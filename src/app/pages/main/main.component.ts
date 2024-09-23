@@ -7,6 +7,7 @@ import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -17,16 +18,24 @@ import { RippleModule } from 'primeng/ripple';
 })
 export class MainComponent {
 
+  constructor(private router:Router) {}
+
   items: MenuItem[] | undefined = [
     {
       key:'dashboard',
       label: 'Dashboard',
-      icon: 'pi pi-objects-column'
+      icon: 'pi pi-objects-column',
+      command:() => {
+        this.router.navigate(['/main/dashboard']);
+      }
     },
     {
       key:'management',
       label: 'Management',
       icon: 'pi pi-server',
+      command:() => {
+        this.router.navigate(['/main/management']);
+      },
       items: [
         {
           label: 'Templates',
