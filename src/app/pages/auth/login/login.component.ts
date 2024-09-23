@@ -1,19 +1,23 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
 import * as validator from 'validator';
+import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonModule,InputTextModule,FormsModule],
+  imports: [ButtonModule,InputTextModule,FormsModule,ToastModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
-  constructor() {}
+  constructor(private toastService:ToastService,private authService:AuthService) {}
 
   email: string = '';
   password: string = '';
@@ -48,7 +52,16 @@ export class LoginComponent {
     }
   }
 
-  signIn() {
+  async signIn() : Promise<any> {
+    try {
+      const response = await this.authService.login({ username: this.email, password: this.password });
+      this.toastService.showSuccess('Success', 'This is a success message!');
+    } catch (error) {
+      console.error(error);
+
+      this.toastService.showError('Error', 'This is an error message!');
+      
+    }
     // Handle the sign-in logic
     console.log('Form is valid, proceed with sign-in');
   }

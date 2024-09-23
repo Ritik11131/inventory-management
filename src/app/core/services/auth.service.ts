@@ -24,8 +24,7 @@ export class AuthService {
       localStorage.setItem('token', this.token);
       return response;
     } catch (error) {
-      console.error(error);
-      return error;
+      throw error;
     }
   }
 
