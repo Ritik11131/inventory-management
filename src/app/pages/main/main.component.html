@@ -1,1 +1,23 @@
+<div class="card">
+    <p-menubar [model]="items">
+        <ng-template pTemplate="start">
+           
+        </ng-template>
+        <ng-template pTemplate="item" let-item let-root="root">
+            <a [routerLink]="item.key" pRipple class="flex align-items-center p-menuitem-link">
+                <span [class]="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+                @if(item.items) {
+                    <i [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+                }
+            </a>
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center gap-2">
+                <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />
+            </div>
+        </ng-template>
+    </p-menubar>
+</div>
+
 <router-outlet></router-outlet>
