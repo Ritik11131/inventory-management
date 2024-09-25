@@ -97,53 +97,64 @@ export class DeviceListComponent {
     },
   ];
 
-  dealers: any[] = [
+  devices: any[] = [
     {
-      id: 1,
+      serial_no: 'S12345',
+      imei: 'IMEI9876543210',
+      iccid_no: 'ICCID1234567890',
+      vehicle_no: 'VN-01-ABC',
+      chassis_no: 'CH123456',
+      model: 'Sedan',
+      class: 'Luxury',
+      rto: 'New York',
+      permit_holder: 'Yes',
       dealer: 'Dealer 1',
-      name: 'John Doe',
-      mobile_no: '9876543210',
-      alternate_no: '9123456789',
-      email: 'john@example.com',
-      address: '123 Main St',
-      city: 'New York',
-      status: 'Active',
-      login_name: 'johndoe',
-      password: 'password123',
-      confirm_password: 'password123',
+      vehicle_status: 'Active',
+      device_status: 'Online',
+      polling_status: 'Successful',
+      payment_status: 'Paid'
     },
     {
-      id: 2,
+      serial_no: 'S67890',
+      imei: 'IMEI1234567890',
+      iccid_no: 'ICCID0987654321',
+      vehicle_no: 'VN-02-XYZ',
+      chassis_no: 'CH987654',
+      model: 'SUV',
+      class: 'Economy',
+      rto: 'Los Angeles',
+      permit_holder: 'No',
       dealer: 'Dealer 2',
-      name: 'Jane Smith',
-      mobile_no: '8765432109',
-      alternate_no: '9012345678',
-      email: 'jane@example.com',
-      address: '456 Market St',
-      city: 'Los Angeles',
-      status: 'Inactive',
-      login_name: 'janesmith',
-      password: 'password456',
-      confirm_password: 'password456',
-    },
+      vehicle_status: 'Inactive',
+      device_status: 'Offline',
+      polling_status: 'Failed',
+      payment_status: 'Pending'
+    }
   ];
 
   columns = [
-    { field: 'dealer', header: 'Dealer',minWidth: '15rem' },
-    { field: 'name', header: 'Name', minWidth: '15rem' },
-    { field: 'mobile_no', header: 'Mobile No', minWidth: '10rem' },
-    { field: 'alternate_no', header: 'Alternate No', minWidth: '10rem' },
-    { field: 'email', header: 'Email',minWidth: '15rem' },
-    { field: 'address', header: 'Address',minWidth: '15rem' },
-    { field: 'city', header: 'City' },
-    { field: 'status', header: 'Status' }
+    { field: 'serial_no', header: 'Serial No' },
+    { field: 'imei', header: 'IMEI' },
+    { field: 'iccid_no', header: 'ICCID No' },
+    { field: 'vehicle_no', header: 'Vehicle No' },
+    { field: 'chassis_no', header: 'Chassis No' },
+    { field: 'model', header: 'Model' },
+    { field: 'class', header: 'Class' },
+    { field: 'rto', header: 'RTO' },
+    { field: 'permit_holder', header: 'Permit Holder' },
+    { field: 'dealer', header: 'Dealer' },
+    { field: 'vehicle_status', header: 'Vehicle Status' },
+    { field: 'device_status', header: 'Device Status' },
+    { field: 'polling_status', header: 'Polling Status' },
+    { field: 'payment_status', header: 'Payment Status' }
   ];
+  
 
   dealerDialog: boolean = false;
 
-  dealer!: any;
+  device!: any;
 
-  selectedDealers!: any[] | null;
+  selectedDevices!: any[] | null;
 
   submitted: boolean = false;
 
@@ -153,7 +164,7 @@ export class DeviceListComponent {
     ngOnInit() {}
 
     openNew() {
-        this.dealer = {};
+        this.device = {};
         this.submitted = false;
         this.dealerDialog = true;
     }
@@ -167,8 +178,8 @@ export class DeviceListComponent {
 
     findIndexById(id: number): number {
         let index = -1;
-        for (let i = 0; i < this.dealers.length; i++) {
-            if (this.dealers[i].id === id) {
+        for (let i = 0; i < this.devices.length; i++) {
+            if (this.devices[i].id === id) {
                 index = i;
                 break;
             }
@@ -197,33 +208,33 @@ export class DeviceListComponent {
       console.log(data);
       this.submitted = true;
 
-        if (this.dealer.name?.trim()) {
-            if (this.dealer.id) {
-                this.dealers[this.findIndexById(this.dealer.id)] = this.dealer;
+        if (this.device.name?.trim()) {
+            if (this.device.id) {
+                this.devices[this.findIndexById(this.device.id)] = this.device;
                 this.toastService.showSuccess('Success', 'This is a success message!');
             } else {
-                this.dealer.id = this.createId();
-                this.dealer.image = 'product-placeholder.svg';
-                this.dealers.push(this.dealer);
+                this.device.id = this.createId();
+                this.device.image = 'product-placeholder.svg';
+                this.devices.push(this.device);
                 this.toastService.showSuccess('Success', 'This is a success message!');
             }
 
-            this.dealers = [...this.dealers];
+            this.devices = [...this.devices];
             this.dealerDialog = false;
-            this.dealer = {};
+            this.device = {};
         }
     }
 
 
     editProduct(product: any) {
-      this.dealer = { ...product };
+      this.device = { ...product };
       this.dealerDialog = true;
   }
 
 
     onEditProduct(product: any) {
       console.log('Editing product:', product);
-      this.dealer = { ...product };
+      this.device = { ...product };
       this.dealerDialog = true;
     }
   
@@ -234,8 +245,8 @@ export class DeviceListComponent {
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.dealers = this.dealers.filter((val) => val.id !== product.id);
-            this.dealer = {};
+            this.devices = this.devices.filter((val) => val.id !== product.id);
+            this.device = {};
             this.toastService.showSuccess('Success', 'This is a success message!');
 
         }
@@ -244,7 +255,7 @@ export class DeviceListComponent {
 
   onSelectionChange(event: any[]) {
     console.log(event);
-    this.selectedDealers = event;
+    this.selectedDevices = event;
     
   }
 

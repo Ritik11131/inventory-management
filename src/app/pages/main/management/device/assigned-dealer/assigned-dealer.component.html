@@ -1,0 +1,27 @@
+<div class="px-4 py-5 md:px-6 lg:px-8">
+    <p-toolbar styleClass="mb-4 gap-2 p-5">
+        <ng-template pTemplate="left">
+            <p-floatLabel>
+                <p-dropdown 
+                    class="mr-4"
+                    styleClass="w-18rem"
+                    optionLabel="name" 
+                    inputId="float-label" />
+                <label for="float-label">Select State</label>
+            </p-floatLabel>
+            <p-floatLabel>
+                <p-dropdown 
+                    styleClass="w-18rem"
+                    optionLabel="name" 
+                    inputId="float-label" />
+                <label for="float-label">Select Dealer</label>
+            </p-floatLabel>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
+                class="mr-2 inline-block" />
+        </ng-template>
+    </p-toolbar>
+
+</div>

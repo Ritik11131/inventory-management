@@ -65,9 +65,12 @@ export class MainComponent {
               }
             },
             {
-              label: 'Device Assigned To Dealer',
+              label: 'Assigned To Dealer',
               icon: 'pi pi-palette',
-              badge: '3'
+              command:() => {
+                this.router.navigate(['/main/management/assigned-dealer']);
+              }
+
             }
           ]
         },

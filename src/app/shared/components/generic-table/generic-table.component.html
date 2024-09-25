@@ -18,7 +18,7 @@
         <tr>
             <th style="width: 4rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
             <th *ngFor="let col of columns" pSortableColumn="{{ col.field }}"
-                [style.minWidth]="col.minWidth || '10rem'">
+                [style.minWidth]="col.minWidth || '15rem'">
                 {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
             </th>
             <th>Actions</th>
