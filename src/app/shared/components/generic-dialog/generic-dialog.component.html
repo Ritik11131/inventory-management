@@ -1,0 +1,59 @@
+<p-dialog [(visible)]="visible" [style]="{ width: width }" header="{{ header }}" [modal]="modal" styleClass="{{ styleClass }}">
+    <ng-template pTemplate="content">
+        @for (field of fields; track $index) {
+        <ng-container>
+            <div class="field">
+                <label for="{{ field.name }}">{{ field.label }}</label>
+                @switch (field.type) {
+                        @case ('text') {
+                            <ng-container>
+                                <input type="text" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" required
+                                    autofocus />
+                            </ng-container>
+                        }
+                        @case ('textarea') {
+                            <ng-container>
+                                <textarea id="{{ field.name }}" pInputTextarea [(ngModel)]="data[field.name]" required rows="3"
+                                    cols="20">
+                          </textarea>
+                            </ng-container>
+                        }
+
+                        @case ('dropdown') {
+                            <ng-container>
+                                <p-dropdown [(ngModel)]="data[field.name]" inputId="{{ field.name }}" [options]="field.options">
+                                </p-dropdown>
+                            </ng-container>
+                        }
+
+                        @case ('radiobutton') {
+                            <ng-container>
+                                <div class="formgrid grid">
+                                    <div class="field-radiobutton col-6" *ngFor="let option of field.options">
+                                        <p-radioButton id="{{ option.value }}" name="{{ field.name }}"
+                                            value="{{ option.value }}" [(ngModel)]="data[field.name]" />
+                                        <label for="{{ option.value }}">{{ option.label }}</label>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        }
+
+                        @case ('number') {
+                            <ng-container>
+                                <p-inputNumber id="{{ field.name }}" [(ngModel)]="data[field.name]" mode="currency"
+                                    currency="USD" locale="en-US" />
+                            </ng-container>
+                        }
+                }
+                
+            </div>
+        </ng-container>
+        }
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
+        <p-button label="Save" icon="pi pi-check" [text]="true" (onClick)="save()" />
+    </ng-template>
+</p-dialog>

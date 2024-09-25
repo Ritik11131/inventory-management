@@ -34,20 +34,38 @@ export class MainComponent {
       label: 'Management',
       icon: 'pi pi-server',
       command:() => {
-        this.router.navigate(['/main/management']);
+        // this.router.navigate(['/main/management']);
       },
       items: [
         {
-          label: 'Templates',
+          label: 'Dealer',
           icon: 'pi pi-palette',
           items: [
             {
-              label: 'Apollo',
+              label: 'Dealer List',
               icon: 'pi pi-palette',
-              badge: '2'
+              command:() => {
+                this.router.navigate(['/main/management/dealer-list']);
+              }
+            },
+          ]
+        },
+        {
+          separator: true
+        },
+        {
+          label: 'Device',
+          icon: 'pi pi-palette',
+          items: [
+            {
+              label: 'Device List',
+              icon: 'pi pi-palette',
+              command:() => {
+                this.router.navigate(['/main/management/device-list']);
+              }
             },
             {
-              label: 'Ultima',
+              label: 'Device Assigned To Dealer',
               icon: 'pi pi-palette',
               badge: '3'
             }
@@ -57,26 +75,7 @@ export class MainComponent {
           separator: true
         },
         {
-          label: 'Templates',
-          icon: 'pi pi-palette',
-          items: [
-            {
-              label: 'Apollo',
-              icon: 'pi pi-palette',
-              badge: '2'
-            },
-            {
-              label: 'Ultima',
-              icon: 'pi pi-palette',
-              badge: '3'
-            }
-          ]
-        },
-        {
-          separator: true
-        },
-        {
-          label: 'Templates',
+          label: 'Activation',
           icon: 'pi pi-palette',
           items: [
             {
