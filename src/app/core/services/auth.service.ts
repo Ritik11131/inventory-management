@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpService } from './http.service';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private token: string = '';
 
-  constructor(private http:HttpService) {}
+  constructor(private http:HttpService,private tokenService:TokenService) {}
 
 
 
@@ -17,11 +17,10 @@ export class AuthService {
    * Login function
    * @param credentials username and password
    */
-   async login(credentials: { username: string, password: string }): Promise<any> {
+   async login(credentials: { Username: string, Password: string }): Promise<any> {
     try {
       const response = await this.http.post('login', credentials);
-      this.token = response.token;
-      localStorage.setItem('token', this.token);
+      this.tokenService.setTokens(response.data.token, response.data.refreshToken, response.data.refreshTokenExpiry);
       return response;
     } catch (error) {
       throw error;
@@ -34,15 +33,7 @@ export class AuthService {
    * @returns True if user is authenticated, false otherwise
    */
    isAuthenticated(): boolean {
-    return !!this.token;
-  }
-
-
-  /**
-   * Get token
-   */
-  getToken(): string {
-    return this.token;
+    return !!this.tokenService.getToken();
   }
 
 
@@ -50,8 +41,7 @@ export class AuthService {
    * Logout function
    */
   logout(): void {
-    this.token = '';
-    localStorage.clear();
+    this.tokenService.clearTokens();
   }
 
 

@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import * as validator from 'validator';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class LoginComponent {
 
-  constructor(private toastService:ToastService,private authService:AuthService) {}
+  constructor(private toastService:ToastService,private authService:AuthService,private router:Router) {}
 
   email: string = '';
   password: string = '';
@@ -37,9 +38,9 @@ export class LoginComponent {
     this.passwordError = '';
 
     // Validate email
-    if (!validator.isEmail(this.email)) {
-      this.emailError = 'Please enter a valid email address';
-    }
+    // if (!validator.isEmail(this.email)) {
+    //   this.emailError = 'Please enter a valid email address';
+    // }
 
     // Validate password (non-empty)
     if (validator.isEmpty(this.password)) {
@@ -54,11 +55,11 @@ export class LoginComponent {
 
   async signIn() : Promise<any> {
     try {
-      const response = await this.authService.login({ username: this.email, password: this.password });
+      await this.authService.login({ Username: this.email, Password: this.password });
       this.toastService.showSuccess('Success', 'This is a success message!');
+      this.router.navigate(['/main/dashboard']);
     } catch (error) {
       console.error(error);
-
       this.toastService.showError('Error', 'This is an error message!');
       
     }

@@ -1,4 +1,4 @@
 export const environment = {
-    apiUrl: 'http://localhost:3000/api',
+    apiUrl: 'https://vs.livetrack24.in/api/auth',
     production: false
   };
