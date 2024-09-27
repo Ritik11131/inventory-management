@@ -5,7 +5,7 @@
     <!-- Caption -->
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
-            <h5 class="m-0">{{ header }}</h5>
+            <h5 class="m-0">{{ header + ' Details' }}</h5>
             <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
                 <input pInputText type="text" placeholder="Search..." />
@@ -32,8 +32,8 @@
             <td style="min-width: 140px;">
                 <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="success"
                     (onClick)="onEdit(item)"></p-button>
-                <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
-                    (onClick)="onDelete(item)"></p-button>
+                <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                    (onClick)="onDelete(item)"></p-button> -->
             </td>
         </tr>
     </ng-template>

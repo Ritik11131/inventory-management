@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { HttpService } from './http.service';
 import { TokenService } from './token.service';
 
@@ -9,18 +8,19 @@ import { TokenService } from './token.service';
 export class AuthService {
 
 
-  constructor(private http:HttpService,private tokenService:TokenService) {}
+  constructor(private http: HttpService, private tokenService: TokenService) {}
 
 
 
-   /**
-   * Login function
-   * @param credentials username and password
-   */
-   async login(credentials: { Username: string, Password: string }): Promise<any> {
+  /**
+  * Login function
+  * @param credentials Username and Password
+  */
+  async login(credentials: { Username: string, Password: string }): Promise<any> {
     try {
-      const response = await this.http.post('login', credentials);
-      this.tokenService.setTokens(response.data.token, response.data.refreshToken, response.data.refreshTokenExpiry);
+      const response = await this.http.post('auth/login', credentials);
+      this.tokenService.setTokens(response.data.token, response.data.refreshToken, response.data.refreshTokenExpiry);  
+      this.tokenService.decodeToken();
       return response;
     } catch (error) {
       throw error;
@@ -28,13 +28,19 @@ export class AuthService {
   }
 
 
-   /**
-   * Check if user is authenticated
-   * @returns True if user is authenticated, false otherwise
-   */
-   isAuthenticated(): boolean {
+  /**
+  * Check if user is authenticated
+  * @returns True if user is authenticated, false otherwise
+  */
+  isAuthenticated(): boolean {
     return !!this.tokenService.getToken();
   }
+
+
+  getUserType(): string {
+    return this.tokenService.getDecodedToken()?.role;
+  }
+
 
 
   /**

@@ -8,6 +8,8 @@ import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+import { TokenService } from '../../core/services/token.service';
 
 @Component({
   selector: 'app-main',
@@ -18,7 +20,7 @@ import { Router } from '@angular/router';
 })
 export class MainComponent {
 
-  constructor(private router:Router) {}
+  constructor(private router:Router,private authService:AuthService) {}
 
   items: MenuItem[] | undefined = [
     {
@@ -38,14 +40,14 @@ export class MainComponent {
       },
       items: [
         {
-          label: 'Dealer',
+          label: this.authService.getUserType(),
           icon: 'pi pi-palette',
           items: [
             {
-              label: 'Dealer List',
+              label: `${this.authService.getUserType()} List`,
               icon: 'pi pi-palette',
               command:() => {
-                this.router.navigate(['/main/management/dealer-list']);
+                this.router.navigate([`/main/management/dynamic-user`]);
               }
             },
           ]
@@ -71,25 +73,6 @@ export class MainComponent {
                 this.router.navigate(['/main/management/assigned-dealer']);
               }
 
-            }
-          ]
-        },
-        {
-          separator: true
-        },
-        {
-          label: 'Activation',
-          icon: 'pi pi-palette',
-          items: [
-            {
-              label: 'Apollo',
-              icon: 'pi pi-palette',
-              badge: '2'
-            },
-            {
-              label: 'Ultima',
-              icon: 'pi pi-palette',
-              badge: '3'
             }
           ]
         }

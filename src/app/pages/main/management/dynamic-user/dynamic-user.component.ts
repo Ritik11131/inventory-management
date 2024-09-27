@@ -1,6 +1,6 @@
-
+import { DynamicUserService } from './../../../../core/services/dynamic-user.service';
 import { Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { RippleModule } from 'primeng/ripple';
@@ -24,19 +24,18 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Dealer } from '../../../../shared/interfaces/dealer.model';
 import { AuthService } from '../../../../core/services/auth.service';
 
-
 @Component({
-  selector: 'app-dealer-list',
+  selector: 'app-dynamic-user',
   standalone: true,
   imports: [TableModule, DialogModule, RippleModule, ButtonModule, ToastModule, ToolbarModule, InputTextModule,
     InputTextareaModule, CommonModule, FileUploadModule, DropdownModule, TagModule, RadioButtonModule,
     RatingModule, InputTextModule, FormsModule, InputNumberModule, GenericDialogComponent, GenericTableComponent, ConfirmDialogModule],
-  templateUrl: './dealer-list.component.html',
-  styleUrl: './dealer-list.component.scss',
+  templateUrl: './dynamic-user.component.html',
+  styleUrl: './dynamic-user.component.scss',
   providers: [ConfirmationService]
-})
-export class DealerListComponent {
 
+})
+export class DynamicUserComponent {
   fields: any[] = [
     {
       name: 'dealer',
@@ -161,10 +160,12 @@ export class DealerListComponent {
   userType!: string;
 
 
-  constructor(private toastService: ToastService, private confirmationService: ConfirmationService, private authService: AuthService) { }
+  constructor(private toastService: ToastService, private confirmationService: ConfirmationService, 
+              private authService: AuthService,private dynamicUser:DynamicUserService) { }
 
   ngOnInit() {
     this.userType = this.authService.getUserType();
+    this.fetchDynamicUserList().then();
    }
 
   openNew() {
@@ -260,7 +261,16 @@ export class DealerListComponent {
   onSelectionChange(event: any[]) {
     console.log(event);
     this.selectedDealers = event;
+
   }
 
 
+  async fetchDynamicUserList() : Promise<any> {
+    try {
+      const response = await this.dynamicUser.getList();
+      this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
+    }
+  }
 }

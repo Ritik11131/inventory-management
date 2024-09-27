@@ -4,11 +4,9 @@ import { TokenService } from '../services/token.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
-  const authToken : any = tokenService.getToken();
+  const authToken : string | null = tokenService.getToken();
 
   if (req.url.endsWith('/login')) {
-    console.log('interceptor called');
-    
     // Don't add the Authorization header for the login endpoint
     return next(req);
   }
@@ -16,7 +14,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Clone the request to add the authentication header.
   const authReq = req.clone({
     setHeaders: {
-      Authorization: authToken
+      Authorization: authToken || 'Hello'
     }
   });
   return next(authReq);

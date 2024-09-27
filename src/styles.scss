@@ -4,3 +4,33 @@
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
 @import 'leaflet/dist/leaflet.css';
+
+
+
+/* Custom Scrollbar Styles */
+
+/* For WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Track color */
+    border-radius: 10px; /* Rounded track */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar color */
+    border-radius: 10px; /* Rounded thumb */
+    border: 3px solid #f1f1f1; /* Space between thumb and track */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darken scrollbar on hover */
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin; /* Thin scrollbar */
+    scrollbar-color: #888 #f1f1f1; /* Thumb and track colors */
+}

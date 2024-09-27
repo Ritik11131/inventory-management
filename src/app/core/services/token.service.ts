@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
 
-
   private tokenKey = 'token';
   private refreshTokenKey = 'refreshToken';
   private refreshTokenExpiryKey = 'refreshTokenExpiry';
+  public decodedToken: string | null = null;
 
-  constructor() { }
+  constructor() {
+    if(this.getToken()) {
+      this.decodeToken();
+    }
+   }
 
 
-  getToken(): string | null {
+  getToken(): any {
     return localStorage.getItem(this.tokenKey);
   }
 
@@ -36,5 +41,18 @@ export class TokenService {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.refreshTokenKey);
     localStorage.removeItem(this.refreshTokenExpiryKey);
+  }
+
+
+  decodeToken(): void {
+    try {
+      this.decodedToken = jwtDecode(this.getToken());
+    } catch (error) {
+      this.decodedToken = null;
+    }
+  }
+  
+  getDecodedToken(): any {
+    return this.decodedToken;
   }
 }
