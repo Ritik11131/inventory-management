@@ -1,6 +1,6 @@
 export interface Dealer {
     id: number;
-    dealer: string;
+    orgname: string;
     name: string;
     mobile_no: string;
     alternate_no: string;

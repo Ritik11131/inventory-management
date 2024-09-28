@@ -28,7 +28,7 @@ export class MainComponent implements OnInit {
   constructor(private router: Router, private authService: AuthService, private toastService: ToastService,
               private breadcrumbService:BreadcrumbService) { }
 
-  userType: string = '';
+  userRole: string = '';
   userName: string = '';
 
   home: MenuItem | undefined = {
@@ -148,7 +148,7 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.userType = this.authService.getUserType();
+    this.userRole = this.authService.getUserRole();
     this.userName = this.authService.getUserName();
     if(this.router.url) {
       this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs(this.router.url);

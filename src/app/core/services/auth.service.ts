@@ -36,9 +36,20 @@ export class AuthService {
     return !!this.tokenService.getToken();
   }
 
+  getUserRole() : string {
+    return this.tokenService.getDecodedToken()?.role
+  }
 
   getUserType(): string {
-    return this.tokenService.getDecodedToken()?.role;
+    if (this.tokenService.getDecodedToken()?.role === 'Admin') {
+      return 'OEM';
+    } else if (this.tokenService.getDecodedToken()?.role === 'OEM') {
+      return 'Distributor'; 
+    } else if (this.tokenService.getDecodedToken()?.role === 'Distributor') {
+      return 'Dealer';
+    }
+
+    return 'User'
   }
 
   getUserName() : string {

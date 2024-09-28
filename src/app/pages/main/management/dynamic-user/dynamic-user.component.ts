@@ -110,7 +110,7 @@ export class DynamicUserComponent {
   dealers: Dealer[] = [
     {
       id: 1,
-      dealer: 'Dealer 1',
+      orgname: 'Dealer 1',
       name: 'John Doe',
       mobile_no: '9876543210',
       alternate_no: '9123456789',
@@ -124,7 +124,7 @@ export class DynamicUserComponent {
     },
     {
       id: 2,
-      dealer: 'Dealer 2',
+      orgname: 'Dealer 2',
       name: 'Jane Smith',
       mobile_no: '8765432109',
       alternate_no: '9012345678',
@@ -139,7 +139,7 @@ export class DynamicUserComponent {
   ];
 
   columns = [
-    { field: 'dealer', header: 'Dealer', minWidth: '15rem' },
+    { field: 'orgname', header: this.authService.getUserType(), minWidth: '15rem' },
     { field: 'name', header: 'Name', minWidth: '15rem' },
     { field: 'mobile_no', header: 'Mobile No', minWidth: '10rem' },
     { field: 'alternate_no', header: 'Alternate No', minWidth: '10rem' },
