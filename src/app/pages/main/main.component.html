@@ -74,6 +74,15 @@
             </div>
         </ng-template>
     </p-menubar>
+
+
+
+    <div class="px-4 py-4 md:px-6 lg:px-8">
+        <p-breadcrumb 
+            class="max-w-full" 
+            [model]="breadCrumbs" 
+            [home]="home" />
+    </div>
 </div>
 
 <router-outlet></router-outlet>

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode } from "jwt-decode";
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +14,7 @@ export class TokenService {
   private refreshTokenExpiryKey = 'refreshTokenExpiry';
   public decodedToken: string | null = null;
 
-  constructor() {
+  constructor(private http:HttpClient) {
     if(this.getToken()) {
       this.decodeToken();
     }
@@ -22,7 +25,7 @@ export class TokenService {
     return localStorage.getItem(this.tokenKey);
   }
 
-  getRefreshToken(): string | null {
+  getRefreshToken(): any {
     return localStorage.getItem(this.refreshTokenKey);
   }
 
@@ -51,6 +54,15 @@ export class TokenService {
       this.decodedToken = null;
     }
   }
+
+
+    refreshToken(): Observable<any> {
+      return this.http.post(environment.apiUrl + 'Auth/refresh', { refreshToken : this.getRefreshToken() }, {
+        headers: {
+          Authorization: this.getRefreshToken()
+        },
+      });
+    }
   
   getDecodedToken(): any {
     return this.decodedToken;
