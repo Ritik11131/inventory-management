@@ -49,9 +49,7 @@ export class MainComponent implements OnInit {
       icon: 'pi pi-objects-column',
       command: () => {
         this.router.navigate(['/main/dashboard']);
-        this.breadCrumbs = [{
-          label: 'Dashboard',
-        }];
+        this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/dashboard');
       }
     },
     {
@@ -60,6 +58,7 @@ export class MainComponent implements OnInit {
       icon: 'pi pi-server',
       command: () => {
         // this.router.navigate(['/main/management']);
+        // this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management');
       },
       items: [
         {
@@ -70,18 +69,8 @@ export class MainComponent implements OnInit {
               label: `${this.authService.getUserType()} List`,
               icon: 'pi pi-palette',
               command: () => {
-                this.router.navigate([`/main/management/dynamic-user`]);
-                this.breadCrumbs = [
-                  {
-                    label: 'Management',
-                  },
-                  {
-                    label: this.authService.getUserType(),
-                  },
-                  {
-                    label: 'List',
-                  }
-                ]
+                this.router.navigate([`/main/management/dynamic-user-list`]);
+                this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management/dynamic-user-list');
               }
             },
           ]
@@ -98,36 +87,15 @@ export class MainComponent implements OnInit {
               icon: 'pi pi-palette',
               command: () => {
                 this.router.navigate(['/main/management/device-list']);
-                this.breadCrumbs = [
-                  {
-                    label: 'Management',
-                  },
-                  {
-                    label: 'Device',
-                  },
-                  {
-                    label: 'List',
-                  }
-                ]
+                this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management/device-list');
               }
             },
             {
               label: `Assigned To ${this.authService.getUserType()}`,
               icon: 'pi pi-palette',
               command: () => {
-                this.router.navigate(['/main/management/assigned-dealer']);
-                this.breadCrumbs = [
-                  {
-                    label: 'Management',
-                  },
-                  {
-                    label: 'Device',
-                  },
-                  {
-                    label: `Assigned To ${this.authService.getUserType()}`,
-
-                  }
-                ]
+                this.router.navigate([`/main/management/assigned/${this.authService.getUserType()}`]);
+                this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${this.authService.getUserType()}`);
               }
 
             }

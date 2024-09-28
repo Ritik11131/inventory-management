@@ -7,38 +7,70 @@ import { AuthService } from './auth.service';
 })
 export class BreadcrumbService {
 
-  breadCrumbs : MenuItem[] = []
+  breadCrumbs : MenuItem[] = [];
+
+  breadcrumbMap = {
+    main: {
+      dashboard: [
+        { label: 'Dashboard' }
+      ],
+      management: {
+        'dynamic-user-list': [
+          { label: 'Management' },
+          { label: (authService : any) => authService.getUserType() },
+          { label: (authService : any) => `${authService.getUserType()} List` }
+        ],
+        'device-list': [
+          { label: 'Management' },
+          { label: 'Device' },
+          { label: 'Device List' }
+        ],
+        assigned: (authService : any) => {
+          return {
+            [authService.getUserType()]: [
+              { label: 'Management' },
+              { label: 'Device' },
+              { label: `Assigned To ${authService.getUserType()}` }
+            ]
+          };
+        }
+      }
+    }
+  };
 
   constructor(private authService:AuthService) {}
 
 
-   generateBreadcrumbs(url: string) : MenuItem[] | undefined {
+  generateBreadcrumbs(url: string): MenuItem[] | undefined {
     this.breadCrumbs = [];
-    const urlParts = url.split('/');
-
+  
+    const urlParts = url.substring(1).split('/');
+  
     // Handle root route (/main)
     if (urlParts.length === 2) {
-      this.breadCrumbs.push({ label: 'Dashboard' });
-    } else {
-      // Handle sub-routes (/main/management, /main/management/dynamic-user)
-      for (let i = 2; i < urlParts.length; i++) {
-        const label = this.getLabel(urlParts[i]);
-        this.breadCrumbs.push({ label });
-      }
-    }
-    console.log(this.breadCrumbs);
-    
-    return this.breadCrumbs
-  }
+      this.breadCrumbs.push({ label: this.capitalize(urlParts[1]) });
+    } else if (urlParts.length > 2) {
+      let breadcrumbPath : any = this.breadcrumbMap;
 
-  private getLabel(urlPart: string): string {
-    switch (urlPart) {
-      case 'management':
-        return 'Management';
-      case 'dynamic-user':
-        return this.authService.getUserType();
-      default:
-        return urlPart.charAt(0).toUpperCase() + urlPart.slice(1);
+      for (const part of urlParts) {
+        if(part !== 'assigned') {
+          breadcrumbPath = breadcrumbPath[part]
+        } else {
+          breadcrumbPath = breadcrumbPath[part](this.authService);
+        }
+      }
+      this.breadCrumbs = breadcrumbPath.map((item : any) => {
+        if(typeof(item.label) === 'function') {
+          return { label: item.label(this.authService) };
+        } else {
+          return item;
+        }
+      })
     }
+  
+    return this.breadCrumbs;
+  }
+  private capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }

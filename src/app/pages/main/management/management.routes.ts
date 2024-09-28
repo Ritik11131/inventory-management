@@ -11,7 +11,7 @@ export const managementRoutes: Routes = [
     component:ManagementComponent,
     children:[
       {
-         path:'dynamic-user',
+         path:'dynamic-user-list',
          component:DynamicUserComponent
       },
       {
@@ -19,7 +19,7 @@ export const managementRoutes: Routes = [
          component:DeviceListComponent
       },
       {
-         path:'assigned-dealer',
+         path:'assigned/:userType',
          component:AssignedDealerComponent
       }
     ]
