@@ -57,11 +57,7 @@ export class TokenService {
 
 
     refreshToken(): Observable<any> {
-      return this.http.post(environment.apiUrl + 'Auth/refresh', { refreshToken : this.getRefreshToken() }, {
-        headers: {
-          Authorization: this.getRefreshToken()
-        },
-      });
+      return this.http.post(environment.apiUrl + '/Auth/refresh', { refreshToken : this.getRefreshToken() });
     }
   
   getDecodedToken(): any {
