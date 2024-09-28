@@ -41,13 +41,24 @@ export class AuthService {
     return this.tokenService.getDecodedToken()?.role;
   }
 
+  getUserName() : string {
+    return this.tokenService.getDecodedToken()?.unique_name;
+  }
+
 
 
   /**
    * Logout function
    */
-  logout(): void {
-    this.tokenService.clearTokens();
+  async logout(): Promise<any> {
+    try {
+      const response = await this.http.get('Auth/logout');
+      this.tokenService.clearTokens();
+      return response;
+    } catch (error) {
+      throw error;
+      
+    }
   }
 
 

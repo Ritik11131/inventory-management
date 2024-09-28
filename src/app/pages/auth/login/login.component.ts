@@ -56,15 +56,13 @@ export class LoginComponent {
   async signIn() : Promise<any> {
     try {
       await this.authService.login({ Username: this.email, Password: this.password });
-      this.toastService.showSuccess('Success', 'This is a success message!');
+      this.toastService.showSuccess('Success', 'Successfully logged in!');
       this.router.navigate(['/main/dashboard']);
     } catch (error) {
       console.error(error);
-      this.toastService.showError('Error', 'This is an error message!');
+      this.toastService.showError('Error', 'Failed to log in!');
       
     }
-    // Handle the sign-in logic
-    console.log('Form is valid, proceed with sign-in');
   }
 
 }
