@@ -65,6 +65,7 @@ export class LoginComponent implements OnInit {
     // Validate password (non-empty)
     if (validator.isEmpty(this.password)) {
       this.passwordError = 'Password cannot be empty';
+      this.generateCatcha();
     }
 
     // If no errors, proceed with form submission
@@ -79,28 +80,36 @@ export class LoginComponent implements OnInit {
       await this.authService.login({ Username: this.email, Password: this.password });
       this.toastService.showSuccess('Success', 'Successfully logged in!');
       this.router.navigate(['/main/dashboard']);
-    } catch (error) {
+    } catch (error : any) {
       console.error(error);
-      this.toastService.showError('Error', 'Failed to log in!');
+      this.generateCatcha();
+      this.toastService.showError('Error', error.error.data);
     } finally {
       this.isLoggedIn = false;
     }
   }
 
   generateCatcha() : void {
+    this.userInput = '';
     this.captchaCode = generateCaptchaCode();
   }
 
-  verifyCode(): void {
+  async verifyCode(): Promise<any> {
       if (this.userInput === this.captchaCode) {
-        this.signIn();
+        await this.signIn();
       } else {
         this.captchaError = true;
         this.userInput = '';
         this.generateCatcha();
-        return this.toastService.showWarn('Warning', 'Invalid code, please try again!');
+        // Temporarily remove and reapply the p-shake class for re-triggering the animation
+        setTimeout(() => {
+          this.captchaError = false; // Remove the class
+          setTimeout(() => {
+            this.captchaError = true; // Re-add the class after a brief delay
+          }, 50);
+        }, 0);
+        return this.toastService.showWarn('Warning', 'Captcha code is incorrect!');
       }
-
   }
 
 }
