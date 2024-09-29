@@ -24,6 +24,7 @@ export class LoginComponent {
   password: string = '';
   emailError: string = '';
   passwordError: string = '';
+  isLoggedIn:boolean = false;
 
 
 
@@ -54,6 +55,7 @@ export class LoginComponent {
   }
 
   async signIn() : Promise<any> {
+    this.isLoggedIn = true;
     try {
       await this.authService.login({ Username: this.email, Password: this.password });
       this.toastService.showSuccess('Success', 'Successfully logged in!');
@@ -61,7 +63,8 @@ export class LoginComponent {
     } catch (error) {
       console.error(error);
       this.toastService.showError('Error', 'Failed to log in!');
-      
+    } finally {
+      this.isLoggedIn = false;
     }
   }
 

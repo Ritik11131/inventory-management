@@ -86,8 +86,7 @@ export class DynamicUserComponent {
       label: 'User Type',
       type: 'radiobutton',
       options: [
-        { label: 'Active', value: 'Active' },
-        { label: 'Inactive', value: 'Inactive' },
+        { label: this.authService.getUserType(), value: this.authService.getUserType() },
       ]
     },
     {
