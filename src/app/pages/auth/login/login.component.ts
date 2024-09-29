@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -16,15 +16,26 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
-
-  constructor(private toastService:ToastService,private authService:AuthService,private router:Router) {}
+export class LoginComponent implements OnInit {
 
   email: string = '';
   password: string = '';
   emailError: string = '';
   passwordError: string = '';
   isLoggedIn:boolean = false;
+  captchaCode: string = '';
+  userInput: string = '';
+  isVerified: boolean = false;
+  isVerifiedLoader: boolean = false;;
+  
+  
+  constructor(private toastService:ToastService,private authService:AuthService,private router:Router) {}
+
+
+  ngOnInit(): void {  
+    this.generateCaptchaCode();
+  }
+
 
 
 
@@ -66,6 +77,28 @@ export class LoginComponent {
     } finally {
       this.isLoggedIn = false;
     }
+  }
+
+
+  generateCaptchaCode(): void {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    this.captchaCode = '';
+    for (let i = 0; i < 7; i++) {
+      this.captchaCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+  }
+
+  verifyCode(): void {
+    this.isVerifiedLoader = true;
+    setTimeout(() => {
+      if (this.userInput === this.captchaCode) {
+        this.isVerified = true;
+        this.toastService.showSuccess('Verified', 'Please Sign In!');
+      } else {
+        this.toastService.showWarn('Warning', 'Invalid code, please try again!');
+      }
+      this.isVerifiedLoader = false;
+    }, 1000)
   }
 
 }
