@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { DividerModule } from 'primeng/divider';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
@@ -8,11 +8,19 @@ import * as validator from 'validator';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { generateCaptchaCode } from '../../../shared/utils/common';
+import { PasswordModule } from 'primeng/password';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonModule,InputTextModule,FormsModule,ToastModule],
+  imports: [ButtonModule,InputTextModule,FormsModule,ToastModule,DividerModule,
+    CommonModule,PasswordModule,InputGroupModule,InputGroupAddonModule,IconFieldModule,InputIconModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -22,25 +30,25 @@ export class LoginComponent implements OnInit {
   password: string = '';
   emailError: string = '';
   passwordError: string = '';
+  captchaError: boolean = false;
   isLoggedIn:boolean = false;
   captchaCode: string = '';
   userInput: string = '';
-  isVerified: boolean = false;
-  isVerifiedLoader: boolean = false;;
+;
   
   
   constructor(private toastService:ToastService,private authService:AuthService,private router:Router) {}
 
 
-  ngOnInit(): void {  
-    this.generateCaptchaCode();
+  ngOnInit(): void { 
+    this.generateCatcha();
   }
 
 
 
 
    // Disable copy-paste events
-   disableEvent(event: ClipboardEvent) {
+   disableEvent(event: any) {
     event.preventDefault();
   }
 
@@ -61,7 +69,7 @@ export class LoginComponent implements OnInit {
 
     // If no errors, proceed with form submission
     if (!this.emailError && !this.passwordError) {
-      this.signIn();
+      this.verifyCode();
     }
   }
 
@@ -79,26 +87,20 @@ export class LoginComponent implements OnInit {
     }
   }
 
-
-  generateCaptchaCode(): void {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    this.captchaCode = '';
-    for (let i = 0; i < 7; i++) {
-      this.captchaCode += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
+  generateCatcha() : void {
+    this.captchaCode = generateCaptchaCode();
   }
 
   verifyCode(): void {
-    this.isVerifiedLoader = true;
-    setTimeout(() => {
       if (this.userInput === this.captchaCode) {
-        this.isVerified = true;
-        this.toastService.showSuccess('Verified', 'Please Sign In!');
+        this.signIn();
       } else {
-        this.toastService.showWarn('Warning', 'Invalid code, please try again!');
+        this.captchaError = true;
+        this.userInput = '';
+        this.generateCatcha();
+        return this.toastService.showWarn('Warning', 'Invalid code, please try again!');
       }
-      this.isVerifiedLoader = false;
-    }, 1000)
+
   }
 
 }
