@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
   isLoggedIn:boolean = false;
   captchaCode: string = '';
   userInput: string = '';
-;
+  isPasswordToggled: boolean = false;
   
   
   constructor(private toastService:ToastService,private authService:AuthService,private router:Router) {}
@@ -110,6 +110,11 @@ export class LoginComponent implements OnInit {
         }, 0);
         return this.toastService.showWarn('Warning', 'Captcha code is incorrect!');
       }
+  }
+
+
+  togglePassword() {
+    this.isPasswordToggled = !this.isPasswordToggled;
   }
 
 }
