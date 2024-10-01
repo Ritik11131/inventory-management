@@ -3,11 +3,13 @@ import { DividerModule } from 'primeng/divider';
 import {icon, latLng, Map, Marker, marker, tileLayer} from "leaflet";
 import { ChartModule } from 'primeng/chart';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DividerModule,ChartModule,LeafletModule],
+  imports: [DividerModule,ChartModule,LeafletModule,ProgressBarModule,PanelModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

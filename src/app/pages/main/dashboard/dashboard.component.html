@@ -1,70 +1,102 @@
 <div class="surface-ground px-4 py-5 md:px-6 lg:px-8">
+    <p-panel [toggleable]="true" header="Device Status Overview">
+        <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2 mr-3">
+                <i class="pi pi-car text-primary text-3xl"></i>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <div class="flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="flex align-items-center gap-2">
+                    <!-- <p-button icon="pi pi-user" rounded="true" text="true" />
+                    <p-button icon="pi pi-bookmark" severity="secondary" rounded="true" text="true" /> -->
+                </div>
+                <span class="p-text-secondary">
+                    Updated 2 hours ago
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="icons">
+            <button class="p-panel-header-icon p-link mr-2">
+                <span class="pi pi-refresh"></span>
+            </button>
+        </ng-template>
+
     <div class="grid">
         <div class="col-12 md:col-6 lg:col-3">
             <div class="surface-card shadow-2 p-3 border-round">
-                <div class="flex justify-content-between mb-3">
+                <div class="flex justify-content-between">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Orders</span>
-                        <div class="text-900 font-medium text-xl">152</div>
+                        <span class="block text-500 font-medium mb-3">Activated Devices</span>
+                        <div class="text-green-500 text-2xl">210</div>
                     </div>
-                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                    <div class="flex align-items-center justify-content-center bg-green-100 border-round"
                         style="width:2.5rem;height:2.5rem">
-                        <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+                        <i class="pi pi-car text-green-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">24 new </span>
-                <span class="text-500">since last visit</span>
             </div>
         </div>
         <div class="col-12 md:col-6 lg:col-3">
             <div class="surface-card shadow-2 p-3 border-round">
-                <div class="flex justify-content-between mb-3">
+                <div class="flex justify-content-between">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Revenue</span>
-                        <div class="text-900 font-medium text-xl">$2.100</div>
+                        <span class="block text-500 font-medium mb-3">Pending Activation</span>
+                        <div class="text-orange-500 text-2xl">284</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
                         style="width:2.5rem;height:2.5rem">
-                        <i class="pi pi-map-marker text-orange-500 text-xl"></i>
+                        <i class="pi pi-car text-orange-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">%52+ </span>
-                <span class="text-500">since last week</span>
             </div>
         </div>
         <div class="col-12 md:col-6 lg:col-3">
             <div class="surface-card shadow-2 p-3 border-round">
-                <div class="flex justify-content-between mb-3">
+                <div class="flex justify-content-between">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Customers</span>
-                        <div class="text-900 font-medium text-xl">28441</div>
+                        <span class="block text-500 font-medium mb-3">Offline devices</span>
+                        <div class="text-red-500 text-2xl">12</div>
                     </div>
-                    <div class="flex align-items-center justify-content-center bg-cyan-100 border-round"
+                    <div class="flex align-items-center justify-content-center bg-red-100 border-round"
                         style="width:2.5rem;height:2.5rem">
-                        <i class="pi pi-inbox text-cyan-500 text-xl"></i>
+                        <i class="pi pi-car text-red-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">520 </span>
-                <span class="text-500">newly registered</span>
             </div>
         </div>
         <div class="col-12 md:col-6 lg:col-3">
             <div class="surface-card shadow-2 p-3 border-round">
-                <div class="flex justify-content-between mb-3">
+                <div class="flex justify-content-between">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Comments</span>
-                        <div class="text-900 font-medium text-xl">152 Unread</div>
+                        <span class="block text-500 font-medium mb-3">Online Devies</span>
+                        <div class="text-blue-500 text-2xl">152</div>
                     </div>
-                    <div class="flex align-items-center justify-content-center bg-purple-100 border-round"
+                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
                         style="width:2.5rem;height:2.5rem">
-                        <i class="pi pi-comment text-purple-500 text-xl"></i>
+                        <i class="pi pi-car text-blue-500 text-xl"></i>
                     </div>
                 </div>
-                <span class="text-green-500 font-medium">85 </span>
-                <span class="text-500">responded</span>
+            </div>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3">
+            <div class="surface-card shadow-2 p-3 border-round">
+                <div class="flex justify-content-between">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Total devices</span>
+                        <div class="text-gray-500 text-2xl">152</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-gray-100 border-round"
+                        style="width:2.5rem;height:2.5rem">
+                        <i class="pi pi-car text-gray-500 text-xl"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    
+</p-panel>
+
 
 
     <p-divider />
