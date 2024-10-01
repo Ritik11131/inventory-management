@@ -1,7 +1,7 @@
 <p-table #dt [value]="data" [rows]="rows" [paginator]="true" [globalFilterFields]="globalFilterFields"
      [(selection)]="selection" [rowHover]="true" [scrollable]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
-    (selectionChange)="onSelectionChange($event)"  [rowsPerPageOptions]="[10, 25, 50]">
+    (selectionChange)="onSelectionChange($event)"  [rowsPerPageOptions]="[5, 10, 25, 50]">
     <!-- Caption -->
     <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">

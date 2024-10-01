@@ -107,43 +107,35 @@ export class MainComponent implements OnInit {
 
 
   profileItems: MenuItem[] | undefined = [
+    {separator:true},
     {
-      separator: true
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      command: () => {
+        this.router.navigate(['/main/settings']);
+        this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/settings');
+      }
     },
     {
-      label: 'Profile',
-      items: [
-        {
-          label: 'Settings',
-          icon: 'pi pi-cog',
-          shortcut: '⌘+O'
-        },
-        {
-          label: 'Messages',
-          icon: 'pi pi-inbox',
-          badge: '2'
-        },
-        {
-          label: 'Logout',
-          icon: 'pi pi-sign-out',
-          shortcut: '⌘+Q',
-          command: async () => {
-            try {
-              await this.authService.logout();
-              this.toastService.showSuccess('Success', 'Successfully logged out!');
-              this.router.navigate(['/auth/login']);
-            } catch (error) {
-              this.toastService.showError('Error', 'Failed to log out!');
-            }
-
-          }
+      label: 'Messages',
+      icon: 'pi pi-inbox',
+      badge: '2'
+    },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      shortcut: '⌘+Q',
+      command: async () => {
+        try {
+          await this.authService.logout();
+          this.toastService.showSuccess('Success', 'Successfully logged out!');
+          this.router.navigate(['/auth/login']);
+        } catch (error) {
+          this.toastService.showError('Error', 'Failed to log out!');
         }
-      ]
-    },
-    {
-      separator: true
-    }
-  ];
+
+      }
+    }];
 
 
 

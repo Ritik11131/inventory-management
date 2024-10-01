@@ -13,10 +13,9 @@
         </ng-template>
     </p-toolbar>
 
-    <app-generic-table [data]="users" [columns]="columns" [rows]="10" [header]="userType"
+    <app-generic-table [data]="users" [columns]="columns" [rows]="5" [header]="userType"
         [globalFilterFields]="['orgName','name','email','loginId']" (edit)="onEditProduct($event)"
-        (delete)="onDeleteProduct($event)" (selectionChange)="onSelectionChange($event)">
-    </app-generic-table>
+        (delete)="onDeleteProduct($event)" (selectionChange)="onSelectionChange($event)"/>
 </div>
 
 

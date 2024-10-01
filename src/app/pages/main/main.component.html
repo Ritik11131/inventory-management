@@ -1,7 +1,10 @@
 <div class="card">
     <p-menubar [model]="items">
         <ng-template pTemplate="start">
-           
+        <span class="inline-flex align-items-center gap-1 px-2 py-2">
+            <img style="mix-blend-mode: multiply;" src="assets/images/logo.png" alt="logo" height="50" width="50" />
+            <!-- <span class="font-medium text-xl font-semibold">VAHAN<span class="text-primary">SATHI</span></span> -->
+        </span>
         </ng-template>
         <ng-template pTemplate="item" let-item let-root="root">
             <a pRipple class="flex align-items-center p-menuitem-link">
@@ -16,14 +19,21 @@
             <div class="flex align-items-center gap-2">
                 <p-menu #menu [model]="profileItems" styleClass="w-full md:w-15rem" [popup]="true">
                     <ng-template pTemplate="start">
-                        <span class="inline-flex align-items-center gap-1 px-2 py-2">
+                        <!-- <span class="inline-flex align-items-center gap-1 px-2 py-2">
                             <img src="assets/images/logo.png" alt="logo" height="60" width="60"     />
-                            <span class="font-medium text-xl font-semibold">VAHAN<span class="text-primary"> SATHI</span></span>
-                        </span>
+                            <span class="font-medium text-xl font-semibold">VAHAN<span class="text-primary">SATHI</span></span>
+                        </span> -->
+                        <button pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
+                            <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" shape="circle" />
+                            <span class="inline-flex flex-column">
+                                <span class="font-bold">{{ userName }}</span>
+                                <span class="text-sm">{{ userRole }}</span>
+                            </span>
+                        </button>
                     </ng-template>
-                    <ng-template pTemplate="submenuheader" let-item>
+                    <!-- <ng-template pTemplate="submenuheader" let-item>
                         <span class="text-primary font-bold">{{ item.label }}</span>
-                    </ng-template>
+                    </ng-template> -->
                     <ng-template pTemplate="item" let-item>
                         <a pRipple class="flex align-items-center p-menuitem-link">
                             <span [class]="item.icon"></span>
@@ -33,16 +43,18 @@
                         </a>
                     </ng-template>
                     <ng-template pTemplate="end">
-                        <button pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
+                        <!-- <button pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
                             <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" shape="circle" />
                             <span class="inline-flex flex-column">
                                 <span class="font-bold">{{ userName }}</span>
                                 <span class="text-sm">{{ userRole }}</span>
                             </span>
-                        </button>
+                        </button> -->
                     </ng-template>
                 </p-menu>
-                <p-button (onClick)="menu.toggle($event)" icon="pi pi-user" [rounded]="true" [text]="true" severity="info" />
+                <i pBadge style="font-size: 1.3rem" class="mr-3 pi pi-bell p-shake text-orange-500" severity="danger"></i>
+                <!-- <p-button pBadge value="2" icon="pi pi-bell" [rounded]="true" [text]="true" severity="warning" /> -->
+                <p-button class="mr-3" [text]="true" (onClick)="menu.toggle($event)" icon="pi pi-user" [rounded]="true" severity="info" />
             </div>
         </ng-template>
     </p-menubar>

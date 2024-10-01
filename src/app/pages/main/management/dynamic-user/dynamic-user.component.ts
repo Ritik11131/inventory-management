@@ -66,6 +66,8 @@ export class DynamicUserComponent {
         password: "",
         name: "",
         mobileNo: "",
+        address:"",
+        alternatemobileno:"",
         emailId: "",
         orgName: "",
         userType: "",
@@ -95,19 +97,12 @@ export class DynamicUserComponent {
     this.hideFields = [];
   }
 
-  async onSaveProduct(data: any) : Promise<any> {
+  async onSaveProduct(data: DynamicUser) : Promise<any> {
       if (this.user.sno) {
         this.toastService.showSuccess('Success', 'This is a success message!');
       } else {
-        try {
-          const response = await this.dynamicUserService.createUser(data);
-          console.log(response);
-          this.toastService.showSuccess('Success', 'This is a success message!');
-        } catch (error) {
-          this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
-        }
+        await this.createDynamicUser(data);
       }
-
       await this.fetchDynamicUserList();
       this.userDialog = false;
       this.user = this.resetUser();
@@ -150,6 +145,17 @@ export class DynamicUserComponent {
       this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
+    }
+  }
+
+
+  async createDynamicUser(data : DynamicUser) : Promise<any> {
+    try {
+      const response = await this.dynamicUserService.createUser(data);
+      console.log(response);
+      this.toastService.showSuccess('Success', 'User Created Successfully!');
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);
     }
   }
 }
