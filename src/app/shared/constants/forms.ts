@@ -1,9 +1,10 @@
 export const dynamicUserCreateFormFields = [
     {
         name: 'loginId',
-        label: 'Login Id / Username',
+        label: 'Login Id',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('loginId'),
+        validation:true
     },
     {
         name: 'password',
@@ -34,12 +35,14 @@ export const dynamicUserCreateFormFields = [
         label: 'Email',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('emailId'),
+        validation:true
     },
     {
         name: 'mobileNo',
         label: 'Mobile No',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('mobileNo'),
+        validation:true
     },
     {
         name: 'active',

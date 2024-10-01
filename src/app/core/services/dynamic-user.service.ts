@@ -29,4 +29,33 @@ export class DynamicUserService {
       throw error;
     }
   }
+
+  async isEmailValid(email: string): Promise<any> {
+    try {
+      const response = await this.http.get('User/validate-email', { email });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async isLoginIdValid(loginId: string): Promise<any> {
+    try {
+      const response = await this.http.get('User/validate-loginId', { loginId });
+      return response;
+    } catch (error) {
+      throw error;
+
+    }
+  }
+
+  async isMobileNoValid(mobile: string): Promise<any> {
+    try {
+      const response = await this.http.get('User/validate-mobile', { mobile });
+      return response;
+    } catch (error) {
+      throw error;
+
+    }
+  }
 }

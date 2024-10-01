@@ -19,6 +19,6 @@
 </div>
 
 
-<app-generic-dialog [visible]="userDialog" [header]="userType" [width]="'800px'" [modal]="true" [isEditing]="isEditing"
-   [hideFields]="hideFields" [styleClass]="'p-fluid'" [fields]="fields" [data]="user" (onHide)="onHideDialog($event)"
-    (onSave)="onSaveProduct($event)" />
+<app-generic-dialog [isValidated]="isValidated" [visible]="userDialog" [header]="userType" [width]="'800px'" [modal]="true" [isEditing]="isEditing"
+   [hideFields]="hideFields" [styleClass]="'p-fluid'" [fields]="fields" [data]="user" [validationState]="validationState" (onHide)="onHideDialog($event)"
+    (onSave)="onSaveProduct($event)" (onInputTextChange)="onInputTextChange($event)" />

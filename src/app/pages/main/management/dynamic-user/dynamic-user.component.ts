@@ -25,6 +25,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { AuthService } from '../../../../core/services/auth.service';
 import { dynamicUserColumns } from '../../../../shared/constants/columns';
 import { dynamicUserCreateFormFields } from '../../../../shared/constants/forms';
+import { debounceTime, Subject } from 'rxjs';
+
 
 @Component({
   selector: 'app-dynamic-user',
@@ -48,15 +50,66 @@ export class DynamicUserComponent {
   isEditing:boolean = false;
   userType!: string;
   hideFields: string[] = [];
+  validationState: { [key: string]: boolean } = {};
+  isValidated:boolean = false;
+  private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
-  constructor(private toastService: ToastService, private confirmationService: ConfirmationService, 
-              private authService: AuthService,private dynamicUserService:DynamicUserService) { }
+
+
+  constructor(private toastService: ToastService, private confirmationService: ConfirmationService,
+    private authService: AuthService, private dynamicUserService: DynamicUserService) {
+    this.validationDebounceSubject.pipe(
+      debounceTime(400)
+    ).subscribe(({ fieldName, value }) => {
+      this.executeValidation(fieldName, value);
+    });
+  }
 
   ngOnInit() {
     this.userType = this.authService.getUserType();
+    this.constructValidationState(this.fields);    
     this.fetchDynamicUserList().then();
   }
+
+  constructValidationState(fields: any[]): void {
+    fields.forEach((field) => {
+      if (field.hasOwnProperty('validation') && field.validation === true) {
+        // Check if validationState already has the field; if not, initialize it
+        if (!this.validationState.hasOwnProperty(field.name)) {
+          this.validationState[field.name] = false; // Set initial state to false
+        }
+      }
+    });
+  }
+
+  async onInputTextChange({ fieldName, value }: any): Promise<void> {
+    this.validationDebounceSubject.next({ fieldName, value });
+  }
+
+
+  private async executeValidation(fieldName: string, value: any): Promise<void> {
+    const fieldValidationMapping: { [key: string]: (val: string) => Promise<any> } = {
+      emailId: this.dynamicUserService.isEmailValid.bind(this.dynamicUserService),
+      loginId: this.dynamicUserService.isLoginIdValid.bind(this.dynamicUserService),
+      mobileNo: this.dynamicUserService.isMobileNoValid.bind(this.dynamicUserService)
+    };
+  
+    if (fieldValidationMapping[fieldName]) {
+      try {
+        const response = await fieldValidationMapping[fieldName](value);
+        this.validationState[fieldName] = !response.data.isDuplicate;
+      } catch (error) {
+        this.validationState[fieldName] = false;
+        console.error(`Error validating ${fieldName}:`, error);
+      }
+  
+      // Update validation status for the button
+      this.isValidated = Object.values(this.validationState).every(val => val === true);
+      console.log(this.validationState, 'validation state');
+    }
+  }
+  
 
 
   resetUser(): DynamicUser {
@@ -91,7 +144,6 @@ export class DynamicUserComponent {
 
 
   onHideDialog(isVisible: boolean) {
-    console.log(isVisible);
     this.userDialog = isVisible;
     this.isEditing = false;
     this.hideFields = [];
