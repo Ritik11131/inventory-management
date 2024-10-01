@@ -9,7 +9,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { generateCaptchaCode } from '../../../shared/utils/common';
+import { generateRandomString } from '../../../shared/utils/common';
 import { PasswordModule } from 'primeng/password';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit {
 
   generateCatcha() : void {
     this.userInput = '';
-    this.captchaCode = generateCaptchaCode();
+    this.captchaCode = generateRandomString();
   }
 
   async verifyCode(): Promise<any> {

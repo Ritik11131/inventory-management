@@ -63,11 +63,11 @@ export class MainComponent implements OnInit {
       items: [
         {
           label: this.authService.getUserType(),
-          icon: 'pi pi-palette',
+          icon: 'pi pi-users',
           items: [
             {
               label: `${this.authService.getUserType()} List`,
-              icon: 'pi pi-palette',
+              icon: 'pi pi-list',
               command: () => {
                 this.router.navigate([`/main/management/dynamic-user-list`]);
                 this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management/dynamic-user-list');
@@ -80,11 +80,11 @@ export class MainComponent implements OnInit {
         },
         {
           label: 'Device',
-          icon: 'pi pi-palette',
+          icon: 'pi pi-truck',
           items: [
             {
               label: 'Device List',
-              icon: 'pi pi-palette',
+              icon: 'pi pi-list',
               command: () => {
                 this.router.navigate(['/main/management/device-list']);
                 this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management/device-list');
@@ -92,7 +92,7 @@ export class MainComponent implements OnInit {
             },
             {
               label: `Assigned To ${this.authService.getUserType()}`,
-              icon: 'pi pi-palette',
+              icon: 'pi pi-users',
               command: () => {
                 this.router.navigate([`/main/management/assigned/${this.authService.getUserType()}`]);
                 this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${this.authService.getUserType()}`);

@@ -2,11 +2,9 @@ import { HttpRequest, HttpHandlerFn, HttpInterceptorFn, HttpErrorResponse } from
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { TokenService } from '../services/token.service';
-import { Router } from '@angular/router';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
-  const router = inject(Router);
 
   // Don't add the Authorization header for the login or refresh token endpoint
   if (req.url.endsWith('/login') || req.url.endsWith('/Auth/refresh')) {

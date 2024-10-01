@@ -1,5 +1,5 @@
 <p-table #dt [value]="data" [rows]="rows" [paginator]="true" [globalFilterFields]="globalFilterFields"
-     [(selection)]="selection" [rowHover]="true"
+     [(selection)]="selection" [rowHover]="true" [scrollable]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
     (selectionChange)="onSelectionChange($event)"  [rowsPerPageOptions]="[10, 25, 50]">
     <!-- Caption -->
@@ -16,21 +16,40 @@
     <!-- Dynamic Columns -->
     <ng-template pTemplate="header">
         <tr>
-            <th style="width: 4rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
-            <th *ngFor="let col of columns" pSortableColumn="{{ col.field }}"
-                [style.minWidth]="col.minWidth || '15rem'">
-                {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
-            </th>
+            <th pFrozenColumn style="width: 4rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+            @for (col of columns; track $index) {
+                @if (col.field === 'orgName' || col.field === 'name') {
+                    <th pFrozenColumn pSortableColumn="{{ col.field }}"
+                        [style.minWidth]="col.minWidth || '15rem'">
+                        {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                    </th>
+                } @else {
+                    <th pSortableColumn="{{ col.field }}"
+                        [style.minWidth]="col.minWidth || '15rem'">
+                        {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                    </th>
+                }
+            }
             <th>Actions</th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-item>
         <tr>
-            <td><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
-            <td *ngFor="let col of columns">{{ item[col.field] }}</td>
+            <td pFrozenColumn><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
+            @for (col of columns; track $index) {
+                @if (col.field === 'orgName' || col.field === 'name') {
+                    <td pFrozenColumn>{{ item[col.field] || '-' }}</td>
+                } @else {
+                    @if(col.field === 'active'){
+                        <td><p-tag [severity]="item[col.field] ? 'success' : 'danger'" [value]="item[col.field] ? 'Active' : 'InActive'"/></td>
+                    } @else {
+                        <td>{{item[col.field] || '-'}}</td>
+                    }
+                }
+            }
             <td style="min-width: 140px;">
-                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="success"
+                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="primary"
                     (onClick)="onEdit(item)"></p-button>
                 <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
                     (onClick)="onDelete(item)"></p-button> -->
