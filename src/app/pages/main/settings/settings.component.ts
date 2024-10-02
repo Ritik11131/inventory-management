@@ -1,10 +1,11 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { DividerModule } from 'primeng/divider';
 import { Router } from '@angular/router';
 import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/services/auth.service';
 
 
 @Component({
@@ -14,30 +15,16 @@ import { CommonModule } from '@angular/common';
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
 
 
   isSmallScreen: boolean = false;
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.checkScreenSize();
-  }
-
-  ngOnInit(): void {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    this.isSmallScreen = window.innerWidth <= 768; // adjust the width as per your requirement for small screens
-  }
-
-  constructor(private router:Router,private breadcrumbService:BreadcrumbService) {}
-
-  items = [
+  settings = [
     {
         label: 'Profile',
         icon: 'pi pi-user',
+        expanded:true,
         items: [
             {
                 label: 'Update Profile',
@@ -66,5 +53,31 @@ export class SettingsComponent {
       ]
   }
 ];
+  userRole: string = '';
+  userName: string = '';
+
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+
+  constructor(private router:Router,private breadcrumbService:BreadcrumbService,private authService:AuthService) {}
+
+
+  ngOnInit(): void {
+    this.userRole = this.authService.getUserRole();
+    this.userName = this.authService.getUserName();
+    this.checkScreenSize();
+    this.settings[0].items[0].command();
+  }
+
+  checkScreenSize() {
+    this.isSmallScreen = window.innerWidth <= 768;
+  }
+
+
+  
 
 }

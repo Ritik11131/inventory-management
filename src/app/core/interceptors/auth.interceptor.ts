@@ -21,7 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       // Check if the error is a 401 Unauthorized
-      if (error.status === 401) {        
+      if (error.status === 401 && req.url.endsWith('/Profile')) {        
         // Call the refresh token API
         return tokenService.refreshToken().pipe(
           switchMap((response: any) => {

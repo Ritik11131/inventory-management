@@ -2,20 +2,20 @@
     <div pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 text-color border-noround mb-5">
         <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" shape="circle" />
         <span class="inline-flex flex-column">
-            <span class="font-bold">{{ 'Abhishek Gupta' }}</span>
-            <span class="text-sm">{{ 'Admin' }}</span>
+            <span class="font-bold">{{ userName }}</span>
+            <span class="text-sm">{{ userRole }}</span>
         </span>
     </div>
 
     <div class="grid grid-nogutter">
         <!-- Sidebar Column -->
         <div class="col-12 md:col-3 lg:col-2">
-            <p-panelMenu [model]="items" styleClass="w-full">
-                <ng-template pTemplate="item" let-item>
+            <p-panelMenu [model]="settings" styleClass="w-full">
+                <ng-template pTemplate="item" let-setting>
                     <a pRipple class="flex align-items-center px-3 py-2 cursor-pointer">
-                        <i [class]="item.icon + ' text-primary'"></i>
-                        <span class="ml-2">{{ item.label }}</span>
-                        @if(item.items) {
+                        <i [class]="setting.icon + ' text-primary'"></i>
+                        <span class="ml-2">{{ setting.label }}</span>
+                        @if(setting.items) {
                             <i class="pi pi-angle-down text-primary ml-auto"></i>
                         }
                     </a>

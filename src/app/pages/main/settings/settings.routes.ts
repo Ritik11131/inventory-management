@@ -7,6 +7,7 @@ import { ResetPasswordComponent } from './privacy/reset-password/reset-password.
 export const settingsRoutes: Routes = [
    {
     path:'',
+    // component:UpdateProfileComponent,
     // component:SettingsComponent,
     children:[
       {

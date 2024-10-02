@@ -40,8 +40,8 @@ export class HttpService {
    * @param data The data to send in the request body.
    * @returns A promise that resolves to the response.
    */
-  async patch(endpoint: string, id: number, data: any): Promise<any> {
-    return await firstValueFrom(this.http.patch(`${this.apiUrl}/${endpoint}/${id}`, data, this.httpOptions));
+  async put(endpoint: string, id: number, data: any): Promise<any> {
+    return await firstValueFrom(this.http.put(`${this.apiUrl}/${endpoint}/${id}`, data, this.httpOptions));
   }
 
   /**
