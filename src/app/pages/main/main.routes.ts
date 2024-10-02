@@ -19,7 +19,8 @@ export const mainRoutes: Routes = [
       },
       {
         path: 'settings',
-        component : SettingsComponent
+        component : SettingsComponent,
+        loadChildren: () => import('./settings/settings.routes').then(m => m.settingsRoutes)
       }
     ]
   },

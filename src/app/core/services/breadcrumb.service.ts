@@ -34,6 +34,22 @@ export class BreadcrumbService {
             ]
           };
         }
+      },
+      settings: {
+       profile: {
+          'update-profile': [
+            { label: 'Settings' },
+            { label: 'Profile' },
+            { label: 'Update Profile' }
+          ]
+        },
+        privacy: {
+          'reset-password': [
+            { label: 'Settings' },
+            { label: 'Privacy' },
+            { label: 'Reset Password' }
+          ]
+        }
       }
     }
   };
@@ -41,11 +57,11 @@ export class BreadcrumbService {
   constructor(private authService:AuthService) {}
 
 
-  generateBreadcrumbs(url: string): MenuItem[] | undefined {
+  generateBreadcrumbs(url: string) : void {
     this.breadCrumbs = [];
   
     const urlParts = url.substring(1).split('/');
-  
+    
     // Handle root route (/main)
     if (urlParts.length === 2) {
       this.breadCrumbs.push({ label: this.capitalize(urlParts[1]) });
@@ -67,7 +83,10 @@ export class BreadcrumbService {
         }
       })
     }
-  
+  }
+
+  updateBreadcrumbs(url: string) :MenuItem[] | undefined {
+    this.generateBreadcrumbs(url);
     return this.breadCrumbs;
   }
 
@@ -76,5 +95,5 @@ export class BreadcrumbService {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  
+
 }

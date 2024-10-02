@@ -7,14 +7,17 @@
                 <div class="flex align-items-center mb-2">
                     <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
                     @if(field.validation) {
-                        <i *ngIf="!validationState[field.name]" class="pi pi-exclamation-circle text-red-500"></i>
-                        <i *ngIf="validationState[field.name]" class="pi pi-check-circle text-green-500"></i>
+                        @if(!validationState[field.name]) {
+                            <i class="pi pi-exclamation-circle text-red-500"></i>
+                        } @else if (validationState[field.name]) {
+                            <i class="pi pi-check-circle text-green-500"></i>
+                        }
                     }
                 </div>
                 @switch (field.type) {
                     @case ('text') {
                         <ng-container>
-                                <input (keyup)="onInputChange($event, field.name)" type="text" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [required]="true" />
+                             <input (keyup)="onInputChange($event, field.name)" type="text" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [required]="true" />
                         </ng-container>
                     }
                     @case ('textarea') {

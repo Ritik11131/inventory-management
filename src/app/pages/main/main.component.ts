@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, RouterLink, RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastService } from '../../core/services/toast.service';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { BreadcrumbService } from '../../core/services/breadcrumb.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -23,17 +24,17 @@ import { BreadcrumbService } from '../../core/services/breadcrumb.service';
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, private authService: AuthService, private toastService: ToastService,
-              private breadcrumbService:BreadcrumbService) { }
+    public breadcrumbService: BreadcrumbService, private route: ActivatedRoute) { }
 
   userRole: string = '';
   userName: string = '';
 
   home: MenuItem | undefined = {
     icon: 'pi pi-home', command: () => {
-      this.router.navigate(['/']); 
+      this.router.navigate(['/']);
       this.breadCrumbs = [{
         label: 'Dashboard',
       }];
@@ -41,6 +42,7 @@ export class MainComponent implements OnInit {
   };
 
   breadCrumbs: MenuItem[] | undefined = [];
+  private breadCrumbRouterSub!: Subscription;
 
   items: MenuItem[] | undefined = [
     {
@@ -49,7 +51,7 @@ export class MainComponent implements OnInit {
       icon: 'pi pi-objects-column',
       command: () => {
         this.router.navigate(['/main/dashboard']);
-        this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/dashboard');
+        this.breadcrumbService.generateBreadcrumbs('/main/dashboard');
       }
     },
     {
@@ -70,7 +72,7 @@ export class MainComponent implements OnInit {
               icon: 'pi pi-list',
               command: () => {
                 this.router.navigate([`/main/management/dynamic-user-list`]);
-                this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management/dynamic-user-list');
+                this.breadcrumbService.generateBreadcrumbs('/main/management/dynamic-user-list');
               }
             },
           ]
@@ -87,7 +89,7 @@ export class MainComponent implements OnInit {
               icon: 'pi pi-list',
               command: () => {
                 this.router.navigate(['/main/management/device-list']);
-                this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management/device-list');
+                this.breadcrumbService.generateBreadcrumbs('/main/management/device-list');
               }
             },
             {
@@ -95,7 +97,7 @@ export class MainComponent implements OnInit {
               icon: 'pi pi-users',
               command: () => {
                 this.router.navigate([`/main/management/assigned/${this.authService.getUserType()}`]);
-                this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${this.authService.getUserType()}`);
+                this.breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${this.authService.getUserType()}`);
               }
 
             }
@@ -107,13 +109,13 @@ export class MainComponent implements OnInit {
 
 
   profileItems: MenuItem[] | undefined = [
-    {separator:true},
+    { separator: true },
     {
       label: 'Settings',
       icon: 'pi pi-cog',
       command: () => {
         this.router.navigate(['/main/settings']);
-        this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/settings');
+        this.breadcrumbService.generateBreadcrumbs('/main/settings');
       }
     },
     {
@@ -142,8 +144,19 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.userRole = this.authService.getUserRole();
     this.userName = this.authService.getUserName();
-    if(this.router.url) {
-      this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs(this.router.url);
+    this.breadCrumbs = this.breadcrumbService.updateBreadcrumbs(this.router.url);
+
+    this.breadCrumbRouterSub = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.breadCrumbs = this.breadcrumbService.updateBreadcrumbs(this.router.url);
+      }
+    });
+  }
+
+
+  ngOnDestroy(): void {
+    if (this.breadCrumbRouterSub) {
+      this.breadCrumbRouterSub.unsubscribe();
     }
   }
 }
