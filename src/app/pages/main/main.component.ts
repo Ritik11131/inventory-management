@@ -15,12 +15,13 @@ import { ToastService } from '../../core/services/toast.service';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { BreadcrumbService } from '../../core/services/breadcrumb.service';
 import { Subscription } from 'rxjs';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-main',
   standalone: true,
   imports: [CommonModule, RouterOutlet, MenubarModule, BadgeModule, AvatarModule, InputTextModule, RippleModule,
-    RouterLink, MenuModule, ButtonModule, BreadcrumbModule],
+    RouterLink, MenuModule, ButtonModule, BreadcrumbModule,DropdownModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })

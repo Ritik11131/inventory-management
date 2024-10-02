@@ -1,15 +1,12 @@
 <div class="card">
     <p-menubar [model]="items">
         <ng-template pTemplate="start">
-        <span class="inline-flex align-items-center gap-1 px-2 py-2">
-            <img style="mix-blend-mode: multiply;" src="assets/images/logo.png" alt="logo" height="50" width="50" />
-            <!-- <span class="font-medium text-xl font-semibold">VAHAN<span class="text-primary">SATHI</span></span> -->
-        </span>
+            <p-avatar image="assets/images/logo.png" styleClass="mr-2" size="large" />
         </ng-template>
         <ng-template pTemplate="item" let-item let-root="root">
             <a pRipple class="flex align-items-center p-menuitem-link">
-                <span [class]="item.icon"></span>
-                <span class="ml-2">{{ item.label }}</span>
+                <span class="text-primary" [class]="item.icon"></span>
+                <span class="ml-2 text-color-secondary">{{ item.label }}</span>
                 @if(item.items) {
                     <i [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
                 }
@@ -54,7 +51,7 @@
                 </p-menu>
                 <i pBadge style="font-size: 1.3rem" class="mr-3 pi pi-bell p-shake text-orange-500" severity="danger"></i>
                 <!-- <p-button pBadge value="2" icon="pi pi-bell" [rounded]="true" [text]="true" severity="warning" /> -->
-                <p-button class="mr-3" [text]="true" (onClick)="menu.toggle($event)" icon="pi pi-user" [rounded]="true" severity="info" />
+                <p-button class="mr-3" [text]="true" (onClick)="menu.toggle($event)" icon="pi pi-user" [rounded]="true" severity="primary" />
             </div>
         </ng-template>
     </p-menubar>
