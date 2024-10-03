@@ -47,12 +47,12 @@
                 <div class="col-6">
                     <div
                         class="flex justify-content-between align-items-center p-3 bg-yellow-100 border-round text-yellow-800">
-                        <span>{{ captchaCode }}</span>
-                        <i (click)="generateCatcha()" class="pi pi-refresh cursor-pointer"></i>
+                        <span class="captcha-text">{{ captchaCode }}</span>
+                        <i (click)="generateCatcha()" class="pi pi-refresh cursor-pointer ml-2"></i>
                     </div>
                 </div>
                 <div class="col-6">
-                    <input id="reCAPTCHA" type="text" placeholder="reCAPTCHA" [(ngModel)]="userInput" pInputText
+                    <input id="reCAPTCHA" type="text" placeholder="Enter here" [(ngModel)]="userInput" pInputText
                         class="w-full mb-3" [ngClass]="{'ng-invalid ng-dirty p-shake': captchaError}">
                 </div>
             </div>
