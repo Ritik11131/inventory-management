@@ -31,6 +31,7 @@ export class RtoComponent implements OnInit {
       placeholder:'Select State',
     }
   ]
+  toolbarDropDownSelected!:any
 
 
 
@@ -78,7 +79,8 @@ export class RtoComponent implements OnInit {
   }
 
 
-  async onToolBarDropDownChange(selected:any) : Promise<any> {    
+  async onToolBarDropDownChange(selected:any) : Promise<any> {
+    this.toolbarDropDownSelected = selected;    
     await this.fetchRTOs(selected)
   }
 
@@ -128,7 +130,7 @@ export class RtoComponent implements OnInit {
     } else {
       await this.createRTO(data);
     }
-    // await this.fetchDynamicUserList();
+    await this.fetchRTOs(this.toolbarDropDownSelected);
     this.rtoDialog = false;
     this.rto = this.resetRTO();
     this.isEditing = false;
