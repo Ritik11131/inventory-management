@@ -42,11 +42,11 @@ export class SettingsComponent implements OnInit {
       icon: 'pi pi-shield',
       items: [
           {
-              label: 'Reset Password',
+              label: 'Change Password',
               icon: 'pi pi-wrench',
               command: () => {
-                this.router.navigate(['/main/settings/privacy/reset-password']);
-                this.breadcrumbService.generateBreadcrumbs('/main/settings/privacy/reset-password');
+                this.router.navigate(['/main/settings/privacy/change-password']);
+                this.breadcrumbService.generateBreadcrumbs('/main/settings/privacy/change-password');
             }
               
           }

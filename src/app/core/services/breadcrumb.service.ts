@@ -44,10 +44,10 @@ export class BreadcrumbService {
           ]
         },
         privacy: {
-          'reset-password': [
+          'change-password': [
             { label: 'Settings' },
             { label: 'Privacy' },
-            { label: 'Reset Password' }
+            { label: 'Change Password' }
           ]
         }
       }

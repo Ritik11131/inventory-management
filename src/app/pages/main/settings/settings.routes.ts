@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { SettingsComponent } from './settings.component';
 import { UpdateProfileComponent } from './profile/update-profile/update-profile.component';
-import { ResetPasswordComponent } from './privacy/reset-password/reset-password.component';
+import { ChangePasswordComponent } from './privacy/change-password/change-password.component';
 
 
 export const settingsRoutes: Routes = [
@@ -15,8 +15,8 @@ export const settingsRoutes: Routes = [
          component:UpdateProfileComponent
       },
       {
-         path:'privacy/reset-password',
-         component:ResetPasswordComponent
+         path:'privacy/change-password',
+         component:ChangePasswordComponent
       }
     ]
    },

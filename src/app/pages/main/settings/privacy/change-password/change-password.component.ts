@@ -12,23 +12,15 @@ import { FormsModule } from '@angular/forms';
 
 
 @Component({
-  selector: 'app-reset-password',
+  selector: 'app-change-password',
   standalone: true,
   imports: [PanelModule,CardModule,ButtonModule,DividerModule,InputTextModule,CommonModule,FormsModule],
-  templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.scss'
+  templateUrl: './change-password.component.html',
+  styleUrl: './change-password.component.scss'
 })
-export class ResetPasswordComponent {
+export class ChangePasswordComponent {
 
   isLoading: boolean = false;
-  // confirmNewPassword: string = '';
-
-  // resetPasswordObj = {
-  //   oldPassword : '',
-  //   newPassword : ''
-  // }
-
-
   confirmNewPassword: WritableSignal<string> = signal('');
   resetPasswordObj = {
     oldPassword: signal(''),
@@ -36,8 +28,12 @@ export class ResetPasswordComponent {
   };
 
   isValid: Signal<boolean> = computed(() => 
-    [this.resetPasswordObj.oldPassword(), this.resetPasswordObj.newPassword(), this.confirmNewPassword()].every(val => val !== '') 
-    && this.resetPasswordObj.newPassword() === this.confirmNewPassword()
+    [
+      this.resetPasswordObj.oldPassword(), 
+      this.resetPasswordObj.newPassword(), 
+      this.confirmNewPassword()
+    ].every(val => val !== '') && 
+      this.resetPasswordObj.newPassword() === this.confirmNewPassword()
   );
 
 
@@ -52,10 +48,8 @@ export class ResetPasswordComponent {
     this.isLoading = true;
     try {
       const response = await this.profileService.resetPassword(payload);
-      console.log(response);
       this.toastService.showSuccess('Success', response.data);
     } catch (error : any) {
-      console.error(error);
       this.toastService.showError('Error', error.error.data);
     } finally{
       this.isLoading = false;
