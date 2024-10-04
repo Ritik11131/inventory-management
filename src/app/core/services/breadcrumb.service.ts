@@ -15,6 +15,16 @@ export class BreadcrumbService {
         { label: 'Dashboard' }
       ],
       management: {
+        'states-list':[
+          { label: 'Management' },
+          { label: 'Sates' },
+          { label: 'State List' }
+        ],
+        'rto-list':[
+          { label: 'Management' },
+          { label: 'RTO' },
+          { label: 'RTO List' }
+        ],
         'dynamic-user-list': [
           { label: 'Management' },
           { label: (authService : any) => authService.getUserType() },

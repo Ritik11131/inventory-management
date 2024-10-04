@@ -7,3 +7,16 @@ export const dynamicUserColumns = [
     { field: 'address', header: 'Address', minWidth: '15rem' },
     { field: 'active', header: 'Status', minWidth: '7rem' },
 ];
+
+
+export const stateColumns = [
+    { field: 'statename', header: 'State Name', minWidth: '10rem' },
+    { field: 'statecode', header: 'State Code', minWidth: '10rem' },
+];
+
+
+export const rtoColumns = [
+    { field: 'state', header: 'State Name', minWidth: '10rem' },
+    { field: 'rtocode', header: 'RTO Code', minWidth: '5rem' },
+    { field: 'rtoname', header: 'RTO Name', minWidth: '5rem' }
+];

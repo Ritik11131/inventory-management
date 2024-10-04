@@ -51,9 +51,9 @@ export class HttpService {
  * @param query The query parameters to send in the request.
  * @returns A promise that resolves to the response.
  */
-async get(endpoint: string, query?: any): Promise<any> {
+async get(endpoint: string, query?: any, id?:any): Promise<any> {
   const params = query ? { params: query } : {};
-  return await firstValueFrom(this.http.get(`${this.apiUrl}/${endpoint}`, { ...this.httpOptions, ...params }));
+  return await firstValueFrom(this.http.get( `${this.apiUrl}/${endpoint}${id ? '/' + id : ''}`, { ...this.httpOptions, ...params }));
 }
   
 }

@@ -35,11 +35,13 @@ export class GenericTableComponent {
   @Input() selection: any[] = []; // Selected rows
   @Input() header:string = ''
   @Input() isDataLoading: boolean = false;
+  @Input() toolbarRightActions: any[] = [];
 
   selectionChange = output<any>();
   edit = output<any>();
   delete = output<any>();
   new = output<any>();
+  dropdown = output<any>();
 
   onSelectionChange(event: any[]) {
     this.selectionChange.emit(event);
@@ -58,9 +60,7 @@ export class GenericTableComponent {
   }
 
   onSearch(event: Event) {
-    const input = event.target as HTMLInputElement;
-    console.log(input);
-    
+    const input = event.target as HTMLInputElement;    
     if (input) {
       this.dt.filterGlobal(input.value, 'contains');
     }
@@ -68,5 +68,11 @@ export class GenericTableComponent {
 
   onPrint() {
     this.dt.exportCSV();
+  }
+
+
+  onDropdownChange(event:any) {
+    console.log(event);
+    this.dropdown.emit(event.value)
   }
 }

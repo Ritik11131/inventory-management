@@ -1,4 +1,4 @@
- <p-dialog [closable]="false" [(visible)]="visible" [style]="{ width: width }" header="{{ header + ' Details' }}" [modal]="modal" styleClass="{{ styleClass }}" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" >
+ <p-dialog [closable]="false" [(visible)]="visible" [style]="{ width: width }" header="{{ (isEditing ? 'Update ' : ' ') + header + ' Details' }}" [modal]="modal" styleClass="{{ styleClass }}" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" >
     <ng-template pTemplate="content">
         <div class="formgrid grid">
             @for (field of fields; track $index) {

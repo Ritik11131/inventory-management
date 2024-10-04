@@ -1,23 +1,7 @@
 import { DynamicUser, DynamicUserField } from './../../../../shared/interfaces/dynamic-user.model';
 import { DynamicUserService } from './../../../../core/services/dynamic-user.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
-import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
-import { RippleModule } from 'primeng/ripple';
-import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
-import { ToolbarModule } from 'primeng/toolbar';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { CommonModule } from '@angular/common';
-import { FileUploadModule } from 'primeng/fileupload';
-import { DropdownModule } from 'primeng/dropdown';
-import { TagModule } from 'primeng/tag';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { RatingModule } from 'primeng/rating';
-import { FormsModule } from '@angular/forms';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { ToastService } from '../../../../core/services/toast.service';
 import { GenericDialogComponent } from '../../../../shared/components/generic-dialog/generic-dialog.component';
 import { GenericTableComponent } from '../../../../shared/components/generic-table/generic-table.component';
@@ -31,9 +15,7 @@ import { debounceTime, Subject } from 'rxjs';
 @Component({
   selector: 'app-dynamic-user',
   standalone: true,
-  imports: [TableModule, DialogModule, RippleModule, ButtonModule, ToastModule, ToolbarModule, InputTextModule,
-    InputTextareaModule, CommonModule, FileUploadModule, DropdownModule, TagModule, RadioButtonModule,
-    RatingModule, InputTextModule, FormsModule, InputNumberModule, GenericDialogComponent, GenericTableComponent, ConfirmDialogModule],
+  imports: [GenericDialogComponent, GenericTableComponent, ConfirmDialogModule],
   templateUrl: './dynamic-user.component.html',
   styleUrl: './dynamic-user.component.scss',
   providers: [ConfirmationService]
@@ -159,10 +141,6 @@ export class DynamicUserComponent {
   }
 
   deleteSelectedProducts() { }
-
-  hideDialog(event : any) {
-    this.userDialog = event;
-  }
 
 
   onHideDialog(isVisible: boolean) {

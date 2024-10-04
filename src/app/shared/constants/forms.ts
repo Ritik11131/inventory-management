@@ -73,3 +73,19 @@ export const dynamicUserCreateFormFields : DynamicUserField[] = [
         hide: (hideFields: string[]) => hideFields.includes('address'),
     },
 ];
+
+
+export const stateCreateFormFields = [
+    {
+        name: 'statename',
+        label: 'State Name',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('statename'),
+    },
+    {
+        name: 'statecode',
+        label: 'State Code',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('statecode'),
+    }
+];

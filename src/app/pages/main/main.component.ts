@@ -79,9 +79,6 @@ export class MainComponent implements OnInit, OnDestroy {
           ]
         },
         {
-          separator: true
-        },
-        {
           label: 'Device',
           icon: 'pi pi-truck',
           items: [
@@ -103,7 +100,35 @@ export class MainComponent implements OnInit, OnDestroy {
 
             }
           ]
-        }
+        },
+        {
+          label: 'States',
+          icon: 'pi pi-users',
+          items: [
+            {
+              label: 'States List',
+              icon: 'pi pi-list',
+              command: () => {
+                this.router.navigate([`/main/management/states-list`]);
+                this.breadcrumbService.generateBreadcrumbs('/main/management/states-list');
+              }
+            },
+          ]
+        },
+        {
+          label: 'RTO',
+          icon: 'pi pi-users',
+          items: [
+            {
+              label: 'RTO List',
+              icon: 'pi pi-list',
+              command: () => {
+                this.router.navigate([`/main/management/rto-list`]);
+                this.breadcrumbService.generateBreadcrumbs('/main/management/rto-list');
+              }
+            },
+          ]
+        },
       ]
     }
   ];
