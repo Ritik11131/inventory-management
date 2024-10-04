@@ -11,12 +11,15 @@ import { TagModule } from 'primeng/tag';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
+import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
-  imports: [TableModule, RippleModule, ButtonModule, InputTextModule, InputTextareaModule, CommonModule, FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, InputNumberModule],
+  imports: [TableModule, RippleModule, ButtonModule, InputTextModule, InputTextareaModule, CommonModule, 
+    FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, 
+    InputNumberModule,ToolbarModule],
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.scss'
 })
@@ -32,6 +35,7 @@ export class GenericTableComponent {
   selectionChange = output<any>();
   edit = output<any>();
   delete = output<any>();
+  new = output<any>();
 
   onSelectionChange(event: any[]) {
     this.selectionChange.emit(event);
@@ -43,5 +47,9 @@ export class GenericTableComponent {
 
   onDelete(item: any) {
     this.delete.emit(item);
+  }
+
+  onNewUser() {
+    this.new.emit(true);
   }
 }

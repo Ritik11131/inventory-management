@@ -1,4 +1,4 @@
-import { DynamicUser } from './../../../../shared/interfaces/dynamic-user.model';
+import { DynamicUser, DynamicUserField } from './../../../../shared/interfaces/dynamic-user.model';
 import { DynamicUserService } from './../../../../core/services/dynamic-user.service';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
@@ -94,7 +94,9 @@ export class DynamicUserComponent {
       loginId: this.dynamicUserService.isLoginIdValid.bind(this.dynamicUserService),
       mobileNo: this.dynamicUserService.isMobileNoValid.bind(this.dynamicUserService)
     };
-  
+    
+    const field : DynamicUserField[] | any = dynamicUserCreateFormFields.find((field) => field.name === fieldName);
+
     if (fieldValidationMapping[fieldName]) {
       try {
         const response = await fieldValidationMapping[fieldName](value);
@@ -103,11 +105,14 @@ export class DynamicUserComponent {
         this.validationState[fieldName] = false;
         console.error(`Error validating ${fieldName}:`, error);
       }
-  
-      // Update validation status for the button
-      this.isValidated = Object.values(this.validationState).every(val => val === true);
-      console.log(this.validationState, 'validation state');
+    } else if (field && field.validation) {
+      this.validationState[fieldName] = field.validation(this.user);
+    } else {
+      this.validationState[fieldName] = true;
     }
+
+    this.isValidated = Object.values(this.validationState).every(val => val === true);
+    console.log(this.validationState, 'validation state');
   }
   
 
@@ -129,17 +134,18 @@ export class DynamicUserComponent {
 }
 
 
-  openNew() {
-    this.isEditing = false;
+  openNew(event : any) {
+    console.log(event);
+    this.isEditing = !event;
     this.hideFields = ['active'];
     this.user = this.resetUser();
-    this.userDialog = true;
+    this.userDialog = event;
   }
 
   deleteSelectedProducts() { }
 
-  hideDialog() {
-    this.userDialog = false;
+  hideDialog(event : any) {
+    this.userDialog = event;
   }
 
 

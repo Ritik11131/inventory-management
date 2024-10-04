@@ -9,10 +9,10 @@
     <ng-template pTemplate="content">
       <div class="grid formgrid">
         <!-- First Row: Profile Id, Login Id, and Password -->
-        <div class="col-12 sm:col-4 py-2">
+        <!-- <div class="col-12 sm:col-4 py-2">
           <label for="profileId" class="w-full sm:w-auto">Profile Id</label>
           <input [disabled]="true" pInputText id="profileId" placeholder="Enter Profile Id" class="w-full mt-2" [(ngModel)]="profileObject.sno" autocomplete="off" />
-        </div>
+        </div> -->
         <div class="col-12 sm:col-4 py-2">
           <label for="loginId" class="w-full sm:w-auto">Login Id</label>
           <input pInputText id="loginId" placeholder="Enter Login Id" class="w-full mt-2" [(ngModel)]="profileObject.loginId" autocomplete="off" />
@@ -21,14 +21,14 @@
           <label for="contactPersonName" class="w-full sm:w-auto">Contact Name</label>
           <input pInputText id="contactPersonName" placeholder="Enter Contact Name" class="w-full mt-2" [(ngModel)]="profileObject.contactPersonName" autocomplete="off" />
         </div>
-      </div>
-  
-      <!-- Second Row: More fields -->
-      <div class="grid formgrid mt-3">
         <div class="col-12 sm:col-4 py-2">
           <label for="mobileNo" class="w-full sm:w-auto">Mobile No</label>
           <input pInputText id="mobileNo" placeholder="Confirm Mobile No" class="w-full mt-2" [(ngModel)]="profileObject.mobileNo" autocomplete="off" />
         </div>
+      </div>
+  
+      <!-- Second Row: More fields -->
+      <div class="grid formgrid mt-3">
         <div class="col-12 sm:col-4 py-2">
           <label for="email" class="w-full sm:w-auto">Email</label>
           <input pInputText id="email" placeholder="Enter Email" class="w-full mt-2" [(ngModel)]="profileObject.email" autocomplete="off" />

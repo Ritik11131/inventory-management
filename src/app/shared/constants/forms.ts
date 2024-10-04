@@ -1,4 +1,6 @@
-export const dynamicUserCreateFormFields = [
+import { DynamicUserField } from "../interfaces/dynamic-user.model";
+
+export const dynamicUserCreateFormFields : DynamicUserField[] = [
     {
         name: 'loginId',
         label: 'Login Id',
@@ -17,6 +19,7 @@ export const dynamicUserCreateFormFields = [
         label: 'Confirm Password',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('confirm_password'),
+        validation: (data: any) => { return data.password === data.confirm_password },
     },
     {
         name: 'orgName',

@@ -64,8 +64,7 @@ export class GenericDialogComponent implements OnChanges {
   }
 
   hideDialog() {
-    const isVisible = false
-    this.onHide.emit(isVisible);
+    this.onHide.emit(false);
   }
 
   save() {

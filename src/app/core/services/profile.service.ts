@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal } from '@angular/core';
 import { HttpService } from './http.service';
 import { Profile } from '../../shared/interfaces/profile';
 
@@ -10,7 +10,7 @@ export class ProfileService {
   constructor(private http: HttpService) { }
 
 
-  async resetPassword(object: { oldPassword: string, newPassword: string }): Promise<any> {
+  async resetPassword(object: { oldPassword: string, newPassword: string}): Promise<any> {
     try {
       const response = await this.http.post('Profile/ResetPassword', { ...object })
       return response;
