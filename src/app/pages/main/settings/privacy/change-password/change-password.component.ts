@@ -8,13 +8,15 @@ import { ProfileService } from '../../../../../core/services/profile.service';
 import { ToastService } from '../../../../../core/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [PanelModule,CardModule,ButtonModule,DividerModule,InputTextModule,CommonModule,FormsModule],
+  imports: [PanelModule,CardModule,ButtonModule,DividerModule,InputTextModule,CommonModule,FormsModule,IconFieldModule,InputIconModule],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss'
 })
@@ -33,8 +35,14 @@ export class ChangePasswordComponent {
       this.resetPasswordObj.newPassword(), 
       this.confirmNewPassword()
     ].every(val => val !== '') && 
-      this.resetPasswordObj.newPassword() === this.confirmNewPassword()
+      this.resetPasswordObj.newPassword() === this.confirmNewPassword() && 
+      this.resetPasswordObj.oldPassword() !== this.resetPasswordObj.newPassword() && 
+      this.resetPasswordObj.oldPassword() !== this.confirmNewPassword()
   );
+  isOldPasswordToggled: boolean = false;
+  isNewPasswordToggled: boolean = false;
+  isConfirmPasswordToggled: boolean = false;
+
 
 
   constructor(private profileService:ProfileService,private toastService:ToastService) {}
@@ -54,5 +62,21 @@ export class ChangePasswordComponent {
     } finally{
       this.isLoading = false;
     }
+  }
+
+  toggleOldPassword() {
+    this.isOldPasswordToggled = !this.isOldPasswordToggled;
+  }
+
+  toggleNewPassword() {
+    this.isNewPasswordToggled = !this.isNewPasswordToggled;
+  }
+
+  toggleConfirmPassword() {
+    this.isConfirmPasswordToggled = !this.isConfirmPasswordToggled;
+  }
+
+  disableEvent(event: ClipboardEvent) {
+    event.preventDefault();
   }
 }
