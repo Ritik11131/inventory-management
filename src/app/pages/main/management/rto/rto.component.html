@@ -5,4 +5,4 @@
 
 <app-generic-dialog [visible]="rtoDialog" [header]="'RTO'" [width]="'800px'" [modal]="true" [isEditing]="isEditing"
     [styleClass]="'p-fluid'" [fields]="fields" [data]="rto" (onHide)="onHideDialog($event)"
-    (onSave)="onSaveRTO($event)" (onInputTextChange)="onInputTextChange($event)" />
+    (onSave)="onSaveRTO($event)" (onInputTextChange)="onInputTextChange($event)" (onDialogDropdownChange)="onDialogDropDownChange($event)" />

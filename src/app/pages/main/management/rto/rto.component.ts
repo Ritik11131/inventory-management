@@ -5,6 +5,7 @@ import { GenericTableComponent } from '../../../../shared/components/generic-tab
 import { rtoColumns } from '../../../../shared/constants/columns';
 import { RtoService } from '../../../../core/services/rto.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { rtoCreateFormFields } from '../../../../shared/constants/forms';
 
 @Component({
   selector: 'app-rto',
@@ -37,41 +38,47 @@ export class RtoComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.fetchStates().then();
+    this.generateStatesOptions().then();
+
   }
 
 
-  async fetchStates() : Promise<any> {
+  async generateStatesOptions() : Promise<any> {
     try {
       const response = await this.stateService.getList();
-      this.toolbarRightActions[0].options = response.data.map((state: any) => {
-        // Extract the keys dynamically
-        const keys = Object.keys(state);
-        
-        // Find the keys for 'id', 'statename', and 'statecode' dynamically
-        const idKey:any = keys.find(key => key.toLowerCase().includes('id'));
-        const nameKey:any = keys.find(key => key.toLowerCase().includes('statename'));
-        const valueKey:any = keys.find(key => key.toLowerCase().includes('statecode'));
-        this.toolbarRightActions[0].dropdownKeys = { idKey, nameKey, valueKey };
-        return {
-          id: state[idKey],
-          statename: state[nameKey],
-          statecode: state[valueKey]
-        };
-      });
-
+      this.generaTetoolBarStateOptions(response)
       console.log(this.toolbarRightActions);
-      
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch State List!`);
     }
   }
 
-
-  async onToolBarDropDownChange(selected:any) : Promise<any> {
-    console.log(selected);
+  generaTetoolBarStateOptions(response : any) {
+    this.toolbarRightActions[0].options = response.data.map((state: any) => {
+      // Extract the keys dynamically
+      const keys = Object.keys(state);
+      
+      // Find the keys for 'id', 'statename', and 'statecode' dynamically
+      const idKey:any = keys.find(key => key.toLowerCase().includes('id'));
+      const nameKey:any = keys.find(key => key.toLowerCase().includes('statename'));
+      const valueKey:any = keys.find(key => key.toLowerCase().includes('statecode'));
+      this.toolbarRightActions[0].dropdownKeys = { idKey, nameKey, valueKey };
+      rtoCreateFormFields[0].dropdownKeys = { idKey, nameKey, valueKey };
+      return {
+        id: state[idKey],
+        statename: state[nameKey],
+        statecode: state[valueKey]
+      };
+    });
+    rtoCreateFormFields[0].options = this.toolbarRightActions[0].options;
+    this.fields = rtoCreateFormFields
+    console.log(this.fields);
     
+  }
+
+
+  async onToolBarDropDownChange(selected:any) : Promise<any> {    
     await this.fetchRTOs(selected)
   }
 
@@ -90,26 +97,81 @@ export class RtoComponent implements OnInit {
   }
 
 
-  onHideDialog($event: any) {
-    throw new Error('Method not implemented.');
+  onDialogDropDownChange(event: any) {
+    console.log(event);
+    console.log(this.rto);
   }
+
+
+  onHideDialog(isVisible: boolean) {
+    this.rtoDialog = isVisible;
+    this.isEditing = false;
+  }
+
+  resetRTO() {
+    return {
+      stateid: null,
+      rtoname: "",
+      rtocode: "",
+    };
+}
+
+
   onInputTextChange($event: any) {
-    throw new Error('Method not implemented.');
   }
-  onSaveRTO($event: any) {
-    throw new Error('Method not implemented.');
+
+
+
+  async onSaveRTO(data: any) : Promise<any> {
+    if (this.rto.id) {
+      await this.updateRTO(data);
+    } else {
+      await this.createRTO(data);
+    }
+    // await this.fetchDynamicUserList();
+    this.rtoDialog = false;
+    this.rto = this.resetRTO();
+    this.isEditing = false;
   }
-  openNew($event: any) {
-    throw new Error('Method not implemented.');
+
+  async createRTO(data : any) : Promise<any> {
+    try {
+      const response = await this.rtoService.createRTO(data);
+      console.log(response);
+      this.toastService.showSuccess('Success', 'RTO Created Successfully!');
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to create RTO!`);
+    }
+  }
+
+
+  async updateRTO(data : any) : Promise<any> {
+    try {
+      const response = await this.rtoService.updateRTO(data);
+      console.log(response);
+      this.toastService.showSuccess('Success', 'RTO Updated Successfully!');
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to update RTO!`);
+    }
+  }
+
+
+  openNew(event: any) {
+    this.isEditing = !event;
+    this.rto = this.resetRTO();
+    this.rtoDialog = event;
   }
   onDeleteProduct($event: any) {
     throw new Error('Method not implemented.');
   }
-  onEditState($event: any) {
-    throw new Error('Method not implemented.');
+  onEditState(rto: any) {
+    this.isEditing = true;
+    console.log('Editing user:', rto);
+    this.rto = { ...rto };
+    this.rtoDialog = true;
   }
-  onSelectionChange($event: any) {
-    throw new Error('Method not implemented.');
+  onSelectionChange(event: any) {
+    console.log(event);
   }
 
 }

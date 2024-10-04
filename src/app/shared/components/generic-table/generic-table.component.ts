@@ -72,7 +72,6 @@ export class GenericTableComponent {
 
 
   onDropdownChange(event:any) {
-    console.log(event);
     this.dropdown.emit(event.value)
   }
 }

@@ -9,7 +9,9 @@
                     @if(field.validation) {
                             <i style="font-size: 7px;" class="pi pi-star-fill text-red-200 mr-2"></i>
                         @if(!validationState[field.name] && data[field.name]?.length >= (!field.dependent?.length ? 4 : 1)) {
-                            <i class="pi pi-exclamation-circle text-red-500" [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'" tooltipPosition="right" ></i>
+                            <i class="pi pi-exclamation-circle text-red-500" 
+                            [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'" 
+                            tooltipPosition="right"></i>
                         } @else if (validationState[field.name] && data[field.name]?.length >= (!field.dependent?.length ? 4 : 1)) {
                             <i class="pi pi-check-circle text-green-500" [pTooltip]="'Looks Good'" tooltipPosition="right"></i>
                         }
@@ -30,7 +32,7 @@
                     @case ('dropdown') {
                         <ng-container>
                             @if(field.name === 'active') {
-                            <p-dropdown [(ngModel)]="data[field.name]" inputId="{{ field.name }}" [options]="field.options"
+                            <p-dropdown appendTo="body" [(ngModel)]="data[field.name]" inputId="{{ field.name }}" [options]="field.options"
                                 (onChange)="onStatusChange($event, field.name)">
                                 <ng-template pTemplate="selectedItem" let-selectedItem>
                                     <p-tag [value]="selectedItem.label" [severity]="selectedItem.severity"></p-tag>
@@ -40,7 +42,10 @@
                                 </ng-template>
                             </p-dropdown>
                             } @else {
-                            <p-dropdown [(ngModel)]="data[field.name]" inputId="{{ field.name }}" [options]="field.options">
+                            <p-dropdown appendTo="body" [showClear]="true" [filter]="true" [filterBy]="field.dropdownKeys.nameKey" 
+                                        inputId="{{ field.name }}" [(ngModel)]="data[field.name]" 
+                                        (onChange)="onDropdownChange($event, field)" [optionValue]="field.dropdownKeys.idKey"  
+                                        [optionLabel]="field.dropdownKeys.nameKey" [options]="field.options">
                             </p-dropdown>
                             }
                         </ng-container>

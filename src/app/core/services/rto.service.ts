@@ -17,4 +17,24 @@ export class RtoService {
       throw error;
     }
   }
+
+
+  async createRTO(rto : any) : Promise<any> {
+    try {
+      const response = await this.http.post('rto', {...rto});
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async updateRTO(rto : any) : Promise<any> {
+    try {
+      const response = await this.http.put('rto', rto.id, {...rto});
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

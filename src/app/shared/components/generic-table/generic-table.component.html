@@ -10,20 +10,20 @@
                 <input [disabled]="!data.length" pInputText placeholder="Search" (input)="onSearch($event)" />
             </span>
         </div>
+        @if(toolbarRightActions.length) {
         <div class="p-toolbar-group-end">
-            @if(toolbarRightActions.length) {
-                @for (action of toolbarRightActions; track $index) {
-                    @if(action.type === 'button') {
-                        <p-button label="Save" icon="pi pi-check" />
-                    }
-
-                    @if(action.type === 'dropdown') {
-                        <p-dropdown [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)" 
-                            [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
-                    }
-                }
+            @for (action of toolbarRightActions; track $index) {
+            @if(action.type === 'button') {
+            <p-button label="Save" icon="pi pi-check" />
+            }
+        
+            @if(action.type === 'dropdown') {
+            <p-dropdown [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
+                [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
+            }
             }
         </div>
+        }
     </p-toolbar>
 
 

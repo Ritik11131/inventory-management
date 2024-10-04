@@ -47,6 +47,7 @@ export class StateComponent implements OnInit {
 
   resetState() {
     return {
+      id:undefined,
       statename: "",
       statecode: ""
     };
@@ -76,7 +77,7 @@ export class StateComponent implements OnInit {
     try {
       const response = await this.stateService.createState(data);
       console.log(response);
-      this.toastService.showSuccess('Success', 'User Created Successfully!');
+      this.toastService.showSuccess('Success', 'State Created Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to create State!`);
     }

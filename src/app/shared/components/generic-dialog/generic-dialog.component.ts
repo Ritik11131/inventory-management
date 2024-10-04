@@ -47,6 +47,7 @@ export class GenericDialogComponent implements OnChanges {
   onHide = output<any>()
   onSave = output<any>()
   onInputTextChange = output<any>();
+  onDialogDropdownChange = output<any>();
   focusedField!: any;
 
   constructor() { }
@@ -88,6 +89,13 @@ export class GenericDialogComponent implements OnChanges {
     } else {
       this.onInputTextChange.emit({ value, fieldName });
     }
+  }
+
+  onDropdownChange(event: any, field: any) {
+    const value = event.value;
+    const fieldName = field.name;
+    // this.data[fieldName] = value.id;
+    this.onDialogDropdownChange.emit({ value, fieldName });
   }
 
 

@@ -89,3 +89,26 @@ export const stateCreateFormFields = [
         hide: (hideFields: string[]) => hideFields.includes('statecode'),
     }
 ];
+
+export const rtoCreateFormFields = [
+    {
+        name: 'stateid',
+        label: 'State Name',
+        type: 'dropdown',
+        options: [],
+        dropdownKeys:{},
+        hide: (hideFields: string[]) => hideFields.includes('stateid'),
+    },
+    {
+        name: 'rtocode',
+        label: 'RTO Code',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('rtocode'),
+    },
+    {
+        name: 'rtoname',
+        label: 'RTO Name',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('rtoname'),
+    }
+];
