@@ -16,7 +16,7 @@ export const stateColumns = [
 
 
 export const rtoColumns = [
-    { field: 'state', header: 'State Name', minWidth: '10rem' },
+    { field: 'state', header: 'State Name', minWidth: '14rem' },
     { field: 'rtocode', header: 'RTO Code', minWidth: '5rem' },
     { field: 'rtoname', header: 'RTO Name', minWidth: '5rem' }
 ];

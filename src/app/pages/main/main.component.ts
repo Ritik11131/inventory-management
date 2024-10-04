@@ -103,7 +103,7 @@ export class MainComponent implements OnInit, OnDestroy {
         },
         {
           label: 'States',
-          icon: 'pi pi-users',
+          icon: 'pi pi-map-marker',
           items: [
             {
               label: 'States List',
@@ -117,7 +117,7 @@ export class MainComponent implements OnInit, OnDestroy {
         },
         {
           label: 'RTO',
-          icon: 'pi pi-users',
+          icon: 'pi pi-id-card',
           items: [
             {
               label: 'RTO List',

@@ -7,7 +7,7 @@
         <div class="p-toolbar-group-center">
             <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
-                <input pInputText placeholder="Search" (input)="onSearch($event)" />
+                <input [disabled]="!data.length" pInputText placeholder="Search" (input)="onSearch($event)" />
             </span>
         </div>
         <div class="p-toolbar-group-end">
@@ -18,7 +18,7 @@
                     }
 
                     @if(action.type === 'dropdown') {
-                        <p-dropdown [options]="action.options" (onChange)="onDropdownChange($event)" 
+                        <p-dropdown [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)" 
                             [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
                     }
                 }
