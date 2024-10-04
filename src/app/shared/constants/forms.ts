@@ -13,6 +13,8 @@ export const dynamicUserCreateFormFields : DynamicUserField[] = [
         label: 'Password',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('password'),
+        validation: (data: any) => { return data.password === data.confirm_password },
+        dependent: ['confirm_password']
     },
     {
         name: 'confirm_password',
@@ -20,6 +22,7 @@ export const dynamicUserCreateFormFields : DynamicUserField[] = [
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('confirm_password'),
         validation: (data: any) => { return data.password === data.confirm_password },
+        dependent: ['password']
     },
     {
         name: 'orgName',

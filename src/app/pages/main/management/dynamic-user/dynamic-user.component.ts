@@ -106,8 +106,23 @@ export class DynamicUserComponent {
         this.validationState[fieldName] = false;
         console.error(`Error validating ${fieldName}:`, error);
       }
-    } else if (field && field.validation) {
-      this.validationState[fieldName] = field.validation(this.user);
+    } else if (field && field.validation && field.dependent) {
+      const isValid = field.validation(this.user);
+      this.validationState[fieldName] = isValid;
+  
+      // Automatically validate dependent fields
+      if (isValid && field.dependent.length) {
+        field.dependent.forEach((depFieldName : any) => {
+          const dependentField : any = dynamicUserCreateFormFields.find(f => f.name === depFieldName);
+          if (dependentField && dependentField.validation) {
+            this.validationState[depFieldName] = dependentField.validation(this.user);
+          }
+        });
+      } else {
+        field.dependent.forEach((depFieldName : any) => {
+          this.validationState[depFieldName] = false;
+        });
+      }
     } else {
       this.validationState[fieldName] = true;
     }
