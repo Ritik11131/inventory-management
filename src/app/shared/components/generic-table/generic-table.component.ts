@@ -1,5 +1,5 @@
-import { Component, Input, output } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { Component, Input, output, ViewChild } from '@angular/core';
+import { Table, TableModule } from 'primeng/table';
 import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,17 +13,20 @@ import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
   imports: [TableModule, RippleModule, ButtonModule, InputTextModule, InputTextareaModule, CommonModule, 
     FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, 
-    InputNumberModule,ToolbarModule],
+    InputNumberModule,ToolbarModule,ProgressSpinnerModule],
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.scss'
 })
 export class GenericTableComponent {
+
+  @ViewChild('dt') dt: Table | any;
 
   @Input() columns: any[] = []; // Dynamic columns
   @Input() data: any[] = []; // Data for the table
@@ -31,6 +34,7 @@ export class GenericTableComponent {
   @Input() globalFilterFields: string[] = []; // Fields for global filtering
   @Input() selection: any[] = []; // Selected rows
   @Input() header:string = ''
+  @Input() isDataLoading: boolean = false;
 
   selectionChange = output<any>();
   edit = output<any>();
@@ -51,5 +55,18 @@ export class GenericTableComponent {
 
   onNewUser() {
     this.new.emit(true);
+  }
+
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    console.log(input);
+    
+    if (input) {
+      this.dt.filterGlobal(input.value, 'contains');
+    }
+  }
+
+  onPrint() {
+    this.dt.exportCSV();
   }
 }

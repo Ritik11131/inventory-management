@@ -1,23 +1,8 @@
-<!-- <div> -->
-    <!-- <p-toolbar styleClass="mb-4 gap-2">
-        <ng-template pTemplate="left">
-            <p-button severity="success" label="New" icon="pi pi-plus" class="mr-2" (onClick)="openNew()" />
-            <p-button severity="danger" label="Delete" icon="pi pi-trash" (onClick)="deleteSelectedProducts()"
-                [disabled]="!selectedUsers || !selectedUsers.length" />
-        </ng-template>
+<app-generic-table [data]="users" [columns]="columns" [rows]="10" [header]="userType" [isDataLoading]="isLoading"
+    [globalFilterFields]="['orgName','name','email','loginId','mobileNo']" (edit)="onEditProduct($event)"
+    (delete)="onDeleteProduct($event)" (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" />
 
-        <ng-template pTemplate="right">
-            
-            <p-button severity="help" label="Export" icon="pi pi-upload" />
-        </ng-template>
-    </p-toolbar> -->
-
-    <app-generic-table [data]="users" [columns]="columns" [rows]="10" [header]="userType"
-        [globalFilterFields]="['orgName','name','email','loginId']" (edit)="onEditProduct($event)"
-        (delete)="onDeleteProduct($event)" (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" />
-<!-- </div> -->
-
-
-<app-generic-dialog [isValidated]="isValidated" [visible]="userDialog" [header]="userType" [width]="'800px'" [modal]="true" [isEditing]="isEditing"
-   [hideFields]="hideFields" [styleClass]="'p-fluid'" [fields]="fields" [data]="user" [validationState]="validationState" (onHide)="onHideDialog($event)"
-    (onSave)="onSaveProduct($event)" (onInputTextChange)="onInputTextChange($event)" />
+<app-generic-dialog [isValidated]="isValidated" [visible]="userDialog" [header]="userType" [width]="'800px'"
+    [modal]="true" [isEditing]="isEditing" [hideFields]="hideFields" [styleClass]="'p-fluid'" [fields]="fields"
+    [data]="user" [validationState]="validationState" (onHide)="onHideDialog($event)" (onSave)="onSaveProduct($event)"
+    (onInputTextChange)="onInputTextChange($event)" />

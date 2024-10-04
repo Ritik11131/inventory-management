@@ -1,84 +1,85 @@
-
 <div class="px-4 md:px-6 lg:px-8">
     <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
         <div class="p-toolbar-group-start">
-            <p-button [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()"/>
-            <p-button [text]="true" [outlined]="true" icon="pi pi-print"/>
+            <p-button [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
+            <p-button [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" />
         </div>
         <div class="p-toolbar-group-center">
             <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
-                <input pInputText placeholder="Search" />
+                <input pInputText placeholder="Search" (input)="onSearch($event)" />
             </span>
         </div>
-        <div class="p-toolbar-group-end">
+        <!-- <div class="p-toolbar-group-end">
             <p-button label="Save" icon="pi pi-check" />
-        </div>
+        </div> -->
     </p-toolbar>
 
 
 
-<p-table #dt [value]="data" [rows]="rows" [paginator]="true" [globalFilterFields]="globalFilterFields"
-     [(selection)]="selection" [rowHover]="true" [scrollable]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
-    (selectionChange)="onSelectionChange($event)"  [rowsPerPageOptions]="[10, 25, 50]" styleClass="p-datatable-sm p-datatable-gridlines"
-    [scrollable]="true" 
-    scrollHeight="400px" 
-    [virtualScroll]="true"
-    [virtualScrollItemSize]="46">
+    <p-table #dt [value]="data" [rows]="rows" [paginator]="true" [globalFilterFields]="globalFilterFields"
+        [(selection)]="selection" [rowHover]="true" [scrollable]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+        (selectionChange)="onSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
+        styleClass="p-datatable-sm p-datatable-gridlines">
 
-    <!-- Dynamic Columns -->
-    <ng-template pTemplate="header">
-        <tr>
-            <th pFrozenColumn style="width: 4rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
-            @for (col of columns; track $index) {
-                @if (col.field === 'orgName' || col.field === 'name') {
-                    <th pSortableColumn="{{ col.field }}"
-                        [style.minWidth]="col.minWidth || '15rem'">
-                        {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
-                    </th>
-                } @else {
-                    <th pSortableColumn="{{ col.field }}"
-                        [style.minWidth]="col.minWidth || '15rem'">
-                        {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
-                    </th>
+        <!-- Dynamic Columns -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th pFrozenColumn style="width: 4rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+                @for (col of columns; track $index) {
+                <th pSortableColumn="{{ col.field }}" [style.minWidth]="col.minWidth || '15rem'">
+                    {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                </th>
                 }
-            }
-            <th pFrozenColumn alignFrozen="right" [frozen]="true">Actions</th>
-        </tr>
-    </ng-template>
+                <th pFrozenColumn alignFrozen="right" [frozen]="true">Actions</th>
+            </tr>
+        </ng-template>
 
-    <ng-template pTemplate="body" let-item>
-        <tr>
-            <td pFrozenColumn><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
-            @for (col of columns; track $index) {
+        <ng-template pTemplate="body" let-item>
+            <tr>
+                <td pFrozenColumn><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
+                @for (col of columns; track $index) {
                 @if (col.field === 'orgName' || col.field === 'name') {
-                    <td>{{ item[col.field] || '-' }}</td>
+                <td>{{ item[col.field] || '-' }}</td>
                 } @else {
-                    @if(col.field === 'active'){
-                        <td><p-tag [severity]="item[col.field] ? 'success' : 'danger'" [value]="item[col.field] ? 'Active' : 'InActive'"/></td>
+                @if(col.field === 'active'){
+                <td><p-tag [severity]="item[col.field] ? 'success' : 'danger'" [value]="item[col.field] ? 'Active' : 'InActive'" />
+                </td>
+                } @else {
+                <td>{{item[col.field] || '-'}}</td>
+                }
+                }
+                }
+                <td pFrozenColumn alignFrozen="right" [frozen]="true">
+                    <i (click)="onEdit(item)" class="pi pi-pencil ml-2 text-sm text-primary cursor-pointer"></i>
+                    <!-- <p-button icon="pi pi-pencil" class="mr-2 text-sm" [rounded]="true" [outlined]="true" severity="primary"
+                                (onClick)="onEdit(item)"></p-button> -->
+                    <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                                (onClick)="onDelete(item)"></p-button> -->
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="sm:text-center text-left">
+                    @if(isDataLoading) {
+                        <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem" />
                     } @else {
-                        <td>{{item[col.field] || '-'}}</td>
+                        No Data
                     }
-                }
-            }
-            <td pFrozenColumn alignFrozen="right" [frozen]="true" style="min-width: 140px;">
-                <i (click)="onEdit(item)" class="pi pi-pencil ml-2 text-sm hover:text-primary cursor-pointer"></i>
-                <!-- <p-button icon="pi pi-pencil" class="mr-2 text-sm" [rounded]="true" [outlined]="true" severity="primary"
-                    (onClick)="onEdit(item)"></p-button> -->
-                <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
-                    (onClick)="onDelete(item)"></p-button> -->
-            </td>
-        </tr>
-    </ng-template>
+                </td>
+            </tr>
+        </ng-template>
 
-    <!-- Summary -->
-    <ng-template pTemplate="summary">
-        <div class="flex align-items-center justify-content-between">
-            In total there are {{ data ? data.length : 0 }} items.
-        </div>
-    </ng-template>
-</p-table>
+        <!-- Summary -->
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{ data ? data.length : 0 }} items.
+            </div>
+        </ng-template>
+    </p-table>
 
 
 </div>

@@ -52,6 +52,7 @@ export class DynamicUserComponent {
   hideFields: string[] = [];
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
+  isLoading:boolean = false;
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
@@ -197,12 +198,15 @@ export class DynamicUserComponent {
 
 
   async fetchDynamicUserList() : Promise<any> {
+    this.isLoading = true;
     try {
       const response = await this.dynamicUserService.getList();
       this.users = response.data;
-      this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+      // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
+    } finally{
+      this.isLoading = false;
     }
   }
 
