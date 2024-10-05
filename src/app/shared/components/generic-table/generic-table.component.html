@@ -1,8 +1,8 @@
 <div class="px-4 md:px-6 lg:px-8">
     <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
         <div class="p-toolbar-group-start">
-            <p-button [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
-            <p-button [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" />
+            <p-button [pTooltip]="'Create New'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
+            <p-button [pTooltip]="'Export CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" />
         </div>
         <div class="p-toolbar-group-center">
             <span class="p-input-icon-left">
@@ -28,8 +28,8 @@
 
 
 
-    <p-table #dt [value]="data" [rows]="rows" [paginator]="true" [globalFilterFields]="globalFilterFields"
-        [(selection)]="selection" [rowHover]="true" [scrollable]="true"
+    <p-table #dt [value]="data" [rows]="rows" [columns]="columns" [paginator]="true" [globalFilterFields]="globalFilterFields"
+        [(selection)]="selection" [rowHover]="true" [scrollable]="true" [exportFilename]="exportFilename"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
         (selectionChange)="onSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
         styleClass="p-datatable-sm p-datatable-gridlines">
@@ -51,23 +51,17 @@
             <tr>
                 <td pFrozenColumn><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
                 @for (col of columns; track $index) {
-                @if (col.field === 'orgName' || col.field === 'name') {
-                <td>{{ item[col.field] || '-' }}</td>
-                } @else {
-                @if(col.field === 'active'){
-                <td><p-tag [severity]="item[col.field] ? 'success' : 'danger'" [value]="item[col.field] ? 'Active' : 'InActive'" />
-                </td>
-                } @else {
-                <td>{{item[col.field] || '-'}}</td>
-                }
-                }
+                    @if(col.field === 'active'){
+                        <td>
+                            <p-tag [severity]="item[col.field] ? 'success' : 'danger'" 
+                                   [value]="item[col.field] ? 'Active' : 'InActive'" />
+                        </td>
+                    }  @else {
+                         <td>{{item[col.field] || '-'}}</td>
+                    }
                 }
                 <td pFrozenColumn alignFrozen="right" [frozen]="true">
                     <i (click)="onEdit(item)" class="pi pi-pencil ml-2 text-sm text-primary cursor-pointer"></i>
-                    <!-- <p-button icon="pi pi-pencil" class="mr-2 text-sm" [rounded]="true" [outlined]="true" severity="primary"
-                                (onClick)="onEdit(item)"></p-button> -->
-                    <!-- <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
-                                (onClick)="onDelete(item)"></p-button> -->
                 </td>
             </tr>
         </ng-template>

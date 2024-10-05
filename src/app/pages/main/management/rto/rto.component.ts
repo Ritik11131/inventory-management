@@ -79,7 +79,7 @@ export class RtoComponent implements OnInit {
   }
 
 
-  async onToolBarDropDownChange(selected:any) : Promise<any> {
+  async onToolBarDropDownChange(selected:any) : Promise<any> {    
     this.toolbarDropDownSelected = selected;    
     await this.fetchRTOs(selected)
   }
@@ -91,8 +91,8 @@ export class RtoComponent implements OnInit {
       this.rtos = response.data;
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error : any) {
-      this.rtos = []
-      this.toastService.showError('Error', error.error.data);
+      this.rtos = [];
+      this.toastService.showError(!selectedState ? 'Select a State' : 'Error', error?.error?.data);
     } finally {
       this.isLoading = false;
     }
@@ -119,7 +119,7 @@ export class RtoComponent implements OnInit {
 }
 
 
-  onInputTextChange($event: any) {
+  onInputTextChange(event: any) {
   }
 
 

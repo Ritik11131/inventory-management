@@ -1,5 +1,5 @@
 <app-generic-table [data]="rtos" [columns]="columns" [rows]="10" [header]="'RTO'" [isDataLoading]="isLoading" [toolbarRightActions]="toolbarRightActions"
-    [globalFilterFields]="['rtocode','rtoname','state']" (edit)="onEditState($event)" (delete)="onDeleteProduct($event)"
+   [exportFilename]="'rtos'" [globalFilterFields]="['rtocode','rtoname','state']" (edit)="onEditState($event)" (delete)="onDeleteProduct($event)"
     (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" (dropdown)="onToolBarDropDownChange($event)" />
 
 

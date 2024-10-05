@@ -14,13 +14,14 @@ import { FormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
   imports: [TableModule, RippleModule, ButtonModule, InputTextModule, InputTextareaModule, CommonModule, 
     FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, 
-    InputNumberModule,ToolbarModule,ProgressSpinnerModule],
+    InputNumberModule,ToolbarModule,ProgressSpinnerModule,TooltipModule],
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.scss'
 })
@@ -35,6 +36,7 @@ export class GenericTableComponent {
   @Input() selection: any[] = []; // Selected rows
   @Input() header:string = ''
   @Input() isDataLoading: boolean = false;
+  @Input() exportFilename: string = 'csv';
   @Input() toolbarRightActions: any[] = [];
 
   selectionChange = output<any>();

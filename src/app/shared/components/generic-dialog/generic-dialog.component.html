@@ -8,11 +8,11 @@
                     <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
                     @if(field.validation) {
                             <i style="font-size: 7px;" class="pi pi-star-fill text-red-200 mr-2"></i>
-                        @if(!validationState[field.name] && data[field.name]?.length >= (!field.dependent?.length ? 4 : 1)) {
+                        @if(!validationState[field.name] && data[field.name]?.length) {
                             <i class="pi pi-exclamation-circle text-red-500" 
                             [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'" 
                             tooltipPosition="right"></i>
-                        } @else if (validationState[field.name] && data[field.name]?.length >= (!field.dependent?.length ? 4 : 1)) {
+                        } @else if (validationState[field.name] && data[field.name]?.length) {
                             <i class="pi pi-check-circle text-green-500" [pTooltip]="'Looks Good'" tooltipPosition="right"></i>
                         }
                     }

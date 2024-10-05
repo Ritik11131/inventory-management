@@ -133,7 +133,6 @@ export class DynamicUserComponent {
 
 
   openNew(event : any) {
-    console.log(event);
     this.isEditing = !event;
     this.hideFields = ['active'];
     this.user = this.resetUser();
