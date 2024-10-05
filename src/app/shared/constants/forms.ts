@@ -1,6 +1,6 @@
-import { DynamicUserField } from "../interfaces/dynamic-user.model";
+import { FormFields } from "../interfaces/forms";
 
-export const dynamicUserCreateFormFields : DynamicUserField[] = [
+export const dynamicUserCreateFormFields : FormFields[] = [
     {
         name: 'loginId',
         label: 'Login Id',
@@ -75,7 +75,7 @@ export const dynamicUserCreateFormFields : DynamicUserField[] = [
 ];
 
 
-export const stateCreateFormFields = [
+export const stateCreateFormFields : FormFields[] = [
     {
         name: 'statename',
         label: 'State Name',
@@ -90,7 +90,7 @@ export const stateCreateFormFields = [
     }
 ];
 
-export const rtoCreateFormFields = [
+export const rtoCreateFormFields : FormFields[] = [
     {
         name: 'stateid',
         label: 'State Name',

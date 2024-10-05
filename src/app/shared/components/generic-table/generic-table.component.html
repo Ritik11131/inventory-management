@@ -13,14 +13,14 @@
         @if(toolbarRightActions.length) {
         <div class="p-toolbar-group-end">
             @for (action of toolbarRightActions; track $index) {
-            @if(action.type === 'button') {
-            <p-button label="Save" icon="pi pi-check" />
-            }
+                @if(action.type === 'button') {
+                    <p-button label="Save" icon="pi pi-check" />
+                }
         
-            @if(action.type === 'dropdown') {
-            <p-dropdown [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
-                [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
-            }
+                @if(action.type === 'dropdown') {
+                    <p-dropdown [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
+                        [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
+                }
             }
         </div>
         }

@@ -1,4 +1,4 @@
-import { DynamicUser, DynamicUserField } from './../../../../shared/interfaces/dynamic-user.model';
+import { DynamicUser } from './../../../../shared/interfaces/dynamic-user.model';
 import { DynamicUserService } from './../../../../core/services/dynamic-user.service';
 import { Component } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
@@ -10,6 +10,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { dynamicUserColumns } from '../../../../shared/constants/columns';
 import { dynamicUserCreateFormFields } from '../../../../shared/constants/forms';
 import { debounceTime, Subject } from 'rxjs';
+import { FormFields } from '../../../../shared/interfaces/forms';
 
 
 @Component({
@@ -78,7 +79,7 @@ export class DynamicUserComponent {
       mobileNo: this.dynamicUserService.isMobileNoValid.bind(this.dynamicUserService)
     };
     
-    const field : DynamicUserField[] | any = dynamicUserCreateFormFields.find((field) => field.name === fieldName);
+    const field : FormFields[] | any = dynamicUserCreateFormFields.find((field) => field.name === fieldName);
 
     if (fieldValidationMapping[fieldName]) {
       try {
