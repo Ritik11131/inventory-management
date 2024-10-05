@@ -54,15 +54,19 @@ export class StateComponent implements OnInit {
   }
 
   async onSaveProduct(data: any) : Promise<any> {
-    if (this.state.id) {
-      await this.updateState(data);
-    } else {
-      await this.createSate(data);
+    try {
+      if (this.state.id) {
+        await this.updateState(data);
+      } else {
+        await this.createSate(data);
+      }
+      await this.fetchStates();
+      this.stateDialog = false;
+      this.state = this.resetState();
+      this.isEditing = false;
+    } catch (error) {
+      console.log(error);
     }
-    await this.fetchStates();
-    this.stateDialog = false;
-    this.state = this.resetState();
-    this.isEditing = false;
   }
 
 
@@ -78,8 +82,9 @@ export class StateComponent implements OnInit {
       const response = await this.stateService.createState(data);
       console.log(response);
       this.toastService.showSuccess('Success', 'State Created Successfully!');
-    } catch (error) {
-      this.toastService.showError('Error', `Failed to create State!`);
+    } catch (error : any) {
+      this.toastService.showError('Error', error.error.data);
+      throw error;
     }
   }
 
@@ -91,6 +96,7 @@ export class StateComponent implements OnInit {
       this.toastService.showSuccess('Success', 'State Updated Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to update State!`);
+      throw error;
     }
   }
 
