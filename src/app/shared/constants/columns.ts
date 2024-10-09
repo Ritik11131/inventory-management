@@ -9,6 +9,21 @@ export const dynamicUserColumns = [
 ];
 
 
+export const deviceColumns = [
+    { field: 'serial_no', header: 'Serial No' },
+    { field: 'device_no', header: 'Device No' },
+    { field: 'sim_provider', header: 'Sim Provider' },
+    { field: 'imei', header: 'IMEI' },
+    { field: 'iccid_no', header: 'ICCID No' },
+    { field: 'primary_mob_no', header: 'Primary Mobile No' },
+    { field: 'primary_sim_operator', header: 'Primary Sim Operator' },
+    { field: 'secondary_mob_no', header: 'Secondary Mobile No' },
+    { field: 'secondary_sim_operator', header: 'Secondary Sim Operator' },
+    { field: 'activation_date', header: 'Activate Date' },
+    { field: 'activation_till', header: 'Activation Till' }
+  ];
+
+
 export const stateColumns = [
     { field: 'statename', header: 'State Name', minWidth: '10rem' },
     { field: 'statecode', header: 'State Code', minWidth: '10rem' },

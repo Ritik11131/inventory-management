@@ -30,6 +30,16 @@ export class DynamicUserService {
     }
   }
 
+
+  async updateUser(user:DynamicUser) : Promise<any> {
+    try {
+      const response = await this.http.put('User', user.sno , { ...user });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async isEmailValid(email: string): Promise<any> {
     try {
       const response = await this.http.get('User/validate-email', { email });

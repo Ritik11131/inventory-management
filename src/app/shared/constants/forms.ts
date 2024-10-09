@@ -56,7 +56,7 @@ export const dynamicUserCreateFormFields : FormFields[] = [
         type: 'dropdown',
         options: [
             { label: 'Active', value: 'Active', severity: 'success' },
-            { label: 'Inactive', value: 'Inactive', severity: 'danger' },
+            { label: 'In Active', value: 'Inactive', severity: 'danger' },
         ],
         hide: (hideFields: string[]) => hideFields.includes('active'),
     },

@@ -21,6 +21,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { GenericTableComponent } from '../../../../../shared/components/generic-table/generic-table.component';
 import { GenericDialogComponent } from '../../../../../shared/components/generic-dialog/generic-dialog.component';
 import { ToastService } from '../../../../../core/services/toast.service';
+import { deviceColumns } from '../../../../../shared/constants/columns';
 
 @Component({
   selector: 'app-device-list',
@@ -132,22 +133,7 @@ export class DeviceListComponent {
     }
   ];
 
-  columns = [
-    { field: 'serial_no', header: 'Serial No' },
-    { field: 'imei', header: 'IMEI' },
-    { field: 'iccid_no', header: 'ICCID No' },
-    { field: 'vehicle_no', header: 'Vehicle No' },
-    { field: 'chassis_no', header: 'Chassis No' },
-    { field: 'model', header: 'Model' },
-    { field: 'class', header: 'Class' },
-    { field: 'rto', header: 'RTO' },
-    { field: 'permit_holder', header: 'Permit Holder' },
-    { field: 'dealer', header: 'Dealer' },
-    { field: 'vehicle_status', header: 'Vehicle Status' },
-    { field: 'device_status', header: 'Device Status' },
-    { field: 'polling_status', header: 'Polling Status' },
-    { field: 'payment_status', header: 'Payment Status' }
-  ];
+  columns = deviceColumns
   
 
   dealerDialog: boolean = false;

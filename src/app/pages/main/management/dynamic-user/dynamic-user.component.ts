@@ -150,8 +150,9 @@ export class DynamicUserComponent {
   }
 
   async onSaveProduct(data: DynamicUser) : Promise<any> {
+    try {
       if (this.user.sno) {
-        this.toastService.showSuccess('Success', 'This is a success message!');
+        await this.updateDynamicUser(data);
       } else {
         await this.createDynamicUser(data);
       }
@@ -160,13 +161,16 @@ export class DynamicUserComponent {
       this.user = this.resetUser();
       this.isEditing = false;
       this.hideFields = [];
+    } catch (error) {
+      console.log(error);
+      this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);
+    }
   }
 
 
   onEditProduct(user: any) {
     this.hideFields = ['password','confirm_password'];
     this.isEditing = true;
-    console.log('Editing user:', user);
     this.user = { ...user };
     this.userDialog = true;
   }
@@ -209,6 +213,17 @@ export class DynamicUserComponent {
       const response = await this.dynamicUserService.createUser(data);
       console.log(response);
       this.toastService.showSuccess('Success', 'User Created Successfully!');
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);
+    }
+  }
+
+
+  async updateDynamicUser(data : DynamicUser) : Promise<any> {
+    try {
+      const response = await this.dynamicUserService.updateUser(data);
+      console.log(response);
+      this.toastService.showSuccess('Success', response.data);
     } catch (error) {
       this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);
     }

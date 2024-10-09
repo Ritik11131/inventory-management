@@ -1,5 +1,5 @@
 export interface DynamicUser {
-    sno?: number;
+    sno?: number | undefined;
     loginId: string;
     password: string;
     name: string;
