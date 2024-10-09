@@ -73,7 +73,7 @@ export class GenericDialogComponent implements OnChanges {
 
 
   onStatusChange(event: any, fieldName: string) {
-    const selectedValue = event.value.label;
+    const selectedValue = event.value;
     if (fieldName === 'active') {
       this.data[fieldName] = selectedValue === 'Active';
     }
