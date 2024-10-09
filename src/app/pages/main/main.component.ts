@@ -16,6 +16,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { BreadcrumbService } from '../../core/services/breadcrumb.service';
 import { Subscription } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
+import { getMenuConfig } from '../../shared/constants/menu-config';
 
 @Component({
   selector: 'app-main',
@@ -32,6 +33,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   userRole: string = '';
   userName: string = '';
+  menuItems!: MenuItem[];
 
   home: MenuItem | undefined = {
     icon: 'pi pi-home', command: () => {
@@ -45,93 +47,93 @@ export class MainComponent implements OnInit, OnDestroy {
   breadCrumbs: MenuItem[] | undefined = [];
   private breadCrumbRouterSub!: Subscription;
 
-  items: MenuItem[] | undefined = [
-    {
-      key: 'dashboard',
-      label: 'Dashboard',
-      icon: 'pi pi-objects-column',
-      command: () => {
-        this.router.navigate(['/main/dashboard']);
-        this.breadcrumbService.generateBreadcrumbs('/main/dashboard');
-      }
-    },
-    {
-      key: 'management',
-      label: 'Management',
-      icon: 'pi pi-server',
-      command: () => {
-        // this.router.navigate(['/main/management']);
-        // this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management');
-      },
-      items: [
-        {
-          label: this.authService.getUserType(),
-          icon: 'pi pi-users',
-          items: [
-            {
-              label: `${this.authService.getUserType()} List`,
-              icon: 'pi pi-list',
-              command: () => {
-                this.router.navigate([`/main/management/dynamic-user-list`]);
-                this.breadcrumbService.generateBreadcrumbs('/main/management/dynamic-user-list');
-              }
-            },
-          ]
-        },
-        {
-          label: 'Device',
-          icon: 'pi pi-truck',
-          items: [
-            {
-              label: 'Device List',
-              icon: 'pi pi-list',
-              command: () => {
-                this.router.navigate(['/main/management/device-list']);
-                this.breadcrumbService.generateBreadcrumbs('/main/management/device-list');
-              }
-            },
-            {
-              label: `Assigned To ${this.authService.getUserType()}`,
-              icon: 'pi pi-users',
-              command: () => {
-                this.router.navigate([`/main/management/assigned/${this.authService.getUserType()}`]);
-                this.breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${this.authService.getUserType()}`);
-              }
+  // items: MenuItem[] | undefined = [
+  //   {
+  //     key: 'dashboard',
+  //     label: 'Dashboard',
+  //     icon: 'pi pi-objects-column',
+  //     command: () => {
+  //       this.router.navigate(['/main/dashboard']);
+  //       this.breadcrumbService.generateBreadcrumbs('/main/dashboard');
+  //     }
+  //   },
+  //   {
+  //     key: 'management',
+  //     label: 'Management',
+  //     icon: 'pi pi-server',
+  //     command: () => {
+  //       // this.router.navigate(['/main/management']);
+  //       // this.breadCrumbs = this.breadcrumbService.generateBreadcrumbs('/main/management');
+  //     },
+  //     items: [
+  //       {
+  //         label: this.authService.getUserType(),
+  //         icon: 'pi pi-users',
+  //         items: [
+  //           {
+  //             label: `${this.authService.getUserType()} List`,
+  //             icon: 'pi pi-list',
+  //             command: () => {
+  //               this.router.navigate([`/main/management/dynamic-user-list`]);
+  //               this.breadcrumbService.generateBreadcrumbs('/main/management/dynamic-user-list');
+  //             }
+  //           },
+  //         ]
+  //       },
+  //       {
+  //         label: 'Device',
+  //         icon: 'pi pi-truck',
+  //         items: [
+  //           {
+  //             label: 'Device List',
+  //             icon: 'pi pi-list',
+  //             command: () => {
+  //               this.router.navigate(['/main/management/device-list']);
+  //               this.breadcrumbService.generateBreadcrumbs('/main/management/device-list');
+  //             }
+  //           },
+  //           {
+  //             label: `Assigned To ${this.authService.getUserType()}`,
+  //             icon: 'pi pi-users',
+  //             command: () => {
+  //               this.router.navigate([`/main/management/assigned/${this.authService.getUserType()}`]);
+  //               this.breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${this.authService.getUserType()}`);
+  //             }
 
-            }
-          ]
-        },
-        {
-          label: 'States',
-          icon: 'pi pi-map-marker',
-          items: [
-            {
-              label: 'States List',
-              icon: 'pi pi-list',
-              command: () => {
-                this.router.navigate([`/main/management/states-list`]);
-                this.breadcrumbService.generateBreadcrumbs('/main/management/states-list');
-              }
-            },
-          ]
-        },
-        {
-          label: 'RTO',
-          icon: 'pi pi-id-card',
-          items: [
-            {
-              label: 'RTO List',
-              icon: 'pi pi-list',
-              command: () => {
-                this.router.navigate([`/main/management/rto-list`]);
-                this.breadcrumbService.generateBreadcrumbs('/main/management/rto-list');
-              }
-            },
-          ]
-        },
-      ]
-    }
-  ];
+  //           }
+  //         ]
+  //       },
+  //       {
+  //         label: 'States',
+  //         icon: 'pi pi-map-marker',
+  //         items: [
+  //           {
+  //             label: 'States List',
+  //             icon: 'pi pi-list',
+  //             command: () => {
+  //               this.router.navigate([`/main/management/states-list`]);
+  //               this.breadcrumbService.generateBreadcrumbs('/main/management/states-list');
+  //             }
+  //           },
+  //         ]
+  //       },
+  //       {
+  //         label: 'RTO',
+  //         icon: 'pi pi-id-card',
+  //         items: [
+  //           {
+  //             label: 'RTO List',
+  //             icon: 'pi pi-list',
+  //             command: () => {
+  //               this.router.navigate([`/main/management/rto-list`]);
+  //               this.breadcrumbService.generateBreadcrumbs('/main/management/rto-list');
+  //             }
+  //           },
+  //         ]
+  //       },
+  //     ]
+  //   }
+  // ];
 
 
   profileItems: MenuItem[] | undefined = [
@@ -168,6 +170,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.initializeMenu();
     this.userRole = this.authService.getUserRole();
     this.userName = this.authService.getUserName();
     this.breadCrumbs = this.breadcrumbService.updateBreadcrumbs(this.router.url);
@@ -178,6 +181,16 @@ export class MainComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+
+    // Method to initialize the menu
+    private initializeMenu() {
+      this.menuItems = getMenuConfig(this.authService, this.router, this.breadcrumbService);
+      console.log(this.menuItems);
+      
+    }
+
+
 
 
   ngOnDestroy(): void {

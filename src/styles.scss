@@ -7,57 +7,71 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 .p-shake {
-    animation: p-shake 0.5s;
+  animation: p-shake 0.5s;
+}
+
+@keyframes p-shake {
+  0% {
+    transform: translateX(0);
   }
-  
-  @keyframes p-shake {
-    0% {
-      transform: translateX(0);
-    }
-    20% {
-      transform: translateX(-10px);
-    }
-    40% {
-      transform: translateX(10px);
-    }
-    60% {
-      transform: translateX(-10px);
-    }
-    80% {
-      transform: translateX(10px);
-    }
-    100% {
-      transform: translateX(0);
-    }
+
+  20% {
+    transform: translateX(-10px);
   }
+
+  40% {
+    transform: translateX(10px);
+  }
+
+  60% {
+    transform: translateX(-10px);
+  }
+
+  80% {
+    transform: translateX(10px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
 
 /* Custom Scrollbar Styles */
 
 /* For WebKit browsers (Chrome, Safari) */
 ::-webkit-scrollbar {
-    width: 12px; /* Width of the scrollbar */
+  width: 12px;
+  /* Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Track color */
-    border-radius: 10px; /* Rounded track */
+  background: #f1f1f1;
+  /* Track color */
+  border-radius: 10px;
+  /* Rounded track */
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #888; /* Scrollbar color */
-    border-radius: 10px; /* Rounded thumb */
-    border: 3px solid #f1f1f1; /* Space between thumb and track */
+  background-color: #888;
+  /* Scrollbar color */
+  border-radius: 10px;
+  /* Rounded thumb */
+  border: 3px solid #f1f1f1;
+  /* Space between thumb and track */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Darken scrollbar on hover */
+  background: #555;
+  /* Darken scrollbar on hover */
 }
 
 /* For Firefox */
 * {
-    scrollbar-width: thin; /* Thin scrollbar */
-    scrollbar-color: #888 #f1f1f1; /* Thumb and track colors */
-    box-sizing: border-box;
+  scrollbar-width: thin;
+  /* Thin scrollbar */
+  scrollbar-color: #888 #f1f1f1;
+  /* Thumb and track colors */
+  box-sizing: border-box;
 }
 
 html {
@@ -69,4 +83,9 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
+}
+
+
+.p-menubar .p-submenu-list {
+  z-index: 3;
 }
