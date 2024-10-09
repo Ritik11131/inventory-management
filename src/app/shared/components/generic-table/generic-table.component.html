@@ -61,7 +61,15 @@
                     }
                 }
                 <td pFrozenColumn alignFrozen="right" [frozen]="true">
-                    <i (click)="onEdit(item)" class="pi pi-pencil ml-2 text-sm text-primary cursor-pointer"></i>
+                    @for(action of actions; track $index) {
+                        @if(action === 'edit') {
+                            <i [pTooltip]="'Edit'" tooltipPosition="bottom" (click)="onEdit(item)" class="pi pi-pencil ml-2 text-sm text-primary cursor-pointer"></i>
+                        }
+
+                        @if(action === 'delete') {
+                            <i [pTooltip]="'Delete'" tooltipPosition="bottom" (click)="onDelete(item)" class="pi pi-trash ml-4 text-sm text-red-500 cursor-pointer"></i>
+                        }
+                    }
                 </td>
             </tr>
         </ng-template>

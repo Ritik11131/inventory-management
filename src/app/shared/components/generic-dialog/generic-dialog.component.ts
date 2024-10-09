@@ -48,8 +48,8 @@ export class GenericDialogComponent implements OnChanges {
   onInputTextChange = output<any>();
   onDialogDropdownChange = output<any>();
   focusedField!: any;
-  isPasswordToggled: boolean = false;
-  isConfirmPasswordToggled: boolean = false;
+  isPasswordToggled: boolean = true;
+  isConfirmPasswordToggled: boolean = true;
 
   constructor() { }
 

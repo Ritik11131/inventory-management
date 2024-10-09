@@ -21,7 +21,12 @@ export const deviceColumns = [
     { field: 'secondary_sim_operator', header: 'Secondary Sim Operator' },
     { field: 'activation_date', header: 'Activate Date' },
     { field: 'activation_till', header: 'Activation Till' }
-  ];
+];
+
+export const simProviders = [
+    { field: 'id', header: 'Id' },
+    { field: 'providerName', header: 'Provider Name' },
+]
 
 
 export const stateColumns = [

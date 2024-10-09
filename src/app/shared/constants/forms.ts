@@ -112,3 +112,13 @@ export const rtoCreateFormFields : FormFields[] = [
         hide: (hideFields: string[]) => hideFields.includes('rtoname'),
     }
 ];
+
+
+export const simProviderFormFields : FormFields[] = [
+    {
+        name: 'providerName',
+        label: 'Provider Name',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('providerName'),
+    }
+]

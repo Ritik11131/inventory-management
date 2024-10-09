@@ -38,6 +38,7 @@ export class GenericTableComponent {
   @Input() isDataLoading: boolean = false;
   @Input() exportFilename: string = 'csv';
   @Input() toolbarRightActions: any[] = [];
+  @Input() actions:any[] = ['edit']
 
   selectionChange = output<any>();
   edit = output<any>();

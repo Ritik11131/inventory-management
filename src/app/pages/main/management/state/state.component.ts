@@ -102,7 +102,7 @@ export class StateComponent implements OnInit {
 
 
   onInputTextChange(event: any) {
-    throw new Error('Method not implemented.');
+    console.log(event);
   }
 
   openNew(event: any) {

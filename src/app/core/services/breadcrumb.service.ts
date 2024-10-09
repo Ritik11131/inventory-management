@@ -15,6 +15,11 @@ export class BreadcrumbService {
         { label: 'Dashboard' }
       ],
       management: {
+        'sim-provider-list':[
+          { label: 'Management' },
+          { label: 'Sim Providers' },
+          { label: 'Sim Provider List' }
+        ],
         'states-list':[
           { label: 'Management' },
           { label: 'Sates' },

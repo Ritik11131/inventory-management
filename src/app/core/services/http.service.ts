@@ -55,5 +55,10 @@ async get(endpoint: string, query?: any, id?:any): Promise<any> {
   const params = query ? { params: query } : {};
   return await firstValueFrom(this.http.get( `${this.apiUrl}/${endpoint}${id ? '/' + id : ''}`, { ...this.httpOptions, ...params }));
 }
+
+
+async delete(endpoint: string, id: number | undefined): Promise<any> {
+  return await firstValueFrom(this.http.delete(`${this.apiUrl}/${endpoint}/${id}`, this.httpOptions));
+}
   
 }
