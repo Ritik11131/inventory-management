@@ -52,7 +52,7 @@ export class DynamicUserComponent {
 
   ngOnInit() {
     this.userType = this.authService.getUserType();
-    this.constructValidationState(this.fields);    
+    // this.constructValidationState(this.fields); 
     this.fetchDynamicUserList().then();
   }
 
@@ -60,11 +60,14 @@ export class DynamicUserComponent {
     fields.forEach((field) => {
       if (field.hasOwnProperty('validation') && field.validation === true) {
         // Check if validationState already has the field; if not, initialize it
-        if (!this.validationState.hasOwnProperty(field.name)) {
-          this.validationState[field.name] = false; // Set initial state to false
+        if (this.isEditing) {
+          this.validationState[field.name] = true; // Valid for edit case if data exists
+        } else {
+          this.validationState[field.name] = false; // Invalid or new entry case
         }
       }
     });
+    this.isValidated = Object.values(this.validationState).every(val => val === true);
   }
 
   async onInputTextChange({ fieldName, value }: any): Promise<void> {
@@ -137,6 +140,7 @@ export class DynamicUserComponent {
     this.isEditing = !event;
     this.hideFields = ['active'];
     this.user = this.resetUser();
+    this.constructValidationState(this.fields);
     this.userDialog = event;
   }
 
@@ -172,6 +176,7 @@ export class DynamicUserComponent {
     this.hideFields = ['password','confirm_password'];
     this.isEditing = true;
     this.user = { ...user };
+    this.constructValidationState(this.fields);
     this.userDialog = true;
   }
 

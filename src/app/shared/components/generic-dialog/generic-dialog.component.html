@@ -8,11 +8,11 @@
                     <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
                     @if(field.validation) {
                             <i style="font-size: 7px;" class="pi pi-star-fill text-red-200 mr-2"></i>
-                        @if(!validationState[field.name] && data[field.name]?.length && !this.isEditing) {
+                        @if(!validationState[field.name] && data[field.name]?.length) {
                             <i class="pi pi-exclamation-circle text-red-500" 
                             [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'" 
                             tooltipPosition="right"></i>
-                        } @else if (validationState[field.name] && data[field.name]?.length && !this.isEditing) {
+                        } @else if (validationState[field.name] && data[field.name]?.length) {
                             <i class="pi pi-check-circle text-green-500" [pTooltip]="'Looks Good'" tooltipPosition="right"></i>
                         }
                     }
@@ -20,7 +20,7 @@
                 @switch (field.type) {
                     @case ('text') {
                         <ng-container>
-                             <input [disabled]="field.validation && isEditing" (keyup)="onInputChange($event, field)" type="text" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [required]="field.validation" />
+                             <input (keyup)="onInputChange($event, field)" type="text" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [required]="field.validation" />
                         </ng-container>
                     }
                     @case ('textarea') {
@@ -76,8 +76,7 @@
 
     <ng-template pTemplate="footer">
         <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
-        <p-button [disabled]="isEditing ? false : !isValidated" [label]="isEditing ? 'Update' : 'Save'" 
-                [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
+        <p-button [disabled]="!isValidated" [label]="isEditing ? 'Update' : 'Save'" [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
     </ng-template>
 </p-dialog>
 
