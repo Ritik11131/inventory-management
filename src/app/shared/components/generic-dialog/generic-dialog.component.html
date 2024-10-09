@@ -1,86 +1,116 @@
- <p-dialog [closable]="false" [(visible)]="visible" [style]="{ width: width }" header="{{ (isEditing ? 'Update ' : ' ') + header + ' Details' }}" [modal]="modal" styleClass="{{ styleClass }}" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" >
+<p-dialog [closable]="false" [(visible)]="visible" [style]="{ width: width }"
+    header="{{ (isEditing ? 'Update ' : ' ') + header + ' Details' }}" [modal]="modal" styleClass="{{ styleClass }}"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
     <ng-template pTemplate="content">
         <div class="formgrid grid">
             @for (field of fields; track $index) {
-                @if(!field.hide(this.hideFields)) {
+            @if(!field.hide(this.hideFields)) {
             <div class="field col-12 sm:col-12 md:col-4">
                 <div class="flex align-items-center mb-2">
                     <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
                     @if(field.validation) {
-                            <i style="font-size: 7px;" class="pi pi-star-fill text-red-200 mr-2"></i>
-                        @if(!validationState[field.name] && data[field.name]?.length) {
-                            <i class="pi pi-exclamation-circle text-red-500" 
-                            [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'" 
-                            tooltipPosition="right"></i>
-                        } @else if (validationState[field.name] && data[field.name]?.length) {
-                            <i class="pi pi-check-circle text-green-500" [pTooltip]="'Looks Good'" tooltipPosition="right"></i>
-                        }
+                    <i style="font-size: 7px;" class="pi pi-star-fill text-red-200 mr-2"></i>
+                    @if(!validationState[field.name] && data[field.name]?.length) {
+                    <i class="pi pi-exclamation-circle text-red-500"
+                        [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'"
+                        tooltipPosition="right"></i>
+                    } @else if (validationState[field.name] && data[field.name]?.length) {
+                    <i class="pi pi-check-circle text-green-500" [pTooltip]="'Looks Good'" tooltipPosition="right"></i>
+                    }
                     }
                 </div>
                 @switch (field.type) {
-                    @case ('text') {
-                        <ng-container>
-                             <input (keyup)="onInputChange($event, field)" type="text" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [required]="field.validation" />
-                        </ng-container>
-                    }
-                    @case ('textarea') {
-                        <ng-container>
-                            <textarea id="{{ field.name }}" pInputTextarea [(ngModel)]="data[field.name]" required rows="1" cols="20">
+                @case ('text') {
+                <ng-container>
+                    <input (keyup)="onInputChange($event, field)" type="text" pInputText id="{{ field.name }}"
+                        [(ngModel)]="data[field.name]" [required]="field.validation" />
+                </ng-container>
+                }
+                @case ('password') {
+                <ng-container>
+                    <p-iconField iconPosition="right">
+                        <input id="{{ field.name }}" class="w-full" [required]="field.validation"
+                            [type]="isPasswordToggled ? 'text' : 'password'" (keyup)="onInputChange($event, field)"
+                            [(ngModel)]="data[field.name]" pInputText (copy)="disableEvent($event)" (paste)="disableEvent($event)"
+                            (cut)="disableEvent($event)" autocomplete="off">
+                        <p-inputIcon (click)="togglePassword()"
+                            [styleClass]="isPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
+                    </p-iconField>
+                </ng-container>
+                }
+                @case ('confirm_password') {
+                <ng-container>
+                    <p-iconField iconPosition="right">
+                        <input id="{{ field.name }}" class="w-full" [required]="field.validation"
+                            [type]="isConfirmPasswordToggled ? 'text' : 'password'" (keyup)="onInputChange($event, field)"
+                            [(ngModel)]="data[field.name]" pInputText (copy)="disableEvent($event)" (paste)="disableEvent($event)"
+                            (cut)="disableEvent($event)" autocomplete="off">
+                        <p-inputIcon (click)="toggleConfirmPassword()"
+                            [styleClass]="isConfirmPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
+                    </p-iconField>
+                </ng-container>
+                }
+                @case ('textarea') {
+                <ng-container>
+                    <textarea id="{{ field.name }}" pInputTextarea [(ngModel)]="data[field.name]" required rows="1"
+                        cols="20">
                             </textarea>
-                        </ng-container>
+                </ng-container>
+                }
+                @case ('dropdown') {
+                <ng-container>
+                    @if(field.name === 'active') {
+                    <p-dropdown [filter]="true" appendTo="body" [(ngModel)]="data[field.name]"
+                        inputId="{{ field.name }}" [options]="field.options"
+                        (onChange)="onStatusChange($event, field.name)">
+                        <ng-template pTemplate="selectedItem" let-selectedItem>
+                            <p-tag [value]="selectedItem.label" [severity]="selectedItem.severity"></p-tag>
+                        </ng-template>
+                        <ng-template pTemplate="item" let-option>
+                            <p-tag [value]="option.label" [severity]="option.severity"></p-tag>
+                        </ng-template>
+                    </p-dropdown>
+                    } @else {
+                    <p-dropdown appendTo="body" [showClear]="true" [filter]="true"
+                        [filterBy]="field.dropdownKeys.nameKey" inputId="{{ field.name }}"
+                        [(ngModel)]="data[field.name]" (onChange)="onDropdownChange($event, field)"
+                        [optionValue]="field.dropdownKeys.idKey" [optionLabel]="field.dropdownKeys.nameKey"
+                        [options]="field.options">
+                    </p-dropdown>
                     }
-                    @case ('dropdown') {
-                        <ng-container>
-                            @if(field.name === 'active') {
-                            <p-dropdown [filter]="true" appendTo="body" [(ngModel)]="data[field.name]" inputId="{{ field.name }}" [options]="field.options"
-                                (onChange)="onStatusChange($event, field.name)">
-                                <ng-template pTemplate="selectedItem" let-selectedItem>
-                                    <p-tag [value]="selectedItem.label" [severity]="selectedItem.severity"></p-tag>
-                                </ng-template>
-                                <ng-template pTemplate="item" let-option>
-                                    <p-tag [value]="option.label" [severity]="option.severity"></p-tag>
-                                </ng-template>
-                            </p-dropdown>
-                            } @else {
-                            <p-dropdown appendTo="body" [showClear]="true" [filter]="true" [filterBy]="field.dropdownKeys.nameKey" 
-                                        inputId="{{ field.name }}" [(ngModel)]="data[field.name]" 
-                                        (onChange)="onDropdownChange($event, field)" [optionValue]="field.dropdownKeys.idKey"  
-                                        [optionLabel]="field.dropdownKeys.nameKey" [options]="field.options">
-                            </p-dropdown>
-                            }
-                        </ng-container>
-                    }
-                    @case ('radiobutton') {
-                        <ng-container>
-                            <div class="formgrid grid">
-                                @for (option of field.options; track $index) {
-                                <div class="field-radiobutton col-12 sm:col-6">
-                                    <p-radioButton id="{{ option.value }}" name="{{ field.name }}" value="{{ option.value }}" [(ngModel)]="data[field.name]" />
-                                    <label for="{{ option.value }}">{{ option.label }}</label>
-                                </div>
-                                }
-                            </div>
-                        </ng-container>
-                    }
-                    @case ('number') {
-                        <ng-container>
-                            <p-inputNumber id="{{ field.name }}" [(ngModel)]="data[field.name]" />
-                        </ng-container>
-                    }
-                }       
+                </ng-container>
+                }
+                @case ('radiobutton') {
+                <ng-container>
+                    <div class="formgrid grid">
+                        @for (option of field.options; track $index) {
+                        <div class="field-radiobutton col-12 sm:col-6">
+                            <p-radioButton id="{{ option.value }}" name="{{ field.name }}" value="{{ option.value }}"
+                                [(ngModel)]="data[field.name]" />
+                            <label for="{{ option.value }}">{{ option.label }}</label>
+                        </div>
+                        }
+                    </div>
+                </ng-container>
+                }
+                @case ('number') {
+                <ng-container>
+                    <p-inputNumber id="{{ field.name }}" [(ngModel)]="data[field.name]" />
+                </ng-container>
+                }
+                }
             </div>
-        }
+            }
             }
         </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
         <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
-        <p-button [disabled]="!isValidated" [label]="isEditing ? 'Update' : 'Save'" [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
+        <p-button [disabled]="!isValidated" [label]="isEditing ? 'Update' : 'Save'"
+            [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
     </ng-template>
 </p-dialog>
 
 
 <p-confirmDialog [style]="{ width: '450px' }" />
-
-

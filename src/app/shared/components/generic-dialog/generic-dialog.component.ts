@@ -48,6 +48,8 @@ export class GenericDialogComponent implements OnChanges {
   onInputTextChange = output<any>();
   onDialogDropdownChange = output<any>();
   focusedField!: any;
+  isPasswordToggled: boolean = false;
+  isConfirmPasswordToggled: boolean = false;
 
   constructor() { }
 
@@ -91,6 +93,20 @@ export class GenericDialogComponent implements OnChanges {
     const fieldName = field.name;
     // this.data[fieldName] = value.id;
     this.onDialogDropdownChange.emit({ value, fieldName });
+  }
+
+
+  disableEvent(event: ClipboardEvent) {
+    event.preventDefault();
+  }
+
+
+  togglePassword() {
+    this.isPasswordToggled = !this.isPasswordToggled;
+  }
+
+  toggleConfirmPassword() {
+    this.isConfirmPasswordToggled = !this.isConfirmPasswordToggled;
   }
 
 
