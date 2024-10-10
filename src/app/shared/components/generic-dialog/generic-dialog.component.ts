@@ -58,6 +58,7 @@ export class GenericDialogComponent implements OnChanges {
 
     if (changes['data'] && changes['data'].currentValue) {
       console.log(this.data, 'dataaa');
+      this.data['active'] = this.data['active'] ? 'Active' : 'Inactive';
     }
 
     if (changes['isEditing'] && changes['isEditing'].currentValue) {
