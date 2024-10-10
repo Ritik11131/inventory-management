@@ -50,6 +50,7 @@ export class GenericDialogComponent implements OnChanges {
   focusedField!: any;
   isPasswordToggled: boolean = true;
   isConfirmPasswordToggled: boolean = true;
+  selectedStatus!:any;
 
   constructor() { }
 
@@ -58,11 +59,10 @@ export class GenericDialogComponent implements OnChanges {
 
     if (changes['data'] && changes['data'].currentValue) {
       console.log(this.data, 'dataaa');
-      this.data['active'] = this.data['active'] ? 'Active' : 'Inactive';
     }
-
+    
     if (changes['isEditing'] && changes['isEditing'].currentValue) {
-      console.log(this.isEditing, 'isEditing');
+      this.selectedStatus = this.data['active'] ? 'Active' : 'Inactive';
     }
   }
 

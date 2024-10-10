@@ -60,7 +60,7 @@
                 @case ('dropdown') {
                 <ng-container>
                     @if(field.name === 'active') {
-                    <p-dropdown [filter]="true" appendTo="body" [(ngModel)]="data[field.name]"
+                    <p-dropdown [filter]="true" appendTo="body" [(ngModel)]="selectedStatus"
                         inputId="{{ field.name }}" [options]="field.options"
                         (onChange)="onStatusChange($event, field.name)">
                         <ng-template pTemplate="selectedItem" let-selectedItem>
