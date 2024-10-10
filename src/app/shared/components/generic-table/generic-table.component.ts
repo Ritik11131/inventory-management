@@ -15,15 +15,16 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
   imports: [TableModule, RippleModule, ButtonModule, InputTextModule, InputTextareaModule, CommonModule, 
     FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, 
-    InputNumberModule,ToolbarModule,ProgressSpinnerModule,TooltipModule],
+    InputNumberModule,ToolbarModule,ProgressSpinnerModule,TooltipModule,ConfirmDialogModule],
   templateUrl: './generic-table.component.html',
-  styleUrl: './generic-table.component.scss'
+  styleUrl: './generic-table.component.scss',
 })
 export class GenericTableComponent {
 
@@ -54,8 +55,8 @@ export class GenericTableComponent {
     this.edit.emit(item);
   }
 
-  onDelete(item: any) {
-    this.delete.emit(item);
+  onDelete(event : Event, item: any) {
+    this.delete.emit({event,item});
   }
 
   onNewUser() {

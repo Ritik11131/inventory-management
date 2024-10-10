@@ -67,7 +67,7 @@
                         }
 
                         @if(action === 'delete') {
-                            <i [pTooltip]="'Delete'" tooltipPosition="bottom" (click)="onDelete(item)" class="pi pi-trash ml-4 text-sm text-red-500 cursor-pointer"></i>
+                            <i [pTooltip]="'Delete'" tooltipPosition="bottom" (click)="onDelete($event,item)" class="pi pi-trash ml-4 text-sm text-red-500 cursor-pointer"></i>
                         }
                     }
                 </td>
@@ -93,6 +93,10 @@
             </div>
         </ng-template>
     </p-table>
+
+
+    <p-confirmDialog [style]="{ width: '300px' }" />
+
 
 
 </div>

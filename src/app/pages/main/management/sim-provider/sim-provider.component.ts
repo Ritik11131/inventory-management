@@ -5,6 +5,7 @@ import { simProviders } from '../../../../shared/constants/columns';
 import { SimProvidersService } from '../../../../core/services/sim-providers.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { simProviderFormFields } from '../../../../shared/constants/forms';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-sim-provider',
@@ -23,7 +24,7 @@ export class SimProviderComponent implements OnInit {
   provider!: any;
   fields:any[] = simProviderFormFields
 
-  constructor(private simProviderService:SimProvidersService,private toastService:ToastService) {}
+  constructor(private simProviderService:SimProvidersService,private toastService:ToastService,private confirmationService: ConfirmationService) {}
 
 
   ngOnInit(): void {
@@ -116,14 +117,30 @@ export class SimProviderComponent implements OnInit {
   }
 
 
-  async onDeleteProvider(provider: any) : Promise<any> {
-    try {
-      const response = await this.simProviderService.deleteSimProvider(provider);
-      console.log(response);
-    } catch (error) {
-      
-    }
-    
+  async onDeleteProvider(event: any) : Promise<any> {
+    console.log(event);
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Do you want to delete this provider?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass:"p-button-danger p-button-text",
+      rejectButtonStyleClass:"p-button-text p-button-text",
+      acceptIcon:"none",
+      rejectIcon:"none",
+      accept: async () => {
+        try {
+          const response = await this.simProviderService.deleteSimProvider(event.item);
+          console.log(response);
+          this.toastService.showSuccess('Success', 'Provider Deleted Successfully!');
+        } catch (error) {
+          this.toastService.showError('Error', `Failed to delete Provider!`);
+        }
+      },
+      reject: () => {
+        this.toastService.showInfo('Rejected', 'You have rejected');
+      }
+  });
   }
 
 
