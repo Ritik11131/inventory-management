@@ -40,7 +40,6 @@ export class RtoComponent implements OnInit {
 
   ngOnInit(): void {
     this.generateStatesOptions().then();
-
   }
 
 

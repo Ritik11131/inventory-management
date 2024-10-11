@@ -22,228 +22,192 @@ import { GenericTableComponent } from '../../../../../shared/components/generic-
 import { GenericDialogComponent } from '../../../../../shared/components/generic-dialog/generic-dialog.component';
 import { ToastService } from '../../../../../core/services/toast.service';
 import { deviceColumns } from '../../../../../shared/constants/columns';
+import { DeviceService } from '../../../../../core/services/device.service';
+import { deviceCreateFormFields } from '../../../../../shared/constants/forms';
+import { FormFields } from '../../../../../shared/interfaces/forms';
+import { DynamicUserService } from '../../../../../core/services/dynamic-user.service';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-device-list',
   standalone: true,
-  imports: [TableModule, DialogModule, RippleModule, ButtonModule, ToastModule, ToolbarModule, InputTextModule, 
-    InputTextareaModule, CommonModule, FileUploadModule, DropdownModule, TagModule, RadioButtonModule, 
-    RatingModule, InputTextModule, FormsModule, InputNumberModule, GenericDialogComponent, GenericTableComponent,ConfirmDialogModule],
+  imports: [TableModule, DialogModule, RippleModule, ButtonModule, ToastModule, ToolbarModule, InputTextModule,
+    InputTextareaModule, CommonModule, FileUploadModule, DropdownModule, TagModule, RadioButtonModule,
+    RatingModule, InputTextModule, FormsModule, InputNumberModule, GenericDialogComponent, GenericTableComponent, ConfirmDialogModule],
   templateUrl: './device-list.component.html',
   styleUrl: './device-list.component.scss',
-  providers:[ConfirmationService]
+  providers: [ConfirmationService]
 })
 export class DeviceListComponent {
 
-
-  fields: any[] = [
-    {
-      name: 'dealer',
-      label: 'Dealer Name',
-      type: 'text',
-    },
-    {
-      name: 'name',
-      label: 'Name',
-      type: 'text',
-    },
-    {
-      name: 'mobile_no',
-      label: 'Mobile No',
-      type: 'text',
-    },
-    {
-      name: 'alternate_no',
-      label: 'Alternate No',
-      type: 'text',
-    },
-    {
-      name: 'email',
-      label: 'Email',
-      type: 'text',
-    },
-    {
-      name: 'address',
-      label: 'Address',
-      type: 'textarea',
-    },
-    {
-      name: 'city',
-      label: 'City',
-      type: 'text',
-    },
-    {
-      name: 'status',
-      label: 'Status',
-      type: 'radiobutton',
-      options: [
-        { label: 'Active', value: 'Active' },
-        { label: 'Inactive', value: 'Inactive' }
-      ]
-    },
-    {
-      name: 'login_name',
-      label: 'Login Name',
-      type: 'text',
-    },
-    {
-      name: 'password',
-      label: 'Password',
-      type: 'text',
-    },
-    {
-      name: 'confirm_password',
-      label: 'Confirm Password',
-      type: 'text',
-    },
-  ];
-
-  devices: any[] = [
-    {
-      serial_no: 'S12345',
-      imei: 'IMEI9876543210',
-      iccid_no: 'ICCID1234567890',
-      vehicle_no: 'VN-01-ABC',
-      chassis_no: 'CH123456',
-      model: 'Sedan',
-      class: 'Luxury',
-      rto: 'New York',
-      permit_holder: 'Yes',
-      dealer: 'Dealer 1',
-      vehicle_status: 'Active',
-      device_status: 'Online',
-      polling_status: 'Successful',
-      payment_status: 'Paid'
-    },
-    {
-      serial_no: 'S67890',
-      imei: 'IMEI1234567890',
-      iccid_no: 'ICCID0987654321',
-      vehicle_no: 'VN-02-XYZ',
-      chassis_no: 'CH987654',
-      model: 'SUV',
-      class: 'Economy',
-      rto: 'Los Angeles',
-      permit_holder: 'No',
-      dealer: 'Dealer 2',
-      vehicle_status: 'Inactive',
-      device_status: 'Offline',
-      polling_status: 'Failed',
-      payment_status: 'Pending'
-    }
-  ];
-
-  columns = deviceColumns
-  
-
-  dealerDialog: boolean = false;
-
+  fields: FormFields[] = deviceCreateFormFields;
+  devices: any[] = [];
+  columns = deviceColumns;
+  isEditing: boolean = false;
+  isLoading: boolean = false;
+  deviceDialog: boolean = false;
   device!: any;
-
   selectedDevices!: any[] | null;
-
   submitted: boolean = false;
 
 
-    constructor(private toastService: ToastService, private confirmationService: ConfirmationService) {}
+  constructor(private toastService: ToastService, 
+    private confirmationService: ConfirmationService, 
+    private deviceService: DeviceService, private dynamicUserService:DynamicUserService,
+  private authService:AuthService) { }
 
-    ngOnInit() {}
-
-    openNew() {
-        this.device = {};
-        this.submitted = false;
-        this.dealerDialog = true;
-    }
-
-    deleteSelectedProducts() {}
-
-    hideDialog() {
-        this.dealerDialog = false;
-        this.submitted = false;
-    }
-
-    findIndexById(id: number): number {
-        let index = -1;
-        for (let i = 0; i < this.devices.length; i++) {
-            if (this.devices[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    }
-
-    createId(): string {
-        let id = '';
-        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (var i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    }
-
-
-    onHideDialog(isVisible:boolean) {
-      console.log(isVisible);
-      
-      this.dealerDialog = isVisible;
-    }
-  
-    onSaveProduct(data: any) {
-      console.log(data);
-      this.submitted = true;
-
-        if (this.device.name?.trim()) {
-            if (this.device.id) {
-                this.devices[this.findIndexById(this.device.id)] = this.device;
-                this.toastService.showSuccess('Success', 'This is a success message!');
-            } else {
-                this.device.id = this.createId();
-                this.device.image = 'product-placeholder.svg';
-                this.devices.push(this.device);
-                this.toastService.showSuccess('Success', 'This is a success message!');
-            }
-
-            this.devices = [...this.devices];
-            this.dealerDialog = false;
-            this.device = {};
-        }
-    }
-
-
-    editProduct(product: any) {
-      this.device = { ...product };
-      this.dealerDialog = true;
+  ngOnInit() {
+    this.fetchDevices().then();
   }
 
 
-    onEditProduct(product: any) {
-      console.log('Editing product:', product);
-      this.device = { ...product };
-      this.dealerDialog = true;
-    }
-  
-    onDeleteProduct(product: any) {
-      console.log('Deleting product:', product);
-      this.confirmationService.confirm({
-        message: 'Are you sure you want to delete ' + product.name + '?',
-        header: 'Confirm',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-            this.devices = this.devices.filter((val) => val.id !== product.id);
-            this.device = {};
-            this.toastService.showSuccess('Success', 'This is a success message!');
 
+  async generateDropdownValues() : Promise<any> {
+    try {
+      const response = await this.dynamicUserService.getList();
+      deviceCreateFormFields[0].options = response.data.map((user: any) => {
+        const keys = Object.keys(user);        
+        const idKey:any = keys.find(key => key.toLowerCase().includes('sno'));
+        const nameKey:any = keys.find(key => key.toLowerCase().includes('name'));
+        const valueKey:any = keys.find(key => key.toLowerCase().includes('sno'));
+        deviceCreateFormFields[0].dropdownKeys = { idKey, nameKey, valueKey };
+        return {
+          sno: user[idKey],
+          name: user[nameKey],
+          id: user[valueKey]
+        };
+      });
+      console.log(deviceCreateFormFields);
+      
+      // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
+    }
+  }
+
+
+
+  async fetchDevices(): Promise<any> {
+    this.isLoading = true;
+    try {
+      const response = await this.deviceService.getList();
+      this.devices = response.data;
+      // this.tdveoastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to fetch Device List!`);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+
+  resetDeviceModel() {
+    return {
+      OemId: undefined,
+      ModelName: "",
+    };
+  }
+
+
+  async onSaveDevice(data: any): Promise<any> {
+    try {
+      if (this.device.id) {
+        await this.updateDevice(data);
+      } else {
+        await this.createDevice(data);
+      }
+      await this.fetchDevices();
+      this.deviceDialog = false;
+      this.device = this.resetDeviceModel();
+      this.isEditing = false;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
+  async createDevice(data: any): Promise<any> {
+    try {
+      const response = await this.deviceService.createDevice(data);
+      console.log(response);
+      this.toastService.showSuccess('Success', 'Provider Created Successfully!');
+    } catch (error: any) {
+      this.toastService.showError('Error', error.error.data);
+      throw error;
+    }
+  }
+
+
+  async updateDevice(data: any): Promise<any> {
+    try {
+      const response = await this.deviceService.updateDevice(data);
+      console.log(response);
+      this.toastService.showSuccess('Success', 'Provider Updated Successfully!');
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to update State!`);
+      throw error;
+    }
+  }
+
+
+  async openNew(event: any) : Promise<any> {
+    await this.generateDropdownValues();
+    this.isEditing = !event;
+    this.device = this.resetDeviceModel();
+    this.deviceDialog = event;
+  }
+
+
+  onEditDevice(state: any) {
+    this.isEditing = true;
+    console.log('Editing user:', state);
+    this.device = { ...state };
+    this.deviceDialog = true;
+  }
+
+
+  onHideDialog(isVisible: boolean) {
+    this.deviceDialog = isVisible;
+    this.isEditing = false;
+  }
+
+
+  async onDeleteDevice(event: any): Promise<any> {
+    console.log(event);
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Do you want to delete this Device?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: "p-button-danger p-button-text",
+      rejectButtonStyleClass: "p-button-text p-button-text",
+      acceptIcon: "none",
+      rejectIcon: "none",
+      accept: async () => {
+        try {
+          const response = await this.deviceService.deleteDevice(event.item);
+          console.log(response);
+          this.toastService.showSuccess('Success', 'Provider Deleted Successfully!');
+        } catch (error) {
+          this.toastService.showError('Error', `Failed to delete Provider!`);
         }
+      },
+      reject: () => {
+        this.toastService.showInfo('Rejected', 'You have rejected');
+      }
     });
   }
 
-  onSelectionChange(event: any[]) {
+
+
+  onInputTextChange(event: any) {
     console.log(event);
-    this.selectedDevices = event;
-    
   }
 
+
+  onSelectionChange(event: any) {
+    console.log(event);
+  }
 
 }

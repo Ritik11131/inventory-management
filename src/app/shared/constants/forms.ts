@@ -90,6 +90,25 @@ export const stateCreateFormFields : FormFields[] = [
     }
 ];
 
+
+export const deviceCreateFormFields : FormFields[] = [
+    {
+        name: 'OemId',
+        label: 'OEM',
+        type: 'dropdown',
+        options: [],
+        dropdownKeys:{},
+        hide: (hideFields: string[]) => hideFields.includes('OemId'),
+    },
+    {
+        name: 'ModelName',
+        label: 'Model Name',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('ModelName'),
+    }
+];
+
+
 export const rtoCreateFormFields : FormFields[] = [
     {
         name: 'stateid',
