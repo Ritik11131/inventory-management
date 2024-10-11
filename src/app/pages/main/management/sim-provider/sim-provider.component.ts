@@ -39,6 +39,7 @@ export class SimProviderComponent implements OnInit {
       this.providers = response.data;
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
+      this.providers = [];
       this.toastService.showError('Error', `Failed to fetch State List!`);
     } finally {
       this.isLoading = false;
@@ -133,6 +134,7 @@ export class SimProviderComponent implements OnInit {
           const response = await this.simProviderService.deleteSimProvider(event.item);
           console.log(response);
           this.toastService.showSuccess('Success', 'Provider Deleted Successfully!');
+          await this.fetchSimProviders()
         } catch (error) {
           this.toastService.showError('Error', `Failed to delete Provider!`);
         }
