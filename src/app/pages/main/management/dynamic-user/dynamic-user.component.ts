@@ -29,7 +29,7 @@ export class DynamicUserComponent {
   columns = dynamicUserColumns
   userDialog: boolean = false;
   user!: DynamicUser;
-  selectedUsers!: any[] | null;
+  selectedUsers!: any[];
   isEditing:boolean = false;
   userType!: string;
   hideFields: string[] = [];

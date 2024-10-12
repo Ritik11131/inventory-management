@@ -40,6 +40,7 @@ export class GenericTableComponent {
   @Input() exportFilename: string = 'csv';
   @Input() toolbarRightActions: any[] = [];
   @Input() actions:any[] = ['edit']
+  @Input() selectionMode: 'single' | 'multiple' = 'multiple';
 
   selectionChange = output<any>();
   edit = output<any>();

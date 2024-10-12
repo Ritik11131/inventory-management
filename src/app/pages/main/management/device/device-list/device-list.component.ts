@@ -79,6 +79,7 @@ export class DeviceListComponent {
       
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
+      deviceCreateFormFields[0].options = [];
       this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
     }
   }
