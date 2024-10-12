@@ -91,7 +91,7 @@ export const stateCreateFormFields : FormFields[] = [
 ];
 
 
-export const deviceCreateFormFields : FormFields[] = [
+export const deviceModelFormFields : FormFields[] = [
     {
         name: 'OemId',
         label: 'OEM',
@@ -105,6 +105,36 @@ export const deviceCreateFormFields : FormFields[] = [
         label: 'Model Name',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('ModelName'),
+    }
+];
+
+
+export const deviceCreateFormFields : FormFields[] = [
+    {
+        name: 'model',
+        label: 'Select Model',
+        type: 'dropdown',
+        options: [],
+        dropdownKeys:{},
+        hide: (hideFields: string[]) => hideFields.includes('model'),
+    },
+    {
+        name: 'sno',
+        label: 'Serial No',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('sno'),
+    },
+    {
+        name: 'imei',
+        label: 'IMEI No',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('imei'),
+    },
+    {
+        name: 'iccid',
+        label: 'ICCID No',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('iccid'),
     }
 ];
 

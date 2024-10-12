@@ -51,6 +51,7 @@ export class GenericDialogComponent implements OnChanges {
   isPasswordToggled: boolean = true;
   isConfirmPasswordToggled: boolean = true;
   selectedStatus!:any;
+  selectedDropdownValue!: any;
 
   constructor() { }
 
@@ -58,11 +59,28 @@ export class GenericDialogComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
 
     if (changes['data'] && changes['data'].currentValue) {
-      console.log(this.data, 'dataaa');
+      // console.log(this.data, 'dataaa');
     }
     
     if (changes['isEditing'] && changes['isEditing'].currentValue) {
-      this.selectedStatus = this.data['active'] ? 'Active' : 'Inactive';
+      if(this.data['active']) {
+        this.selectedStatus = this.data['active'] ? 'Active' : 'Inactive';
+      } else {
+        this.fields.forEach((field: any) => {
+          // Check if the field is of type 'dropdown'
+          if (field.type === 'dropdown') {
+            const selectedId = typeof this.data[field.name] === 'object' ? this.data[field.name].id : this.data[field.name];
+            
+            // Find the matching object in the dropdown's options based on the id
+            const selectedOption = field.options.find((option: any) => option[field.dropdownKeys.idKey] === selectedId);
+        
+            // If a matching option is found, update the data with the selected option
+            if (selectedOption) {
+              this.data[field.name] = selectedOption;
+            }
+          }
+        });
+      }
     }
   }
 
@@ -90,10 +108,11 @@ export class GenericDialogComponent implements OnChanges {
   }
 
   onDropdownChange(event: any, field: any) {
-    const value = event.value;
+    const selectedValue = event.value;
+    console.log(selectedValue);
     const fieldName = field.name;
-    // this.data[fieldName] = value.id;
-    this.onDialogDropdownChange.emit({ value, fieldName });
+    this.data[fieldName] = selectedValue;
+    this.onDialogDropdownChange.emit({ selectedValue, fieldName });
   }
 
 

@@ -25,8 +25,8 @@ import { deviceColumns } from '../../../../../shared/constants/columns';
 import { DeviceService } from '../../../../../core/services/device.service';
 import { deviceCreateFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
-import { DynamicUserService } from '../../../../../core/services/dynamic-user.service';
 import { AuthService } from '../../../../../core/services/auth.service';
+import { DeviceModelService } from '../../../../../core/services/device-model.service';
 
 @Component({
   selector: 'app-device-list',
@@ -53,8 +53,7 @@ export class DeviceListComponent {
 
   constructor(private toastService: ToastService, 
     private confirmationService: ConfirmationService, 
-    private deviceService: DeviceService, private dynamicUserService:DynamicUserService,
-  private authService:AuthService) { }
+    private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService) { }
 
   ngOnInit() {
     this.fetchDevices().then();
@@ -64,17 +63,16 @@ export class DeviceListComponent {
 
   async generateDropdownValues() : Promise<any> {
     try {
-      const response = await this.dynamicUserService.getList();
-      deviceCreateFormFields[0].options = response.data.map((user: any) => {
-        const keys = Object.keys(user);        
-        const idKey:any = keys.find(key => key.toLowerCase().includes('sno'));
-        const nameKey:any = keys.find(key => key.toLowerCase().includes('name'));
-        const valueKey:any = keys.find(key => key.toLowerCase().includes('sno'));
-        deviceCreateFormFields[0].dropdownKeys = { idKey, nameKey, valueKey };
+      const response = await this.deviceModelService.getList();
+      deviceCreateFormFields[0].options = response.data.map((obj: any) => {
+        const keys = Object.keys(obj);       
+        const idKey:any = keys.find(key => key.includes('id'));
+        const nameKey:any = keys.find(key => key.includes('modelName'));
+        // const valueKey:any = keys.find(key => key.toLowerCase().includes('id'));
+        deviceCreateFormFields[0].dropdownKeys = { idKey, nameKey };
         return {
-          sno: user[idKey],
-          name: user[nameKey],
-          id: user[valueKey]
+          id: obj[idKey],
+          modelName: obj[nameKey],
         };
       });
       console.log(deviceCreateFormFields);
@@ -103,8 +101,10 @@ export class DeviceListComponent {
 
   resetDeviceModel() {
     return {
-      OemId: undefined,
-      ModelName: "",
+      model: null,
+      imei: "",
+      iccid:"",
+      sno:""
     };
   }
 
@@ -159,7 +159,8 @@ export class DeviceListComponent {
   }
 
 
-  onEditDevice(state: any) {
+  async onEditDevice(state: any) : Promise<any> {
+    await this.generateDropdownValues();
     this.isEditing = true;
     console.log('Editing user:', state);
     this.device = { ...state };
@@ -202,7 +203,7 @@ export class DeviceListComponent {
 
 
   onInputTextChange(event: any) {
-    console.log(event);
+    // console.log(event);
   }
 
 

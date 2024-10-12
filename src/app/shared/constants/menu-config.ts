@@ -44,16 +44,30 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
     // User type specific menu items
     const userMenuItems: Record<string, MenuItem[]> = {
         Admin: [
+            // {
+            //     label: 'Device',
+            //     icon: 'pi pi-truck',
+            //     items: [
+            //         {
+            //             label: 'Device List',
+            //             icon: 'pi pi-list',
+            //             command: () => {
+            //                 router.navigate(['/main/management/device-list']);
+            //                 breadcrumbService.generateBreadcrumbs('/main/management/device-list');
+            //             }
+            //         },
+            //     ]
+            // },
             {
-                label: 'Device',
+                label: 'Device Model',
                 icon: 'pi pi-truck',
                 items: [
                     {
-                        label: 'Device List',
+                        label: 'Device Model List',
                         icon: 'pi pi-list',
                         command: () => {
-                            router.navigate(['/main/management/device-list']);
-                            breadcrumbService.generateBreadcrumbs('/main/management/device-list');
+                            router.navigate(['/main/management/device-model-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/device-model-list');
                         }
                     },
                 ]

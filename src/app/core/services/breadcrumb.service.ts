@@ -40,6 +40,11 @@ export class BreadcrumbService {
           { label: 'Device' },
           { label: 'Device List' }
         ],
+        'device-model-list': [
+          { label: 'Management' },
+          { label: 'Device Model' },
+          { label: 'Device Model List' }
+        ],
         assigned: (authService : any) => {
           return {
             [authService.getUserType()]: [

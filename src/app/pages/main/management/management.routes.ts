@@ -6,6 +6,7 @@ import { DynamicUserComponent } from './dynamic-user/dynamic-user.component';
 import { StateComponent } from './state/state.component';
 import { RtoComponent } from './rto/rto.component';
 import { SimProviderComponent } from './sim-provider/sim-provider.component';
+import { DeviceModelComponent } from './device-model/device-model.component';
 
 export const managementRoutes: Routes = [
    {
@@ -35,6 +36,10 @@ export const managementRoutes: Routes = [
       {
          path:'sim-provider-list',
          component:SimProviderComponent
+      },
+      {
+         path:'device-model-list',
+         component:DeviceModelComponent
       }
     ]
    },
