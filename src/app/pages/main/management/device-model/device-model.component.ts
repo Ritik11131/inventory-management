@@ -8,6 +8,7 @@ import { DynamicUserService } from '../../../../core/services/dynamic-user.servi
 import { deviceModelFormFields } from '../../../../shared/constants/forms';
 import { DeviceModelService } from '../../../../core/services/device-model.service';
 import { deviceColumns } from '../../../../shared/constants/columns';
+import { DeviceService } from '../../../../core/services/device.service';
 
 @Component({
   selector: 'app-device-model',
@@ -28,7 +29,7 @@ export class DeviceModelComponent implements OnInit {
   submitted: boolean = false;
 
   constructor(private toastService:ToastService,private authService:AuthService,private dynamicUserService:DynamicUserService,
-    private deviceModelService:DeviceModelService) {}
+    private deviceModelService:DeviceModelService,private deviceService:DeviceService) {}
 
 
 
@@ -45,7 +46,7 @@ export class DeviceModelComponent implements OnInit {
   async fetchDevices(): Promise<any> {
     this.isLoading = true;
     try {
-      const response = await this.deviceModelService.getList();
+      const response = await this.deviceService.getList();
       this.deviceModels = response.data;
       // this.tdveoastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
@@ -61,9 +62,9 @@ export class DeviceModelComponent implements OnInit {
       const response = await this.dynamicUserService.getList();
       deviceModelFormFields[0].options = response.data.map((user: any) => {
         const keys = Object.keys(user);        
-        const idKey:any = keys.find(key => key.toLowerCase().includes('sno'));
-        const nameKey:any = keys.find(key => key.toLowerCase().includes('name'));
-        const valueKey:any = keys.find(key => key.toLowerCase().includes('sno'));
+        const idKey:any = keys.find(key => key.includes('sno'));
+        const nameKey:any = keys.find(key => key.includes('name'));
+        const valueKey:any = keys.find(key => key.includes('sno'));
         deviceModelFormFields[0].dropdownKeys = { idKey, nameKey, valueKey };
         return {
           sno: user[idKey],

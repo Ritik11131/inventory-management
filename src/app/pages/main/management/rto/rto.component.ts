@@ -60,9 +60,9 @@ export class RtoComponent implements OnInit {
       const keys = Object.keys(state);
       
       // Find the keys for 'id', 'statename', and 'statecode' dynamically
-      const idKey:any = keys.find(key => key.toLowerCase().includes('id'));
-      const nameKey:any = keys.find(key => key.toLowerCase().includes('statename'));
-      const valueKey:any = keys.find(key => key.toLowerCase().includes('statecode'));
+      const idKey:any = keys.find(key => key.includes('id'));
+      const nameKey:any = keys.find(key => key.includes('statename'));
+      const valueKey:any = keys.find(key => key.includes('statecode'));
       this.toolbarRightActions[0].dropdownKeys = { idKey, nameKey, valueKey };
       rtoCreateFormFields[0].dropdownKeys = { idKey, nameKey, valueKey };
       return {

@@ -11,7 +11,7 @@ export class DeviceModelService {
 
   async getList() : Promise<any> {
     try {
-      const response = await this.http.get('Device',{});
+      const response = await this.http.get('DeviceModel',{});
       return response;
     } catch (error) {
       throw error;

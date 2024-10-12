@@ -46,6 +46,7 @@ export class GenericTableComponent {
   delete = output<any>();
   new = output<any>();
   dropdown = output<any>();
+  linkRTO = output<any>();
 
   onSelectionChange(event: any[]) {
     this.selectionChange.emit(event);
@@ -77,5 +78,9 @@ export class GenericTableComponent {
 
   onDropdownChange(event:any) {
     this.dropdown.emit(event.value)
+  }
+
+  onLinkRTO() {
+    this.linkRTO.emit(true)
   }
 }

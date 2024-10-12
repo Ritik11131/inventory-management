@@ -94,7 +94,7 @@ export const stateCreateFormFields : FormFields[] = [
 export const deviceModelFormFields : FormFields[] = [
     {
         name: 'OemId',
-        label: 'OEM',
+        label: 'Select OEM',
         type: 'dropdown',
         options: [],
         dropdownKeys:{},
