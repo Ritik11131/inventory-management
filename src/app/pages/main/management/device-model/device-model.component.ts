@@ -53,7 +53,7 @@ export class DeviceModelComponent implements OnInit {
   async fetchDeviceModel(selectedUser:any): Promise<any> {
     this.isLoading = true;
     try {
-      const response = await this.deviceModelService.getList(selectedUser);
+      const response = await this.deviceModelService.getListByUser(selectedUser);
       this.deviceModels = response.data;
       // this.tdveoastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error  :any) {
@@ -139,8 +139,6 @@ export class DeviceModelComponent implements OnInit {
 
 
   async onSaveDeviceModel(data: any): Promise<any> {
-    console.log(data);
-    
     try {
       if (this.deviceModel.id) {
         await this.updateDevice(data);

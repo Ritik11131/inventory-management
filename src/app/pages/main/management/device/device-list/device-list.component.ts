@@ -127,9 +127,14 @@ export class DeviceListComponent {
     this.isValidated = Object.values(this.validationState).every(val => val === true);
   }
 
+  /**
+   * Populate the model dropdown with the list of available device models.
+   * 
+   * @returns {Promise<any>} Resolves with the populated dropdown options.
+   */
   async generateDropdownValues() : Promise<any> {
     try {
-      const response = await this.deviceService.getList();
+      const response = await this.deviceModelService.getList();
       deviceCreateFormFields[0].options = response.data.map((obj: any) => {
         const keys = Object.keys(obj);       
         const idKey:any = keys.find(key => key.includes('id'));
