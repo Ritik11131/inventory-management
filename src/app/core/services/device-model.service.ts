@@ -9,9 +9,9 @@ export class DeviceModelService {
   constructor(private http:HttpService) { }
 
 
-  async getList() : Promise<any> {
+  async getList(user : any) : Promise<any> {
     try {
-      const response = await this.http.get('DeviceModel',{});
+      const response = await this.http.get('DeviceModel', {}, user.id);
       return response;
     } catch (error) {
       throw error;

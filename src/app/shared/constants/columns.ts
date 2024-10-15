@@ -23,6 +23,12 @@ export const deviceColumns = [
     { field: 'activation_till', header: 'Activation Till' }
 ];
 
+export const deviceModelColumns = [
+    { field: 'index', header: 'S.NO' },
+    { field: 'oemName', header: 'User Name' },
+    { field: 'modelName', header: 'Model Name' }
+];
+
 export const simProviders = [
     { field: 'id', header: 'Id' },
     { field: 'providerName', header: 'Provider Name' },

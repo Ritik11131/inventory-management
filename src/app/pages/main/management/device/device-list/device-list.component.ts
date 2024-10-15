@@ -129,7 +129,7 @@ export class DeviceListComponent {
 
   async generateDropdownValues() : Promise<any> {
     try {
-      const response = await this.deviceModelService.getList();
+      const response = await this.deviceService.getList();
       deviceCreateFormFields[0].options = response.data.map((obj: any) => {
         const keys = Object.keys(obj);       
         const idKey:any = keys.find(key => key.includes('id'));

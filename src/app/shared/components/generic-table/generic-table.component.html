@@ -20,7 +20,7 @@
                 }
         
                 @if(action.type === 'dropdown') {
-                    <p-dropdown [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
+                    <p-dropdown appendTo="body" [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
                         [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
                 }
             }
@@ -55,7 +55,7 @@
             </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-item>
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
             <tr>
                 <td pFrozenColumn>
                     @if(selectionMode === 'multiple') {
@@ -71,7 +71,11 @@
                                    [value]="item[col.field] ? 'Active' : 'In Active'" />
                         </td>
                     }  @else {
-                         <td>{{item[col.field] || '-'}}</td>
+                        @if(col.field === 'index') {
+                            <td>{{ rowIndex + 1 }}</td>
+                        } @else {
+                            <td>{{item[col.field] || '-'}}</td>
+                        }
                     }
                 }
                 @if(actions.length) {

@@ -7,7 +7,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { DynamicUserService } from '../../../../core/services/dynamic-user.service';
 import { deviceModelFormFields } from '../../../../shared/constants/forms';
 import { DeviceModelService } from '../../../../core/services/device-model.service';
-import { deviceColumns } from '../../../../shared/constants/columns';
+import { deviceModelColumns } from '../../../../shared/constants/columns';
 import { DeviceService } from '../../../../core/services/device.service';
 
 @Component({
@@ -21,12 +21,21 @@ export class DeviceModelComponent implements OnInit {
 
   fields: FormFields[] = deviceModelFormFields;
   deviceModels: any[] = [];
-  columns = deviceColumns;
+  columns = deviceModelColumns;
   isEditing: boolean = false;
   isLoading: boolean = false;
   deviceModelDialog: boolean = false;
   deviceModel!: any;
   submitted: boolean = false;
+  toolbarRightActions:any[] = [
+    {
+      type:'dropdown',
+      options:[],
+      dropdownKeys:{},
+      placeholder:`Select ${this.authService.getUserType()}`,
+    }
+  ]
+  toolbarDropDownSelected: any;
 
   constructor(private toastService:ToastService,private authService:AuthService,private dynamicUserService:DynamicUserService,
     private deviceModelService:DeviceModelService,private deviceService:DeviceService) {}
@@ -34,23 +43,23 @@ export class DeviceModelComponent implements OnInit {
 
 
     ngOnInit(): void {
-      //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-      //Add 'implements OnInit' to the class.
-      this.fetchDevices().then();
+      this.generateUserOptions().then()
     }
 
 
 
     
     
-  async fetchDevices(): Promise<any> {
+  async fetchDeviceModel(selectedUser:any): Promise<any> {
     this.isLoading = true;
     try {
-      const response = await this.deviceService.getList();
+      const response = await this.deviceModelService.getList(selectedUser);
       this.deviceModels = response.data;
       // this.tdveoastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
-    } catch (error) {
-      this.toastService.showError('Error', `Failed to fetch Device List!`);
+    } catch (error  :any) {
+      this.deviceModels = [];
+      this.toastService.showError(!selectedUser ? 'Select a State' : 'Error', error?.error?.data);
+
     } finally {
       this.isLoading = false;
     }
@@ -89,6 +98,46 @@ export class DeviceModelComponent implements OnInit {
   }
 
 
+  async generateUserOptions() : Promise<any> {
+    try {
+      const response = await this.dynamicUserService.getList();
+      this.generaTetoolBarUserOptions(response)
+      console.log(this.toolbarRightActions);
+      // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to fetch State List!`);
+    }
+  }
+
+
+  generaTetoolBarUserOptions(response : any) {
+    this.toolbarRightActions[0].options = response.data.map((state: any) => {
+      // Extract the keys dynamically
+      const keys = Object.keys(state);
+      
+      // Find the keys for 'id', 'statename', and 'statecode' dynamically
+      const idKey:any = keys.find(key => key.includes('sno'));
+      const nameKey:any = keys.find(key => key.includes('name'));
+      this.toolbarRightActions[0].dropdownKeys = { idKey, nameKey };
+      deviceModelFormFields[0].dropdownKeys = { idKey, nameKey };
+      return {
+        id: state[idKey],
+        name: state[nameKey],
+      };
+    });
+    deviceModelFormFields[0].options = this.toolbarRightActions[0].options;
+    this.fields = deviceModelFormFields
+    console.log(this.fields);
+    
+  }
+
+
+  async onToolBarDropDownChange(selected:any) : Promise<any> {    
+    this.toolbarDropDownSelected = selected;    
+    await this.fetchDeviceModel(selected)
+  }
+
+
   async onSaveDeviceModel(data: any): Promise<any> {
     console.log(data);
     
@@ -98,7 +147,7 @@ export class DeviceModelComponent implements OnInit {
       } else {
         await this.createDevice(data);
       }
-      await this.fetchDevices();
+      await this.fetchDeviceModel(this.toolbarDropDownSelected);
       this.deviceModelDialog = false;
       this.deviceModel = this.resetDeviceModel();
       this.isEditing = false;
