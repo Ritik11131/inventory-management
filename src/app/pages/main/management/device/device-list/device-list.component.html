@@ -3,6 +3,7 @@
     (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" />
 
 
-<app-generic-dialog [visible]="deviceDialog" [header]="'Device'" [width]="'600px'" [modal]="true" [isEditing]="isEditing"
+<app-generic-dialog [isValidated]="isValidated" [validationState]="validationState" [visible]="deviceDialog" [header]="'Device'"
+     [width]="'600px'" [modal]="true" [isEditing]="isEditing"
     [styleClass]="'p-fluid'" [fields]="fields" [data]="device" (onHide)="onHideDialog($event)"
     (onSave)="onSaveDevice($event)" (onInputTextChange)="onInputTextChange($event)" />

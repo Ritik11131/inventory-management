@@ -27,6 +27,7 @@ import { deviceCreateFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-device-list',
@@ -49,17 +50,82 @@ export class DeviceListComponent {
   device!: any;
   selectedDevices!: any[] | null;
   submitted: boolean = false;
+  validationState: { [key: string]: boolean } = {};
+  isValidated:boolean = false;
+  private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
+
 
 
   constructor(private toastService: ToastService, 
     private confirmationService: ConfirmationService, 
-    private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService) { }
+    private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService) {
+      this.validationDebounceSubject.pipe(
+        debounceTime(400)
+      ).subscribe(({ fieldName, value }) => {
+        this.executeValidation(fieldName, value);
+      });
+     }
 
   ngOnInit() {
     this.fetchDevices().then();
   }
 
 
+  private async executeValidation(fieldName: string, value: any): Promise<void> {
+    const fieldValidationMapping: { [key: string]: (val: string) => Promise<any> } = {
+      iccid: this.deviceService.isICCIDValid.bind(this.deviceService),
+      imei: this.deviceService.isIMEIValid.bind(this.deviceService),
+      sno: this.deviceService.isDeviceSNoValid.bind(this.deviceService),
+    };
+    
+    const field : FormFields[] | any = deviceCreateFormFields.find((field) => field.name === fieldName);
+
+    if (fieldValidationMapping[fieldName]) {
+      try {
+        const response = await fieldValidationMapping[fieldName](value);
+        this.validationState[fieldName] = !response.data.isDuplicate;
+      } catch (error) {
+        this.validationState[fieldName] = false;
+        console.error(`Error validating ${fieldName}:`, error);
+      }
+    } else if (field && field.validation && field.dependent) {
+      const isValid = field.validation(this.device);
+      this.validationState[fieldName] = isValid;
+  
+      // Automatically validate dependent fields
+      if (isValid && field.dependent.length) {
+        field.dependent.forEach((depFieldName : any) => {
+          const dependentField : any = deviceCreateFormFields.find(f => f.name === depFieldName);
+          if (dependentField && dependentField.validation) {
+            this.validationState[depFieldName] = dependentField.validation(this.device);
+          }
+        });
+      } else {
+        field.dependent.forEach((depFieldName : any) => {
+          this.validationState[depFieldName] = false;
+        });
+      }
+    } else {
+      this.validationState[fieldName] = true;
+    }
+
+    this.isValidated = Object.values(this.validationState).every(val => val === true);
+    console.log(this.validationState, 'validation state');
+  }
+
+  constructValidationState(fields: any[]): void {
+    fields.forEach((field) => {
+      if (field.hasOwnProperty('validation') && field.validation === true) {
+        // Check if validationState already has the field; if not, initialize it
+        if (this.isEditing) {
+          this.validationState[field.name] = true; // Valid for edit case if data exists
+        } else {
+          this.validationState[field.name] = false; // Invalid or new entry case
+        }
+      }
+    });
+    this.isValidated = Object.values(this.validationState).every(val => val === true);
+  }
 
   async generateDropdownValues() : Promise<any> {
     try {
@@ -155,6 +221,7 @@ export class DeviceListComponent {
   async openNew(event: any) : Promise<any> {
     await this.generateDropdownValues();
     this.isEditing = !event;
+    this.constructValidationState(this.fields);
     this.device = this.resetDeviceModel();
     this.deviceDialog = event;
   }
@@ -163,6 +230,7 @@ export class DeviceListComponent {
   async onEditDevice(state: any) : Promise<any> {
     await this.generateDropdownValues();
     this.isEditing = true;
+    this.constructValidationState(this.fields);
     console.log('Editing user:', state);
     this.device = { ...state };
     this.deviceDialog = true;
@@ -203,7 +271,8 @@ export class DeviceListComponent {
 
 
 
-  onInputTextChange(event: any) {
+  onInputTextChange({ fieldName, value }: any) {
+    this.validationDebounceSubject.next({ fieldName, value });
     // console.log(event);
   }
 

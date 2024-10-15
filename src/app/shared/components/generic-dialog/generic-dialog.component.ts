@@ -63,7 +63,7 @@ export class GenericDialogComponent implements OnChanges {
     }
     
     if (changes['isEditing'] && changes['isEditing'].currentValue) {
-      if(this.data['active']) {
+      if(this.data.hasOwnProperty('active')) {
         this.selectedStatus = this.data['active'] ? 'Active' : 'Inactive';
       } else {
         this.fields.forEach((field: any) => {

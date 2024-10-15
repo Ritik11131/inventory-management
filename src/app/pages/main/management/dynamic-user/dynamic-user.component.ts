@@ -52,7 +52,6 @@ export class DynamicUserComponent {
 
   ngOnInit() {
     this.userType = this.authService.getUserType();
-    // this.constructValidationState(this.fields); 
     this.fetchDynamicUserList().then();
   }
 

@@ -123,18 +123,21 @@ export const deviceCreateFormFields : FormFields[] = [
         label: 'Serial No',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('sno'),
+        validation:true
     },
     {
         name: 'imei',
         label: 'IMEI No',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('imei'),
+        validation:true
     },
     {
         name: 'iccid',
         label: 'ICCID No',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('iccid'),
+        validation:true
     }
 ];
 

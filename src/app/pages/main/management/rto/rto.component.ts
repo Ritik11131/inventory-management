@@ -123,11 +123,17 @@ export class RtoComponent implements OnInit {
 
 
 
+  /**
+   * Saves a RTO.
+   * @param data The RTO to be saved.
+   * @returns A promise that resolves when the RTO is saved.
+   */
   async onSaveRTO(data: any) : Promise<any> {
+    const rtoObject = {...data,stateid:data.stateid.id}
     if (this.rto.id) {
-      await this.updateRTO(data);
+      await this.updateRTO(rtoObject);
     } else {
-      await this.createRTO(data);
+      await this.createRTO(rtoObject);
     }
     await this.fetchRTOs(this.toolbarDropDownSelected);
     this.rtoDialog = false;

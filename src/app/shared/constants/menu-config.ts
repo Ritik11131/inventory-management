@@ -73,6 +73,29 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                 ]
             },
             {
+                label: 'Device',
+                icon: 'pi pi-truck',
+                items: [
+                    {
+                        label: 'Device List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/device-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/device-list');
+                        }
+                    },
+                    {
+                        label: `Assigned To ${authService.getUserType()}`,
+                        icon: 'pi pi-users',
+                        command: () => {
+                            router.navigate([`/main/management/assigned/${authService.getUserType()}`]);
+                            breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
+                        }
+
+                    }
+                ]
+            },
+            {
                 label: 'Vehicle',
                 icon: 'pi pi-car',
                 items: [

@@ -55,5 +55,35 @@ export class DeviceService {
     }
   }
 
+  async isICCIDValid(iccid: string): Promise<any> {
+    try {
+      const response = await this.http.get('Device/validate-iccid', { iccid });
+      return response;
+    } catch (error) {
+      throw error;
+
+    }
+  }
+
+  async isIMEIValid(imei: string): Promise<any> {
+    try {
+      const response = await this.http.get('Device/validate-imei', { imei });
+      return response;
+    } catch (error) {
+      throw error;
+
+    }
+  }
+
+  async isDeviceSNoValid(devicesno: string): Promise<any> {
+    try {
+      const response = await this.http.get('Device/validate-devicesno', { devicesno });
+      return response;
+    } catch (error) {
+      throw error;
+
+    }
+  }
+
 
 }
