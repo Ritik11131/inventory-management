@@ -80,6 +80,12 @@
                     }
                 </ng-container>
                 }
+                @case('multiselect') {
+                <ng-container>
+                    <p-multiSelect [filter]="true" appendTo="body" inputId="{{ field.name }}"
+                        [options]="field.options" [(ngModel)]="data[field.name]" [optionLabel]="field.dropdownKeys.nameKey"/>
+                </ng-container>
+                }
                 @case ('radiobutton') {
                 <ng-container>
                     <div class="formgrid grid">

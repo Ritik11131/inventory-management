@@ -139,7 +139,7 @@ export class DeviceListComponent {
         const keys = Object.keys(obj);       
         const idKey:any = keys.find(key => key.includes('id'));
         const nameKey:any = keys.find(key => key.includes('modelName'));
-        // const valueKey:any = keys.find(key => key.toLowerCase().includes('id'));
+        // const valueKey:any = keys.find(key => key.includes('id'));
         deviceCreateFormFields[0].dropdownKeys = { idKey, nameKey };
         return {
           id: obj[idKey],

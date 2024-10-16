@@ -174,3 +174,23 @@ export const simProviderFormFields : FormFields[] = [
         hide: (hideFields: string[]) => hideFields.includes('providerName'),
     }
 ]
+
+
+export const linkRtoFormFields : FormFields[] = [
+    {
+        name: 'stateid',
+        label: 'Select State',
+        type: 'dropdown',
+        options: [],
+        dropdownKeys:{},
+        hide: (hideFields: string[]) => hideFields.includes('stateid'),
+    },
+    {
+        name: 'rtoName',
+        label: 'Select RTO',
+        type: 'multiselect',
+        options: [],
+        dropdownKeys:{},
+        hide: (hideFields: string[]) => hideFields.includes('rtoName'),
+    }
+]

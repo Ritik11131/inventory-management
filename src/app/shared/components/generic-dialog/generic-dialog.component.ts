@@ -17,6 +17,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 
 @Component({
@@ -24,7 +25,7 @@ import { InputIconModule } from 'primeng/inputicon';
   standalone: true,
   imports: [TableModule, DialogModule, RippleModule, ButtonModule,
     InputTextModule, InputTextareaModule, CommonModule, FileUploadModule,
-    DropdownModule, TagModule, RadioButtonModule, RatingModule,
+    DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule,
     InputTextModule, FormsModule, InputNumberModule, ConfirmDialogModule, TooltipModule, IconFieldModule, InputIconModule],
   templateUrl: './generic-dialog.component.html',
   styleUrl: './generic-dialog.component.scss'

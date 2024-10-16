@@ -8,9 +8,11 @@ import { GenericTableComponent } from '../../../../shared/components/generic-tab
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { AuthService } from '../../../../core/services/auth.service';
 import { dynamicUserColumns } from '../../../../shared/constants/columns';
-import { dynamicUserCreateFormFields } from '../../../../shared/constants/forms';
+import { dynamicUserCreateFormFields, linkRtoFormFields } from '../../../../shared/constants/forms';
 import { debounceTime, Subject } from 'rxjs';
 import { FormFields } from '../../../../shared/interfaces/forms';
+import { StatesService } from '../../../../core/services/states.service';
+import { RtoService } from '../../../../core/services/rto.service';
 
 
 @Component({
@@ -24,7 +26,7 @@ import { FormFields } from '../../../../shared/interfaces/forms';
 })
 export class DynamicUserComponent {
 
-  fields: any[] = dynamicUserCreateFormFields;
+  fields: any[] = [];
   users: DynamicUser[] = [];
   columns = dynamicUserColumns
   userDialog: boolean = false;
@@ -42,7 +44,7 @@ export class DynamicUserComponent {
 
 
   constructor(private toastService: ToastService, private confirmationService: ConfirmationService,
-    private authService: AuthService, private dynamicUserService: DynamicUserService) {
+    private authService: AuthService, private dynamicUserService: DynamicUserService,private stateService:StatesService,private rtoService:RtoService) {
     this.validationDebounceSubject.pipe(
       debounceTime(400)
     ).subscribe(({ fieldName, value }) => {
@@ -53,6 +55,47 @@ export class DynamicUserComponent {
   ngOnInit() {
     this.userType = this.authService.getUserType();
     this.fetchDynamicUserList().then();
+  }
+
+
+  async generateStatesOptions() : Promise<any> {
+    try {
+      const response = await this.stateService.getList();
+      this.generaTetoolBarStateOptions(response)
+      // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to fetch State List!`);
+    }
+  }
+
+  generaTetoolBarStateOptions(response : any) {
+    linkRtoFormFields.forEach((field: any) => {
+      if (field.name === 'stateid') {
+        field.options = response.data.map((state: any) => {
+          // Extract the keys dynamically
+          const keys = Object.keys(state);
+    
+          // Find the keys for 'id', 'statename', and 'statecode' dynamically
+          const idKey: any = keys.find(key => key.includes('id'));
+          const nameKey: any = keys.find(key => key.includes('statename'));
+          const valueKey: any = keys.find(key => key.includes('statecode'));
+    
+          // Set dropdownKeys for this field
+          field.dropdownKeys = { idKey, nameKey, valueKey };
+    
+          return {
+            id: state[idKey],
+            statename: state[nameKey],
+            statecode: state[valueKey]
+          };
+        });
+      }
+    });
+    
+    // Assign fields dynamically to this.fields
+    this.fields = linkRtoFormFields;
+    console.log(this.fields);
+    
   }
 
   constructValidationState(fields: any[]): void {
@@ -136,11 +179,61 @@ export class DynamicUserComponent {
 
 
   openNew(event : any) {
+    this.fields = dynamicUserCreateFormFields;
     this.isEditing = !event;
     this.hideFields = ['active'];
     this.user = this.resetUser();
     this.constructValidationState(this.fields);
     this.userDialog = event;
+  }
+
+  async onLinkRTO(event : any) : Promise<any> {
+    await this.generateStatesOptions()
+    this.fields = linkRtoFormFields;
+    this.isEditing = !event;
+    this.hideFields = [];
+    this.user = this.resetUser();
+    // this.constructValidationState(this.fields);
+    this.userDialog = event;
+  }
+
+
+  generateRTOOptions(response : any) {    
+    linkRtoFormFields.forEach((field: any) => {
+      if (field.name === 'rtoName') {
+        field.options = response.data.map((rto: any) => {
+          // Extract the keys dynamically
+          const keys = Object.keys(rto);
+    
+          // Find the keys for 'id', 'statename', and 'statecode' dynamically
+          const idKey: any = keys.find(key => key.includes('id'));
+          const nameKey: any = keys.find(key => key.includes('rtoname'));
+    
+          // Set dropdownKeys for this field
+          field.dropdownKeys = { idKey, nameKey };
+    
+          return {
+            id: rto[idKey],
+            rtoname: rto[nameKey],
+          };
+        });
+      }
+    });
+    
+    // Assign fields dynamically to this.fields
+    this.fields = linkRtoFormFields;
+    console.log(this.fields);
+    
+  }
+
+  async onDialogDropDownChange(event: any) : Promise<any> {
+    const {fieldName , selectedValue} = event;
+    if(fieldName === 'stateid') {
+      const response = await this.rtoService.getList(selectedValue);
+      console.log(response,'response');
+      
+      this.generateRTOOptions(response);
+    }
   }
 
   deleteSelectedProducts() { }
@@ -172,6 +265,7 @@ export class DynamicUserComponent {
 
 
   onEditProduct(user: any) {
+    this.fields = dynamicUserCreateFormFields;
     this.hideFields = ['password','confirm_password'];
     this.isEditing = true;
     this.user = { ...user };

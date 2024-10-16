@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from './auth.service';
+import { capitalize } from '../../shared/utils/common';
 
 @Injectable({
   providedIn: 'root'
@@ -84,7 +85,7 @@ export class BreadcrumbService {
     
     // Handle root route (/main)
     if (urlParts.length === 2) {
-      this.breadCrumbs.push({ label: this.capitalize(urlParts[1]) });
+      this.breadCrumbs.push({ label: capitalize(urlParts[1]) });
     } else if (urlParts.length > 2) {
       let breadcrumbPath : any = this.breadcrumbMap;
 
@@ -108,11 +109,6 @@ export class BreadcrumbService {
   updateBreadcrumbs(url: string) :MenuItem[] | undefined {
     this.generateBreadcrumbs(url);
     return this.breadCrumbs;
-  }
-
-
-  private capitalize(str: string): string {
-    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
 
