@@ -31,16 +31,16 @@ export class DynamicUserComponent {
   columns = dynamicUserColumns
   userDialog: boolean = false;
   user!: DynamicUser;
-  selectedUsers!: any[];
+  selectedUsers!: any;
   isEditing:boolean = false;
   userType!: string;
   hideFields: string[] = [];
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
   isLoading:boolean = false;
+  unlinked:any[] = [];
+  linked:any[] = [];
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
-
-
 
 
   constructor(private toastService: ToastService, private confirmationService: ConfirmationService,
@@ -198,31 +198,12 @@ export class DynamicUserComponent {
   }
 
 
-  generateRTOOptions(response : any) {    
-    linkRtoFormFields.forEach((field: any) => {
-      if (field.name === 'rtoName') {
-        field.options = response.data.map((rto: any) => {
-          // Extract the keys dynamically
-          const keys = Object.keys(rto);
-    
-          // Find the keys for 'id', 'statename', and 'statecode' dynamically
-          const idKey: any = keys.find(key => key.includes('id'));
-          const nameKey: any = keys.find(key => key.includes('rtoname'));
-    
-          // Set dropdownKeys for this field
-          field.dropdownKeys = { idKey, nameKey };
-    
-          return {
-            id: rto[idKey],
-            rtoname: rto[nameKey],
-          };
-        });
-      }
-    });
-    
-    // Assign fields dynamically to this.fields
-    this.fields = linkRtoFormFields;
-    console.log(this.fields);
+  generateLinkedUnlinkedPickList(response : any,linkedRto : any) { 
+    this.unlinked = response.data;
+    // this.linked = response.data
+
+    console.log(this.unlinked);
+    console.log(this.linked);
     
   }
 
@@ -230,9 +211,10 @@ export class DynamicUserComponent {
     const {fieldName , selectedValue} = event;
     if(fieldName === 'stateid') {
       const response = await this.rtoService.getList(selectedValue);
+      console.log(this.selectedUsers,'selectedUsers');
+      const linkedRto = await this.rtoService.getLinkedRtoUserWise(this.selectedUsers)
       console.log(response,'response');
-      
-      this.generateRTOOptions(response);
+      this.generateLinkedUnlinkedPickList(response,linkedRto);
     }
   }
 

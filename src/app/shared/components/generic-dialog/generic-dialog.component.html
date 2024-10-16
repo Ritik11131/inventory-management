@@ -31,8 +31,8 @@
                     <p-iconField iconPosition="right">
                         <input id="{{ field.name }}" class="w-full" [required]="field.validation"
                             [type]="isPasswordToggled ? 'text' : 'password'" (keyup)="onInputChange($event, field)"
-                            [(ngModel)]="data[field.name]" pInputText (copy)="disableEvent($event)" (paste)="disableEvent($event)"
-                            (cut)="disableEvent($event)" autocomplete="off">
+                            [(ngModel)]="data[field.name]" pInputText (copy)="disableEvent($event)"
+                            (paste)="disableEvent($event)" (cut)="disableEvent($event)" autocomplete="off">
                         <p-inputIcon (click)="togglePassword()"
                             [styleClass]="isPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
                     </p-iconField>
@@ -42,9 +42,10 @@
                 <ng-container>
                     <p-iconField iconPosition="right">
                         <input id="{{ field.name }}" class="w-full" [required]="field.validation"
-                            [type]="isConfirmPasswordToggled ? 'text' : 'password'" (keyup)="onInputChange($event, field)"
-                            [(ngModel)]="data[field.name]" pInputText (copy)="disableEvent($event)" (paste)="disableEvent($event)"
-                            (cut)="disableEvent($event)" autocomplete="off">
+                            [type]="isConfirmPasswordToggled ? 'text' : 'password'"
+                            (keyup)="onInputChange($event, field)" [(ngModel)]="data[field.name]" pInputText
+                            (copy)="disableEvent($event)" (paste)="disableEvent($event)" (cut)="disableEvent($event)"
+                            autocomplete="off">
                         <p-inputIcon (click)="toggleConfirmPassword()"
                             [styleClass]="isConfirmPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
                     </p-iconField>
@@ -60,9 +61,8 @@
                 @case ('dropdown') {
                 <ng-container>
                     @if(field.name === 'active') {
-                    <p-dropdown [filter]="true" appendTo="body" [(ngModel)]="selectedStatus"
-                        inputId="{{ field.name }}" [options]="field.options"
-                        (onChange)="onStatusChange($event, field.name)">
+                    <p-dropdown [filter]="true" appendTo="body" [(ngModel)]="selectedStatus" inputId="{{ field.name }}"
+                        [options]="field.options" (onChange)="onStatusChange($event, field.name)">
                         <ng-template pTemplate="selectedItem" let-selectedItem>
                             <p-tag [value]="selectedItem.label" [severity]="selectedItem.severity"></p-tag>
                         </ng-template>
@@ -74,16 +74,36 @@
                     <p-dropdown styleClass="w-full" appendTo="body" [showClear]="true" [filter]="true"
                         [filterBy]="field.dropdownKeys.nameKey" inputId="{{ field.name }}"
                         [(ngModel)]="data[field.name]" (onChange)="onDropdownChange($event, field)"
-                         [optionLabel]="field.dropdownKeys.nameKey"
-                        [options]="field.options">
+                        [optionLabel]="field.dropdownKeys.nameKey" [options]="field.options">
                     </p-dropdown>
                     }
                 </ng-container>
                 }
                 @case('multiselect') {
                 <ng-container>
-                    <p-multiSelect [filter]="true" appendTo="body" inputId="{{ field.name }}"
-                        [options]="field.options" [(ngModel)]="data[field.name]" [optionLabel]="field.dropdownKeys.nameKey"/>
+                    <p-multiSelect [filter]="true" appendTo="body" inputId="{{ field.name }}" [options]="field.options"
+                        [(ngModel)]="data[field.name]" [optionLabel]="field.dropdownKeys.nameKey" />
+                </ng-container>
+                }
+                @case('pickList') {
+                <ng-container>
+                    <p-pickList [source]="source" [target]="target" [sourceHeader]="sourceHeader" [targetHeader]="targetHeader"
+                        [dragdrop]="true" [responsive]="true" [showSourceControls]="false" [showTargetControls]="false"
+                        [sourceStyle]="{ height: sourceHeight,width:sourceWidth }"
+                        [targetStyle]="{ height: targetHeight,width:targetWidth }" [breakpoint]="breakpoint">
+                        <ng-template let-item pTemplate="item">
+                            <div class="flex flex-wrap p-2 align-items-center gap-3">
+                                <div class="flex-1 flex flex-column gap-2">
+                                    <span class="font-bold">
+                                        {{ item.rtoname }}
+                                    </span>
+                                </div>
+                                <span class="font-bold text-blue-500">
+                                    <i class="pi pi-link text-sm"></i>
+                                </span>
+                            </div>
+                        </ng-template>
+                    </p-pickList>
                 </ng-container>
                 }
                 @case ('radiobutton') {

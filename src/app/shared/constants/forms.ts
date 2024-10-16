@@ -187,8 +187,8 @@ export const linkRtoFormFields : FormFields[] = [
     },
     {
         name: 'rtoName',
-        label: 'Select RTO',
-        type: 'multiselect',
+        label: 'Link/Unlink RTO',
+        type: 'pickList',
         options: [],
         dropdownKeys:{},
         hide: (hideFields: string[]) => hideFields.includes('rtoName'),
