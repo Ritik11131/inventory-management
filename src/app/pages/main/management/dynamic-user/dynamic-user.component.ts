@@ -40,6 +40,7 @@ export class DynamicUserComponent {
   isLoading:boolean = false;
   unlinked:any[] = [];
   linked:any[] = [];
+  currentAction: 'create' | 'edit' | 'linkRTO' | null = null;
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
@@ -77,16 +78,16 @@ export class DynamicUserComponent {
     
           // Find the keys for 'id', 'statename', and 'statecode' dynamically
           const idKey: any = keys.find(key => key.includes('id'));
-          const nameKey: any = keys.find(key => key.includes('statename'));
-          const valueKey: any = keys.find(key => key.includes('statecode'));
+          const nameKey: any = keys.find(key => key.includes('stateName'));
+          const valueKey: any = keys.find(key => key.includes('stateCode'));
     
           // Set dropdownKeys for this field
           field.dropdownKeys = { idKey, nameKey, valueKey };
     
           return {
             id: state[idKey],
-            statename: state[nameKey],
-            statecode: state[valueKey]
+            stateName: state[nameKey],
+            stateCode: state[valueKey]
           };
         });
       }
@@ -175,10 +176,19 @@ export class DynamicUserComponent {
         userType: "",
         active: false
     };
-}
+  }
+
+
+  resetLinkRTOUser(): any {
+    return {
+      userId:this.selectedUsers?.sno,
+      rtoId:[]
+    }
+  } 
 
 
   openNew(event : any) {
+    this.currentAction = 'create';
     this.fields = dynamicUserCreateFormFields;
     this.isEditing = !event;
     this.hideFields = ['active'];
@@ -188,30 +198,31 @@ export class DynamicUserComponent {
   }
 
   async onLinkRTO(event : any) : Promise<any> {
+    this.currentAction = 'linkRTO';
     await this.generateStatesOptions()
     this.fields = linkRtoFormFields;
     this.isEditing = !event;
+    this.isValidated = true
     this.hideFields = [];
-    this.user = this.resetUser();
+    this.user = this.resetLinkRTOUser();
     // this.constructValidationState(this.fields);
     this.userDialog = event;
   }
 
 
   generateLinkedUnlinkedPickList(response : any,linkedRto : any) { 
-    this.unlinked = response.data;
-    // this.linked = response.data
-
+    this.linked = linkedRto.data[0]?.rtoId;
+    this.unlinked = response.data.filter((item1 : any) => 
+      !this.linked.some(item2 => item1['id'] === item2['id'])
+    );
     console.log(this.unlinked);
     console.log(this.linked);
-    
   }
 
   async onDialogDropDownChange(event: any) : Promise<any> {
     const {fieldName , selectedValue} = event;
     if(fieldName === 'stateid') {
       const response = await this.rtoService.getList(selectedValue);
-      console.log(this.selectedUsers,'selectedUsers');
       const linkedRto = await this.rtoService.getLinkedRtoUserWise(this.selectedUsers)
       console.log(response,'response');
       this.generateLinkedUnlinkedPickList(response,linkedRto);
@@ -222,23 +233,21 @@ export class DynamicUserComponent {
 
 
   onHideDialog(isVisible: boolean) {
-    this.userDialog = isVisible;
-    this.isEditing = false;
-    this.hideFields = [];
+    this.resetVaribles();
   }
 
-  async onSaveProduct(data: DynamicUser) : Promise<any> {
+  async onSaveProduct(data: any) : Promise<any> {
     try {
-      if (this.user.sno) {
+      if (this.user.sno && this.currentAction === 'edit') {
         await this.updateDynamicUser(data);
-      } else {
+      } else if(this.currentAction === 'create') {
         await this.createDynamicUser(data);
+      } else if(this.currentAction === 'linkRTO') {
+        await this.linkRTO();
+        await this.unlinkRTO();
       }
       await this.fetchDynamicUserList();
-      this.userDialog = false;
-      this.user = this.resetUser();
-      this.isEditing = false;
-      this.hideFields = [];
+      this.resetVaribles();
     } catch (error) {
       console.log(error);
       this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);
@@ -246,7 +255,19 @@ export class DynamicUserComponent {
   }
 
 
+  resetVaribles() {
+    this.userDialog = false;
+    this.user = this.resetUser();
+    this.isEditing = false;
+    this.hideFields = [];
+    this.linked = [];
+    this.unlinked = [];
+    this.currentAction = null;
+  }
+
+
   onEditProduct(user: any) {
+    this.currentAction = 'edit';
     this.fields = dynamicUserCreateFormFields;
     this.hideFields = ['password','confirm_password'];
     this.isEditing = true;
@@ -295,6 +316,35 @@ export class DynamicUserComponent {
       this.toastService.showSuccess('Success', 'User Created Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);
+    }
+  }
+
+
+  async linkRTO() : Promise<any> {
+    const linkedPayload = {
+      userId:this.selectedUsers?.sno,
+      rtoId:this.linked
+    };
+    try {
+      const response = await this.dynamicUserService.linkRtoToUser(linkedPayload); 
+      console.log(response);
+      this.toastService.showSuccess('Success', response.data);     
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to Link ${this.authService.getUserType()}!`);
+    }
+  }
+
+  async unlinkRTO() : Promise<any> {
+    const unlinkedPayload = {
+      userId:this.selectedUsers?.sno,
+      rtoId:this.unlinked
+    };
+    try {
+      const response = await this.dynamicUserService.unlinkRtoToUser(unlinkedPayload); 
+      console.log(response);
+      // this.toastService.showSuccess('Success', response.data);     
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to Link ${this.authService.getUserType()}!`);
     }
   }
 

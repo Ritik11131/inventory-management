@@ -52,18 +52,8 @@ export class GenericDialogComponent implements OnChanges {
   @Input() targetHeight: string = '';
   @Input() targetWidth: string = '';
   @Input() breakpoint: string = '';
-  @Input() source = [
-    { name: 'Product 1', category: 'Category A', price: 100, image: 'bamboo-watch.jpg' },
-    { name: 'Product 2', category: 'Category B', price: 200, image: 'black-watch.jpg' },
-    { name: 'Product 3', category: 'Category A', price: 150, image: 'blue-band.jpg' },
-    { name: 'Product 4', category: 'Category C', price: 250, image: 'blue-t-shirt.jpg' },
-    { name: 'Product 5', category: 'Category D', price: 300, image: 'bracelet.jpg' }
-  ];
-
-  @Input() target = [
-    { name: 'Product 6', category: 'Category E', price: 400, image: 'brown-purse.jpg' },
-    { name: 'Product 7', category: 'Category F', price: 350, image: 'cherry-watch.jpg' }
-  ];
+  @Input() source:any[] = [];
+  @Input() target:any[] = [];
 
   onHide = output<any>()
   onSave = output<any>()
@@ -74,6 +64,7 @@ export class GenericDialogComponent implements OnChanges {
   isConfirmPasswordToggled: boolean = true;
   selectedStatus!:any;
   selectedDropdownValue!: any;
+  uploadedFiles: any[] = [];
 
   constructor() { }
 
@@ -149,6 +140,11 @@ export class GenericDialogComponent implements OnChanges {
 
   toggleConfirmPassword() {
     this.isConfirmPasswordToggled = !this.isConfirmPasswordToggled;
+  }
+
+  onUpload(event: any, field: any) {
+    const fieldName = field.name;
+    this.data[fieldName] = event.currentFiles[0];
   }
 
 

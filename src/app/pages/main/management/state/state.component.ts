@@ -48,8 +48,8 @@ export class StateComponent implements OnInit {
   resetState() {
     return {
       id:undefined,
-      statename: "",
-      statecode: ""
+      stateName: "",
+      stateCode: ""
     };
   }
 

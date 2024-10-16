@@ -13,7 +13,7 @@ export class HttpService {
   private apiUrl = environment.apiUrl;
   private httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
        'Access-Control-Allow-Origin': '*',
     })
   };

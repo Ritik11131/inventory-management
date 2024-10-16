@@ -23,7 +23,7 @@ import { GenericDialogComponent } from '../../../../../shared/components/generic
 import { ToastService } from '../../../../../core/services/toast.service';
 import { deviceColumns } from '../../../../../shared/constants/columns';
 import { DeviceService } from '../../../../../core/services/device.service';
-import { deviceCreateFormFields } from '../../../../../shared/constants/forms';
+import { bulkUploadDeviceFormFields, deviceCreateFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
@@ -41,7 +41,7 @@ import { debounceTime, Subject } from 'rxjs';
 })
 export class DeviceListComponent {
 
-  fields: FormFields[] = deviceCreateFormFields;
+  fields: FormFields[] = [];
   devices: any[] = [];
   columns = deviceColumns;
   isEditing: boolean = false;
@@ -52,6 +52,7 @@ export class DeviceListComponent {
   submitted: boolean = false;
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
+  currentAction: 'create' | 'edit' | 'bulkUpload' | null = null;
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
@@ -132,28 +133,43 @@ export class DeviceListComponent {
    * 
    * @returns {Promise<any>} Resolves with the populated dropdown options.
    */
-  async generateDropdownValues() : Promise<any> {
+  async generateDropdownValues(type: 'create' | 'edit' | 'bulkUpload'): Promise<any> {
     try {
       const response = await this.deviceModelService.getList();
-      deviceCreateFormFields[0].options = response.data.map((obj: any) => {
+      // Determine which form fields to use based on the 'type'
+      const formFields = (type === 'create' || type === 'edit') 
+        ? deviceCreateFormFields 
+        : bulkUploadDeviceFormFields;
+  
+      formFields[0].options = response.data.map((obj: any) => {
         const keys = Object.keys(obj);       
-        const idKey:any = keys.find(key => key.includes('id'));
-        const nameKey:any = keys.find(key => key.includes('modelName'));
-        // const valueKey:any = keys.find(key => key.includes('id'));
-        deviceCreateFormFields[0].dropdownKeys = { idKey, nameKey };
+        const idKey: any = keys.find(key => key.includes('id'));
+        const nameKey: any = keys.find(key => key.includes('modelName'));
+  
+        // Setting dropdownKeys based on found keys
+        formFields[0].dropdownKeys = { idKey, nameKey };
+  
         return {
           id: obj[idKey],
           modelName: obj[nameKey],
         };
       });
-      console.log(deviceCreateFormFields);
-      
+  
+      console.log(formFields);
+  
+      // Show success message (optional)
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
-      deviceCreateFormFields[0].options = [];
+      // If there's an error, clear the options
+      const formFields = (type === 'create' || type === 'edit') 
+        ? deviceCreateFormFields 
+        : bulkUploadDeviceFormFields;
+  
+      formFields[0].options = [];
       this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
     }
   }
+  
 
 
 
@@ -171,7 +187,7 @@ export class DeviceListComponent {
   }
 
 
-  resetDeviceModel() {
+  resetDevice() {
     return {
       model: null,
       imei: "",
@@ -180,18 +196,31 @@ export class DeviceListComponent {
     };
   }
 
+  resetBulkUploadDevice() {
+    return {
+      model: null,
+      file:null
+    };
+  }
+
 
   async onSaveDevice(data: any): Promise<any> {
     try {
-      if (this.device.id) {
+      if (this.device.id && this.currentAction === 'edit') {
         await this.updateDevice(data);
-      } else {
+      } else if (this.currentAction === 'create') {
         await this.createDevice(data);
+      } else if (this.currentAction === 'bulkUpload') {
+        const formData = new FormData();
+        formData.append('file', data.file, data.file.name)
+        formData.append('modelId', data.model.id.toString());
+        await this.handleBulkUpload(formData);
       }
       await this.fetchDevices();
       this.deviceDialog = false;
-      this.device = this.resetDeviceModel();
+      this.device = this.resetDevice();
       this.isEditing = false;
+      this.currentAction = null;
     } catch (error) {
       console.log(error);
     }
@@ -210,6 +239,17 @@ export class DeviceListComponent {
     }
   }
 
+  async handleBulkUpload(data: any): Promise<any> {
+    try {
+      const response = await this.deviceService.bulkUpload(data);
+      console.log(response);
+      this.toastService.showSuccess('Success', 'Provider Created Successfully!');
+    } catch (error: any) {
+      this.toastService.showError('Error', error.error.data.message);
+      throw error;
+    }
+  }
+
 
   async updateDevice(data: any): Promise<any> {
     try {
@@ -224,16 +264,31 @@ export class DeviceListComponent {
 
 
   async openNew(event: any) : Promise<any> {
-    await this.generateDropdownValues();
+    this.currentAction = 'create';
+    this.fields = deviceCreateFormFields;
+    await this.generateDropdownValues('create');
     this.isEditing = !event;
     this.constructValidationState(this.fields);
-    this.device = this.resetDeviceModel();
+    this.device = this.resetDevice();
+    this.deviceDialog = event;
+  }
+
+  async bulkUploadDevice(event: any) : Promise<any> {
+    this.currentAction = 'bulkUpload';
+    await this.generateDropdownValues('bulkUpload');
+    this.fields = bulkUploadDeviceFormFields;
+    this.isEditing = !event;
+    this.isValidated = true
+    this.device = this.resetBulkUploadDevice();
+    // this.constructValidationState(this.fields);
     this.deviceDialog = event;
   }
 
 
   async onEditDevice(state: any) : Promise<any> {
-    await this.generateDropdownValues();
+    this.currentAction = 'edit';
+    this.fields = deviceCreateFormFields;
+    await this.generateDropdownValues('create');
     this.isEditing = true;
     this.constructValidationState(this.fields);
     console.log('Editing user:', state);

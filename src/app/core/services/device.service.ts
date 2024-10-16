@@ -85,5 +85,14 @@ export class DeviceService {
     }
   }
 
+  async bulkUpload(data: any): Promise<any> {
+    try { 
+      const response = await this.http.post('Device/upload', data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 }

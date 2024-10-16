@@ -77,13 +77,13 @@ export const dynamicUserCreateFormFields : FormFields[] = [
 
 export const stateCreateFormFields : FormFields[] = [
     {
-        name: 'statename',
+        name: 'stateName',
         label: 'State Name',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('statename'),
     },
     {
-        name: 'statecode',
+        name: 'stateCode',
         label: 'State Code',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('statecode'),
@@ -144,24 +144,24 @@ export const deviceCreateFormFields : FormFields[] = [
 
 export const rtoCreateFormFields : FormFields[] = [
     {
-        name: 'stateid',
+        name: 'state',
         label: 'State Name',
         type: 'dropdown',
         options: [],
         dropdownKeys:{},
-        hide: (hideFields: string[]) => hideFields.includes('stateid'),
+        hide: (hideFields: string[]) => hideFields.includes('state'),
     },
     {
-        name: 'rtocode',
+        name: 'rtoCode',
         label: 'RTO Code',
         type: 'text',
-        hide: (hideFields: string[]) => hideFields.includes('rtocode'),
+        hide: (hideFields: string[]) => hideFields.includes('rtoCode'),
     },
     {
-        name: 'rtoname',
+        name: 'rtoName',
         label: 'RTO Name',
         type: 'text',
-        hide: (hideFields: string[]) => hideFields.includes('rtoname'),
+        hide: (hideFields: string[]) => hideFields.includes('rtoName'),
     }
 ];
 
@@ -192,5 +192,23 @@ export const linkRtoFormFields : FormFields[] = [
         options: [],
         dropdownKeys:{},
         hide: (hideFields: string[]) => hideFields.includes('rtoName'),
+    }
+]
+
+
+export const bulkUploadDeviceFormFields : FormFields[] = [
+    {
+        name: 'model',
+        label: 'Select Model',
+        type: 'dropdown',
+        options: [],
+        dropdownKeys:{},
+        hide: (hideFields: string[]) => hideFields.includes('model'),
+    },
+    {
+        name: 'file',
+        label: 'Choose File',
+        type: 'file',
+        hide: (hideFields: string[]) => hideFields.includes('file'),
     }
 ]

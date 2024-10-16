@@ -61,14 +61,14 @@ export class RtoComponent implements OnInit {
       
       // Find the keys for 'id', 'statename', and 'statecode' dynamically
       const idKey:any = keys.find(key => key.includes('id'));
-      const nameKey:any = keys.find(key => key.includes('statename'));
-      const valueKey:any = keys.find(key => key.includes('statecode'));
+      const nameKey:any = keys.find(key => key.includes('stateName'));
+      const valueKey:any = keys.find(key => key.includes('stateCode'));
       this.toolbarRightActions[0].dropdownKeys = { idKey, nameKey, valueKey };
       rtoCreateFormFields[0].dropdownKeys = { idKey, nameKey, valueKey };
       return {
         id: state[idKey],
-        statename: state[nameKey],
-        statecode: state[valueKey]
+        stateName: state[nameKey],
+        stateCode: state[valueKey]
       };
     });
     rtoCreateFormFields[0].options = this.toolbarRightActions[0].options;
@@ -111,15 +111,14 @@ export class RtoComponent implements OnInit {
 
   resetRTO() {
     return {
-      stateid: null,
-      rtoname: "",
-      rtocode: "",
+      state: null,
+      rtoName: "",
+      rtoCode: "",
     };
 }
 
 
-  onInputTextChange(event: any) {
-  }
+  onInputTextChange(event: any) {}
 
 
 
@@ -128,12 +127,11 @@ export class RtoComponent implements OnInit {
    * @param data The RTO to be saved.
    * @returns A promise that resolves when the RTO is saved.
    */
-  async onSaveRTO(data: any) : Promise<any> {
-    const rtoObject = {...data,stateid:data.stateid.id}
+  async onSaveRTO(data: any) : Promise<any> {    
     if (this.rto.id) {
-      await this.updateRTO(rtoObject);
+      await this.updateRTO(data);
     } else {
-      await this.createRTO(rtoObject);
+      await this.createRTO(data);
     }
     await this.fetchRTOs(this.toolbarDropDownSelected);
     this.rtoDialog = false;

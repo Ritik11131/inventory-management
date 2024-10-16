@@ -68,4 +68,23 @@ export class DynamicUserService {
 
     }
   }
+
+  async linkRtoToUser(linkObject: any) : Promise<any> {
+    try {
+      const response = await this.http.post('UserRto/Link', linkObject);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async unlinkRtoToUser(unlinkObject: any) : Promise<any> {
+    try {
+      const response = await this.http.post('UserRto/UnLink', unlinkObject);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
