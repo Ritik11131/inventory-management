@@ -1,0 +1,2 @@
+<app-generic-table [data]="inventory" [columns]="columns" [rows]="10" [header]="'Inventory'" [isDataLoading]="isLoading"
+  [actions]="[]" [exportFilename]="'inventory'" [globalFilterFields]="['imei','iccid','sno']" (selectionChange)="onSelectionChange($event)" />
