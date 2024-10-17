@@ -18,4 +18,14 @@ export class InventoryService {
       throw error;
     }
   }
+
+
+  async transferInventory(data:any) : Promise<any> {
+    try {
+      const response = await this.http.post('Inventory',data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

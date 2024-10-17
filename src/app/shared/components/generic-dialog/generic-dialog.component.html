@@ -9,7 +9,7 @@
                 <div class="flex align-items-center mb-2">
                     <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
                     @if(field.validation) {
-                    <i style="font-size: 7px;" class="pi pi-star-fill text-red-200 mr-2"></i>
+                    <i style="font-size: 7px;" class="pi pi-asterisk text-red-500 mr-2"></i>
                     @if(!validationState[field.name] && data[field.name]?.length) {
                     <i class="pi pi-exclamation-circle text-red-500"
                         [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'"

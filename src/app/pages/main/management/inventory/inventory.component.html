@@ -1,2 +1,4 @@
-<app-generic-table [data]="inventory" [columns]="columns" [rows]="10" [header]="'Inventory'" [isDataLoading]="isLoading"
-  [actions]="[]" [exportFilename]="'inventory'" [globalFilterFields]="['imei','iccid','sno']" (selectionChange)="onSelectionChange($event)" />
+<app-generic-table [data]="inventory" [columns]="columns" [rows]="10" [header]="'Inventory'" [selection]="selectedInventory"
+ [isDataLoading]="isLoading" [actions]="[]" [exportFilename]="'inventory'" [toolbarRightActions]="toolbarRightActions"
+[globalFilterFields]="['imei','iccid','sno']" (selectionChange)="onSelectionChange($event)"
+ (transferInventory)="onTransferInventory($event)" (dropdown)="onToolBarDropDownChange($event)" />
