@@ -22,6 +22,12 @@ export const deviceColumns = [
     { field: 'activation_till', header: 'Activation Till' }
 ];
 
+export const InventoryColumns = [
+    { field: 'sno', header: 'Device No' },
+    { field: 'imei', header: 'IMEI' },
+    { field: 'iccid', header: 'ICCID No' },
+]
+
 export const deviceModelColumns = [
     { field: 'index', header: 'S.NO' },
     { field: 'oemName', header: 'User Name' },

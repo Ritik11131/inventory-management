@@ -7,6 +7,7 @@ import { StateComponent } from './state/state.component';
 import { RtoComponent } from './rto/rto.component';
 import { SimProviderComponent } from './sim-provider/sim-provider.component';
 import { DeviceModelComponent } from './device-model/device-model.component';
+import { InventoryComponent } from './inventory/inventory.component';
 
 export const managementRoutes: Routes = [
    {
@@ -40,7 +41,11 @@ export const managementRoutes: Routes = [
       {
          path:'device-model-list',
          component:DeviceModelComponent
-      }
+      },
+      {
+         path:'inventory-list',
+         component:InventoryComponent
+      },
     ]
    },
    

@@ -177,6 +177,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                 ]
             },
             {
+                label: 'Inventory',
+                icon: 'pi pi-car',
+                items: [
+                    {
+                        label: 'Inventory List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/inventory-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/inventory-list');
+                        }
+                    }
+                ]
+            },
+            {
                 label: 'Vehicle',
                 icon: 'pi pi-car',
                 items: [

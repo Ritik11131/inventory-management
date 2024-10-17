@@ -31,6 +31,11 @@ export class BreadcrumbService {
           { label: 'RTO' },
           { label: 'RTO List' }
         ],
+        'inventory-list':[
+          { label: 'Management' },
+          { label: 'Inventory' },
+          { label: 'Inventory List' }
+        ],
         'dynamic-user-list': [
           { label: 'Management' },
           { label: (authService : any) => authService.getUserType() },
