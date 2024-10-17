@@ -47,10 +47,6 @@ export class AuthService {
       : 'User';
   }
 
-  getDeviceEndpointBasedOnRole(): string {
-    return this.tokenService.getDecodedToken()?.role === 'Admin' ? 'DeviceModel' : 'Device';
-  }
-
   getUserName() : string {
     return this.tokenService.getDecodedToken()?.unique_name;
   }

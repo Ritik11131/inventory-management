@@ -210,8 +210,10 @@ export class DeviceListComponent {
     try {
       if (this.device.id && this.currentAction === 'edit') {
         await this.updateDevice(data);
+        await this.fetchAndResetDevice();
       } else if (this.currentAction === 'create') {
         await this.createDevice(data);
+        await this.fetchAndResetDevice();
       } else if (this.currentAction === 'bulkUpload') {
         const formData = new FormData();
         formData.append('file', data.file, data.file.name)
@@ -222,7 +224,13 @@ export class DeviceListComponent {
           const fileContent = e.target.result;
           const firstLine = fileContent.split('\n')[0].trim(); // Read the first row
           if (firstLine === this.bulkUploadHeader) {
-            await this.handleBulkUpload(formData);
+            try {
+              await this.handleBulkUpload(formData); // Proceed if bulk upload succeeds
+              await this.fetchAndResetDevice(); // Close dialog and reset state after success
+            } catch (error) {
+              // Handle bulk upload error, keep dialog open
+              console.error('Bulk upload failed:', error);
+            }
           } else {
             return this.toastService.showError('Error', 'Invalid file format. Please upload a file with the correct headers.');
           }
@@ -230,14 +238,18 @@ export class DeviceListComponent {
       
         fileReader.readAsText(data.file);
       }
-      await this.fetchDevices();
-      this.deviceDialog = false;
-      this.device = this.resetDevice();
-      this.isEditing = false;
-      this.currentAction = null;
     } catch (error) {
       console.log(error);
     }
+  }
+
+
+  async fetchAndResetDevice(): Promise<any> {
+    await this.fetchDevices();
+    this.deviceDialog = false;
+    this.device = this.resetDevice();
+    this.isEditing = false;
+    this.currentAction = null;
   }
 
 
