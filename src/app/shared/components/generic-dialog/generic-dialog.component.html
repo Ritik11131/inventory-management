@@ -22,7 +22,7 @@
                 @switch (field.type) {
                 @case ('text') {
                 <ng-container>
-                    <input (keyup)="onInputChange($event, field)" type="text" pInputText id="{{ field.name }}"
+                    <input class="w-full" (keyup)="onInputChange($event, field)" type="text" pInputText id="{{ field.name }}"
                         [(ngModel)]="data[field.name]" [required]="field.validation" />
                 </ng-container>
                 }
@@ -108,8 +108,15 @@
                 }
                 @case ('file') {
                 <ng-container>
-                    <p-fileUpload chooseLabel="Browse" mode="basic" name="file" accept=".txt" [maxFileSize]="1000000"
-                        [customUpload]="true" (onSelect)="onUpload($event, field)" [auto]="true"/>
+                    <p-fileUpload name="file" (onSelect)="onSelect($event, field)" [multiple]="false" [auto]="true" accept=".txt"
+                        maxFileSize="1000000">
+                        <ng-template pTemplate="empty">
+                            <div class="flex align-items-center justify-content-center flex-column">
+                                <i class="pi pi-cloud-upload border-2 border-circle p-3 text-4xl text-400 border-400"></i>
+                                <p class="mt-4 mb-0">Drag and drop files here to upload.</p>
+                            </div>
+                        </ng-template>
+                    </p-fileUpload>
                 </ng-container>
                 }
                 @case ('radiobutton') {

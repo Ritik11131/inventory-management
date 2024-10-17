@@ -28,6 +28,7 @@ import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
 import { debounceTime, Subject } from 'rxjs';
+import { downloadFile } from '../../../../../shared/utils/common';
 
 @Component({
   selector: 'app-device-list',
@@ -53,6 +54,7 @@ export class DeviceListComponent {
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
   currentAction: 'create' | 'edit' | 'bulkUpload' | null = null;
+  bulkUploadHeader:string = 'VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode';
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
@@ -214,7 +216,19 @@ export class DeviceListComponent {
         const formData = new FormData();
         formData.append('file', data.file, data.file.name)
         formData.append('modelId', data.model.id.toString());
-        await this.handleBulkUpload(formData);
+
+        const fileReader = new FileReader();
+        fileReader.onload = async (e: any) => {
+          const fileContent = e.target.result;
+          const firstLine = fileContent.split('\n')[0].trim(); // Read the first row
+          if (firstLine === this.bulkUploadHeader) {
+            await this.handleBulkUpload(formData);
+          } else {
+            return this.toastService.showError('Error', 'Invalid file format. Please upload a file with the correct headers.');
+          }
+        };
+      
+        fileReader.readAsText(data.file);
       }
       await this.fetchDevices();
       this.deviceDialog = false;
@@ -246,6 +260,7 @@ export class DeviceListComponent {
       this.toastService.showSuccess('Success', 'Provider Created Successfully!');
     } catch (error: any) {
       this.toastService.showError('Error', error.error.data.message);
+      downloadFile(error?.error?.data?.error, 'error_rows.txt','text/plain');
       throw error;
     }
   }

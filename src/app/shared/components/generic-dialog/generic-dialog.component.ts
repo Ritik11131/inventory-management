@@ -142,7 +142,7 @@ export class GenericDialogComponent implements OnChanges {
     this.isConfirmPasswordToggled = !this.isConfirmPasswordToggled;
   }
 
-  onUpload(event: any, field: any) {
+  onSelect(event: any, field: any) {
     const fieldName = field.name;
     this.data[fieldName] = event.currentFiles[0];
   }
