@@ -51,5 +51,5 @@ export const downloadFile = (data: any, fileName: string, fileType: string): voi
     } else {
       console.error('Browser does not support the required Blob functionality.');
     }
-  }
+}
   

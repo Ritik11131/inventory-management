@@ -50,6 +50,7 @@ export class GenericTableComponent {
   linkRTO = output<any>();
   transferInventory = output<any>();
   bulkUpload = output<any>();
+  sampleBulkUpload = output<any>();
 
   onSelectionChange(event: any[]) {
     this.selectionChange.emit(event);
@@ -89,6 +90,10 @@ export class GenericTableComponent {
 
   onUpload() {
     this.bulkUpload.emit(true)
+  }
+
+  onExportSample() {
+    this.sampleBulkUpload.emit(true);
   }
 
   onTransferInventory() {

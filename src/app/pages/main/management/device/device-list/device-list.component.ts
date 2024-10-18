@@ -243,6 +243,12 @@ export class DeviceListComponent {
     }
   }
 
+  exportSampleBulkUpload(event : any) {
+    if(event) {
+      downloadFile([`VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode\nT6|ABC6T4I011900000001|861359037709909|8991000904643962735|08/2024|26`], 'sample_bulk_upload.txt','text/plain');
+    } 
+  }
+
 
   async fetchAndResetDevice(): Promise<any> {
     await this.fetchDevices();
