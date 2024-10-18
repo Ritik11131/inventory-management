@@ -5,29 +5,27 @@
             <p-button [pTooltip]="'Link RTO'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-link" class="mr-2" (onClick)="onLinkRTO()" />
             <p-button [pTooltip]="'Transfer Inventory'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-external-link" class="mr-2" (onClick)="onTransferInventory()" />
             <p-button [pTooltip]="'Bulk Upload'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-cloud-upload" (onClick)="onUpload()" />
-            <p-button [pTooltip]="'Export Sample Bulk Upload'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-file-o" (onClick)="onExportSample()" />
+            <p-button [pTooltip]="'Export Sample Bulk Upload .txt File'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-file-o" (onClick)="onExportSample()" />
             <p-button [pTooltip]="'Export CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" />
         </div>
-        <div class="p-toolbar-group-center">
+        <div class="p-toolbar-group-end">
+            @if(toolbarRightActions.length) {
+                @for (action of toolbarRightActions; track $index) {
+                    @if(action.type === 'button') {
+                        <p-button label="Save" icon="pi pi-check" />
+                    }
+        
+                    @if(action.type === 'dropdown') {
+                        <p-dropdown styleClass="mr-2" appendTo="body" [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
+                            [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
+                    }
+                }
+            }
             <span class="p-input-icon-left">
                 <i class="pi pi-search"></i>
                 <input [disabled]="!data.length" pInputText placeholder="Search" (input)="onSearch($event)" />
             </span>
         </div>
-        @if(toolbarRightActions.length) {
-        <div class="p-toolbar-group-end">
-            @for (action of toolbarRightActions; track $index) {
-                @if(action.type === 'button') {
-                    <p-button label="Save" icon="pi pi-check" />
-                }
-        
-                @if(action.type === 'dropdown') {
-                    <p-dropdown appendTo="body" [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
-                        [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
-                }
-            }
-        </div>
-        }
     </p-toolbar>
 
 
