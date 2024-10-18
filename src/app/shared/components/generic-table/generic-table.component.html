@@ -1,0 +1,127 @@
+<div class="px-4 md:px-6 lg:px-8">
+    <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
+        <div class="p-toolbar-group-start">
+            <p-button [pTooltip]="'Create New'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
+            <p-button [pTooltip]="'Link RTO'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-link" class="mr-2" (onClick)="onLinkRTO()" />
+            <p-button [pTooltip]="'Transfer Inventory'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-external-link" class="mr-2" (onClick)="onTransferInventory()" />
+            <p-button [pTooltip]="'Bulk Upload'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-cloud-upload" (onClick)="onUpload()" />
+            <p-button [pTooltip]="'Export CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" />
+        </div>
+        <div class="p-toolbar-group-center">
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input [disabled]="!data.length" pInputText placeholder="Search" (input)="onSearch($event)" />
+            </span>
+        </div>
+        @if(toolbarRightActions.length) {
+        <div class="p-toolbar-group-end">
+            @for (action of toolbarRightActions; track $index) {
+                @if(action.type === 'button') {
+                    <p-button label="Save" icon="pi pi-check" />
+                }
+        
+                @if(action.type === 'dropdown') {
+                    <p-dropdown appendTo="body" [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
+                        [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
+                }
+            }
+        </div>
+        }
+    </p-toolbar>
+
+
+
+    <p-table #dt [value]="data" [rows]="rows" [columns]="columns" [paginator]="true" [globalFilterFields]="globalFilterFields"
+        [(selection)]="selection" [rowHover]="true" [scrollable]="true" [exportFilename]="exportFilename"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+        (selectionChange)="onSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
+        styleClass="p-datatable-sm p-datatable-gridlines">
+
+        <!-- Dynamic Columns -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th pFrozenColumn style="width: 4rem">
+                    @if(selectionMode === 'multiple') {
+                        <p-tableHeaderCheckbox/>
+                    }
+                </th>
+                @for (col of columns; track $index) {
+                <th pFrozenColumn [frozen]="col.frozen || false" alignFrozen="right" pSortableColumn="{{ col.field }}" [style.minWidth]="col.minWidth || '15rem'">
+                    {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                </th>
+                }
+                @if(actions.length) {
+                    <th pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">Actions</th>
+                }
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+            <tr>
+                <td pFrozenColumn>
+                    @if(selectionMode === 'multiple') {
+                        <p-tableCheckbox [value]="item"/>
+                    } @else {
+                        <p-tableRadioButton [value]="item" />
+                    }
+                </td>
+                @for (col of columns; track $index) {
+                    @if(col.field === 'active'){
+                        <td pFrozenColumn alignFrozen="right" [frozen]="col.frozen">
+                            <p-tag [severity]="item[col.field] ? 'success' : 'danger'" 
+                                   [value]="item[col.field] ? 'Active' : 'In Active'" />
+                        </td>
+                    }  @else {
+                        @if(col.field === 'index') {
+                            <td>{{ rowIndex + 1 }}</td>
+                        } @else if(col.nested) {
+                            <td>{{item[col.field][col.nestedName]}}</td>
+                        } @else {
+                            <td>{{item[col.field] || '-'}}</td>
+                        }
+                    }
+                }
+                @if(actions.length) {
+                <td pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">
+                    @for(action of actions; track $index) {
+                    @if(action === 'edit') {
+                    <i [pTooltip]="'Edit'" tooltipPosition="bottom" (click)="onEdit(item)"
+                        class="pi pi-pencil ml-2 text-sm text-primary cursor-pointer"></i>
+                    }
+                
+                    @if(action === 'delete') {
+                    <i [pTooltip]="'Delete'" tooltipPosition="bottom" (click)="onDelete($event,item)"
+                        class="pi pi-trash ml-4 text-sm text-red-500 cursor-pointer"></i>
+                    }
+                    }
+                </td>
+                }
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="sm:text-center text-left">
+                    @if(isDataLoading) {
+                        <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem" />
+                    } @else {
+                        No Data Found.
+                    }
+                </td>
+            </tr>
+        </ng-template>
+
+        <!-- Summary -->
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{ data ? data.length : 0 }} items.
+            </div>
+        </ng-template>
+    </p-table>
+
+
+    <p-confirmDialog [style]="{ width: '300px' }" />
+
+
+
+</div>
