@@ -1,10 +1,16 @@
 {
   "hosting": {
-    "public": "dist/inventory-management/browser",
+    "public": "dist/vahan/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
