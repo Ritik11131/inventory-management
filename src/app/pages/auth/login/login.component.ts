@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
   captchaCode: string = '';
   userInput: string = '';
   isPasswordToggled: boolean = false;
+  captchaImageClass: string = '';
   
   
   constructor(private toastService:ToastService,private authService:AuthService,private router:Router) {}
@@ -115,6 +116,11 @@ export class LoginComponent implements OnInit {
 
   togglePassword() {
     this.isPasswordToggled = !this.isPasswordToggled;
+  }
+
+
+  onCaptchaInputChange(event: any) {
+    this.captchaImageClass = event.target.value === this.captchaCode ? 'pi pi-check-circle text-green-600' : 'pi pi-times-circle text-red-600'
   }
 
 }
