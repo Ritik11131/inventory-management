@@ -33,12 +33,20 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             // Clone the original request with the new token
             const newAuthReq = req.clone({
               setHeaders: {
-                Authorization: tokenService.getToken() || ''
+                Authorization: tokenService.getToken()
               }
             });
 
             // Retry the original request with the new token
             return next(newAuthReq);
+          }),
+          catchError((refreshError : HttpErrorResponse) => {
+            // If refresh token API also returns 401, log the user out
+            if (refreshError.status === 401) {
+              tokenService.clearTokens();
+            }
+            // Throw the refresh error
+            return throwError(refreshError);
           })
         );
       } else {
