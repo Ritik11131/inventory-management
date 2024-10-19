@@ -71,8 +71,8 @@
                         </ng-template>
                     </p-dropdown>
                     } @else {
-                    <p-dropdown styleClass="w-full" appendTo="body" [showClear]="true" [filter]="true"
-                        [filterBy]="field.dropdownKeys.nameKey" inputId="{{ field.name }}"
+                    <p-dropdown [placeholder]="field.placeholder" styleClass="w-full" appendTo="body"
+                         [showClear]="true" [filter]="true" [filterBy]="field.dropdownKeys.nameKey" inputId="{{ field.name }}"
                         [(ngModel)]="data[field.name]" (onChange)="onDropdownChange($event, field)"
                         [optionLabel]="field.dropdownKeys.nameKey" [options]="field.options">
                     </p-dropdown>

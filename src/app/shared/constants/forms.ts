@@ -180,6 +180,7 @@ export const linkRtoFormFields : FormFields[] = [
     {
         name: 'stateid',
         label: 'Select State',
+        placeholder: 'Select a state',
         type: 'dropdown',
         options: [],
         dropdownKeys:{},
@@ -200,6 +201,7 @@ export const bulkUploadDeviceFormFields : FormFields[] = [
     {
         name: 'model',
         label: 'Select Model',
+        placeholder: 'Select a model',
         type: 'dropdown',
         options: [],
         dropdownKeys:{},
