@@ -34,6 +34,7 @@ export class DynamicUserComponent {
   selectedUsers!: any;
   isEditing:boolean = false;
   userType!: string;
+  selectionMode!: 'single' | 'multiple' | 'none';
   hideFields: string[] = [];
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
@@ -55,6 +56,15 @@ export class DynamicUserComponent {
 
   ngOnInit() {
     this.userType = this.authService.getUserType();
+    this.selectionMode = this.userType === 'Dealer' ? 'single' : 'none';
+    console.log(this.selectionMode);
+    
+    if (this.selectionMode === 'none') {
+      // Check if the 'index' column does not exist in the columns array
+      if (!this.columns.find(col => col.field === 'index')) {
+        this.columns.unshift({ field: 'index', header: 'S.NO', minWidth: '7rem' });
+      }
+    }
     this.fetchDynamicUserList().then();
   }
 
