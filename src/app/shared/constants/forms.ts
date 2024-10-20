@@ -141,6 +141,24 @@ export const deviceCreateFormFields : FormFields[] = [
     }
 ];
 
+export const deviceTransferInventoryFormFields : FormFields[] = [
+    {
+        name:'user',
+        label:'Select Distributor',
+        type:'dropdown',
+        options:[],
+        dropdownKeys:{},
+        placeholder:'Select a Distributor',
+        hide: (hideFields: string[]) => hideFields.includes('user'),
+    },
+    {
+        name: 'no_of_device',
+        label: 'Number of Devices to Transfer',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('no_of_device'),
+    },
+]
+
 
 export const rtoCreateFormFields : FormFields[] = [
     {

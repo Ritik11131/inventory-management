@@ -117,7 +117,7 @@ export class GenericDialogComponent implements OnChanges {
   onInputChange(event: any, field: any) {
     const value = event.target.value;
     const fieldName = field.name;
-    this.onInputTextChange.emit({ value, fieldName });
+    this.onInputTextChange.emit({ value, field });
   }
 
   onDropdownChange(event: any, field: any) {

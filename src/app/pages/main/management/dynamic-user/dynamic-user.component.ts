@@ -113,8 +113,11 @@ export class DynamicUserComponent {
     this.isValidated = Object.values(this.validationState).every(val => val === true);
   }
 
-  async onInputTextChange({ fieldName, value }: any): Promise<void> {
-    this.validationDebounceSubject.next({ fieldName, value });
+  async onInputTextChange({ field, value }: any): Promise<void> {
+    if(field.hasOwnProperty('validation')) {
+      const fieldName = field.name;
+      this.validationDebounceSubject.next({ fieldName, value });
+    }
   }
 
 

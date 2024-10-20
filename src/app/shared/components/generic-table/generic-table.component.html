@@ -49,11 +49,13 @@
         <!-- Dynamic Columns -->
         <ng-template pTemplate="header">
             <tr>
-                <th pFrozenColumn style="width: 4rem">
-                    @if(selectionMode === 'multiple') {
-                        <p-tableHeaderCheckbox/>
-                    }
-                </th>
+                @if (selectionMode !== 'none') {
+                    <th pFrozenColumn style="width: 4rem">
+                        @if(selectionMode === 'multiple') {
+                            <p-tableHeaderCheckbox/>
+                        }
+                    </th>
+                }
                 @for (col of columns; track $index) {
                 <th pFrozenColumn [frozen]="col.frozen || false" alignFrozen="right" pSortableColumn="{{ col.field }}" [style.minWidth]="col.minWidth || '15rem'">
                     {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
@@ -67,13 +69,15 @@
 
         <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
             <tr>
-                <td pFrozenColumn>
-                    @if(selectionMode === 'multiple') {
-                        <p-tableCheckbox [value]="item"/>
-                    } @else if(selectionMode === 'single') {
-                        <p-tableRadioButton [value]="item" />
-                    }
-                </td>
+                @if(selectionMode !== 'none') {   
+                    <td pFrozenColumn>
+                        @if(selectionMode === 'multiple') {
+                            <p-tableCheckbox [value]="item"/>
+                        } @else if(selectionMode === 'single') {
+                            <p-tableRadioButton [value]="item" />
+                        }
+                    </td>
+                }
                 @for (col of columns; track $index) {
                     @if(col.field === 'active'){
                         <td pFrozenColumn alignFrozen="right" [frozen]="col.frozen">

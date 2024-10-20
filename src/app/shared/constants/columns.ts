@@ -10,6 +10,7 @@ export const dynamicUserColumns = [
 
 
 export const deviceColumns = [
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field: 'sno', header: 'Device No' },
     { field: 'imei', header: 'IMEI' },
     { field: 'iccid', header: 'ICCID No' },
@@ -26,7 +27,7 @@ export const InventoryColumns = [
     { field: 'sno', header: 'Device No' },
     { field: 'imei', header: 'IMEI' },
     { field: 'iccid', header: 'ICCID No' },
-]
+];
 
 export const deviceModelColumns = [
     { field: 'index', header: 'S.NO' },
@@ -37,7 +38,7 @@ export const deviceModelColumns = [
 export const simProviders = [
     { field: 'id', header: 'Id' },
     { field: 'providerName', header: 'Provider Name' },
-]
+];
 
 
 export const stateColumns = [

@@ -2,7 +2,7 @@
     header="{{ (isEditing ? 'Update ' : ' ') + header + ' Details' }}" [modal]="modal" styleClass="{{ styleClass }}"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
     <ng-template pTemplate="content">
-        <div class="formgrid grid">
+        <div class="formgrid grid mt-3">
             @for (field of fields; track $index) {
             @if(!field.hide(this.hideFields)) {
             <div class="field col-12 sm:col-12 md:col-4">

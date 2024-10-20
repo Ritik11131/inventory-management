@@ -23,12 +23,14 @@ import { GenericDialogComponent } from '../../../../../shared/components/generic
 import { ToastService } from '../../../../../core/services/toast.service';
 import { deviceColumns } from '../../../../../shared/constants/columns';
 import { DeviceService } from '../../../../../core/services/device.service';
-import { bulkUploadDeviceFormFields, deviceCreateFormFields } from '../../../../../shared/constants/forms';
+import { bulkUploadDeviceFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
 import { debounceTime, Subject } from 'rxjs';
 import { downloadFile } from '../../../../../shared/utils/common';
+import { DynamicUserService } from '../../../../../core/services/dynamic-user.service';
+import { InventoryService } from '../../../../../core/services/inventory.service';
 
 @Component({
   selector: 'app-device-list',
@@ -53,14 +55,14 @@ export class DeviceListComponent {
   submitted: boolean = false;
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
-  currentAction: 'create' | 'edit' | 'bulkUpload' | null = null;
+  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | null = null;
   bulkUploadHeader:string = 'VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode';
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
 
-  constructor(private toastService: ToastService, 
-    private confirmationService: ConfirmationService, 
+  constructor(private toastService: ToastService, private dynamicUserService:DynamicUserService,
+    private confirmationService: ConfirmationService,  private inventoryService:InventoryService,
     private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService) {
       this.validationDebounceSubject.pipe(
         debounceTime(400)
@@ -135,26 +137,35 @@ export class DeviceListComponent {
    * 
    * @returns {Promise<any>} Resolves with the populated dropdown options.
    */
-  async generateDropdownValues(type: 'create' | 'edit' | 'bulkUpload'): Promise<any> {
+  async generateDropdownValues(type: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory'): Promise<any> {
     try {
-      const response = await this.deviceModelService.getList();
+      const response = (type === 'create' || type === 'edit' || type === 'bulkUpload') ? 
+                        await this.deviceModelService.getList() : 
+                        await this.dynamicUserService.getList();
       // Determine which form fields to use based on the 'type'
-      const formFields = (type === 'create' || type === 'edit') 
-        ? deviceCreateFormFields 
-        : bulkUploadDeviceFormFields;
+      const formFields = (type === 'create' || type === 'edit') ? deviceCreateFormFields : 
+                          type === 'bulkUpload' ? bulkUploadDeviceFormFields : 
+                          deviceTransferInventoryFormFields;
   
       formFields[0].options = response.data.map((obj: any) => {
         const keys = Object.keys(obj);       
-        const idKey: any = keys.find(key => key.includes('id'));
-        const nameKey: any = keys.find(key => key.includes('modelName'));
+        const idKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload') ? 'id' : 'sno'));
+        const nameKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload') ? 'modelName' : 'name'));
   
         // Setting dropdownKeys based on found keys
         formFields[0].dropdownKeys = { idKey, nameKey };
+
+
   
-        return {
-          id: obj[idKey],
-          modelName: obj[nameKey],
-        };
+        return (type === 'create' || type === 'edit' || type === 'bulkUpload')
+          ? {
+            id: obj[idKey],
+            modelName: obj[nameKey],
+          }
+          : {
+            sno: obj[idKey],
+            name: obj[nameKey],
+          };
       });
   
       console.log(formFields);
@@ -163,15 +174,39 @@ export class DeviceListComponent {
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       // If there's an error, clear the options
-      const formFields = (type === 'create' || type === 'edit') 
-        ? deviceCreateFormFields 
-        : bulkUploadDeviceFormFields;
+      const formFields = (type === 'create' || type === 'edit') ? deviceCreateFormFields : 
+                          type === 'bulkUpload' ? bulkUploadDeviceFormFields : 
+                          deviceTransferInventoryFormFields;
   
       formFields[0].options = [];
       this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
     }
   }
-  
+
+
+
+  // async generateTranferInventoryDropdownValues(): Promise<any> {
+  //   try {
+  //     const response = await this.dynamicUserService.getList();
+  //     deviceTransferInventoryFormFields[0].options = response.data.map((user: any) => {
+  //       const keys = Object.keys(user);
+  //       const idKey: any = keys.find(key => key.includes('sno'));
+  //       const nameKey: any = keys.find(key => key.includes('name'));
+  //       // const valueKey: any = keys.find(key => key.includes('sno'));
+  //       deviceTransferInventoryFormFields[0].dropdownKeys = { idKey, nameKey };
+  //       return {
+  //         sno: user[idKey],
+  //         name: user[nameKey],
+  //         // id: user[valueKey]
+  //       };
+  //     });
+
+  //     // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+  //   } catch (error) {
+  //     this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
+  //   }
+  // }
+
 
 
 
@@ -196,6 +231,13 @@ export class DeviceListComponent {
       iccid:"",
       sno:""
     };
+  }
+
+  resetTransferInventoryDevice() {
+    return {
+      user:null,
+      no_of_device:[]
+    }
   }
 
   resetBulkUploadDevice() {
@@ -237,11 +279,29 @@ export class DeviceListComponent {
         };
       
         fileReader.readAsText(data.file);
+      } else {
+        console.log(data,'data');
+        await this.transferInventory(data);
       }
     } catch (error) {
       console.log(error);
     }
   }
+
+
+
+  async transferInventory({ user, no_of_device } : { user : { sno:number, name:string }, no_of_device : string }) : Promise<any> {
+    const payload = { 
+      userId: user.sno,
+      DeviceId: this.devices.slice(0, +no_of_device).map((device: any) => device.id) // Limiting to the first 5 devices
+   };
+     try {
+       const response = await this.inventoryService.transferInventory(payload);
+       this.toastService.showSuccess('Success', response.data);
+     } catch (error : any) {
+       this.toastService.showError('Error', error.error.data.message);
+     }
+   }
 
   exportSampleBulkUpload(event : any) {
     if(event) {
@@ -333,6 +393,7 @@ export class DeviceListComponent {
   onHideDialog(isVisible: boolean) {
     this.deviceDialog = isVisible;
     this.isEditing = false;
+    this.device = null;
   }
 
 
@@ -364,14 +425,28 @@ export class DeviceListComponent {
 
 
 
-  onInputTextChange({ fieldName, value }: any) {
-    this.validationDebounceSubject.next({ fieldName, value });
-    // console.log(event);
+  onInputTextChange({ field, value }: any) {
+    console.log(field);
+    if(field.hasOwnProperty('validation')) {
+      const fieldName = field.name;
+      this.validationDebounceSubject.next({ fieldName, value });
+    }
   }
 
 
   onSelectionChange(event: any) {
     console.log(event);
+  }
+
+
+  async onTransferInventory(event:any) : Promise<any> {
+    this.currentAction = 'tranferInventory';
+    await this.generateDropdownValues('tranferInventory');
+    this.fields = deviceTransferInventoryFormFields;
+    this.isEditing = !event;
+    this.isValidated = true;
+    this.device = this.resetTransferInventoryDevice();
+    this.deviceDialog = event;
   }
 
 }
