@@ -222,10 +222,15 @@ export class DynamicUserComponent {
   async onDialogDropDownChange(event: any) : Promise<any> {
     const {fieldName , selectedValue} = event;
     if(fieldName === 'stateid') {
-      const response = await this.rtoService.getList(selectedValue);
-      const linkedRto = await this.rtoService.getLinkedRtoUserWise(this.selectedUsers)
-      console.log(response,'response');
-      this.generateLinkedUnlinkedPickList(response,linkedRto);
+      try {
+        const response = await this.rtoService.getList(selectedValue);
+        const linkedRto = await this.rtoService.getLinkedRtoUserWise(this.selectedUsers);
+        this.generateLinkedUnlinkedPickList(response,linkedRto);
+      } catch (error : any) {
+        console.log(error);
+        this.toastService.showError('Error', error.error.data);
+        
+      }
     }
   }
 
