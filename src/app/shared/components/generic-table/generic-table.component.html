@@ -70,7 +70,7 @@
                 <td pFrozenColumn>
                     @if(selectionMode === 'multiple') {
                         <p-tableCheckbox [value]="item"/>
-                    } @else {
+                    } @else if(selectionMode === 'single') {
                         <p-tableRadioButton [value]="item" />
                     }
                 </td>

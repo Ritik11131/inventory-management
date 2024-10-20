@@ -8,6 +8,10 @@ import { TokenService } from './token.service';
 export class AuthService {
 
 
+  // User Role refres to the the parent or logged in user.
+  // User Type refres to the the child user.
+
+
   constructor(private http: HttpService, private tokenService: TokenService) {}
 
 

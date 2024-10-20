@@ -39,9 +39,9 @@ export const tableActionsConfigRoleWise : any = {
       },
     Distributor: {
         DealerList: [
-            { label: 'Add', icon: 'pi pi-plus', action: 'onNewDealer' },
-            { label: 'Export to CSV', icon: 'pi pi-print', action: 'onExportDealer' },
-            { label: 'Link RTO', icon: 'pi pi-link', action: 'onLinkRTO' }
+            { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
+            { label: 'Link RTO', icon: 'pi pi-link', action: 'onLinkRTO' },
+            { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' },
         ],
         DeviceList: [
             { label: 'Transfer Inventory', icon: 'pi pi-external-link', action: 'onTransferInventory' },

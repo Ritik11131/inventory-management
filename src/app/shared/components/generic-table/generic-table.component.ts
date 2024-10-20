@@ -69,10 +69,9 @@ export class GenericTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadActions();    
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    
+    this.loadActions();    
   }
 
 
@@ -89,18 +88,21 @@ export class GenericTableComponent implements OnInit {
 
 
   invokeAction(action: any) {
-    if(action === 'onNewUser') {
-      this.onNewUser();
-    } else if(action === 'onPrint') {
-      this.onPrint();
-    } else if(action === 'onLinkRTO') {
-      this.onLinkRTO();
-    } else if(action === 'onUpload') {
-      this.onUpload();
-    } else if(action === 'onExportSample') {
-      this.onExportSample();
-    } else if(action === 'onTransferInventory') {
-      this.onTransferInventory();
+    const actionMap: { [key: string]: () => void } = {
+      'onNewUser': () => this.onNewUser(),
+      'onPrint': () => this.onPrint(),
+      'onLinkRTO': () => this.onLinkRTO(),
+      'onUpload': () => this.onUpload(),
+      'onExportSample': () => this.onExportSample(),
+      'onTransferInventory': () => this.onTransferInventory(),
+    };
+  
+    const actionMethod = actionMap[action];
+    
+    if (actionMethod) {
+      actionMethod(); // Invoke the corresponding method
+    } else {
+      console.warn(`No action found for: ${action}`);
     }
   }
 
