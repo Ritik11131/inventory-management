@@ -1,5 +1,5 @@
 <app-generic-table [data]="providers" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="['edit','delete']"
-   [exportFilename]="'Sim Providers'" [globalFilterFields]="['providerName','id']" (edit)="onEditProvider($event)" (delete)="onDeleteProvider($event)"
+   [exportFilename]="'Sim Providers'" [globalFilterFields]="['providerName','id']" (edit)="onEditProvider($event)" (delete)="onDeleteProvider($event)" [selectionMode]="'none'"
     (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" />
 
 

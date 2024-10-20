@@ -30,24 +30,27 @@ export const InventoryColumns = [
 ];
 
 export const deviceModelColumns = [
-    { field: 'index', header: 'S.NO' },
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field: 'oemName', header: 'User Name' },
     { field: 'modelName', header: 'Model Name' }
 ];
 
 export const simProviders = [
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field: 'id', header: 'Id' },
     { field: 'providerName', header: 'Provider Name' },
 ];
 
 
 export const stateColumns = [
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field: 'stateName', header: 'State Name', minWidth: '10rem' },
     { field: 'stateCode', header: 'State Code', minWidth: '10rem' },
 ];
 
 
 export const rtoColumns = [
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field: 'state', header: 'State Name', minWidth: '14rem', nested: true, nestedName: 'stateName' },
     { field: 'rtoCode', header: 'RTO Code', minWidth: '5rem' },
     { field: 'rtoName', header: 'RTO Name', minWidth: '5rem' }

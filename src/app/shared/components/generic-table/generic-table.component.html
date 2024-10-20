@@ -2,14 +2,9 @@
     <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
         <div class="p-toolbar-group-start">
             @for (action of availableActions; track $index) {
-                <p-button
-                [pTooltip]="action.label"
-                tooltipPosition="bottom"
-                [text]="true"
-                [outlined]="true"
-                [icon]="action.icon"
-                class="mr-2"
-                (onClick)="invokeAction(action.action)" />
+                <p-button [pTooltip]="action.label" tooltipPosition="bottom" [text]="true" [outlined]="true" 
+                          [icon]="action.icon" class="mr-2"
+                          (onClick)="invokeAction(action.action)" />
             }
             <!-- <p-button [pTooltip]="'Create New'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
             <p-button [pTooltip]="'Link RTO'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-link" class="mr-2" (onClick)="onLinkRTO()" />
