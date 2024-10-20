@@ -224,7 +224,11 @@ export class DynamicUserComponent {
     if(fieldName === 'stateid') {
       try {
         const response = await this.rtoService.getList(selectedValue);
+        console.log(response,'rtos');
+        
         const linkedRto = await this.rtoService.getLinkedRtoUserWise(this.selectedUsers);
+        console.log(linkedRto,'linked rto');
+        
         this.generateLinkedUnlinkedPickList(response,linkedRto);
       } catch (error : any) {
         console.log(error);

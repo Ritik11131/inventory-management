@@ -18,8 +18,8 @@ export class ToastService {
     this.messageService.add({ severity: 'info', summary, detail });
   }
 
-  showWarn(summary: string, detail: string) {
-    this.messageService.add({ severity: 'warn', summary, detail });
+  showWarn(summary: string, detail: string, life?: number) {
+    this.messageService.add({ severity: 'warn', summary, detail, life });
   }
 
   showError(summary: string, detail: string) {

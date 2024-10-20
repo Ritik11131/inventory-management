@@ -2,9 +2,13 @@ import { HttpRequest, HttpHandlerFn, HttpInterceptorFn, HttpErrorResponse } from
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { TokenService } from '../services/token.service';
+import { Router } from '@angular/router';
+import { ToastService } from '../services/toast.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
+  const routerService = inject(Router);
+  const toastService = inject(ToastService);
 
   // Don't add the Authorization header for the login or refresh token endpoint
   if (req.url.endsWith('/login') || req.url.endsWith('/Auth/refresh')) {
@@ -41,9 +45,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(newAuthReq);
           }),
           catchError((refreshError : HttpErrorResponse) => {
+            console.log(refreshError,'refresherror');
+            
             // If refresh token API also returns 401, log the user out
             if (refreshError.status === 401) {
               tokenService.clearTokens();
+              setTimeout(()=>{
+                routerService.navigateByUrl('/auth/login');
+                toastService.showWarn('Session Expired', 'Please login again!', 10000);
+              },500);
             }
             // Throw the refresh error
             return throwError(refreshError);
