@@ -1,12 +1,22 @@
 <div class="px-4 md:px-6 lg:px-8">
     <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
         <div class="p-toolbar-group-start">
-            <p-button [pTooltip]="'Create New'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
+            @for (action of availableActions; track $index) {
+                <p-button
+                [pTooltip]="action.label"
+                tooltipPosition="bottom"
+                [text]="true"
+                [outlined]="true"
+                [icon]="action.icon"
+                class="mr-2"
+                (onClick)="invokeAction(action.action)" />
+            }
+            <!-- <p-button [pTooltip]="'Create New'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
             <p-button [pTooltip]="'Link RTO'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-link" class="mr-2" (onClick)="onLinkRTO()" />
             <p-button [pTooltip]="'Transfer Inventory'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-external-link" class="mr-2" (onClick)="onTransferInventory()" />
             <p-button [pTooltip]="'Bulk Upload'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-cloud-upload" (onClick)="onUpload()" />
             <p-button [pTooltip]="'Export Sample Bulk Upload .txt File'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-file-o" (onClick)="onExportSample()" />
-            <p-button [pTooltip]="'Export To CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" />
+            <p-button [pTooltip]="'Export To CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" /> -->
         </div>
         <div class="p-toolbar-group-end">
             @if(toolbarRightActions.length) {

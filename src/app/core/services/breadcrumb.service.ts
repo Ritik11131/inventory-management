@@ -117,4 +117,9 @@ export class BreadcrumbService {
   }
 
 
+  getBreadCrumbsJson() : MenuItem[] {
+    return this.breadCrumbs;
+  }
+
+
 }

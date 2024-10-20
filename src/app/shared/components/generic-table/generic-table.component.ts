@@ -1,4 +1,4 @@
-import { Component, Input, output, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, output, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
@@ -16,6 +16,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { tableActionsConfigRoleWise } from '../../constants/table-config';
+import { AuthService } from '../../../core/services/auth.service';
+import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
+import { tableActions } from '../../interfaces/table';
 
 @Component({
   selector: 'app-generic-table',
@@ -26,9 +30,14 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.scss',
 })
-export class GenericTableComponent {
+export class GenericTableComponent implements OnInit {
 
   @ViewChild('dt') dt: Table | any;
+
+  userRole: string = '';
+  currentSection: string | any = '';
+  tableActionsConfigRoleWise : any = tableActionsConfigRoleWise;
+  availableActions: tableActions[] = [];
 
   @Input() columns: any[] = []; // Dynamic columns
   @Input() data: any[] = []; // Data for the table
@@ -51,6 +60,51 @@ export class GenericTableComponent {
   transferInventory = output<any>();
   bulkUpload = output<any>();
   sampleBulkUpload = output<any>();
+
+
+  constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService) {
+    this.userRole = this.authService.getUserRole();
+    this.currentSection = this.breadcrumbService.getBreadCrumbsJson()[this.breadcrumbService.getBreadCrumbsJson().length - 1]?.label?.replace(/\s+/g, '');;
+    console.log(this.currentSection,'section');
+  }
+
+  ngOnInit(): void {
+    this.loadActions();    
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    
+  }
+
+
+
+  loadActions() {
+    // Retrieve actions based on role and section
+    if (tableActionsConfigRoleWise[this.userRole] && tableActionsConfigRoleWise[this.userRole][this.currentSection]) {
+      this.availableActions = tableActionsConfigRoleWise[this.userRole][this.currentSection];
+    }
+
+    console.log(this.availableActions,'actions');
+    
+  }
+
+
+  invokeAction(action: any) {
+    if(action === 'onNewUser') {
+      this.onNewUser();
+    } else if(action === 'onPrint') {
+      this.onPrint();
+    } else if(action === 'onLinkRTO') {
+      this.onLinkRTO();
+    } else if(action === 'onUpload') {
+      this.onUpload();
+    } else if(action === 'onExportSample') {
+      this.onExportSample();
+    } else if(action === 'onTransferInventory') {
+      this.onTransferInventory();
+    }
+  }
+
+
 
   onSelectionChange(event: any[]) {
     this.selectionChange.emit(event);

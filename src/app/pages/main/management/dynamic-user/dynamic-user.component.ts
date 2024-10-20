@@ -210,9 +210,9 @@ export class DynamicUserComponent {
   }
 
 
-  generateLinkedUnlinkedPickList(response : any,linkedRto : any) { 
-    this.linked = linkedRto.data[0]?.rtoId;
-    this.unlinked = response.data.filter((item1 : any) => 
+  generateLinkedUnlinkedPickList(rtoList : any,linkedRto : any) { 
+    this.linked = linkedRto?.data ? linkedRto?.data[0]?.rtoId : [];
+    this.unlinked = rtoList.data.filter((item1 : any) => 
       !this.linked.some(item2 => item1['id'] === item2['id'])
     );
     console.log(this.unlinked);
@@ -221,20 +221,29 @@ export class DynamicUserComponent {
 
   async onDialogDropDownChange(event: any) : Promise<any> {
     const {fieldName , selectedValue} = event;
+    let rtoList;
+    let linkedRto;
+    this.linked= [];
+    this.unlinked = [];
     if(fieldName === 'stateid') {
       try {
-        const response = await this.rtoService.getList(selectedValue);
-        console.log(response,'rtos');
-        
-        const linkedRto = await this.rtoService.getLinkedRtoUserWise(this.selectedUsers);
-        console.log(linkedRto,'linked rto');
-        
-        this.generateLinkedUnlinkedPickList(response,linkedRto);
+        rtoList = await this.rtoService.getList(selectedValue);
+        console.log(rtoList,'rtos');
       } catch (error : any) {
         console.log(error);
+        rtoList = [];
+        this.toastService.showError('Error', error.error.data);
+      }
+
+      try {
+        linkedRto = await this.rtoService.getLinkedRtoUserWise(this.selectedUsers);
+        console.log(linkedRto,'linked rto');
+      } catch (error  :any) {
+        linkedRto = [];
         this.toastService.showError('Error', error.error.data);
         
       }
+      this.generateLinkedUnlinkedPickList(rtoList,linkedRto);
     }
   }
 
