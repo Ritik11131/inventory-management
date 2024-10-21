@@ -10,7 +10,8 @@ import {ToastModule} from 'primeng/toast';
   standalone: true,
   imports: [RouterOutlet,ButtonModule,ToastModule,CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  providers:[]
 })
 export class AppComponent {
   title = 'inventory-management';
