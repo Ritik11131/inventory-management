@@ -74,10 +74,10 @@
                     </td>
                 }
                 @for (col of columns; track $index) {
-                    @if(col.field === 'active'){
-                        <td pFrozenColumn alignFrozen="right" [frozen]="col.frozen">
+                    @if(col.field === 'active' || col.field === 'activationStatus' || col.field === 'inStock') {
+                        <td pFrozenColumn alignFrozen="right" [frozen]="col?.frozen">
                             <p-tag [severity]="item[col.field] ? 'success' : 'danger'" 
-                                   [value]="item[col.field] ? 'Active' : 'In Active'" />
+                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatus') ? (item[col.field] ? 'ACTIVATED' : 'EXPIRED') : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"  />
                         </td>
                     }  @else {
                         @if(col.field === 'index') {

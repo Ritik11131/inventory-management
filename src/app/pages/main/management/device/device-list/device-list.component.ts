@@ -212,10 +212,29 @@ export class DeviceListComponent {
 
   async fetchDevices(): Promise<any> {
     this.isLoading = true;
+    this.devices = [];
     try {
-      const response = await this.deviceService.getList();
-      this.devices = response.data;
-      // this.tdveoastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+      const { data } = await this.deviceService.getList(500, 1);
+      this.devices = data?.items || []; // Use optional chaining for safety
+      console.log(data);
+  
+      const { pageSize, totalPage } = data;
+  
+      // Create an array of promises for fetching all pages
+      const pageRequests = Array.from({ length: totalPage - 1 }, (_, i) =>
+        this.deviceService.getList(pageSize, i + 2) // Start from page 2
+      );
+  
+      // Wait for all requests to complete
+      const responses = await Promise.all(pageRequests);
+  
+      // Concatenate all items from the responses
+      responses.forEach(response => {
+        this.devices = this.devices.concat(response.data?.items || []);
+      });
+  
+      // Optional: Show success message
+      // this.toastService.showSuccess('Success', `${this.authService.getUser Type()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch Device List!`);
     } finally {

@@ -15,12 +15,15 @@ export const deviceColumns = [
     { field: 'imei', header: 'IMEI' },
     { field: 'iccid', header: 'ICCID No' },
     { field: 'sim_provider', header: 'Sim Provider' },
+    { field: 'simDetails', header: 'Sim Details' },
     { field: 'primary_sim_operator', header: 'Primary Sim Operator' },
     { field: 'primary_mob_no', header: 'Primary Mobile No' },
     { field: 'secondary_sim_operator', header: 'Secondary Sim Operator' },
     { field: 'secondary_mob_no', header: 'Secondary Mobile No' },
     { field: 'activation_date', header: 'Activation Date' },
-    { field: 'activation_till', header: 'Activation Till' }
+    { field: 'activation_till', header: 'Activation Till' },
+    { field: 'inStock', header: 'Stock Status' , frozen: true, minWidth: '10rem' },
+    { field: 'activationStatus', header: 'Activation Status', frozen: true, minWidth: '12rem' },
 ];
 
 export const InventoryColumns = [

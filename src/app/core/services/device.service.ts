@@ -9,9 +9,9 @@ export class DeviceService {
 
   constructor(private http:HttpService,private authService:AuthService) { }
 
-  async getList() : Promise<any> {
+  async getList(pageSize:any,page:any) : Promise<any> {
     try {
-      const response = await this.http.get('Device', {});
+      const response = await this.http.get('Device',{ pageSize,page });
       return response;
     } catch (error) {
       throw error;
