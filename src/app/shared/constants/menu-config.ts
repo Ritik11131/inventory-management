@@ -273,13 +273,22 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                     },
                     {
                         label: 'Fitment',
-                        icon: 'pi pi-users',
+                        icon: 'pi pi-money-bill',
                         command: () => {
-                            router.navigate([`/main/management/assigned/${authService.getUserType()}`]);
-                            breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
+                            router.navigate(['/main/management/device-fitment']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/device-fitment');
                         }
 
                     }
+                    // {
+                    //     label: 'Fitment',
+                    //     icon: 'pi pi-users',
+                    //     command: () => {
+                    //         router.navigate([`/main/management/assigned/${authService.getUserType()}`]);
+                    //         breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
+                    //     }
+
+                    // }
                 ]
             },
             // {
@@ -296,20 +305,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
             //         }
             //     ]
             // },
-            {
-                label: 'Activation',
-                icon: 'pi pi-car',
-                items: [
-                    {
-                        label: 'Activation List',
-                        icon: 'pi pi-list',
-                        command: () => {
-                            router.navigate(['/main/management/vehicle-list']);
-                            breadcrumbService.generateBreadcrumbs('/main/management/vehicle-list');
-                        }
-                    }
-                ]
-            }
+            // {
+            //     label: 'Activation',
+            //     icon: 'pi pi-car',
+            //     items: [
+            //         {
+            //             label: 'Activation List',
+            //             icon: 'pi pi-list',
+            //             command: () => {
+            //                 router.navigate(['/main/management/vehicle-list']);
+            //                 breadcrumbService.generateBreadcrumbs('/main/management/vehicle-list');
+            //             }
+            //         }
+            //     ]
+            // }
         ]
     };
 

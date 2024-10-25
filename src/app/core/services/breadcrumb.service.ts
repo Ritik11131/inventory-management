@@ -36,6 +36,11 @@ export class BreadcrumbService {
           { label: 'RTO' },
           { label: 'RTO List' }
         ],
+        'device-fitment' : [
+          { label: 'Management' },
+          { label: 'Device' },
+          { label: 'Device Fitment' }
+        ],
         'inventory-list':[
           { label: 'Management' },
           { label: 'Inventory' },

@@ -9,6 +9,7 @@ import { SimProviderComponent } from './sim-provider/sim-provider.component';
 import { DeviceModelComponent } from './device-model/device-model.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { VehicleCategoryComponent } from './vehicle-category/vehicle-category.component';
+import { FitmentComponent } from './device/fitment/fitment.component';
 
 export const managementRoutes: Routes = [
    {
@@ -51,6 +52,10 @@ export const managementRoutes: Routes = [
          path:'vehicle-category-list',
          component:VehicleCategoryComponent
       },
+      {
+         path:'device-fitment',
+         component:FitmentComponent
+      }
     ]
    },
    

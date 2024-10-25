@@ -53,8 +53,11 @@ export const tableActionsConfigRoleWise : any = {
         ],
     },
     Dealer: {
+      UserList:[
+        { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
+      ],
       DeviceList: [
-        { label: 'Export to CSV', icon: 'pi pi-print', action: 'onExportDevice' }
+        { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
       ],
       FitmentList: [
         { label: 'Validate Fitment', icon: 'pi pi-check', action: 'onFitmentValidation' }
