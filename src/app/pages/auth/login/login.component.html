@@ -39,11 +39,11 @@
                 <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
             </div>
 
-            <p-divider align="center" type="dotted">
+            <!-- <p-divider align="center" type="dotted">
                 <b>Enter CAPTCHA</b>
             </p-divider>
-            <label for="reCAPTCHA" class="block text-900 font-medium mb-2"></label>
-            <div class="grid">
+            <label for="reCAPTCHA" class="block text-900 font-medium mb-2"></label> -->
+            <!-- <div class="grid">
                 <div class="col-6">
                     <div
                         class="flex justify-content-between align-items-center p-3 bg-yellow-100 border-round text-yellow-800">
@@ -58,10 +58,12 @@
                             class="w-full mb-3" [ngClass]="{'ng-invalid ng-dirty p-shake': captchaError}" />
                     </p-iconField>
                 </div>
-            </div>
+            </div> -->
 
-            <button [disabled]="!userInput.length" [loading]="isLoggedIn" pButton pRipple label="Sign In"
+            <button [loading]="isLoggedIn" pButton pRipple label="Sign In"
                 icon="pi pi-sign-in" iconPos="right" class="w-full" (click)="validateForm()"></button>
         </div>
     </div>
 </div>
+
+<!-- [disabled]="!userInput.length" -->

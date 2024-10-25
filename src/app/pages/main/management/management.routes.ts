@@ -8,6 +8,7 @@ import { RtoComponent } from './rto/rto.component';
 import { SimProviderComponent } from './sim-provider/sim-provider.component';
 import { DeviceModelComponent } from './device-model/device-model.component';
 import { InventoryComponent } from './inventory/inventory.component';
+import { VehicleCategoryComponent } from './vehicle-category/vehicle-category.component';
 
 export const managementRoutes: Routes = [
    {
@@ -45,6 +46,10 @@ export const managementRoutes: Routes = [
       {
          path:'inventory-list',
          component:InventoryComponent
+      },
+      {
+         path:'vehicle-category-list',
+         component:VehicleCategoryComponent
       },
     ]
    },

@@ -21,6 +21,11 @@ export class BreadcrumbService {
           { label: 'Sim Providers' },
           { label: 'Sim Provider List' }
         ],
+        'vehicle-category-list':[
+          { label: 'Management' },
+          { label: 'Vehicle Category' },
+          { label: 'Vehicle Category List' }
+        ],
         'states-list':[
           { label: 'Management' },
           { label: 'Sates' },
