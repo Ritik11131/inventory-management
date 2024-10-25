@@ -74,10 +74,10 @@
                     </td>
                 }
                 @for (col of columns; track $index) {
-                    @if(col.field === 'active' || col.field === 'activationStatus' || col.field === 'inStock') {
+                    @if(col.field === 'active' || col.field === 'activationStatusText' || col.field === 'inStock') {
                         <td pFrozenColumn alignFrozen="right" [frozen]="col?.frozen">
-                            <p-tag [severity]="item[col.field] ? 'success' : 'danger'" 
-                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatus') ? (item[col.field] ? 'ACTIVATED' : 'EXPIRED') : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"  />
+                            <p-tag [severity]="col.field === 'activationStatusText' ? (item[col.field] === 'Active' ? 'success' : 'danger') : item[col.field] ? 'success' : 'danger'" 
+                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"  />
                         </td>
                     }  @else {
                         @if(col.field === 'index') {
@@ -100,6 +100,13 @@
                     @if(action === 'delete') {
                     <i [pTooltip]="'Delete'" tooltipPosition="bottom" (click)="onDelete($event,item)"
                         class="pi pi-trash ml-4 text-sm text-red-500 cursor-pointer"></i>
+                    }
+
+                    @if(action === 'activate') {
+                        @if(item.activationStatusText !== 'Active') {
+                            <i [pTooltip]="'Activate'" tooltipPosition="bottom" (click)="onActivate($event,item)"
+                                class="pi pi-eject ml-4 text-sm text-green-500 cursor-pointer"></i>
+                        }
                     }
                     }
                 </td>

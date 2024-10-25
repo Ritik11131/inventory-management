@@ -23,7 +23,7 @@ import { GenericDialogComponent } from '../../../../../shared/components/generic
 import { ToastService } from '../../../../../core/services/toast.service';
 import { deviceColumns } from '../../../../../shared/constants/columns';
 import { DeviceService } from '../../../../../core/services/device.service';
-import { bulkUploadDeviceFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields } from '../../../../../shared/constants/forms';
+import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
@@ -31,6 +31,7 @@ import { debounceTime, Subject } from 'rxjs';
 import { downloadFile } from '../../../../../shared/utils/common';
 import { DynamicUserService } from '../../../../../core/services/dynamic-user.service';
 import { InventoryService } from '../../../../../core/services/inventory.service';
+import { SimProvidersService } from '../../../../../core/services/sim-providers.service';
 
 @Component({
   selector: 'app-device-list',
@@ -55,13 +56,14 @@ export class DeviceListComponent {
   submitted: boolean = false;
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
-  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | null = null;
+  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | null = null;
   bulkUploadHeader:string = 'VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode';
+  actions:any[] = [];
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
 
-  constructor(private toastService: ToastService, private dynamicUserService:DynamicUserService,
+  constructor(private toastService: ToastService, private dynamicUserService:DynamicUserService, private simProviderService:SimProvidersService,
     private confirmationService: ConfirmationService,  private inventoryService:InventoryService,
     private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService) {
       this.validationDebounceSubject.pipe(
@@ -72,6 +74,7 @@ export class DeviceListComponent {
      }
 
   ngOnInit() {
+    this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate'] : ['edit']
     this.fetchDevices().then();
   }
 
@@ -137,20 +140,20 @@ export class DeviceListComponent {
    * 
    * @returns {Promise<any>} Resolves with the populated dropdown options.
    */
-  async generateDropdownValues(type: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory'): Promise<any> {
+  async generateDropdownValues(type: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate'): Promise<any> {
     try {
-      const response = (type === 'create' || type === 'edit' || type === 'bulkUpload') ? 
-                        await this.deviceModelService.getList() : 
+      const response = (type === 'create' || type === 'edit' || type === 'bulkUpload') ? await this.deviceModelService.getList() : 
+                        (type === 'activate') ? await this.simProviderService.getList() :
                         await this.dynamicUserService.getList();
       // Determine which form fields to use based on the 'type'
       const formFields = (type === 'create' || type === 'edit') ? deviceCreateFormFields : 
-                          type === 'bulkUpload' ? bulkUploadDeviceFormFields : 
+                          type === 'bulkUpload' ? bulkUploadDeviceFormFields :  type === 'activate' ? deviceActivationFormFields :
                           deviceTransferInventoryFormFields;
   
       formFields[0].options = response.data.map((obj: any) => {
         const keys = Object.keys(obj);       
-        const idKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload') ? 'id' : 'sno'));
-        const nameKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload') ? 'modelName' : 'name'));
+        const idKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload' || type === 'activate') ? 'id' : 'sno'));
+        const nameKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload') ? 'modelName' : (type === 'activate') ? 'providerName' : 'name'));
   
         // Setting dropdownKeys based on found keys
         formFields[0].dropdownKeys = { idKey, nameKey };
@@ -162,10 +165,15 @@ export class DeviceListComponent {
             id: obj[idKey],
             modelName: obj[nameKey],
           }
-          : {
-            sno: obj[idKey],
-            name: obj[nameKey],
-          };
+          : (type === 'activate')
+            ? {
+              id: obj[idKey],
+              providerName: obj[nameKey],
+            }
+            : {
+              sno: obj[idKey],
+              name: obj[nameKey],
+            };
       });
   
       console.log(formFields);
@@ -175,7 +183,7 @@ export class DeviceListComponent {
     } catch (error) {
       // If there's an error, clear the options
       const formFields = (type === 'create' || type === 'edit') ? deviceCreateFormFields : 
-                          type === 'bulkUpload' ? bulkUploadDeviceFormFields : 
+                          type === 'bulkUpload' ? bulkUploadDeviceFormFields : type === 'activate' ? deviceActivationFormFields : 
                           deviceTransferInventoryFormFields;
   
       formFields[0].options = [];
@@ -259,6 +267,12 @@ export class DeviceListComponent {
     }
   }
 
+  resetActivationDevice() {
+    return {
+      sim:null
+    };
+  }
+
   resetBulkUploadDevice() {
     return {
       model: null,
@@ -298,6 +312,8 @@ export class DeviceListComponent {
         };
       
         fileReader.readAsText(data.file);
+      } else if(this.currentAction === 'activate') {
+        await this.activateDevice(data);
       } else {
         console.log(data,'data');
         await this.transferInventory(data);
@@ -320,7 +336,19 @@ export class DeviceListComponent {
      } catch (error : any) {
        this.toastService.showError('Error', error.error.data.message);
      }
-   }
+  }
+
+  async activateDevice({ sim } : { sim : any }) : Promise<any> {
+    try {
+      const response = await this.deviceService.activateDevice(sim,this.device);
+      this.toastService.showSuccess('Success', response.data);
+    } catch (error : any) {
+      this.toastService.showError('Error', error.error.data.message);
+    } finally {
+      this.device = this.resetActivationDevice();
+    }
+    
+  }
 
   exportSampleBulkUpload(event : any) {
     if(event) {
@@ -465,6 +493,19 @@ export class DeviceListComponent {
     this.isEditing = !event;
     this.isValidated = true;
     this.device = this.resetTransferInventoryDevice();
+    this.deviceDialog = event;
+  }
+
+
+  async onActivate(event: any) : Promise<any> {
+    console.log(event);   
+    this.currentAction = 'activate';
+    await this.generateDropdownValues('activate');
+    this.fields = deviceActivationFormFields;
+    this.isEditing = !event;
+    this.isValidated = true;
+    // this.device = this.resetActivationDevice();
+    this.device = event.item;
     this.deviceDialog = event;
   }
 

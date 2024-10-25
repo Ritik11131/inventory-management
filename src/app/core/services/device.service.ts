@@ -95,4 +95,14 @@ export class DeviceService {
   }
 
 
+  async activateDevice(sim:any,device: any): Promise<any> {
+    try { 
+      const response = await this.http.get('Device/activate-sim', {}, `${sim.id}/${device.id}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }

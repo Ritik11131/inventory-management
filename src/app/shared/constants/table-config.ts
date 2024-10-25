@@ -15,6 +15,10 @@ export const tableActionsConfigRoleWise : any = {
         { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
         { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
       ],
+      VehicleCategoryList: [
+        { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
+        { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
+      ],
       StateList: [
         { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
         { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
@@ -50,7 +54,6 @@ export const tableActionsConfigRoleWise : any = {
     },
     Dealer: {
       DeviceList: [
-        { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
         { label: 'Export to CSV', icon: 'pi pi-print', action: 'onExportDevice' }
       ],
       FitmentList: [

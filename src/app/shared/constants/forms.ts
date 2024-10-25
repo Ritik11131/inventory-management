@@ -193,6 +193,28 @@ export const simProviderFormFields : FormFields[] = [
     }
 ]
 
+export const deviceActivationFormFields : FormFields[] = [
+    {
+        name:'sim',
+        label:'Select Provider',
+        type:'dropdown',
+        options:[],
+        dropdownKeys:{},
+        placeholder:'Select a Provider',
+        hide: (hideFields: string[]) => hideFields.includes('sim'),
+    }
+]
+
+
+export const vehicleCategoryFormFields : FormFields[] = [
+    {
+        name: 'name',
+        label: 'Category Name',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('name'),
+    }
+]
+
 
 export const linkRtoFormFields : FormFields[] = [
     {

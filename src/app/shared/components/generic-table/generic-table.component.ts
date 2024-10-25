@@ -60,6 +60,7 @@ export class GenericTableComponent implements OnInit {
   transferInventory = output<any>();
   bulkUpload = output<any>();
   sampleBulkUpload = output<any>();
+  activate = output<any>();
 
 
   constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService) {
@@ -154,5 +155,9 @@ export class GenericTableComponent implements OnInit {
 
   onTransferInventory() {
     this.transferInventory.emit(true)
+  }
+
+  onActivate(event : Event, item: any) {
+    this.activate.emit({event , item})
   }
 }
