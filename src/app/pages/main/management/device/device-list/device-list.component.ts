@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
@@ -23,7 +23,7 @@ import { GenericDialogComponent } from '../../../../../shared/components/generic
 import { ToastService } from '../../../../../core/services/toast.service';
 import { deviceColumns } from '../../../../../shared/constants/columns';
 import { DeviceService } from '../../../../../core/services/device.service';
-import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields } from '../../../../../shared/constants/forms';
+import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields, fitmentFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
@@ -32,6 +32,10 @@ import { downloadFile } from '../../../../../shared/utils/common';
 import { DynamicUserService } from '../../../../../core/services/dynamic-user.service';
 import { InventoryService } from '../../../../../core/services/inventory.service';
 import { SimProvidersService } from '../../../../../core/services/sim-providers.service';
+import { VehicleCategoryService } from '../../../../../core/services/vehicle-category.service';
+import { StatesService } from '../../../../../core/services/states.service';
+import { RtoService } from '../../../../../core/services/rto.service';
+import { FitmentService } from '../../../../../core/services/fitment.service';
 
 @Component({
   selector: 'app-device-list',
@@ -45,27 +49,30 @@ import { SimProvidersService } from '../../../../../core/services/sim-providers.
 })
 export class DeviceListComponent {
 
-  fields: FormFields[] = [];
+  fields: FormFields[] | any[] = [];
   devices: any[] = [];
   columns = deviceColumns;
   isEditing: boolean = false;
   isLoading: boolean = false;
   deviceDialog: boolean = false;
+  accesStepForm : boolean = false;
   device!: any;
   selectedDevices!: any[] | null;
   submitted: boolean = false;
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
-  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | null = null;
+  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | 'fitment' | null = null;
   bulkUploadHeader:string = 'VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode';
   actions:any[] = [];
+  stepFormFields: any[] = [];
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
 
   constructor(private toastService: ToastService, private dynamicUserService:DynamicUserService, private simProviderService:SimProvidersService,
-    private confirmationService: ConfirmationService,  private inventoryService:InventoryService,
-    private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService) {
+    private confirmationService: ConfirmationService,  private inventoryService:InventoryService, private vehicleCategory:VehicleCategoryService,
+    private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService,private stateService:StatesService,
+  private rtoService:RtoService,private fitmentService:FitmentService) {
       this.validationDebounceSubject.pipe(
         debounceTime(400)
       ).subscribe(({ fieldName, value }) => {
@@ -74,7 +81,7 @@ export class DeviceListComponent {
      }
 
   ngOnInit() {
-    this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate'] : ['edit']
+    this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate','fitment'] : ['edit']
     this.fetchDevices().then();
   }
 
@@ -267,6 +274,35 @@ export class DeviceListComponent {
     }
   }
 
+
+  resetDeviceFitment(selectedDevice : any) {
+    return {
+      deviceSno:selectedDevice.sno,
+      isOld: null,
+      vehicleCategory: {
+          id: null,
+          name: ""
+      },
+      manufacturingYear: "",
+      vehicleNo: "",
+      chassisNo: "",
+      engineNo: "",
+      vehicleMake: "",
+      vehicleModel: "",
+      state: {
+          id: null,
+          stateName: ""
+      },
+      rto: {
+          id: null,
+          rtoName: ""
+      },
+      permitHolderName: "",
+      permitHolderMobile: "",
+      aadhaarNumber: ""
+  };
+  }
+
   resetActivationDevice() {
     return {
       sim:null
@@ -314,15 +350,47 @@ export class DeviceListComponent {
         fileReader.readAsText(data.file);
       } else if(this.currentAction === 'activate') {
         await this.activateDevice(data);
-      } else {
-        console.log(data,'data');
+      } else if(this.currentAction === 'tranferInventory') {
         await this.transferInventory(data);
+      } else {
+        await this.createDeviceFitment(data);
       }
     } catch (error) {
       console.log(error);
     }
   }
 
+  async createDeviceFitment(data: any): Promise<any> {
+    const { isOld, vehicleCategory, vehicleModel, vehicleMake, vehicleNo, chassisNo, engineNo, manufacturingYear, rto, sno, permitHolderName, permitHolderMobile, aadhaarNumber } = data;
+
+    const payload = {
+      vehicle: {
+        isOld,
+        vehicleCategory,
+        vehicleModel,
+        vehicleMake,
+        vehicleNo,
+        chassisNo,
+        engineNo,
+        manufacturingYear
+      },
+      rto: rto.id,
+      deviceSno: sno,
+      permitHolderName,
+      permitHolderMobile,
+      aadhaarNumber
+    };
+
+
+console.log(payload,'payload');
+
+    try {
+      const response = await this.fitmentService.createFitment(payload);
+      this.toastService.showSuccess('Success', response.data);
+    } catch (error: any) {
+      this.toastService.showError('Error', error.error.data.message);
+    }
+  }
 
 
   async transferInventory({ user, no_of_device } : { user : { sno:number, name:string }, no_of_device : string }) : Promise<any> {
@@ -507,6 +575,96 @@ export class DeviceListComponent {
     // this.device = this.resetActivationDevice();
     this.device = event.item;
     this.deviceDialog = event;
+  }
+
+  async onFitment(event: any) : Promise<any> {
+    console.log(event);   
+    this.currentAction = 'fitment';
+    this.accesStepForm = true;
+    this.generateAllDropdownValuesStepForm(fitmentFormFields,event);
+    this.isEditing = !event;
+    this.isValidated = true;
+    this.device = this.resetDeviceFitment(event.item);
+    this.deviceDialog = event;
+  }
+
+
+  async generateAllDropdownValuesStepForm(form:any,event:any) : Promise<any> {
+    console.log(event.item);
+    form[0].fields.map(async (object:any)=>{
+      if(object.type === 'dropdown' && object.name !== 'isOld') {
+        const response = await this.vehicleCategory.getList();
+        object.options = response.data.map((obj: any) => {
+          const keys = Object.keys(obj);
+          const idKey: any = keys.find(key => key.includes('id'));
+          const nameKey: any = keys.find(key => key.includes('name'));
+          object.dropdownKeys = { idKey, nameKey };
+          return {
+            id: obj[idKey],
+            name: obj[nameKey],
+          };
+        })
+      }
+    });
+
+    form[1].fields.map(async (object:any)=>{
+      if(object.name === 'state') {
+        const response = await this.stateService.getList();
+        console.log(response);
+
+        object.options = response.data.map((obj: any) => {
+          const keys = Object.keys(obj);
+          const idKey: any = keys.find(key => key.includes('id'));
+          const nameKey: any = keys.find(key => key.includes('stateName'));
+          object.dropdownKeys = { idKey, nameKey };
+          return {
+            id: obj[idKey],
+            stateName: obj[nameKey],
+          };
+        })
+        
+      }
+    })
+
+    form[2].fields.map((object:any)=>{
+      if(object.name === 'iccid' || object.name === 'sno') {
+        object.value = event.item[object.name]
+      } else {
+        if(event?.item?.simDetails) {
+          object.value = event?.item?.simDetails[object.name]
+        }
+      }
+    });
+    
+    console.log(form);
+    this.stepFormFields = form
+    
+  }
+
+  async stepperDropdwonChange(event: any) : Promise<any> {
+    console.log(event); 
+    const  { fieldName , selectedValue } = event;
+    if(fieldName === 'state') {
+      this.stepFormFields[1].fields.map(async (object:any)=>{
+        if(object.name === 'rto') {
+          try {
+            const response = await this.rtoService.getList(selectedValue);
+            object.options = response.data.map((obj: any) => {
+              const keys = Object.keys(obj);
+              const idKey: any = keys.find(key => key.includes('id'));
+              const nameKey: any = keys.find(key => key.includes('rtoName'));
+              object.dropdownKeys = { idKey, nameKey };
+              return {
+                id: obj[idKey],
+                rtoName: obj[nameKey],
+              };
+            })
+          } catch (error) {
+            object.options = [];
+          }
+        }
+      })
+    }
   }
 
 }

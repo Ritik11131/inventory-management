@@ -61,6 +61,7 @@ export class GenericTableComponent implements OnInit {
   bulkUpload = output<any>();
   sampleBulkUpload = output<any>();
   activate = output<any>();
+  fitment = output<any>();
 
 
   constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService) {
@@ -159,5 +160,9 @@ export class GenericTableComponent implements OnInit {
 
   onActivate(event : Event, item: any) {
     this.activate.emit({event , item})
+  }
+
+  onFitment(event : Event,item:any) {
+    this.fitment.emit({event , item})
   }
 }

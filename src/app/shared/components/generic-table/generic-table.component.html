@@ -57,7 +57,7 @@
                 </th>
                 }
                 @if(actions.length) {
-                    <th pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">Actions</th>
+                    <th [style.minWidth]="'8rem'" pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">Actions</th>
                 }
             </tr>
         </ng-template>
@@ -107,6 +107,13 @@
                             <i [pTooltip]="'Activate'" tooltipPosition="bottom" (click)="onActivate($event,item)"
                                 class="pi pi-eject ml-4 text-sm text-primary-500 cursor-pointer"></i>
                         }
+                    }
+
+                    @if(action === 'fitment') {
+                        <!-- @if(item.activationStatusText !== 'Active') { -->
+                            <i [pTooltip]="'Fitment'" tooltipPosition="bottom" (click)="onFitment($event,item)"
+                                class="pi pi-ethereum ml-4 text-sm text-primary-500 cursor-pointer"></i>
+                        <!-- } -->
                     }
                     }
                 </td>

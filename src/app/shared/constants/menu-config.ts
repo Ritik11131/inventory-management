@@ -271,15 +271,15 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                             breadcrumbService.generateBreadcrumbs('/main/management/device-list');
                         }
                     },
-                    {
-                        label: 'Fitment',
-                        icon: 'pi pi-money-bill',
-                        command: () => {
-                            router.navigate(['/main/management/device-fitment']);
-                            breadcrumbService.generateBreadcrumbs('/main/management/device-fitment');
-                        }
+                    // {
+                    //     label: 'Fitment',
+                    //     icon: 'pi pi-money-bill',
+                    //     command: () => {
+                    //         router.navigate(['/main/management/device-fitment']);
+                    //         breadcrumbService.generateBreadcrumbs('/main/management/device-fitment');
+                    //     }
 
-                    }
+                    // }
                     // {
                     //     label: 'Fitment',
                     //     icon: 'pi pi-users',

@@ -254,3 +254,76 @@ export const bulkUploadDeviceFormFields : FormFields[] = [
         hide: (hideFields: string[]) => hideFields.includes('file'),
     }
 ]
+
+
+
+export const fitmentFormFields : any[] = [
+    {
+      header: 'Vehicle Details',
+      fields: [
+        {
+          type: 'dropdown', name: 'isOld', label: 'Vehicle Type', placeholder: 'Select a Vehicle Type',
+          options: [
+            { label: 'Old', value: true},
+            { label: 'New', value: false},
+          ],
+        },
+        { type: 'text', name: 'vehicleNo', label: 'Vehicle No', validation: true, placeholder: 'Enter your Vehicle No' },
+        { type: 'text', name: 'chassisNo', label: 'Chassis No', placeholder: 'Enter your Chassis No' },
+        { type: 'text', name: 'engineNo', label: 'Engine No', placeholder: 'Enter your Engine No' },
+        { type: 'text', name: 'vehicleMake', label: 'Vehicle Make', placeholder: 'Enter Vehicle Make' },
+        { type: 'text', name: 'vehicleModel', label: 'Vehicle Model', placeholder: 'Enter Vehicle Model' },
+        { type: 'dropdown', name: 'vehicleCategory', label: 'Vehicle Category',  placeholder: 'Select a Vehicle Category',
+          options: [],
+          dropdownKeys:{} 
+        },
+        { type: 'text', name: 'manufacturingYear', label: 'Manufacturing Year', placeholder: 'Enter Manufacturing Year' },
+
+
+      ]
+    },
+    {
+      header: 'RTO Details',
+      fields: [
+        {
+          name: 'state',
+          label: 'Select State',
+          placeholder: 'Select a state',
+          type: 'dropdown',
+          options: [],
+          dropdownKeys:{},
+          hide: (hideFields: string[]) => hideFields.includes('stateid'),
+      },
+      {
+        name: 'rto',
+        label: 'Select RTO',
+        placeholder: 'Select a Rto',
+        type: 'dropdown',
+        options: [],
+        dropdownKeys:{},
+        hide: (hideFields: string[]) => hideFields.includes('rto'),
+    },
+      ]
+    },
+    {
+      header: 'Device Details',
+      fields: [
+        { type: 'non-editable', name: 'sno', label: 'Device Sno.', placeholder: 'Enter Device Serial No.', value:'' },
+        { type: 'non-editable', name: 'iccid', label: 'Iccid No', placeholder: 'Enter ICCID No.', value:'' },
+        { type: 'non-editable', name: 'primaryOpt', label: 'Sim Operator 1', placeholder: 'Enter Sim Operator 1', value:'' },
+        { type: 'non-editable', name: 'primarySimNo', label: 'Sim No. 1', placeholder: 'Enter Sim No. 1', value:'' },
+        { type: 'non-editable', name: 'secondaryOpt', label: 'Sim Operator 2',  placeholder: 'Enter Sim Operator 2', value:'' },
+        { type: 'non-editable', name: 'secondarySimNo', label: 'Sim No. 2',  placeholder: 'Enter Sim No. 2', value:'' },
+        { type: 'non-editable', name: 'activationOn', label: 'Activation Date', placeholder: 'Select Activation Date', value:'' },
+        { type: 'non-editable', name: 'validity', label: 'Validity', placeholder: 'Select Validity Date', value:'' }
+      ]
+    },
+    {
+      header: 'Permit Holder Details',
+      fields: [
+        { type: 'text', name: 'permitHolderName', label: 'Permit Holder Name', placeholder: 'Enter Permit Holder Name' },
+        { type: 'text', name: 'permitHolderMobile', label: 'Contact No', placeholder: 'Enter Contact No' },
+        { type: 'text', name: 'aadhaarNumber', label: 'Aadhar No', placeholder: 'Enter Aadhar No' }
+      ]
+    }
+  ]

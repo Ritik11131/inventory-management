@@ -20,6 +20,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { GenericStepperComponent } from '../generic-stepper/generic-stepper.component';
 
 
 @Component({
@@ -27,7 +28,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
   standalone: true,
   imports: [TableModule, DialogModule, RippleModule, ButtonModule, PickListModule, DragDropModule,
     InputTextModule, InputTextareaModule, CommonModule, FileUploadModule,
-    DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule,
+    DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule, GenericStepperComponent,
     InputTextModule, FormsModule, InputNumberModule, ConfirmDialogModule, TooltipModule, IconFieldModule, InputIconModule],
   templateUrl: './generic-dialog.component.html',
   styleUrl: './generic-dialog.component.scss'
@@ -54,11 +55,14 @@ export class GenericDialogComponent implements OnChanges {
   @Input() breakpoint: string = '';
   @Input() source:any[] = [];
   @Input() target:any[] = [];
+  @Input() isStepForm : boolean = false;
+  @Input() stepFormFields: any[] = [];
 
   onHide = output<any>()
   onSave = output<any>()
   onInputTextChange = output<any>();
   onDialogDropdownChange = output<any>();
+  stepperDropDownChange = output<any>();
   focusedField!: any;
   isPasswordToggled: boolean = true;
   isConfirmPasswordToggled: boolean = true;
@@ -69,7 +73,7 @@ export class GenericDialogComponent implements OnChanges {
   constructor() { }
 
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {    
 
     if (changes['data'] && changes['data'].currentValue) {
       // console.log(this.data, 'dataaa');
@@ -145,6 +149,10 @@ export class GenericDialogComponent implements OnChanges {
   onSelect(event: any, field: any) {
     const fieldName = field.name;
     this.data[fieldName] = event.currentFiles[0];
+  }
+
+  onStepperDropDownChange(event: any) {
+    this.stepperDropDownChange.emit(event);
   }
 
 
