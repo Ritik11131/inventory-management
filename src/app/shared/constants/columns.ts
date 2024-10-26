@@ -14,13 +14,12 @@ export const deviceColumns = [
     { field: 'sno', header: 'Device No' },
     { field: 'imei', header: 'IMEI' },
     { field: 'iccid', header: 'ICCID No' },
-    { field: 'sim_provider', header: 'Sim Provider'},
-    // { field: 'simDetails', header: 'Sim Details' },
-    { field: 'primary_sim_operator', header: 'Primary Sim Operator'},
-    { field: 'primary_mob_no', header: 'Primary Mobile No' },
-    { field: 'secondary_sim_operator', header: 'Secondary Sim Operator' },
-    { field: 'secondary_mob_no', header: 'Secondary Mobile No' },
-    { field: 'activation_date', header: 'Activation Date' },
+    { field: 'simDetails', header: 'Sim Provider',nested:true, subfield:'provider', nextsubfield:'providerName' },
+    { field: 'simDetails', header: 'Primary Sim Operator', nested:true, subfield:'primaryOpt' },
+    { field: 'simDetails', header: 'Primary Mobile No',nested:true, subfield:'primarySimNo' },
+    { field: 'simDetails', header: 'Secondary Sim Operator',nested:true, subfield:'secondaryOpt' },
+    { field: 'simDetails', header: 'Secondary Mobile No',nested:true, subfield:'secondarySimNo' },
+    { field: 'simDetails', header: 'Activation Date',nested:true, subfield:'activationOn' },
     { field: 'activation_till', header: 'Activation Till' },
     { field: 'inStock', header: 'Stock Status', minWidth: '12rem' },
     { field: 'activationStatusText', header: 'Activation Status', frozen:true, minWidth: '12rem' },
@@ -54,7 +53,7 @@ export const stateColumns = [
 
 export const rtoColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
-    { field: 'state', header: 'State Name', minWidth: '14rem', nested: true, nestedName: 'stateName' },
+    { field: 'state', header: 'State Name', minWidth: '14rem', nested: true, subfield: 'stateName' },
     { field: 'rtoCode', header: 'RTO Code', minWidth: '5rem' },
     { field: 'rtoName', header: 'RTO Name', minWidth: '5rem' }
 ];

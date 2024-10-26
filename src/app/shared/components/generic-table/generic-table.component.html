@@ -82,8 +82,18 @@
                     }  @else {
                         @if(col.field === 'index') {
                             <td>{{ rowIndex + 1 }}</td>
-                        } @else if(col.nested) {
-                            <td>{{item[col.field][col.nestedName]}}</td>
+                        } @else if (col.nested) {
+                            <td>
+                                @if (col.subfield) {
+                                    @if (col.nextsubfield) {
+                                        {{ item[col.field]?.[col.subfield]?.[col.nextsubfield] || '-' }}
+                                    } @else {
+                                        {{ item[col.field]?.[col.subfield] || '-' }}
+                                    }
+                                } @else {
+                                    {{ '-' }}
+                                }
+                            </td>
                         } @else {
                             <td>{{item[col.field] || '-'}}</td>
                         }
