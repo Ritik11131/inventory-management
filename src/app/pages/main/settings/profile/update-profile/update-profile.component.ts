@@ -57,7 +57,7 @@ export class UpdateProfileComponent implements OnInit {
     try {
      const response = await this.profileService.getProfileDetails();
      this.profileObject = response.data;
-     this.toastService.showSuccess('Success', 'Profile fetched successfully!');
+    //  this.toastService.showSuccess('Success', 'Profile fetched successfully!');
     } catch (error) {
     this.toastService.showError('Error', 'Failed to fetch profile!');
     }
