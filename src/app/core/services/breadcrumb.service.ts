@@ -84,6 +84,11 @@ export class BreadcrumbService {
             { label: 'Settings' },
             { label: 'Privacy' },
             { label: 'Change Password' }
+          ],
+          'upload-certificates' : [
+            { label: 'Settings' },
+            { label: 'Privacy' },
+            { label: 'Upload Certificates' }
           ]
         }
       }

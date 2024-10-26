@@ -49,7 +49,16 @@ export class SettingsComponent implements OnInit {
                 this.breadcrumbService.generateBreadcrumbs('/main/settings/privacy/change-password');
             }
               
+          },
+          {
+            label: 'Upload Cetificates',
+            icon: 'pi pi-wrench',
+            command: () => {
+              this.router.navigate(['/main/settings/privacy/upload-certificates']);
+              this.breadcrumbService.generateBreadcrumbs('/main/settings/privacy/upload-certificates');
           }
+            
+        }
       ]
   }
 ];
