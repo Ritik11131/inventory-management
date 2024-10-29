@@ -24,7 +24,7 @@
                                 @switch(field.type) {
                                 @case ('text') {
                                 <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]"
-                                    [required]="field.validation" placeholder="{{ field.placeholder }}" />
+                                (keyup)="onInputChange($event, field)" [required]="field.validation" placeholder="{{ field.placeholder }}" />
                                 }
                                 @case ('dropdown') {
                                 <p-dropdown appendTo="body" styleClass="w-full" [name]="field.name" [options]="field.options" [optionLabel]="field?.dropdownKeys?.nameKey"
@@ -62,11 +62,6 @@
                     @if ($index < steps.length - 1) { <p-button [disabled]="!isValidated" label="Next"
                         icon="pi pi-arrow-right" iconPos="right" (onClick)="nextStep()"></p-button>
                         }
-
-                        <!-- @if ($index === steps.length - 1) {
-                        <p-button [disabled]="!isValidated" label="Finish" icon="pi pi-arrow-right"
-                            (onClick)="finishStep()"></p-button>
-                        } -->
                 </div>
             </ng-template>
         </p-stepperPanel>

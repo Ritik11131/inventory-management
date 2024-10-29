@@ -66,6 +66,7 @@ export class DeviceListComponent {
   actions:any[] = [];
   stepFormFields: any[] = [];
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
+  private validationStepperDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
 
 
@@ -78,6 +79,14 @@ export class DeviceListComponent {
       ).subscribe(({ fieldName, value }) => {
         this.executeValidation(fieldName, value);
       });
+
+
+
+      this.validationStepperDebounceSubject.pipe(
+        debounceTime(400)
+      ).subscribe(({ fieldName, value }) => {
+        this.executeStepperValidation(fieldName, value);
+      });
      }
 
   ngOnInit() {
@@ -85,6 +94,41 @@ export class DeviceListComponent {
                     this.authService.getUserRole() === 'Distributor' ? [] :  
                     ['edit']
     this.fetchDevices().then();
+  }
+
+  private async executeStepperValidation(fieldName: string, value: any): Promise<void> {    
+    const fieldValidationMapping: { [key: string]: (val: string) => Promise<any> } = {
+      vehicleNo : this.fitmentService.isVehicleNoValid.bind(this.deviceService),
+    };
+    
+    if(fieldValidationMapping[fieldName]) {
+      try {
+        const response = await fieldValidationMapping[fieldName](value);
+        if(!response.data.isDuplicate) {
+          try {
+            const vehicleDetails = await this.fitmentService.getVehicleDetails(value);
+            console.log(vehicleDetails,'vehicleDetails');
+            this.device.vehicleMake = vehicleDetails?.data?.vehicleMake;
+            this.device.vehicleModel = vehicleDetails?.data?.vehicleModel;
+            this.device.chassisNo = vehicleDetails?.data?.chassisNumber;
+            this.device.engineNo = vehicleDetails?.data?.vehicleEngineNo;
+          } catch (error) {
+            console.log(error);
+            this.device.vehicleMake = null;
+            this.device.vehicleModel = null;
+            this.device.chassisNo = null;
+            this.device.engineNo = null;
+          }
+        }
+        this.validationState[fieldName] = !response.data.isDuplicate;
+      } catch (error) {
+        this.validationState[fieldName] = false;
+        console.error(`Error validating ${fieldName}:`, error);
+      }
+    }    
+
+    this.isValidated = Object.values(this.validationState).every(val => val === true);
+  
   }
 
 
@@ -384,13 +428,13 @@ export class DeviceListComponent {
     };
 
 
-console.log(payload,'payload');
+    console.log(payload,'payload');
 
     try {
       const response = await this.fitmentService.createFitment(payload);
       this.toastService.showSuccess('Success', response.data);
     } catch (error: any) {
-      this.toastService.showError('Error', error.error.data.message);
+      this.toastService.showError('Error', error.error.data);
     }
   }
 
@@ -551,6 +595,15 @@ console.log(payload,'payload');
   }
 
 
+  stepperInputTextChange({ field, value }: any) {
+    console.log(field,value);
+    if(field.hasOwnProperty('validation')) {
+      const fieldName = field.name;
+      this.validationStepperDebounceSubject.next({ fieldName, value });
+    }
+  }
+
+
   onSelectionChange(event: any) {
     console.log(event);
   }
@@ -644,7 +697,6 @@ console.log(payload,'payload');
   }
 
   async stepperDropdwonChange(event: any) : Promise<any> {
-    console.log(event); 
     const  { fieldName , selectedValue } = event;
     if(fieldName === 'state') {
       this.stepFormFields[1].fields.map(async (object:any)=>{

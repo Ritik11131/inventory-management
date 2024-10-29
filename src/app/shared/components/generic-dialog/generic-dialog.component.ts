@@ -63,6 +63,7 @@ export class GenericDialogComponent implements OnChanges {
   onInputTextChange = output<any>();
   onDialogDropdownChange = output<any>();
   stepperDropDownChange = output<any>();
+  stepperInputTextChange = output<any>();
   focusedField!: any;
   isPasswordToggled: boolean = true;
   isConfirmPasswordToggled: boolean = true;
@@ -76,7 +77,7 @@ export class GenericDialogComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {    
 
     if (changes['data'] && changes['data'].currentValue) {
-      // console.log(this.data, 'dataaa');
+      console.log(this.data, 'dataaa');
     }
     
     if (changes['isEditing'] && changes['isEditing'].currentValue) {
@@ -120,13 +121,11 @@ export class GenericDialogComponent implements OnChanges {
 
   onInputChange(event: any, field: any) {
     const value = event.target.value;
-    const fieldName = field.name;
     this.onInputTextChange.emit({ value, field });
   }
 
   onDropdownChange(event: any, field: any) {
     const selectedValue = event.value;
-    console.log(selectedValue);
     const fieldName = field.name;
     this.data[fieldName] = selectedValue;
     this.onDialogDropdownChange.emit({ selectedValue, fieldName });
@@ -153,6 +152,10 @@ export class GenericDialogComponent implements OnChanges {
 
   onStepperDropDownChange(event: any) {
     this.stepperDropDownChange.emit(event);
+  }
+
+  onStepperInputTextChange(event: any) {
+    this.stepperInputTextChange.emit(event); 
   }
 
 

@@ -18,4 +18,26 @@ export class FitmentService {
       throw error;
     }
   }
+
+
+  async isVehicleNoValid(vehicleNo: string): Promise<any> {
+    try {
+      const response = await this.http.get('Fitment/validate-vehicle', { vehicleNo });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async getVehicleDetails(vehicleNo: string): Promise<any> {
+    try {
+      const response = await this.http.get('Fitment/vehicle-details', { vehicleNo });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  
 }
