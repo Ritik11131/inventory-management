@@ -44,20 +44,6 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
     // User type specific menu items
     const userMenuItems: Record<string, MenuItem[]> = {
         Admin: [
-            // {
-            //     label: 'Device',
-            //     icon: 'pi pi-truck',
-            //     items: [
-            //         {
-            //             label: 'Device List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/device-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/device-list');
-            //             }
-            //         },
-            //     ]
-            // },
             {
                 label: 'Device Model',
                 icon: 'pi pi-truck',
@@ -176,34 +162,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                     // }
                 ]
             },
-            // {
-            //     label: 'Inventory',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Inventory List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/inventory-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/inventory-list');
-            //             }
-            //         }
-            //     ]
-            // },
-            // {
-            //     label: 'Vehicle',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Vehicle List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/vehicle-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/vehicle-list');
-            //             }
-            //         }
-            //     ]
-            // }
+            {
+                label: 'Vehicle',
+                icon: 'pi pi-car',
+                items: [
+                    {
+                        label: 'Vehicle Category List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/vehicle-category-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/vehicle-category-list');
+                        }
+                    }
+                ]
+            },
         ],
         Distributor: [
             {
@@ -229,34 +201,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                     // }
                 ]
             },
-            // {
-            //     label: 'Inventory',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Inventory List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/inventory-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/inventory-list');
-            //             }
-            //         }
-            //     ]
-            // },
-            // {
-            //     label: 'Vehicle',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Vehicle List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/vehicle-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/vehicle-list');
-            //             }
-            //         }
-            //     ]
-            // }
+            {
+                label: 'Vehicle',
+                icon: 'pi pi-car',
+                items: [
+                    {
+                        label: 'Vehicle Category List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/vehicle-category-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/vehicle-category-list');
+                        }
+                    }
+                ]
+            },
         ],
         Dealer: [
             {
@@ -271,54 +229,22 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                             breadcrumbService.generateBreadcrumbs('/main/management/device-list');
                         }
                     },
-                    // {
-                    //     label: 'Fitment',
-                    //     icon: 'pi pi-money-bill',
-                    //     command: () => {
-                    //         router.navigate(['/main/management/device-fitment']);
-                    //         breadcrumbService.generateBreadcrumbs('/main/management/device-fitment');
-                    //     }
-
-                    // }
-                    // {
-                    //     label: 'Fitment',
-                    //     icon: 'pi pi-users',
-                    //     command: () => {
-                    //         router.navigate([`/main/management/assigned/${authService.getUserType()}`]);
-                    //         breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
-                    //     }
-
-                    // }
                 ]
             },
-            // {
-            //     label: 'Vehicle',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Vehicle List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/vehicle-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/vehicle-list');
-            //             }
-            //         }
-            //     ]
-            // },
-            // {
-            //     label: 'Activation',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Activation List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/vehicle-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/vehicle-list');
-            //             }
-            //         }
-            //     ]
-            // }
+            {
+                label: 'Vehicle',
+                icon: 'pi pi-car',
+                items: [
+                    {
+                        label: 'Vehicle Category List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/vehicle-category-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/vehicle-category-list');
+                        }
+                    }
+                ]
+            },
         ]
     };
 

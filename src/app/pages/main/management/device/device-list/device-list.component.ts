@@ -91,7 +91,7 @@ export class DeviceListComponent {
 
   ngOnInit() {
     this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate','fitment'] : 
-                    this.authService.getUserRole() === 'Distributor' ? [] :  
+                    (this.authService.getUserRole() === 'Distributor' || this.authService.getUserRole() === 'Admin') ? [] :  
                     ['edit']
     this.fetchDevices().then();
   }
@@ -463,8 +463,6 @@ export class DeviceListComponent {
       this.toastService.showSuccess('Success', response.data);
     } catch (error : any) {
       this.toastService.showError('Error', error.error.data.message);
-    } finally {
-      this.device = this.resetActivationDevice();
     }
     
   }
@@ -631,7 +629,6 @@ export class DeviceListComponent {
     this.fields = deviceActivationFormFields;
     this.isEditing = !event;
     this.isValidated = true;
-    // this.device = this.resetActivationDevice();
     this.device = event.item;
     this.deviceDialog = event;
   }
