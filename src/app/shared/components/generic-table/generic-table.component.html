@@ -120,10 +120,10 @@
                     }
 
                     @if(action === 'fitment') {
-                        <!-- @if(item.activationStatusText !== 'Active') { -->
+                        @if(item.activationStatus && item.inStock) {
                             <i [pTooltip]="'Fitment'" tooltipPosition="bottom" (click)="onFitment($event,item)"
-                                class="pi pi-ethereum ml-4 text-sm text-primary-500 cursor-pointer"></i>
-                        <!-- } -->
+                                class="pi pi-id-card ml-4 text-sm text-primary-500 cursor-pointer"></i>
+                        }
                     }
                     }
                 </td>

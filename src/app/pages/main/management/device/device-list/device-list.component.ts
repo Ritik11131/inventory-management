@@ -119,6 +119,11 @@ export class DeviceListComponent {
             this.device.chassisNo = null;
             this.device.engineNo = null;
           }
+        } else {
+            this.device.vehicleMake = null;
+            this.device.vehicleModel = null;
+            this.device.chassisNo = null;
+            this.device.engineNo = null;
         }
         this.validationState[fieldName] = !response.data.isDuplicate;
       } catch (error) {
@@ -532,9 +537,8 @@ export class DeviceListComponent {
     await this.generateDropdownValues('bulkUpload');
     this.fields = bulkUploadDeviceFormFields;
     this.isEditing = !event;
-    this.isValidated = true
+    this.isValidated = true;
     this.device = this.resetBulkUploadDevice();
-    // this.constructValidationState(this.fields);
     this.deviceDialog = event;
   }
 
@@ -632,13 +636,27 @@ export class DeviceListComponent {
     this.deviceDialog = event;
   }
 
+
+  constructStepperValidationState(fields: any[]): void {
+    console.log(fields,'construct');
+    fields.map((field) => {
+    field.fields.map((object:any)=> {
+      if (object.hasOwnProperty('validation') && object.validation) {
+        this.validationState[object.name] = false; // Invalid or new entry case
+      }
+    })
+    })
+
+    this.isValidated = Object.values(this.validationState).every(val => val === true);
+  }
+
   async onFitment(event: any) : Promise<any> {
     console.log(event);   
     this.currentAction = 'fitment';
     this.accesStepForm = true;
     this.generateAllDropdownValuesStepForm(fitmentFormFields,event);
+    this.constructStepperValidationState(this.stepFormFields);
     this.isEditing = !event;
-    this.isValidated = true;
     this.device = this.resetDeviceFitment(event.item);
     this.deviceDialog = event;
   }
@@ -692,7 +710,7 @@ export class DeviceListComponent {
     });
     
     console.log(form);
-    this.stepFormFields = form
+    this.stepFormFields = form;
     
   }
 
