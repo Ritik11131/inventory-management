@@ -112,18 +112,22 @@ export class DeviceListComponent {
             this.device.vehicleModel = vehicleDetails?.data?.vehicleModel;
             this.device.chassisNo = vehicleDetails?.data?.chassisNumber;
             this.device.engineNo = vehicleDetails?.data?.vehicleEngineNo;
+            this.device.manufacturingYear = vehicleDetails?.data?.registrationDate;
+            this.device.permitHolderName = vehicleDetails?.data?.ownerName;
           } catch (error) {
             console.log(error);
             this.device.vehicleMake = null;
             this.device.vehicleModel = null;
             this.device.chassisNo = null;
             this.device.engineNo = null;
+            this.device.manufacturingYear = null
           }
         } else {
             this.device.vehicleMake = null;
             this.device.vehicleModel = null;
             this.device.chassisNo = null;
             this.device.engineNo = null;
+            this.device.manufacturingYear = null
         }
         this.validationState[fieldName] = !response.data.isDuplicate;
       } catch (error) {
@@ -401,6 +405,7 @@ export class DeviceListComponent {
         fileReader.readAsText(data.file);
       } else if(this.currentAction === 'activate') {
         await this.activateDevice(data);
+        await this.fetchAndResetDevice();
       } else if(this.currentAction === 'tranferInventory') {
         await this.transferInventory(data);
       } else {

@@ -148,14 +148,14 @@
         } @else {
             <ng-container>
             <app-generic-stepper [data]="data" [steps]="stepFormFields" (onDialogDropdownChange)="onStepperDropDownChange($event)" 
-             (onStepperInputTextChange)="onStepperInputTextChange($event)" [validationState]="validationState" [isValidated]="isValidated" />
+             (onStepperInputTextChange)="onStepperInputTextChange($event)" [validationState]="validationState" [isValidated]="isValidated" (emitCurrentStepIndex)="emitCurrentStepIndex($event)" />
             </ng-container>
         }
     </ng-template>
 
     <ng-template pTemplate="footer">
         <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
-        <p-button [disabled]="!isValidated" [label]="isEditing ? 'Update' : 'Save'"
+        <p-button [disabled]="!isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="isEditing ? 'Update' : 'Save'"
             [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
     </ng-template>
 </p-dialog>

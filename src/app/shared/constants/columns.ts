@@ -17,10 +17,11 @@ export const deviceColumns = [
     { field: 'simDetails', header: 'Sim Provider',nested:true, subfield:'provider', nextsubfield:'providerName' },
     { field: 'simDetails', header: 'Primary Sim Operator', nested:true, subfield:'primaryOpt' },
     { field: 'simDetails', header: 'Primary Mobile No',nested:true, subfield:'primarySimNo' },
+    { field: 'simDetails', header: 'Primary Sim Validity',nested:true, subfield:'primaryValidTill' },
     { field: 'simDetails', header: 'Secondary Sim Operator',nested:true, subfield:'secondaryOpt' },
     { field: 'simDetails', header: 'Secondary Mobile No',nested:true, subfield:'secondarySimNo' },
+    { field: 'simDetails', header: 'Secondary Sim Validity',nested:true, subfield:'secondaryValidTill' },
     { field: 'simDetails', header: 'Activation Date',nested:true, subfield:'activationOn' },
-    { field: 'activation_till', header: 'Activation Till' },
     { field: 'inStock', header: 'Stock Status', minWidth: '12rem' },
     { field: 'activationStatusText', header: 'Activation Status', frozen:true, minWidth: '12rem' },
 ];

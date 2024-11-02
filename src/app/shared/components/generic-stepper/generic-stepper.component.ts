@@ -33,15 +33,16 @@ import { TooltipModule } from 'primeng/tooltip';
 ]
 })
 export class GenericStepperComponent implements OnChanges {
+  
+  currentStepIndex: number = 0;
 
   @Input() steps: Array<{ header: string; fields: any[] }> = [];
-  @Input() currentStepIndex: number = 0;
   @Input() data: { [key: string]: any } = {};
   @Input() validationState: { [key: string]: boolean } = {};
   @Input() isValidated: boolean = true;
   @Input() hideFields: string[] = [];
-
-
+  
+  emitCurrentStepIndex = output<any>();
   onDialogDropdownChange = output<any>();
   onStepperInputTextChange = output<any>();
 
@@ -56,6 +57,7 @@ export class GenericStepperComponent implements OnChanges {
   prevStep(): void {
     if (this.currentStepIndex > 0) {
       this.currentStepIndex--;
+      this.emitCurrentStepIndex.emit(this.currentStepIndex);
     }
   }
 
@@ -63,6 +65,7 @@ export class GenericStepperComponent implements OnChanges {
   nextStep(): void {
     if (this.currentStepIndex < this.steps.length - 1) {
       this.currentStepIndex++;
+      this.emitCurrentStepIndex.emit(this.currentStepIndex);
     }
   }
 

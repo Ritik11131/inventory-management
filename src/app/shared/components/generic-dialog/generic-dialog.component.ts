@@ -70,6 +70,7 @@ export class GenericDialogComponent implements OnChanges {
   selectedStatus!:any;
   selectedDropdownValue!: any;
   uploadedFiles: any[] = [];
+  stepperCurrentIndex!: number;
 
   constructor() { }
 
@@ -156,6 +157,10 @@ export class GenericDialogComponent implements OnChanges {
 
   onStepperInputTextChange(event: any) {
     this.stepperInputTextChange.emit(event); 
+  }
+
+  emitCurrentStepIndex(index: number) {
+    this.stepperCurrentIndex = index;
   }
 
 

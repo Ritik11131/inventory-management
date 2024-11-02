@@ -273,11 +273,11 @@ export const fitmentFormFields : any[] = [
         { type: 'text', name: 'engineNo', label: 'Engine No', placeholder: 'Enter your Engine No' },
         { type: 'text', name: 'vehicleMake', label: 'Vehicle Make', placeholder: 'Enter Vehicle Make' },
         { type: 'text', name: 'vehicleModel', label: 'Vehicle Model', placeholder: 'Enter Vehicle Model' },
+        { type: 'text', name: 'manufacturingYear', label: 'Manufacturing Year', placeholder: 'Enter Manufacturing Year' },
         { type: 'dropdown', name: 'vehicleCategory', label: 'Vehicle Category',  placeholder: 'Select a Vehicle Category',
           options: [],
           dropdownKeys:{} 
         },
-        { type: 'text', name: 'manufacturingYear', label: 'Manufacturing Year', placeholder: 'Enter Manufacturing Year' },
 
 
       ]
@@ -310,12 +310,13 @@ export const fitmentFormFields : any[] = [
       fields: [
         { type: 'non-editable', name: 'sno', label: 'Device Sno.', placeholder: 'Enter Device Serial No.', value:'' },
         { type: 'non-editable', name: 'iccid', label: 'Iccid No', placeholder: 'Enter ICCID No.', value:'' },
-        { type: 'non-editable', name: 'primaryOpt', label: 'Sim Operator 1', placeholder: 'Enter Sim Operator 1', value:'' },
-        { type: 'non-editable', name: 'primarySimNo', label: 'Sim No. 1', placeholder: 'Enter Sim No. 1', value:'' },
-        { type: 'non-editable', name: 'secondaryOpt', label: 'Sim Operator 2',  placeholder: 'Enter Sim Operator 2', value:'' },
-        { type: 'non-editable', name: 'secondarySimNo', label: 'Sim No. 2',  placeholder: 'Enter Sim No. 2', value:'' },
+        { type: 'non-editable', name: 'primaryOpt', label: 'Primary Sim Operator', placeholder: 'Enter Sim Operator 1', value:'' },
+        { type: 'non-editable', name: 'primarySimNo', label: 'Primary Sim No.', placeholder: 'Enter Sim No. 1', value:'' },
+        { type: 'non-editable', name: 'secondaryOpt', label: 'Secondary Sim Operator',  placeholder: 'Enter Sim Operator 2', value:'' },
+        { type: 'non-editable', name: 'secondarySimNo', label: 'Secondary Sim No.',  placeholder: 'Enter Sim No. 2', value:'' },
         { type: 'non-editable', name: 'activationOn', label: 'Activation Date', placeholder: 'Select Activation Date', value:'' },
-        { type: 'non-editable', name: 'validity', label: 'Validity', placeholder: 'Select Validity Date', value:'' }
+        { type: 'non-editable', name: 'primaryValidTill', label: 'Primary Sim Validity', placeholder: '', value:'' },
+        { type: 'non-editable', name: 'secondaryValidTill', label: 'Secondary Sim Validity', placeholder: '', value:'' }
       ]
     },
     {
