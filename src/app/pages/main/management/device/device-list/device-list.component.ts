@@ -254,32 +254,6 @@ export class DeviceListComponent {
   }
 
 
-
-  // async generateTranferInventoryDropdownValues(): Promise<any> {
-  //   try {
-  //     const response = await this.dynamicUserService.getList();
-  //     deviceTransferInventoryFormFields[0].options = response.data.map((user: any) => {
-  //       const keys = Object.keys(user);
-  //       const idKey: any = keys.find(key => key.includes('sno'));
-  //       const nameKey: any = keys.find(key => key.includes('name'));
-  //       // const valueKey: any = keys.find(key => key.includes('sno'));
-  //       deviceTransferInventoryFormFields[0].dropdownKeys = { idKey, nameKey };
-  //       return {
-  //         sno: user[idKey],
-  //         name: user[nameKey],
-  //         // id: user[valueKey]
-  //       };
-  //     });
-
-  //     // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
-  //   } catch (error) {
-  //     this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
-  //   }
-  // }
-
-
-
-
   async fetchDevices(): Promise<any> {
     this.isLoading = true;
     this.devices = [];
@@ -382,7 +356,7 @@ export class DeviceListComponent {
         await this.fetchAndResetDevice();
       } else if (this.currentAction === 'bulkUpload') {
         const formData = new FormData();
-        formData.append('file', data.file, data.file.name)
+        formData.append('file', data.file, data.file.name);
         formData.append('modelId', data.model.id.toString());
 
         const fileReader = new FileReader();
@@ -452,7 +426,7 @@ export class DeviceListComponent {
   async transferInventory({ user, no_of_device } : { user : { sno:number, name:string }, no_of_device : string }) : Promise<any> {
     const payload = { 
       userId: user.sno,
-      DeviceId: this.devices.slice(0, +no_of_device).map((device: any) => device.id) // Limiting to the first 5 devices
+      DeviceId: this.devices.slice(0, +no_of_device).map((device: any) => device.id)
    };
      try {
        const response = await this.inventoryService.transferInventory(payload);

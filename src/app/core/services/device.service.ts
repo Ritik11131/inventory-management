@@ -48,13 +48,6 @@ export class DeviceService {
     }
   }
 
-
-  deviceTableConfig() {
-    return {
-      create : true
-    }
-  }
-
   async isICCIDValid(iccid: string): Promise<any> {
     try {
       const response = await this.http.get('Device/validate-iccid', { iccid });

@@ -20,13 +20,14 @@ import { tableActionsConfigRoleWise } from '../../constants/table-config';
 import { AuthService } from '../../../core/services/auth.service';
 import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
 import { tableActions } from '../../interfaces/table';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
   imports: [TableModule, RippleModule, ButtonModule, InputTextModule, InputTextareaModule, CommonModule, 
     FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, 
-    InputNumberModule,ToolbarModule,ProgressSpinnerModule,TooltipModule,ConfirmDialogModule],
+    InputNumberModule,ToolbarModule,ProgressSpinnerModule,TooltipModule,ConfirmDialogModule,MenuModule],
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.scss',
 })
@@ -37,7 +38,8 @@ export class GenericTableComponent implements OnInit {
   userRole: string = '';
   currentSection: string | any = '';
   tableActionsConfigRoleWise : any = tableActionsConfigRoleWise;
-  availableActions: tableActions[] = [];
+  availableHeaderActions: tableActions[] = [];
+  menuItems: any[] = [];
 
   @Input() columns: any[] = []; // Dynamic columns
   @Input() data: any[] = []; // Data for the table
@@ -62,6 +64,8 @@ export class GenericTableComponent implements OnInit {
   sampleBulkUpload = output<any>();
   activate = output<any>();
   fitment = output<any>();
+  actionMenuItems!: any[];
+  availableActionsList!: any;
 
 
   constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService) {
@@ -73,20 +77,69 @@ export class GenericTableComponent implements OnInit {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.loadActions();    
+    this.loadActions(); 
   }
 
 
 
   loadActions() {
-    // Retrieve actions based on role and section
     if (tableActionsConfigRoleWise[this.userRole] && tableActionsConfigRoleWise[this.userRole][this.currentSection]) {
-      this.availableActions = tableActionsConfigRoleWise[this.userRole][this.currentSection];
+      this.availableHeaderActions = tableActionsConfigRoleWise[this.userRole][this.currentSection];
+      
+      // Map actions to menuItems for p-menu
+      this.menuItems = this.availableHeaderActions.map((action:any) => ({
+        label: action.label,
+        icon: action.icon,
+        command: () => this.invokeAction(action.action)
+      }));
+    } else {
+      // Handle case if no actions are found for role and section
+      this.menuItems = [
+        { label: 'No actions available', icon: 'pi pi-info-circle' }
+      ];
     }
-
-    console.log(this.availableActions,'actions');
-    
   }
+
+
+  loadActionMenuItems(selectedItem: any) {
+    this.actionMenuItems = [];
+    this.actions.forEach((actionType:any) => {
+        if (actionType === 'edit') {
+            this.actionMenuItems.push({
+                label: 'Edit',
+                icon: 'pi pi-pencil',
+                command: () => this.onEdit(selectedItem)
+            });
+        } else if (actionType === 'delete') {
+            this.actionMenuItems.push({
+                label: 'Delete',
+                icon: 'pi pi-trash',
+                command: (event:any) => this.onDelete(event, selectedItem)
+            });
+        } else if (actionType === 'activate' && selectedItem.activationStatusText !== 'Active') {
+            this.actionMenuItems.push({
+                label: 'Activate',
+                icon: 'pi pi-eject',
+                command: (event:any) => this.onActivate(event, selectedItem)
+            });
+        } else if (actionType === 'fitment' && selectedItem.activationStatus && selectedItem.inStock) {
+            this.actionMenuItems.push({
+                label: 'Fitment',
+                icon: 'pi pi-id-card',
+                command: (event:any) => this.onFitment(event, selectedItem)
+            });
+        }
+    });
+
+    if(this.actionMenuItems.length === 0) {
+        this.actionMenuItems.push({
+            label: 'No actions available',
+            icon: 'pi pi-info-circle',
+            command: () => {}
+        });
+    }
+}
+
 
 
   invokeAction(action: any) {

@@ -1,11 +1,14 @@
 <div class="px-4 md:px-6 lg:px-8">
     <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
         <div class="p-toolbar-group-start">
-            @for (action of availableActions; track $index) {
+            <!-- @for (action of availableActions; track $index) {
                 <p-button [pTooltip]="action.label" tooltipPosition="bottom" [text]="true" [outlined]="true" 
                           [icon]="action.icon" class="mr-2"
                           (onClick)="invokeAction(action.action)" />
-            }
+            } -->
+
+            <p-menu appendTo="body" [model]="menuItems" [popup]="true" #menu></p-menu>
+            <p-button  [text]="true" [outlined]="true"  label="Manage" icon="pi pi-cog" (click)="menu.toggle($event)"></p-button>
             <!-- <p-button [pTooltip]="'Create New'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
             <p-button [pTooltip]="'Link RTO'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-link" class="mr-2" (onClick)="onLinkRTO()" />
             <p-button [pTooltip]="'Transfer Inventory'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-external-link" class="mr-2" (onClick)="onTransferInventory()" />
@@ -86,9 +89,9 @@
                             <td>
                                 @if (col.subfield) {
                                     @if (col.nextsubfield) {
-                                        {{ item[col.field]?.[col.subfield]?.[col.nextsubfield] || '-' }}
+                                        {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield]?.[col.nextsubfield] | date) || '-') : (item[col.field]?.[col.subfield]?.[col.nextsubfield] || '-') }}
                                     } @else {
-                                        {{ item[col.field]?.[col.subfield] || '-' }}
+                                        {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield] | date) || '-') : (item[col.field]?.[col.subfield] || '-') }}
                                     }
                                 } @else {
                                     {{ '-' }}
@@ -100,8 +103,12 @@
                     }
                 }
                 @if(actions.length) {
-                <td pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">
-                    @for(action of actions; track $index) {
+                    <td pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">
+                        <i class="pi pi-ellipsis-h text-md text-primary cursor-pointer" (click)="loadActionMenuItems(item); actionMenu.toggle($event)"></i>
+                        <p-menu appendTo="body" #actionMenu [model]="actionMenuItems" popup="true"></p-menu>
+                    </td>
+                    <!-- <td pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">
+                        @for(action of actions; track $index) {
                     @if(action === 'edit') {
                     <i [pTooltip]="'Edit'" tooltipPosition="bottom" (click)="onEdit(item)"
                         class="pi pi-pencil ml-2 text-sm text-primary cursor-pointer"></i>
@@ -126,7 +133,7 @@
                         }
                     }
                     }
-                </td>
+                </td> -->
                 }
             </tr>
         </ng-template>
