@@ -314,9 +314,9 @@ export const fitmentFormFields : any[] = [
         { type: 'non-editable', name: 'primarySimNo', label: 'Primary Sim No.', placeholder: 'Enter Sim No. 1', value:'' },
         { type: 'non-editable', name: 'secondaryOpt', label: 'Secondary Sim Operator',  placeholder: 'Enter Sim Operator 2', value:'' },
         { type: 'non-editable', name: 'secondarySimNo', label: 'Secondary Sim No.',  placeholder: 'Enter Sim No. 2', value:'' },
-        { type: 'non-editable', name: 'activationOn', label: 'Activation Date', placeholder: 'Select Activation Date', value:'' },
-        { type: 'non-editable', name: 'primaryValidTill', label: 'Primary Sim Validity', placeholder: '', value:'' },
-        { type: 'non-editable', name: 'secondaryValidTill', label: 'Secondary Sim Validity', placeholder: '', value:'' }
+        { type: 'non-editable', name: 'activationOn', label: 'Activation Date', placeholder: 'Select Activation Date', date: true ,value:'' },
+        { type: 'non-editable', name: 'primaryValidTill', label: 'Primary Sim Validity', placeholder: '', date: true ,value:'' },
+        { type: 'non-editable', name: 'secondaryValidTill', label: 'Secondary Sim Validity', placeholder: '', date: true ,value:'' }
       ]
     },
     {

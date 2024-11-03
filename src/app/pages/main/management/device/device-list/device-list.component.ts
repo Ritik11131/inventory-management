@@ -16,7 +16,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
-
+import { DatePipe } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { GenericTableComponent } from '../../../../../shared/components/generic-table/generic-table.component';
 import { GenericDialogComponent } from '../../../../../shared/components/generic-dialog/generic-dialog.component';
@@ -45,7 +45,7 @@ import { FitmentService } from '../../../../../core/services/fitment.service';
     RatingModule, InputTextModule, FormsModule, InputNumberModule, GenericDialogComponent, GenericTableComponent, ConfirmDialogModule],
   templateUrl: './device-list.component.html',
   styleUrl: './device-list.component.scss',
-  providers: [ConfirmationService]
+  providers: [ConfirmationService,DatePipe]
 })
 export class DeviceListComponent {
 
@@ -70,7 +70,7 @@ export class DeviceListComponent {
 
 
 
-  constructor(private toastService: ToastService, private dynamicUserService:DynamicUserService, private simProviderService:SimProvidersService,
+  constructor(private datePipe: DatePipe,private toastService: ToastService, private dynamicUserService:DynamicUserService, private simProviderService:SimProvidersService,
     private confirmationService: ConfirmationService,  private inventoryService:InventoryService, private vehicleCategory:VehicleCategoryService,
     private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService,private stateService:StatesService,
   private rtoService:RtoService,private fitmentService:FitmentService) {
@@ -101,40 +101,62 @@ export class DeviceListComponent {
       vehicleNo : this.fitmentService.isVehicleNoValid.bind(this.deviceService),
     };
     
-    if(fieldValidationMapping[fieldName]) {
+    if (fieldValidationMapping[fieldName]) {
       try {
         const response = await fieldValidationMapping[fieldName](value);
-        if(!response.data.isDuplicate) {
+        const isDuplicate = response.data.isDuplicate;
+    
+        if (!isDuplicate) {
           try {
             const vehicleDetails = await this.fitmentService.getVehicleDetails(value);
-            console.log(vehicleDetails,'vehicleDetails');
-            this.device.vehicleMake = vehicleDetails?.data?.vehicleMake;
-            this.device.vehicleModel = vehicleDetails?.data?.vehicleModel;
-            this.device.chassisNo = vehicleDetails?.data?.chassisNumber;
-            this.device.engineNo = vehicleDetails?.data?.vehicleEngineNo;
-            this.device.manufacturingYear = vehicleDetails?.data?.registrationDate;
-            this.device.permitHolderName = vehicleDetails?.data?.ownerName;
+            console.log(vehicleDetails, 'vehicleDetails');
+    
+            const {
+              vehicleMake,
+              vehicleModel,
+              chassisNumber: chassisNo,
+              vehicleEngineNo: engineNo,
+              registrationDate: manufacturingYear,
+              ownerName: permitHolderName
+            } = vehicleDetails?.data || {};
+    
+            Object.assign(this.device, {
+              vehicleMake,
+              vehicleModel,
+              chassisNo,
+              engineNo,
+              manufacturingYear,
+              permitHolderName
+            });
+    
           } catch (error) {
             console.log(error);
-            this.device.vehicleMake = null;
-            this.device.vehicleModel = null;
-            this.device.chassisNo = null;
-            this.device.engineNo = null;
-            this.device.manufacturingYear = null
+            Object.assign(this.device, {
+              vehicleMake: null,
+              vehicleModel: null,
+              chassisNo: null,
+              engineNo: null,
+              manufacturingYear: null,
+              permitHolderName: null
+            });
           }
         } else {
-            this.device.vehicleMake = null;
-            this.device.vehicleModel = null;
-            this.device.chassisNo = null;
-            this.device.engineNo = null;
-            this.device.manufacturingYear = null
+          Object.assign(this.device, {
+            vehicleMake: null,
+            vehicleModel: null,
+            chassisNo: null,
+            engineNo: null,
+            manufacturingYear: null,
+            permitHolderName: null
+          });
         }
-        this.validationState[fieldName] = !response.data.isDuplicate;
+    
+        this.validationState[fieldName] = !isDuplicate;
       } catch (error) {
         this.validationState[fieldName] = false;
         console.error(`Error validating ${fieldName}:`, error);
       }
-    }    
+    }      
 
     this.isValidated = Object.values(this.validationState).every(val => val === true);
   
@@ -680,7 +702,7 @@ export class DeviceListComponent {
         object.value = event.item[object.name]
       } else {
         if(event?.item?.simDetails) {
-          object.value = event?.item?.simDetails[object.name]
+          object.value = object?.date ? this.datePipe.transform((event?.item?.simDetails[object.name]), 'MMM d, yyyy') : event?.item?.simDetails[object.name]
         }
       }
     });
