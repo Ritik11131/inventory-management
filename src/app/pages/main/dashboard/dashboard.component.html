@@ -46,24 +46,21 @@
     <div class="grid">
         <div *ngFor="let panel of secondRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'pie' ? '4' : '8' }}">
             <p-panel [header]="panel.header">
-                <div class="surface-card shadow-2 p-3 border-round">
                     <div class="flex flex-column justify-content-between">
                         <div class="flex justify-content-between mb-3">
                             <p-chart [responsive]="true" class="w-full" height="300px" [type]="panel.type"
                                 [data]="panel.data" [options]="panel.options"></p-chart>
                         </div>
                     </div>
-                </div>
-            </p-panel>
+             </p-panel>
         </div>
     </div>
 
     <p-divider />
 
     <div class="grid">
-        <div *ngFor="let panel of thirdRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'bar' ? '6' : '3' }}">
+        <div *ngFor="let panel of thirdRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'bar' ? '4' : '4' }}">
           <p-panel [header]="panel.header">
-            <div class="surface-card shadow-2 p-3 border-round">
               <div class="flex flex-column justify-content-between">
                 <div class="flex justify-content-between mb-3">
                   <p-chart
@@ -76,7 +73,6 @@
                   ></p-chart>
                 </div>
               </div>
-            </div>
           </p-panel>
         </div>
       </div>

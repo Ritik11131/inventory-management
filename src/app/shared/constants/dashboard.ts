@@ -116,20 +116,23 @@ export const thirdRowCharts: ChartPanel[] = [
     header: 'Total Inventory',
     type: 'doughnut',
     data: {
-      labels: ['Available', 'Assigned', 'Maintenance'],
+      labels: [],
       datasets: [
         {
-          data: [200, 150, 50],
-          backgroundColor: ['#66BB6A', '#FFA726', '#42A5F5'],
-
-
+          data: [],
+          backgroundColor: [
+            '#66BB6A', // OEM - Vibrant Green
+            '#FFA726', // Dealer - Bright Orange
+            '#42A5F5', // Distributor - Sky Blue
+            '#EF5350'  // Others - Crimson Red
+          ],
         },
       ],
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { position: 'top',labels: { usePointStyle: true, } },
+        legend: { position: 'right',labels: { usePointStyle: true, } },
       },
     },
   },
@@ -148,7 +151,7 @@ export const thirdRowCharts: ChartPanel[] = [
     options: {
       responsive: true,
       plugins: {
-        legend: { position: 'top',labels: { usePointStyle: true, } },
+        legend: { position: 'right',labels: { usePointStyle: true, } },
       },
     },
   },
