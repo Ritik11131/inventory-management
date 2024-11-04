@@ -1,5 +1,5 @@
 <div class="surface-ground px-4 py-5 md:px-6 lg:px-8">
-    <p-panel [toggleable]="true" header="Device Status Overview">
+    <p-panel header="Device Status Overview">
         <ng-template pTemplate="header">
             <div class="flex align-items-center gap-2 mr-3">
                 <i class="pi pi-car text-primary text-3xl"></i>
@@ -23,194 +23,68 @@
         </ng-template>
 
         <div class="grid">
+            @for (vehicle of vehicleStatusOverview; track $index) {
             <div class="col-12 md:col-6 lg:col-3">
                 <div class="surface-card shadow-2 p-3 border-round">
                     <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Activated Devices</span>
-                            <div class="text-green-500 text-2xl">210</div>
+                        <div> <span class="block text-500 font-medium mb-3">{{ vehicle.label }}</span>
+                            <div [ngClass]="vehicle.textColorClass + ' text-2xl'">{{ vehicle.count }}</div>
                         </div>
-                        <div class="flex align-items-center justify-content-center bg-green-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-green-500 text-xl"></i>
+                        <div class="flex align-items-center justify-content-center"
+                            [ngClass]="vehicle.bgColorClass + ' border-round'" style="width:2.5rem;height:2.5rem">
+                            <i class="pi pi-car" [ngClass]="vehicle.textColorClass + ' text-xl'"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Pending Activation</span>
-                            <div class="text-orange-500 text-2xl">284</div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-orange-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Offline devices</span>
-                            <div class="text-red-500 text-2xl">12</div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center bg-red-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-red-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Online Devies</span>
-                            <div class="text-blue-500 text-2xl">152</div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-blue-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Total devices</span>
-                            <div class="text-gray-500 text-2xl">152</div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center bg-gray-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-gray-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
 
     </p-panel>
 
-    <p-divider/>
-
-
-    <p-panel [toggleable]="true" header="Hierarchy Summary">
-        <ng-template pTemplate="header">
-            <div class="flex align-items-center gap-2 mr-3">
-                <i class="pi pi-users text-primary text-3xl"></i>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="footer">
-            <div class="flex flex-wrap align-items-center justify-content-between gap-3">
-                <div class="flex align-items-center gap-2">
-                    <!-- <p-button icon="pi pi-user" rounded="true" text="true" />
-                    <p-button icon="pi pi-bookmark" severity="secondary" rounded="true" text="true" /> -->
-                </div>
-                <span class="p-text-secondary">
-                    Updated 2 hours ago
-                </span>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="icons">
-            <button class="p-panel-header-icon p-link mr-2">
-                <span class="pi pi-sync"></span>
-            </button>
-        </ng-template>
-
-        <div class="grid">
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Total OEM</span>
-                            <div class="text-green-500 text-2xl">210</div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center bg-green-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-green-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Total Distributor</span>
-                            <div class="text-orange-500 text-2xl">284</div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-orange-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Total Delaer</span>
-                            <div class="text-red-500 text-2xl">12</div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center bg-red-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-red-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div>
-                            <span class="block text-500 font-medium mb-3">Total User</span>
-                            <div class="text-blue-500 text-2xl">152</div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
-                            style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car text-blue-500 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </p-panel>
-
-
-    <p-divider/>
-
-
+    <p-divider />
     <div class="grid">
-        <div class="col-12 md:col-6 lg:col-9">
-            <div class="surface-card shadow-2 p-3 border-round">
-                <div class="flex justify-content-between mb-3">
-                    <p-chart [responsive]="true" class="w-full" height="400px" type="line" [data]="bardata"
-                        [options]="baroptions" />
-                </div>
-            </div>
-        </div>
-        <div class="col-12 md:col-6 lg:col-3">
-            <div class="surface-card shadow-2 p-3 border-round">
-                <div class="flex flex-column justify-content-between">
-                    <div class="flex justify-content-between mb-3">
-                        <p-chart [responsive]="true" class="w-full" height="400px" type="doughnut" [data]="data"
-                            [options]="options" />
+        <div *ngFor="let panel of secondRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'pie' ? '4' : '8' }}">
+            <p-panel [header]="panel.header">
+                <div class="surface-card shadow-2 p-3 border-round">
+                    <div class="flex flex-column justify-content-between">
+                        <div class="flex justify-content-between mb-3">
+                            <p-chart [responsive]="true" class="w-full" height="300px" [type]="panel.type"
+                                [data]="panel.data" [options]="panel.options"></p-chart>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </p-panel>
         </div>
     </div>
 
+    <p-divider />
 
     <div class="grid">
+        <div *ngFor="let panel of thirdRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'bar' ? '6' : '3' }}">
+          <p-panel [header]="panel.header">
+            <div class="surface-card shadow-2 p-3 border-round">
+              <div class="flex flex-column justify-content-between">
+                <div class="flex justify-content-between mb-3">
+                  <p-chart
+                    [responsive]="true"
+                    class="w-full"
+                    [height]="'300px'"
+                    [type]="panel.type"
+                    [data]="panel.data"
+                    [options]="panel.options"
+                  ></p-chart>
+                </div>
+              </div>
+            </div>
+          </p-panel>
+        </div>
+      </div>
+      
+
+
+
+    <!-- <div class="grid">
         <div class="col-12 md:col-6 lg:col-12">
             <div class="surface-card shadow-2 p-3 border-round">
                 <div class="h-20rem md:h-30rem lg:h-40rem" leaflet (leafletMapReady)="onMapReady($event)"
@@ -218,5 +92,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>

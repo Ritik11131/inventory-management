@@ -1,164 +1,109 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
-import {icon, latLng, Map, Marker, marker, tileLayer} from "leaflet";
+import { icon, latLng, Map, Marker, marker, tileLayer } from "leaflet";
 import { ChartModule } from 'primeng/chart';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { PanelModule } from 'primeng/panel';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { secondRowCharts, thirdRowCharts, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
+import { DashboardService } from '../../../core/services/dashboard.service';
+
+
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DividerModule,ChartModule,LeafletModule,ProgressBarModule,PanelModule],
+  imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() {}
+
+  vehicleStatusOverview = vehicleStatusOverviewObject;
+  secondRowCharts = secondRowCharts;
+  thirdRowCharts = thirdRowCharts;
+
+  constructor(private dashboardService: DashboardService) { }
 
 
   map!: Map;
 
   lealfetOptions = {
     layers: [
-        tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 18, attribution: '...'})
+      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
     ],
     zoom: 5,
     center: latLng(27.54095593, 79.16035184)
-};
-
-
-  data = {
-    labels: ['A', 'B', 'C','D','E'],
-    datasets: [
-        {
-            data: [88,9,8,10,5],
-            backgroundColor: [
-                "#FE475D",
-                "#FE6C7D",
-                "#FE919E",
-                "#FFB5BE",
-                "#FFDADF"
-              ],
-            hoverBackgroundColor: [
-                "#FA5267",
-                "#FA7585",
-                "#FF9CA7",
-                "#FABEC5",
-                "#FCE1E4"
-              ] 
-        }
-    ]
-};
-
-options = {
-    cutout: '60%',
-      plugins: {
-          legend: { display: true,position: 'top', labels: { usePointStyle: true } },
-          tooltip: { enabled: true }
-      },
-      animation: {
-          animateRotate: true,
-          animateScale: true,
-          easing: 'easeInOutQuart',
-          animateOnInit: true,
-      },
-  };
-
-
-bardata = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            type: 'line',
-            label: 'My First dataset',
-            borderColor:"#39C8A6",
-            fill: true,
-            tension: 0.6,
-            data: [50, 25, 12, 48, 56, 76, 42]
-        },
-        {
-            type:'bar',
-            label: 'My Second dataset',
-            backgroundColor: ['#3357FF'],
-            // hoverBackgroundColor: ['#FF6F4B', '#4BFF6F', '#4B6FFF', '#FF4BA8', '#FFD04B'], 
-            data: [65, 59, 80, 81, 56, 55, 40]
-        },
-        {
-            type:'bar',
-            label: 'My Third dataset',
-            backgroundColor: ['#FFC733'],
-            // hoverBackgroundColor: ['#FF6F4B', '#4BFF6F', '#4B6FFF', '#FF4BA8', '#FFD04B'],
-            data: [22, 42, 32, 12, 82, 22, 82]
-        }
-    ]
-};
-
-
-baroptions = {
-    animation: {
-      easing: 'easeInOutQuart',
-      animateOnInit: true,
-  },
-    plugins: {
-        legend: { display : true ,position:'bottom'},
-        tooltip:{ enabled:true }
-    },
-    scales: {
-      x: {
-        display: true,
-        grid: {
-          display: false
-        },
-        ticks: {
-          color: '#252525'
-        },
-        title: {
-          display: true,
-        //   text: 'Trip Distance',
-          color: 'black',
-          font: {
-            weight: 400,
-            size: 12,
-          },
-        }
-      },
-      y: {
-        display: true,
-        grid: {
-          display: false
-        },
-        title: {
-          display: true,
-        //   text: 'No of Events(%)',
-          color: 'black',
-          font: {
-            weight: 400,
-            size: 12,
-          },
-        }
-      }
-    },
-    elements: {
-      bar: {
-        borderRadius: {
-          topLeft: 8,
-          topRight: 8,
-          bottomLeft: 0,
-          bottomRight: 0
-        },
-      }
-    }
   };
 
   onMapReady(map: Map) {
-      this.map = map;
-}
+    this.map = map;
+  }
 
 
-ngOnInit(): void {
-    
-}
+
+  ngOnInit(): void {
+    this.fetchUserCountAndDeviceStock().then()
+  }
+
+
+  async fetchUserCountAndDeviceStock(): Promise<any> {
+    try {
+      const response = await this.dashboardService.getUserCountAndDeviceStock();
+      console.log(response, 'response');
+
+      this.secondRowCharts[0].data = {
+        ...this.secondRowCharts[0].data,
+        labels: Object.keys(response.data.userCountTask),
+        datasets: [{
+          ...this.secondRowCharts[0].data.datasets[0],  // Keep other dataset properties like backgroundColor
+          data: Object.values(response.data.userCountTask)
+        }]
+      };
+
+      const filtereddeviceInStock = response?.data?.deviceInStock?.filter((object : any) => object?.user?.usertype !== 'User');
+      console.log(filtereddeviceInStock,'filtered');
+
+      let availableUsers: Record<string, number> = {
+        OEM: 0,
+        Distributor: 0,
+        Dealer: 0,
+        User: 0
+      };
+      
+      // Loop through filtered devices and dynamically increment user counts
+      filtereddeviceInStock.forEach((obj: any) => {
+        const userType = obj.user.usertype;
+        
+        // Only increment if the user type exists in availableUsers
+        if (availableUsers.hasOwnProperty(userType)) {
+          availableUsers[userType] += obj.count;
+        }
+      });
+
+
+      this.thirdRowCharts[1].data = {
+        ...this.thirdRowCharts[1].data,
+        labels: Object.keys(availableUsers),
+        datasets: [{
+          ...this.thirdRowCharts[1].data.datasets[0],  // Keep other dataset properties like backgroundColor
+          data: Object.values(availableUsers)
+        }]
+      };
+
+
+      console.log(availableUsers);
+      
+      
+
+
+    } catch (error) {
+
+    }
+  }
 
 }

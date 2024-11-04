@@ -129,8 +129,9 @@ export class DeviceListComponent {
               permitHolderName
             });
     
-          } catch (error) {
+          } catch (error : any) {
             console.log(error);
+            this.toastService.showError('Error', error.error.data);
             Object.assign(this.device, {
               vehicleMake: null,
               vehicleModel: null,
@@ -152,7 +153,8 @@ export class DeviceListComponent {
         }
     
         this.validationState[fieldName] = !isDuplicate;
-      } catch (error) {
+      } catch (error : any) {
+        this.toastService.showError('Error', error.error.data);
         this.validationState[fieldName] = false;
         console.error(`Error validating ${fieldName}:`, error);
       }
