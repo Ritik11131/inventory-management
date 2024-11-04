@@ -1,49 +1,214 @@
 <div class="surface-ground px-4 py-5 md:px-6 lg:px-8">
-    <p-panel header="Device Status Overview">
-        <ng-template pTemplate="header">
-            <div class="flex align-items-center gap-2 mr-3">
-                <i class="pi pi-car text-primary text-3xl"></i>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="footer">
-            <div class="flex flex-wrap align-items-center justify-content-between gap-3">
-                <div class="flex align-items-center gap-2">
-                    <!-- <p-button icon="pi pi-user" rounded="true" text="true" />
-                    <p-button icon="pi pi-bookmark" severity="secondary" rounded="true" text="true" /> -->
-                </div>
-                <span class="p-text-secondary">
-                    Updated 2 hours ago
-                </span>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="icons">
-            <button class="p-panel-header-icon p-link mr-2">
-                <span class="pi pi-sync"></span>
-            </button>
-        </ng-template>
 
-        <div class="grid">
-            @for (vehicle of vehicleStatusOverview; track $index) {
-            <div class="col-12 md:col-6 lg:col-3">
-                <div class="surface-card shadow-2 p-3 border-round">
-                    <div class="flex justify-content-between">
-                        <div> <span class="block text-500 font-medium mb-3">{{ vehicle.label }}</span>
-                            <div [ngClass]="vehicle.textColorClass + ' text-2xl'">{{ vehicle.count }}</div>
+    <div class="grid mb-4">
+        @for (vehicle of vehicleStatusOverview; track $index) {
+        <div class="col-12 md:col-6 lg:col-3">
+            <div class="surface-card shadow-2 p-3 border-round">
+                <div class="flex justify-content-between">
+                    <div>
+                        <div class="mb-3" [ngClass]="vehicle.textColorClass + ' text-5xl'">{{ vehicle.count }}</div>
+                        <span class="block text-500 font-medium">{{ vehicle.label }}</span>
+                    </div>
+                    <div class="flex align-items-center justify-content-center"
+                        [ngClass]="vehicle.bgColorClass + ' border-round'" style="width:5rem;height:5rem">
+                        <i class="pi pi-car" [ngClass]="vehicle.textColorClass + ' text-5xl'"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="grid mb-4">
+        <div class="col-12 md:col-6 lg:col-5">
+            <p-panel header="Total Inventory">
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <div class="surface-card shadow-2 p-3 border-round">
+                            <div class="flex justify-content-between">
+                                <div>
+                                    <div class="mb-3" [ngClass]="'text-green-500' + ' text-5xl'">2000</div>
+                                    <span class="block text-500 font-medium">Fitted</span>
+                                </div>
+                                <div class="flex align-items-center justify-content-center"
+                                    [ngClass]="'bg-green-100' + ' border-round'" style="width:5rem;height:5rem">
+                                    <i class="pi pi-car" [ngClass]="'text-green-500' + ' text-5xl'"></i>
+                                </div>
+                            </div>
+                            <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
+                                <div class="bg-cyan-500 h-full" style="width: 64%; border-radius: 4px;"></div>
+                            </div>
                         </div>
-                        <div class="flex align-items-center justify-content-center"
-                            [ngClass]="vehicle.bgColorClass + ' border-round'" style="width:2.5rem;height:2.5rem">
-                            <i class="pi pi-car" [ngClass]="vehicle.textColorClass + ' text-xl'"></i>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <div class="surface-card shadow-2 p-3 border-round">
+                            <div class="flex justify-content-between">
+                                <div>
+                                    <div class="mb-3" [ngClass]="'text-green-500' + ' text-5xl'">0</div>
+                                    <span class="block text-500 font-medium">Balanced</span>
+                                </div>
+                                <div class="flex align-items-center justify-content-center"
+                                    [ngClass]="'bg-green-100' + ' border-round'" style="width:5rem;height:5rem">
+                                    <i class="pi pi-car" [ngClass]="'text-green-500' + ' text-5xl'"></i>
+                                </div>
+                            </div>
+                            <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
+                                <div class="bg-cyan-500 h-full" style="width: 64%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-panel>
+        </div>
+        <div class="col-12 md:col-6 lg:col-5">
+            <p-panel header="Total Complaint Lodge">
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <div class="surface-card shadow-2 p-3 border-round">
+                            <div class="flex justify-content-between">
+                                <div>
+                                    <div class="mb-3" [ngClass]="'text-green-500' + ' text-5xl'">0</div>
+                                    <span class="block text-500 font-medium">Resolved</span>
+                                </div>
+                                <div class="flex align-items-center justify-content-center"
+                                    [ngClass]="'bg-green-100' + ' border-round'" style="width:5rem;height:5rem">
+                                    <i class="pi pi-car" [ngClass]="'text-green-500' + ' text-5xl'"></i>
+                                </div>
+                            </div>
+                            <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
+                                <div class="bg-cyan-500 h-full" style="width: 64%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <div class="surface-card shadow-2 p-3 border-round">
+                            <div class="flex justify-content-between">
+                                <div>
+                                    <div class="mb-3" [ngClass]="'text-green-500' + ' text-5xl'">0</div>
+                                    <span class="block text-500 font-medium">Not Resolved</span>
+                                </div>
+                                <div class="flex align-items-center justify-content-center"
+                                    [ngClass]="'bg-green-100' + ' border-round'" style="width:5rem;height:5rem">
+                                    <i class="pi pi-car" [ngClass]="'text-green-500' + ' text-5xl'"></i>
+                                </div>
+                            </div>
+                            <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
+                                <div class="bg-cyan-500 h-full" style="width: 64%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-panel>
+        </div>
+        <div class="col-12 md:col-6 lg:col-2">
+            <div class="p-3 border-round bg-red-500">
+                <div class="flex justify-content-between">
+                    <div class="flex align-items-center justify-content-center" [ngClass]="' border-circle'"
+                        style="width:14rem;height:14rem">
+                        <span [ngClass]="'text-white' + ' text-7xl font-bold'">SOS</span>
+                    </div>
+                    <div class="flex align-items-center justify-content-center" [ngClass]="'bg-white' + ' border-round'"
+                        style="width:14rem;height:14rem">
+                        <span [ngClass]="'text-red-500 font-bold' + ' text-7xl'">1000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="grid nested-grid">
+        <div class="col-12 md:col-5 lg:col-5">
+            <p-panel header="Vehicle Type Wise Installation">
+                <ng-template pTemplate="icons">
+                    <button class="p-panel-header-icon p-link mr-2">
+                        <span class="pi pi-filter"></span>
+                    </button>
+                </ng-template>
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <h2>Total Vehicles</h2>
+                        <div class="flex justify-content-center align-items-center">
+                            <p-knob [readonly]="true" [size]="200" [strokeWidth]="10" />
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-6">
+                        <div class="grid">
+                            @for (vehicle of vehicleStatusOverview; track $index) {
+                            <div class="col-12 md:col-12 lg:col-12">
+                                <div class="surface-card shadow-2 p-3 border-round">
+                                    <div class="flex justify-content-between">
+                                        <div>
+                                            <div class="mb-3" [ngClass]="vehicle.textColorClass + ' text-5xl'">{{
+                                                vehicle.count }}</div>
+                                            <span class="block text-500 font-medium">{{ vehicle.label }}</span>
+                                        </div>
+                                        <div class="flex align-items-center justify-content-center"
+                                            [ngClass]="vehicle.bgColorClass + ' border-round'"
+                                            style="width:4rem;height:4rem">
+                                            <i class="pi pi-car" [ngClass]="vehicle.textColorClass + ' text-4xl'"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </p-panel>
+        </div>
+        <div class="col-12 md:col-7 lg:col-7">
+            <div class="grid">
+                <div class="col-12 lg:col-8">
+                    <p-panel header="Renewal Status">
+                        <div id="chart">
+                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                                [labels]="chartOptions.labels" [fill]="chartOptions.fill"
+                                [dataLabels]="chartOptions.dataLabels"
+                                [responsive]="chartOptions.responsive"></apx-chart>
+                        </div>
+                    </p-panel>
+                </div>
+                <div class="col-12 lg:col-4">
+                    <p-panel header="Total Registration">
+                        <div class="grid">
+                            @for (item of totalRegistrationObject | keyvalue; track $index) {
+                                <div class="col-12 md:col-12 lg:col-12">
+                                    <div class="p-3 bg-green-700 border-round">
+                                        <div class="flex justify-content-between">
+                                            <div class="flex align-items-center justify-content-center">
+                                                <div [ngClass]="'text-green-500 text-white' + ' text-2xl'">{{item.key}}</div>
+                                            </div>
+                                            <div class="flex align-items-center justify-content-center">
+                                                <div [ngClass]="'text-green-500 text-white' + ' text-5xl'">{{item.value}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </p-panel>
+                </div>
+                <div class="col-12">
+                    <div class="grid">
+                        <div class="col-12 md:col-6 lg:col-12">
+                            <div class="surface-card shadow-2 p-3 border-round">
+                                <div class="h-20rem md:h-30rem lg:h-40rem" leaflet (leafletMapReady)="onMapReady($event)"
+                                    [leafletOptions]="leafletOptions">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            }
         </div>
+    </div>
 
-    </p-panel>
 
-    <p-divider />
-    <div class="grid">
+
+
+    <!-- <div class="grid">
         <div *ngFor="let panel of secondRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'pie' ? '4' : '8' }}">
             <p-panel [header]="panel.header">
                     <div class="flex flex-column justify-content-between">
@@ -56,7 +221,6 @@
         </div>
     </div>
 
-    <p-divider />
 
     <div class="grid">
         <div *ngFor="let panel of thirdRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'bar' ? '4' : '4' }}">
@@ -75,8 +239,8 @@
               </div>
           </p-panel>
         </div>
-      </div>
-      
+      </div> -->
+
 
 
 

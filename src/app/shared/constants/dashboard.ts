@@ -4,8 +4,15 @@ export const vehicleStatusOverviewObject = [
     { label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500' }, 
     { label: 'Idle Vehicles', count: 0, colorClass: 'orange', bgColorClass: 'bg-orange-100', textColorClass: 'text-orange-500' }, 
     { label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500' }, 
-    { label: 'Offline Vehicles', count: 0, colorClass: 'blue', bgColorClass: 'bg-blue-100', textColorClass: 'text-blue-500' }
+    { label: 'Offline Vehicles', count: 0, colorClass: 'blue', bgColorClass: 'bg-blue-100', textColorClass: 'text-blue-500' },
 ]
+
+export const totalRegistrationObject = {
+    OEM: 0,
+    Distributor: 0,
+    Dealer: 0,
+    User: 0
+  };
 
 
 export const secondRowCharts: ChartPanel[] = [
@@ -131,6 +138,7 @@ export const thirdRowCharts: ChartPanel[] = [
       ],
     },
     options: {
+        cutout: 120,
       responsive: true,
       plugins: {
         legend: { position: 'right',labels: { usePointStyle: true, } },
