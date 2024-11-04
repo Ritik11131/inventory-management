@@ -1,10 +1,10 @@
 import { ChartPanel } from "../interfaces/dashboard";
 
 export const vehicleStatusOverviewObject = [
-    { label: 'Running Vehicles', count: 210, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500' }, 
-    { label: 'Idle Vehicles', count: 284, colorClass: 'orange', bgColorClass: 'bg-orange-100', textColorClass: 'text-orange-500' }, 
-    { label: 'Stop Vehicles', count: 12, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500' }, 
-    { label: 'Offline Vehicles', count: 152, colorClass: 'blue', bgColorClass: 'bg-blue-100', textColorClass: 'text-blue-500' }
+    { label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500' }, 
+    { label: 'Idle Vehicles', count: 0, colorClass: 'orange', bgColorClass: 'bg-orange-100', textColorClass: 'text-orange-500' }, 
+    { label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500' }, 
+    { label: 'Offline Vehicles', count: 0, colorClass: 'blue', bgColorClass: 'bg-blue-100', textColorClass: 'text-blue-500' }
 ]
 
 
@@ -59,7 +59,7 @@ export const secondRowCharts: ChartPanel[] = [
           y: { display: true }
         },
         plugins: {
-          legend: { position: 'top',labels: { usePointStyle: true, } }
+          legend: { position: 'bottom',labels: { usePointStyle: true, } }
         },
         elements: {
             bar: {
@@ -82,12 +82,13 @@ export const thirdRowCharts: ChartPanel[] = [
     header: 'Vehicle Type Wise Installation',
     type: 'bar',
     data: {
-      labels: ['Car', 'Truck', 'Bike', 'Bus'],
+      labels: [],
       datasets: [
         {
           label: 'Installations',
           backgroundColor: '#42A5F5',
-          data: [120, 150, 180, 90],
+          data: [],
+          barThickness:50
         },
       ],
     },
@@ -98,7 +99,7 @@ export const thirdRowCharts: ChartPanel[] = [
         y: { display: true },
       },
       plugins: {
-        legend: { position: 'top',labels: { usePointStyle: true, } },
+        legend: { position: 'bottom',labels: { usePointStyle: true, } },
       },
       elements: {
         bar: {

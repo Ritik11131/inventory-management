@@ -17,4 +17,14 @@ export class DashboardService {
       throw error;
     }
   }
+
+
+  async getvehicleTypesAndCount() : Promise<any> {
+    try {
+      const response = await this.http.get('Dashboard/GetSummaryVehicleType',{});
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

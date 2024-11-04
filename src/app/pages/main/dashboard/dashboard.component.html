@@ -49,7 +49,7 @@
                     <div class="flex flex-column justify-content-between">
                         <div class="flex justify-content-between mb-3">
                             <p-chart [responsive]="true" class="w-full" height="300px" [type]="panel.type"
-                                [data]="panel.data" [options]="panel.options"></p-chart>
+                                [data]="panel.data" [options]="panel.options" (onDataSelect)="onClick($event)"></p-chart>
                         </div>
                     </div>
              </p-panel>

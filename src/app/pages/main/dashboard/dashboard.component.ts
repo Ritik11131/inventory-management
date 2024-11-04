@@ -47,9 +47,33 @@ export class DashboardComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.fetchUserCountAndDeviceStock().then()
+    this.fetchUserCountAndDeviceStock().then();
+    this.fetchVehicleTypesAndCount().then()
   }
 
+  async fetchVehicleTypesAndCount() : Promise<any> {
+    try {
+      const response = await this.dashboardService.getvehicleTypesAndCount();
+      console.log(response,'ressss');
+      const availableVehicleTypes = response.data.reduce((acc : any, { categoryName, deviceCount } : any) => {
+        acc[categoryName] = (acc[categoryName] || 0) + deviceCount; // Increment if exists, or initialize
+        return acc;
+      }, {} as { [key: string]: number });
+
+
+      this.thirdRowCharts[0].data = {
+        ...this.thirdRowCharts[0].data,
+        labels: Object.keys(availableVehicleTypes),
+        datasets: [{
+          ...this.thirdRowCharts[0].data.datasets[0],  // Keep other dataset properties like backgroundColor
+          data: Object.values(availableVehicleTypes)
+        }]
+      };
+      
+    } catch (error) {
+      
+    }
+  }
 
   async fetchUserCountAndDeviceStock(): Promise<any> {
     try {
@@ -104,6 +128,11 @@ export class DashboardComponent implements OnInit {
     } catch (error) {
 
     }
+  }
+
+  onClick(event  :any) {
+    console.log(event);
+    
   }
 
 }
