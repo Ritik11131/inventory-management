@@ -7,11 +7,10 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { PanelModule } from 'primeng/panel';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { secondRowCharts, thirdRowCharts, totalRegistrationObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
+import { chartOptions, complaintStatsObject, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { ChartComponent } from "ng-apexcharts";
 import { KnobModule } from 'primeng/knob';
 
 import {
@@ -22,16 +21,10 @@ import {
   ApexDataLabels,
   ApexLegend
 } from "ng-apexcharts";
+import { ChartOptions } from '../../../shared/interfaces/dashboard';
+import { TicketsService } from '../../../core/services/tickets.service';
 
-export type ChartOptions = {
-  series: ApexNonAxisChartSeries;
-  chart: ApexChart;
-  responsive: ApexResponsive[];
-  labels: any;
-  fill: ApexFill;
-  legend: ApexLegend;
-  dataLabels: ApexDataLabels;
-};
+
 
 
 
@@ -44,55 +37,7 @@ export type ChartOptions = {
 })
 export class DashboardComponent implements OnInit {
 
-
-  vehicleStatusOverview = vehicleStatusOverviewObject;
-  totalRegistrationObject = totalRegistrationObject
-  secondRowCharts = secondRowCharts;
-  thirdRowCharts = thirdRowCharts;
-
-
-  public chartOptions!: Partial<ChartOptions>;
-
-  constructor(private dashboardService: DashboardService) {
-    this.chartOptions = {
-      series: [44, 55, 41],
-      chart: {
-        width: 395,
-        type: "donut"
-      },
-      dataLabels: {
-        enabled: true
-      },
-      fill: {
-        type: "gradient"
-      },
-      labels: ["Total", "Due Status", "Lapse Status"],
-      legend: {
-        offsetY: 50, // Adds space by moving the legend downward
-        fontWeight: 600,    // Set font weight
-        formatter: (label, opts) => {
-          const value = opts.w.globals.series[opts.seriesIndex];
-          return `${label}: ${value}`;  // Display label and corresponding value
-        }
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 380
-            },
-            legend: {
-              position: "bottom"
-            }
-          }
-        }
-      ]
-    };
-  }
-    
-
-
+  
   map!: Map;
 
   leafletOptions = {
@@ -102,6 +47,16 @@ export class DashboardComponent implements OnInit {
     zoom: 5,
     center: latLng(27.54095593, 79.16035184)
   };
+  vehicleStatusOverview = vehicleStatusOverviewObject;
+  totalRegistrationObject = totalRegistrationObject;
+  vehicleInstallationTypes = vehicleInstallationTypesObject;
+  complaintStats = complaintStatsObject;
+  totalComplaints!:number;
+  totalvehicleInstallation : number = 0;
+  public chartOptions: any = chartOptions;
+
+  constructor(private dashboardService: DashboardService, private ticketService:TicketsService) {}
+    
 
   onMapReady(map: Map) {
     this.map = map;
@@ -110,28 +65,44 @@ export class DashboardComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.fetchUserCountAndDeviceStock().then();
-    this.fetchVehicleTypesAndCount().then()
+    this.initializeDashboard();
+  }
+
+
+  async initializeDashboard() {
+    try {
+      // Run all promises in parallel to reduce waiting time
+      await Promise.all([
+        this.fetchUserCountAndDeviceStock(),
+        this.fetchVehicleTypesAndCount(),
+        this.fetchTicketsGroupByStatus()
+      ]);
+    
+      // Process or assign the results if needed
+     
+    } catch (error) {
+      console.error("Error fetching initial data:", error);
+    }
+  }
+
+  async fetchTicketsGroupByStatus() : Promise<any> {
+    try {
+      const response = await this.ticketService.getTicketsGroupByStatus();
+      this.totalComplaints = response?.data?.closed + response?.data?.open;
+      this.complaintStats[0].count = response?.data?.closed;
+      this.complaintStats[1].count = response?.data?.open
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async fetchVehicleTypesAndCount() : Promise<any> {
     try {
       const response = await this.dashboardService.getvehicleTypesAndCount();
-      console.log(response,'ressss');
-      const availableVehicleTypes = response.data.reduce((acc : any, { categoryName, deviceCount } : any) => {
-        acc[categoryName] = (acc[categoryName] || 0) + deviceCount; // Increment if exists, or initialize
-        return acc;
-      }, {} as { [key: string]: number });
-
-
-      this.thirdRowCharts[0].data = {
-        ...this.thirdRowCharts[0].data,
-        labels: Object.keys(availableVehicleTypes),
-        datasets: [{
-          ...this.thirdRowCharts[0].data.datasets[0],  // Keep other dataset properties like backgroundColor
-          data: Object.values(availableVehicleTypes)
-        }]
-      };
+      response?.data?.forEach((obj : any) => {
+        this.totalvehicleInstallation += obj.deviceCount;
+      });
+      this.vehicleInstallationTypes = response?.data;
       
     } catch (error) {
       
@@ -142,45 +113,7 @@ export class DashboardComponent implements OnInit {
     try {
       const response = await this.dashboardService.getUserCountAndDeviceStock();
       console.log(response, 'response');
-
       this.totalRegistrationObject = response?.data?.userCountTask;
-
-      const filtereddeviceInStock = response?.data?.deviceInStock?.filter((object : any) => object?.user?.usertype !== 'User');
-      console.log(filtereddeviceInStock,'filtered');
-
-      let availableUsers: Record<string, number> = {
-        OEM: 0,
-        Distributor: 0,
-        Dealer: 0,
-        User: 0
-      };
-      
-      // Loop through filtered devices and dynamically increment user counts
-      filtereddeviceInStock.forEach((obj: any) => {
-        const userType = obj.user.usertype;
-        
-        // Only increment if the user type exists in availableUsers
-        if (availableUsers.hasOwnProperty(userType)) {
-          availableUsers[userType] += obj.count;
-        }
-      });
-
-
-      this.thirdRowCharts[1].data = {
-        ...this.thirdRowCharts[1].data,
-        labels: Object.keys(availableUsers),
-        datasets: [{
-          ...this.thirdRowCharts[1].data.datasets[0],  // Keep other dataset properties like backgroundColor
-          data: Object.values(availableUsers)
-        }]
-      };
-
-
-      console.log(availableUsers);
-      
-      
-
-
     } catch (error) {
 
     }

@@ -22,17 +22,20 @@
     <div class="grid mb-4">
         <div class="col-12 md:col-6 lg:col-5">
             <p-panel header="Total Inventory">
+                <ng-template pTemplate="icons">
+                    <span class="text-3xl text-indigo-500 font-bold">0</span>
+                </ng-template>
                 <div class="grid">
                     <div class="col-12 md:col-6 lg:col-6">
                         <div class="surface-card shadow-2 p-3 border-round">
                             <div class="flex justify-content-between">
                                 <div>
-                                    <div class="mb-3" [ngClass]="'text-blue-500' + ' text-5xl'">2000</div>
+                                    <div class="mb-3" [ngClass]="'text-blue-500' + ' text-5xl'">0</div>
                                     <span class="block text-500 font-medium">Fitted</span>
                                 </div>
                                 <div class="flex align-items-center justify-content-center"
                                     [ngClass]="'bg-blue-100' + ' border-round'" style="width:5rem;height:5rem">
-                                    <i class="pi pi-car" [ngClass]="'text-blue-500' + ' text-5xl'"></i>
+                                    <i class="pi pi-hammer" [ngClass]="'text-blue-500' + ' text-5xl'"></i>
                                 </div>
                             </div>
                             <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
@@ -49,7 +52,7 @@
                                 </div>
                                 <div class="flex align-items-center justify-content-center"
                                     [ngClass]="'bg-purple-100' + ' border-round'" style="width:5rem;height:5rem">
-                                    <i class="pi pi-car" [ngClass]="'text-purple-500' + ' text-5xl'"></i>
+                                    <i class="pi pi-list-check" [ngClass]="'text-purple-500' + ' text-5xl'"></i>
                                 </div>
                             </div>
                             <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
@@ -62,43 +65,31 @@
         </div>
         <div class="col-12 md:col-6 lg:col-5">
             <p-panel header="Total Complaint Lodge">
+                <ng-template pTemplate="icons">
+                  <span class="text-3xl text-indigo-500 font-bold">{{ totalComplaints }}</span>
+                </ng-template>
                 <div class="grid">
-                    <div class="col-12 md:col-6 lg:col-6">
-                        <div class="surface-card shadow-2 p-3 border-round">
-                            <div class="flex justify-content-between">
-                                <div>
-                                    <div class="mb-3" [ngClass]="'text-green-500' + ' text-5xl'">0</div>
-                                    <span class="block text-500 font-medium">Resolved</span>
-                                </div>
-                                <div class="flex align-items-center justify-content-center"
-                                    [ngClass]="'bg-green-100' + ' border-round'" style="width:5rem;height:5rem">
-                                    <i class="pi pi-car" [ngClass]="'text-green-500' + ' text-5xl'"></i>
-                                </div>
-                            </div>
-                            <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
-                                <div class="bg-green-500 h-full" style="width: 64%; border-radius: 4px;"></div>
-                            </div>
+                  <div *ngFor="let stat of complaintStats" class="col-12 md:col-6 lg:col-6">
+                    <div class="surface-card shadow-2 p-3 border-round">
+                      <div class="flex justify-content-between">
+                        <div>
+                          <div class="mb-3" [ngClass]="'text-' + stat.colorClass + '-500 text-5xl'">{{ stat.count }}</div>
+                          <span class="block text-500 font-medium">{{ stat.status }}</span>
                         </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-6">
-                        <div class="surface-card shadow-2 p-3 border-round">
-                            <div class="flex justify-content-between">
-                                <div>
-                                    <div class="mb-3" [ngClass]="'text-red-500' + ' text-5xl'">0</div>
-                                    <span class="block text-500 font-medium">Not Resolved</span>
-                                </div>
-                                <div class="flex align-items-center justify-content-center"
-                                    [ngClass]="'bg-red-100' + ' border-round'" style="width:5rem;height:5rem">
-                                    <i class="pi pi-car" [ngClass]="'text-red-500' + ' text-5xl'"></i>
-                                </div>
-                            </div>
-                            <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
-                                <div class="bg-red-500 h-full" style="width: 64%; border-radius: 4px;"></div>
-                            </div>
+                        <div class="flex align-items-center justify-content-center"
+                             [ngClass]="'bg-' + stat.colorClass + '-100 border-round'" style="width:5rem;height:5rem">
+                          <i class="pi" [ngClass]="stat.icon + ' text-' + stat.colorClass + '-500 text-5xl'"></i>
                         </div>
+                      </div>
+                      <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
+                        <div [ngClass]="'bg-' + stat.colorClass + '-500 h-full'" 
+                             [style.width.%]="(stat.count / totalComplaints) * 100" style="border-radius: 4px;"></div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-            </p-panel>
+              </p-panel>
+              
         </div>
         <div class="col-12 md:col-6 lg:col-2">
             <div class="p-3 border-round bg-red-500">
@@ -130,24 +121,23 @@
                     <div class="col-12 md:col-6 lg:col-6">
                         <h2>Total Vehicles</h2>
                         <div class="flex justify-content-center align-items-center">
-                            <p-knob [readonly]="true" [size]="200" [strokeWidth]="10" />
+                            <p-knob [(ngModel)]="totalvehicleInstallation" [readonly]="true" [size]="300" [strokeWidth]="10" />
                         </div>
                     </div>
                     <div class="col-12 md:col-6 lg:col-6">
-                        <div class="grid">
-                            @for (vehicle of vehicleStatusOverview; track $index) {
+                        <div style="height: 665px;" class="p-5 overflow-auto">
+                            @for (vehicle of vehicleInstallationTypes; track $index) {
                             <div class="col-12 md:col-12 lg:col-12">
                                 <div class="surface-card shadow-2 p-3 border-round">
                                     <div class="flex justify-content-between">
                                         <div>
-                                            <div class="mb-3" [ngClass]="vehicle.textColorClass + ' text-5xl'">{{
-                                                vehicle.count }}</div>
-                                            <span class="block text-500 font-medium">{{ vehicle.label }}</span>
+                                            <div class="mb-3" [ngClass]="' text-5xl'">{{ vehicle.deviceCount }}</div>
+                                            <span class="block text-500 font-medium">{{ vehicle.categoryName }}</span>
                                         </div>
                                         <div class="flex align-items-center justify-content-center"
-                                            [ngClass]="vehicle.bgColorClass + ' border-round'"
+                                            [ngClass]="' border-round'"
                                             style="width:4rem;height:4rem">
-                                            <i class="pi pi-car" [ngClass]="vehicle.textColorClass + ' text-4xl'"></i>
+                                            <i class="pi pi-car" [ngClass]="' text-4xl'"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +160,7 @@
                 </div>
                 <div class="col-12 lg:col-4">
                     <p-panel header="Total Registration">
-                        <div class="grid">
+                        <div class="p-4">
                             @for (item of totalRegistrationObject | keyvalue; track $index) {
                                 <div class="col-12 md:col-12 lg:col-12">
                                     <div class="p-3 bg-green-700 border-round">
@@ -192,7 +182,7 @@
                     <div class="grid">
                         <div class="col-12 md:col-6 lg:col-12">
                             <div class="surface-card shadow-2 border-round">
-                                <div class="h-20rem md:h-30rem lg:h-40rem" leaflet (leafletMapReady)="onMapReady($event)"
+                                <div style="height: 400px;" leaflet (leafletMapReady)="onMapReady($event)"
                                     [leafletOptions]="leafletOptions">
                                 </div>
                             </div>
@@ -245,8 +235,8 @@
     <!-- <div class="grid">
         <div class="col-12 md:col-6 lg:col-12">
             <div class="surface-card shadow-2 p-3 border-round">
-                <div class="h-20rem md:h-30rem lg:h-40rem" leaflet (leafletMapReady)="onMapReady($event)"
-                    [leafletOptions]="lealfetOptions">
+                <div style="height: 500px;" leaflet (leafletMapReady)="onMapReady($event)"
+                    [leafletOptions]="leafletOptions">
                 </div>
             </div>
         </div>
