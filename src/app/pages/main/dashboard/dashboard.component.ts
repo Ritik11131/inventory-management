@@ -51,14 +51,13 @@ export class DashboardComponent implements OnInit {
   thirdRowCharts = thirdRowCharts;
 
 
-  @ViewChild("chart") chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
 
   constructor(private dashboardService: DashboardService) {
     this.chartOptions = {
-      series: [44, 55, 41, 17, 15],
+      series: [44, 55, 41],
       chart: {
-        width: 380,
+        width: 395,
         type: "donut"
       },
       dataLabels: {
@@ -67,7 +66,15 @@ export class DashboardComponent implements OnInit {
       fill: {
         type: "gradient"
       },
-      labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+      labels: ["Total", "Due Status", "Lapse Status"],
+      legend: {
+        offsetY: 50, // Adds space by moving the legend downward
+        fontWeight: 600,    // Set font weight
+        formatter: (label, opts) => {
+          const value = opts.w.globals.series[opts.seriesIndex];
+          return `${label}: ${value}`;  // Display label and corresponding value
+        }
+      },
       responsive: [
         {
           breakpoint: 480,
@@ -82,7 +89,8 @@ export class DashboardComponent implements OnInit {
         }
       ]
     };
-   }
+  }
+    
 
 
   map!: Map;
