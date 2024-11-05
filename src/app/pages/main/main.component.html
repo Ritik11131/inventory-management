@@ -8,7 +8,7 @@
         </ng-template>
         <ng-template pTemplate="item" let-item let-root="root">
             <a pRipple class="flex align-items-center p-menuitem-link">
-                <span class="text-primary" [class]="item.icon"></span>
+                <span class="text-primary text-xl" [class]="item.icon"></span>
                 <span class="ml-2 text-color-secondary">{{ item.label }}</span>
                 @if(item.items) {
                 <i [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
@@ -19,8 +19,7 @@
             <div class="flex align-items-center gap-2">
                 <p-menu #menu [model]="profileItems" styleClass="w-full md:w-15rem" [popup]="true">
                     <ng-template pTemplate="start">
-                        <button pRipple
-                            class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
+                        <button pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
                             <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
                                 class="mr-2" shape="circle" />
                             <span class="inline-flex flex-column">

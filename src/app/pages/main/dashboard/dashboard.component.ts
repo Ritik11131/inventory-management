@@ -7,7 +7,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { PanelModule } from 'primeng/panel';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { chartOptions, complaintStatsObject, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
+import { chartOptions, complaintStatsObject, renewalStatusObject, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -38,10 +38,8 @@ export class DashboardComponent implements OnInit {
     center: latLng(27.54095593, 79.16035184)
   };
   vehicleStatusOverview = vehicleStatusOverviewObject;
-  totalRegistrationObject = [ 
-    {value:0,key:'OEM',bgColor:'bg-green-500'},
-    {value:0,key:'RFC',bgColor:'bg-yellow-500'},
-  ];
+  totalRegistration = totalRegistrationObject
+  renewalStatus = renewalStatusObject;
   vehicleInstallationTypes = vehicleInstallationTypesObject;
   complaintStats = complaintStatsObject;
   totalComplaints:number = 0;
@@ -106,8 +104,8 @@ export class DashboardComponent implements OnInit {
     try {
       const response = await this.dashboardService.getUserCountAndDeviceStock();
       console.log(response, 'response');
-      this.totalRegistrationObject[0].value = response.data.userCountTask.OEM;
-      this.totalRegistrationObject[1].value = response.data.userCountTask.Dealer;
+      this.totalRegistration[0].value = response.data.userCountTask.OEM;
+      this.totalRegistration[1].value = response.data.userCountTask.Dealer;
       
     } catch (error) {
 

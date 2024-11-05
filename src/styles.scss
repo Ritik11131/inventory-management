@@ -85,6 +85,12 @@ body {
   min-height: 100%;
 }
 
+body,
+body .p-component
+{
+  font-family: 'Urbanist', sans-serif;
+}
+
 
 .p-menubar .p-submenu-list {
   z-index: 3;

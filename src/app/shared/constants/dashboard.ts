@@ -7,10 +7,17 @@ export const vehicleStatusOverviewObject = [
     { label: 'Offline Vehicles', count: 6780, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700' },
 ]
 
-export const totalRegistrationObject = {
-    OEM: {value:0,bgColor:'bg-green-500'},
-    RFC: {value : 0, bgColor:'bg-yellow-500'},
-};
+export const renewalStatusObject = [
+  { value : 0, key:'Due',bgColor: 'bg-green-500' },
+  { value: 0, key: 'Lapse', bgColor: 'bg-yellow-500' },
+];
+
+export const totalRegistrationObject = [
+  { value: 0, key: 'OEM', bgColor: 'bg-green-500' },
+  { value: 0, key: 'RFC', bgColor: 'bg-yellow-500' },
+];
+
+
 
 export const vehicleInstallationTypesObject = [
     { categoryName: 'Car', deviceCount: 0 }, 
