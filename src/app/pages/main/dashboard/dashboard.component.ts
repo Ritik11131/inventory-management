@@ -12,16 +12,6 @@ import { DashboardService } from '../../../core/services/dashboard.service';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { KnobModule } from 'primeng/knob';
-
-import {
-  ApexNonAxisChartSeries,
-  ApexResponsive,
-  ApexChart,
-  ApexFill,
-  ApexDataLabels,
-  ApexLegend
-} from "ng-apexcharts";
-import { ChartOptions } from '../../../shared/interfaces/dashboard';
 import { TicketsService } from '../../../core/services/tickets.service';
 
 
@@ -48,10 +38,13 @@ export class DashboardComponent implements OnInit {
     center: latLng(27.54095593, 79.16035184)
   };
   vehicleStatusOverview = vehicleStatusOverviewObject;
-  totalRegistrationObject = totalRegistrationObject;
+  totalRegistrationObject = [ 
+    {value:0,key:'OEM',bgColor:'bg-green-500'},
+    {value:0,key:'RFC',bgColor:'bg-yellow-500'},
+  ];
   vehicleInstallationTypes = vehicleInstallationTypesObject;
   complaintStats = complaintStatsObject;
-  totalComplaints!:number;
+  totalComplaints:number = 0;
   totalvehicleInstallation : number = 0;
   public chartOptions: any = chartOptions;
 
@@ -113,7 +106,9 @@ export class DashboardComponent implements OnInit {
     try {
       const response = await this.dashboardService.getUserCountAndDeviceStock();
       console.log(response, 'response');
-      this.totalRegistrationObject = response?.data?.userCountTask;
+      this.totalRegistrationObject[0].value = response.data.userCountTask.OEM;
+      this.totalRegistrationObject[1].value = response.data.userCountTask.Dealer;
+      
     } catch (error) {
 
     }

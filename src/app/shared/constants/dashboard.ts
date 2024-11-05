@@ -1,17 +1,15 @@
 // import { ChartPanel } from "../interfaces/dashboard";
 
 export const vehicleStatusOverviewObject = [
-    { label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500' }, 
-    { label: 'Idle Vehicles', count: 0, colorClass: 'orange', bgColorClass: 'bg-orange-100', textColorClass: 'text-orange-500' }, 
-    { label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500' }, 
-    { label: 'Offline Vehicles', count: 0, colorClass: 'blue', bgColorClass: 'bg-blue-100', textColorClass: 'text-blue-500' },
+    { label: 'Running Vehicles', count: 1230, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500' }, 
+    { label: 'Idle Vehicles', count: 3450, colorClass: 'yelow', bgColorClass: 'bg-yellow-100', textColorClass: 'text-yellow-400' }, 
+    { label: 'Stop Vehicles', count: 4560, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500' }, 
+    { label: 'Offline Vehicles', count: 6780, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700' },
 ]
 
 export const totalRegistrationObject = {
-    OEM: 0,
-    Distributor: 0,
-    Dealer: 0,
-    User: 0
+    OEM: {value:0,bgColor:'bg-green-500'},
+    RFC: {value : 0, bgColor:'bg-yellow-500'},
 };
 
 export const vehicleInstallationTypesObject = [
@@ -43,21 +41,29 @@ export const complaintStatsObject = [
 
 
   export const chartOptions = {
-    series: [44, 55, 41],
+    series: [44122121, 55212121],
     chart: {
-      width: 428,
-      type: "donut"
+      width: 330,
+      type: "pie"
     },
+    colors:['#eec137','#ff3d32'],
     dataLabels: {
       enabled: true
     },
     fill: {
       type: "gradient"
     },
-    labels: ["Total", "Due Status", "Lapse Status"],
+    labels: ["Due", "Lapse"],
     legend: {
-      offsetY: 50, // Adds space by moving the legend downward
+      offsetY:0, // Adds space by moving the legend downward
       fontWeight: 600,    // Set font weight
+      fontFamily:  'Urbanist ,sans-serif',
+      fontSize: '14px',
+      floating: false,
+      itemMargin: {
+        horizontal: 5,
+        vertical: 0
+    },
       formatter: (label:any, opts:any) => {
         const value = opts.w.globals.series[opts.seriesIndex];
         return `${label}: ${value}`;  // Display label and corresponding value
