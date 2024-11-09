@@ -119,7 +119,13 @@ export class DeviceListComponent {
               registrationDate: manufacturingYear,
               ownerName: permitHolderName
             } = vehicleDetails?.data || {};
-    
+            
+            this.stepFormFields.forEach((step : any) => {
+              step.fields.forEach((field : any) => {
+                field.disabled = !!this.device[field.name];
+              });
+            });            
+
             Object.assign(this.device, {
               vehicleMake,
               vehicleModel,
