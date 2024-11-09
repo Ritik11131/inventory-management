@@ -15,11 +15,12 @@ import { RatingModule } from 'primeng/rating';
 import { StepperModule } from 'primeng/stepper';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-generic-stepper',
   standalone: true,
-  imports: [StepperModule,ButtonModule, InputTextareaModule, CommonModule, FileUploadModule,
+  imports: [StepperModule,ButtonModule, InputTextareaModule, CommonModule, FileUploadModule,CalendarModule,
     DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule, FormsModule,
     InputTextModule, FormsModule, InputNumberModule,TooltipModule, IconFieldModule, InputIconModule],
   templateUrl: './generic-stepper.component.html',
@@ -35,7 +36,6 @@ import { TooltipModule } from 'primeng/tooltip';
 export class GenericStepperComponent implements OnChanges {
   
   currentStepIndex: number = 0;
-
   @Input() steps: Array<{ header: string; fields: any[] }> = [];
   @Input() data: { [key: string]: any } = {};
   @Input() validationState: { [key: string]: boolean } = {};
@@ -48,7 +48,7 @@ export class GenericStepperComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-      console.log(this.steps);
+      console.log(this.data,'yeahhhh');
       
   }
 
@@ -82,6 +82,11 @@ export class GenericStepperComponent implements OnChanges {
   onInputChange(event: any, field: any) {
     const value = event.target.value;
     this.onStepperInputTextChange.emit({ value, field });
+  }
+
+  onDateSelect(event: Date, fieldName: string): void {
+    // Extract the year and store it in the model
+    this.data[fieldName] = event.getFullYear().toString(); // Store as a string or number
   }
 
 }

@@ -23,9 +23,14 @@
                             </div>
                             @switch(field.type) {
                             @case ('text') {
-                            <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]"
+                            <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [disabled]="field?.disabled || false"
                                 (keyup)="onInputChange($event, field)" [required]="field.validation"
                                 placeholder="{{ field.placeholder }}" />
+                            }
+                            @case ('date') {
+                                <p-calendar [disabled]="field?.disabled"  [readonlyInput]="true" appendTo="body" styleClass="w-full" id="{{field.name}}" 
+                                placeholder="{{field.placeholder}}" [(ngModel)]="data[field.name]" [view]="field.view"  
+                                [dateFormat]="field.dateFormat"  (onSelect)="onDateSelect($event, field.name)" />
                             }
                             @case ('dropdown') {
                             <p-dropdown appendTo="body" styleClass="w-full" [name]="field.name"

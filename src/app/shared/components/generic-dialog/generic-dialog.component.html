@@ -24,7 +24,7 @@
                 @switch (field.type) {
                 @case ('text') {
                 <ng-container>
-                    <input class="w-full" (keyup)="onInputChange($event, field)" type="text" pInputText [disabled]="field?.disabled || false"
+                    <input class="w-full" (keyup)="onInputChange($event, field)" type="text" pInputText 
                         id="{{ field.name }}" [(ngModel)]="data[field.name]" [required]="field.validation" />
                 </ng-container>
                 }

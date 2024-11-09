@@ -96,7 +96,17 @@ export class DeviceListComponent {
     this.fetchDevices().then();
   }
 
-  private async executeStepperValidation(fieldName: string, value: any): Promise<void> {    
+  private async executeStepperValidation(fieldName: string, value: any): Promise<void> {  
+
+    const stepperFieldsToDisable = [
+      'vehicleMake',
+      'vehicleModel',
+      'chassisNo',
+      'engineNo',
+      'manufacturingYear',
+      'permitHolderName'
+    ];
+
     const fieldValidationMapping: { [key: string]: (val: string) => Promise<any> } = {
       vehicleNo : this.fitmentService.isVehicleNoValid.bind(this.deviceService),
     };
@@ -111,7 +121,7 @@ export class DeviceListComponent {
             const vehicleDetails = await this.fitmentService.getVehicleDetails(value);
             console.log(vehicleDetails, 'vehicleDetails');
     
-            const {
+            let {
               vehicleMake,
               vehicleModel,
               chassisNumber: chassisNo,
@@ -120,11 +130,16 @@ export class DeviceListComponent {
               ownerName: permitHolderName
             } = vehicleDetails?.data || {};
             
-            this.stepFormFields.forEach((step : any) => {
-              step.fields.forEach((field : any) => {
-                field.disabled = !!this.device[field.name];
+            manufacturingYear = manufacturingYear && new Date(manufacturingYear).getFullYear().toString()
+          
+            // Set the `disabled` property for specific fields based on data
+           this.stepFormFields.forEach(step => {
+              step.fields.forEach((field:any) => {
+                if (stepperFieldsToDisable.includes(field.name)) {
+                  field.disabled = true;
+                }
               });
-            });            
+            });             
 
             Object.assign(this.device, {
               vehicleMake,
@@ -137,6 +152,13 @@ export class DeviceListComponent {
     
           } catch (error : any) {
             console.log(error);
+            this.stepFormFields.forEach(step => {
+              step.fields.forEach((field:any) => {
+                if (stepperFieldsToDisable.includes(field.name)) {
+                  field.disabled = false;
+                }
+              });
+            }); 
             this.toastService.showError('Error', error.error.data);
             Object.assign(this.device, {
               vehicleMake: null,
@@ -148,6 +170,13 @@ export class DeviceListComponent {
             });
           }
         } else {
+          this.stepFormFields.forEach(step => {
+            step.fields.forEach((field:any) => {
+              if (stepperFieldsToDisable.includes(field.name)) {
+                field.disabled = false;
+              }
+            });
+          }); 
           Object.assign(this.device, {
             vehicleMake: null,
             vehicleModel: null,
