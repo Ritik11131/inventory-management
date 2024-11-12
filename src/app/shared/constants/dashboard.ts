@@ -1,10 +1,10 @@
 // import { ChartPanel } from "../interfaces/dashboard";
 
 export const vehicleStatusOverviewObject = [
-    { label: 'Running Vehicles', count: 1230, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500' }, 
-    { label: 'Idle Vehicles', count: 3450, colorClass: 'yelow', bgColorClass: 'bg-yellow-100', textColorClass: 'text-yellow-400' }, 
-    { label: 'Stop Vehicles', count: 4560, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500' }, 
-    { label: 'Offline Vehicles', count: 6780, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700' },
+    { label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500' }, 
+    { label: 'Idle Vehicles', count: 0, colorClass: 'yelow', bgColorClass: 'bg-yellow-100', textColorClass: 'text-yellow-400' }, 
+    { label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500' }, 
+    { label: 'Offline Vehicles', count: 0, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700' },
 ]
 
 export const renewalStatusObject = [

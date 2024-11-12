@@ -28,14 +28,14 @@
                 </ng-template>
                 
                 <ng-template pTemplate="icons">
-                    <span class="text-3xl text-indigo-500 font-bold">10000</span>
+                    <span class="text-3xl text-indigo-500 font-bold">0</span>
                 </ng-template>
                 <div class="grid">
                     <div class="col-12 md:col-6 lg:col-6 ">
                         <div class="shadow-2 p-3 border-round surface-300">
                             <div class="flex justify-content-between">
                                 <div>
-                                    <div class="mb-3" [ngClass]="'text-green-500' + ' text-5xl'">123456</div>
+                                    <div class="mb-3" [ngClass]="'text-green-500' + ' text-5xl'">0</div>
                                     <span  class="block text-500 font-bold text-2xl">Fitted</span>
                                 </div>
                                 <div class="flex align-items-center justify-content-center"
@@ -52,7 +52,7 @@
                         <div class="surface-300 shadow-2 p-3 border-round">
                             <div class="flex justify-content-between">
                                 <div>
-                                    <div class="mb-3" [ngClass]="'text-yellow-500' + ' text-5xl'">123456</div>
+                                    <div class="mb-3" [ngClass]="'text-yellow-500' + ' text-5xl'">0</div>
                                     <span  class="block text-500 font-bold text-2xl">Balanced</span>
                                 </div>
                                 <div class="flex align-items-center justify-content-center"
@@ -74,7 +74,7 @@
                     <span class="text-3xl font-bold" >Total Complaint Lodge</span>
                 </ng-template>
                 <ng-template pTemplate="icons">
-                  <span class="text-3xl text-indigo-500 font-bold">{{ totalComplaints || 1000 }}</span>
+                  <span class="text-3xl text-indigo-500 font-bold">{{ totalComplaints || 0 }}</span>
                 </ng-template>
                 <div class="grid">
                   <div *ngFor="let stat of complaintStats" class="col-12 md:col-6 lg:col-6">
@@ -119,7 +119,7 @@
                 </ng-template>
                 <div class="bg-red-500 shadow-2 p-6 border-round">
                     <div class="flex justify-content-center align-items-center">
-                            <span [ngClass]="'text-white font-bold' + ' text-7xl'">1000</span>
+                            <span [ngClass]="'text-white font-bold' + ' text-7xl'">0</span>
                     </div>
                 </div>
             </p-panel>
@@ -235,7 +235,7 @@
                         </ng-template>
                         <div class="p-3 border-round bg-yellow-500">
                             <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
-                                <span class="text-white font-bold text-7xl md:text-7xl sm:text-3xl">1000</span>
+                                <span class="text-white font-bold text-7xl md:text-7xl sm:text-3xl">0</span>
                             </div>   
                         </div>
                         
