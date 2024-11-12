@@ -62,4 +62,5 @@ export const rtoColumns = [
 export const vehicleCategoryColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field:'name',header: 'Name', minWidth: '10rem' },
+    { field:'totalCount',header: 'Total', minWidth: '10rem' },
 ];

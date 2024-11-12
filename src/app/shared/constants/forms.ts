@@ -212,6 +212,12 @@ export const vehicleCategoryFormFields : FormFields[] = [
         label: 'Category Name',
         type: 'text',
         hide: (hideFields: string[]) => hideFields.includes('name'),
+    },
+    {
+        name: 'totalCount',
+        label: 'Total Count',
+        type: 'number',
+        hide: (hideFields: string[]) => hideFields.includes('totalCount'),
     }
 ]
 

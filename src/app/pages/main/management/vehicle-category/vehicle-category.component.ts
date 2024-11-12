@@ -52,6 +52,7 @@ export class VehicleCategoryComponent {
     return {
       id:undefined,
       name: "",
+      totalCount:0
     };
   }
 
