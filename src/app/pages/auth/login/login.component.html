@@ -14,7 +14,7 @@
             <p-iconField iconPosition="left">
                 <p-inputIcon styleClass="pi pi-user" />
                 <input required id="email" class="w-full mb-3" type="text" placeholder="Username" [(ngModel)]="email"
-                    pInputText />
+                    pInputText (keydown.enter)="validateForm()" />
             </p-iconField>
             @if(emailError) {
             <div class="text-red-500 mb-3">{{emailError}}</div>
@@ -25,7 +25,7 @@
                 <p-inputIcon (click)="togglePassword()" styleClass="pi pi-eye cursor-pointer" />
                 <input required [type]="isPasswordToggled ? 'text' : 'password'" placeholder="Password" [(ngModel)]="password" pInputText
                     class="w-full mb-3" (copy)="disableEvent($event)" (paste)="disableEvent($event)"
-                    (cut)="disableEvent($event)">
+                    (cut)="disableEvent($event)" (keydown.enter)="validateForm()">
             </p-iconField>
 
             @if(passwordError) {
@@ -61,7 +61,7 @@
             </div> -->
 
             <button [loading]="isLoggedIn" pButton pRipple label="Sign In"
-                icon="pi pi-sign-in" iconPos="right" class="w-full" (click)="validateForm()"></button>
+                icon="pi pi-sign-in" iconPos="right" class="w-full" autofocus (click)="validateForm()"></button>
         </div>
     </div>
 </div>

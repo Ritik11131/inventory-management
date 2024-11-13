@@ -364,8 +364,10 @@ export class DeviceListComponent {
 
 
   resetDeviceFitment(selectedDevice : any) {
+    console.log(selectedDevice);
+    
     return {
-      deviceSno:selectedDevice.sno,
+      deviceSno:selectedDevice.id,
       isOld: null,
       vehicleCategory: {
           id: null,
@@ -442,7 +444,9 @@ export class DeviceListComponent {
       } else if(this.currentAction === 'tranferInventory') {
         await this.transferInventory(data);
       } else {
+        console.log(data,'data');
         await this.createDeviceFitment(data);
+        await this.fetchAndResetDevice();
       }
     } catch (error) {
       console.log(error);
@@ -450,7 +454,7 @@ export class DeviceListComponent {
   }
 
   async createDeviceFitment(data: any): Promise<any> {
-    const { isOld, vehicleCategory, vehicleModel, vehicleMake, vehicleNo, chassisNo, engineNo, manufacturingYear, rto, sno, permitHolderName, permitHolderMobile, aadhaarNumber } = data;
+    const { isOld, vehicleCategory, vehicleModel, vehicleMake, vehicleNo, chassisNo, engineNo, manufacturingYear, rto, deviceSno, permitHolderName, permitHolderMobile, aadhaarNumber } = data;
 
     const payload = {
       vehicle: {
@@ -464,7 +468,7 @@ export class DeviceListComponent {
         manufacturingYear
       },
       rto: rto.id,
-      deviceSno: sno,
+      deviceSno,
       permitHolderName,
       permitHolderMobile,
       aadhaarNumber
