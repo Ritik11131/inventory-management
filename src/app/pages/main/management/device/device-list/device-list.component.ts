@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
@@ -73,7 +73,7 @@ export class DeviceListComponent {
   constructor(private datePipe: DatePipe,private toastService: ToastService, private dynamicUserService:DynamicUserService, private simProviderService:SimProvidersService,
     private confirmationService: ConfirmationService,  private inventoryService:InventoryService, private vehicleCategory:VehicleCategoryService,
     private deviceService: DeviceService, private deviceModelService:DeviceModelService, private authService:AuthService,private stateService:StatesService,
-  private rtoService:RtoService,private fitmentService:FitmentService) {
+  private rtoService:RtoService,private fitmentService:FitmentService,private cdr: ChangeDetectorRef) {
       this.validationDebounceSubject.pipe(
         debounceTime(400)
       ).subscribe(({ fieldName, value }) => {
@@ -364,8 +364,6 @@ export class DeviceListComponent {
 
 
   resetDeviceFitment(selectedDevice : any) {
-    console.log(selectedDevice);
-    
     return {
       deviceSno:selectedDevice.id,
       isOld: null,
@@ -444,7 +442,6 @@ export class DeviceListComponent {
       } else if(this.currentAction === 'tranferInventory') {
         await this.transferInventory(data);
       } else {
-        console.log(data,'data');
         await this.createDeviceFitment(data);
         await this.fetchAndResetDevice();
       }
@@ -775,6 +772,29 @@ export class DeviceListComponent {
           }
         }
       })
+    } else if(fieldName === 'isOld') {
+       // Create a new reference for stepFormFields
+       const updatedFields = this.stepFormFields.map((step, index) => {
+        if (index === 0) {
+          return {
+            ...step,
+            fields: step.fields.map((field : any) => {
+              if (field.name === 'vehicleNo') {
+                return {
+                  ...field,
+                  label: !selectedValue ? 'Chassis No' : 'Vehicle No',
+                };
+              }
+              return field;
+            }),
+          };
+        }
+        return step;
+      });
+
+      this.stepFormFields = updatedFields;
+      this.cdr.detectChanges();
+      
     }
   }
 
