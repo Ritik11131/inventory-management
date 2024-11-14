@@ -36,7 +36,9 @@
                 <div class="flex align-items-center">
                     <!-- <label for="rememberme1" class="text-900">Remember me</label> -->
                 </div>
-                <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
+                <span [routerLink]="['/auth/forgot-password']" class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">
+                    Forgot password?
+                </span>
             </div>
 
             <!-- <p-divider align="center" type="dotted">

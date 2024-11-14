@@ -7,7 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import * as validator from 'validator';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { generateRandomString } from '../../../shared/utils/common';
 import { PasswordModule } from 'primeng/password';
@@ -19,7 +19,7 @@ import { InputIconModule } from 'primeng/inputicon';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonModule,InputTextModule,FormsModule,ToastModule,DividerModule,
+  imports: [ButtonModule,InputTextModule,FormsModule,ToastModule,DividerModule,RouterModule,
     CommonModule,PasswordModule,InputGroupModule,InputGroupAddonModule,IconFieldModule,InputIconModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
