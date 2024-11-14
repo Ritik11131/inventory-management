@@ -133,7 +133,7 @@ export class DeviceListComponent {
             manufacturingYear = manufacturingYear && new Date(manufacturingYear).getFullYear().toString()
           
             // Set the `disabled` property for specific fields based on data
-           this.stepFormFields.forEach(step => {
+            this.stepFormFields.forEach(step => {
               step.fields.forEach((field:any) => {
                 if (stepperFieldsToDisable.includes(field.name)) {
                   field.disabled = true;
