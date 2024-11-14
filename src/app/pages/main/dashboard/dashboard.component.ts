@@ -7,7 +7,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { PanelModule } from 'primeng/panel';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { chartOptions, complaintStatsObject, renewalStatusObject, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
+import { chartOptions, complaintStatsObject, inventoryObject, renewalStatusObject, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -38,7 +38,8 @@ export class DashboardComponent implements OnInit {
     center: latLng(27.54095593, 79.16035184)
   };
   vehicleStatusOverview = vehicleStatusOverviewObject;
-  totalRegistration = totalRegistrationObject
+  totalRegistration = totalRegistrationObject;
+  inventory = inventoryObject;
   renewalStatus = renewalStatusObject;
   vehicleInstallationTypes = vehicleInstallationTypesObject;
   complaintStats = complaintStatsObject;

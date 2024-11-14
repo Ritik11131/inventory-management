@@ -20,55 +20,7 @@
     </div>
 
     <div class="grid mb-4">
-        <div class="col-12 md:col-6 lg:col-5">
-            <p-panel styleClass="shadow-3 border-round-3xl">
-
-                <ng-template pTemplate="header">
-                    <span class="text-3xl font-bold" >Total Inventory</span>
-                </ng-template>
-                
-                <ng-template pTemplate="icons">
-                    <span class="text-3xl text-indigo-500 font-bold">0</span>
-                </ng-template>
-                <div class="grid">
-                    <div class="col-12 md:col-6 lg:col-6 ">
-                        <div class="shadow-2 p-3 border-round surface-300">
-                            <div class="flex justify-content-between">
-                                <div>
-                                    <div class="mb-3" [ngClass]="'text-green-500' + ' text-5xl'">0</div>
-                                    <span  class="block text-500 font-bold text-2xl">Fitted</span>
-                                </div>
-                                <div class="flex align-items-center justify-content-center"
-                                    [ngClass]="'bg-green-100' + ' border-round'" style="width:5rem;height:5rem">
-                                    <i class="pi pi-hammer" [ngClass]="'text-green-500' + ' text-5xl'"></i>
-                                </div>
-                            </div>
-                            <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
-                                <div class="bg-green-500 h-full" style="width: 100%; border-radius: 4px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 md:col-6 lg:col-6">
-                        <div class="surface-300 shadow-2 p-3 border-round">
-                            <div class="flex justify-content-between">
-                                <div>
-                                    <div class="mb-3" [ngClass]="'text-yellow-500' + ' text-5xl'">0</div>
-                                    <span  class="block text-500 font-bold text-2xl">Balanced</span>
-                                </div>
-                                <div class="flex align-items-center justify-content-center"
-                                    [ngClass]="'bg-yellow-100' + ' border-round'" style="width:5rem;height:5rem">
-                                    <i class="pi pi-list-check" [ngClass]="'text-yellow-500' + ' text-5xl'"></i>
-                                </div>
-                            </div>
-                            <div class="surface-300 w-full mt-4" style="height: 7px; border-radius: 4px;">
-                                <div class="bg-yellow-500 h-full" style="width: 100%; border-radius: 4px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </p-panel>
-        </div>
-        <div class="col-12 md:col-6 lg:col-5">
+        <div class="col-12 md:col-6 lg:col-6">
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
                     <span class="text-3xl font-bold" >Total Complaint Lodge</span>
@@ -117,11 +69,38 @@
                 <ng-template pTemplate="header">
                     <span class="text-3xl font-bold">SOS</span>
                 </ng-template>
-                <div class="bg-red-500 shadow-2 p-6 border-round">
-                    <div class="flex justify-content-center align-items-center">
-                            <span [ngClass]="'text-white font-bold' + ' text-7xl'">0</span>
-                    </div>
+                <div class="p-3 border-round bg-red-500">
+                    <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
+                        <span class="text-white font-bold text-7xl md:text-7xl sm:text-3xl">0</span>
+                    </div>   
                 </div>
+            </p-panel>
+        </div>
+
+        <div class="col-12 md:col-6 lg:col-2">
+            <p-panel styleClass="shadow-3 border-round-3xl">
+                <ng-template pTemplate="header">
+                    <span class="text-3xl font-bold" >Over Speed</span>
+                </ng-template>
+                <div class="p-3 border-round bg-yellow-500">
+                    <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
+                        <span class="text-white font-bold text-7xl md:text-7xl sm:text-3xl">0</span>
+                    </div>   
+                </div>
+                
+            </p-panel>
+        </div>
+        <div class="col-12 md:col-6 lg:col-2">
+            <p-panel styleClass="shadow-3 border-round-3xl">
+                <ng-template pTemplate="header">
+                    <span class="text-3xl font-bold" >Alert</span>
+                </ng-template>
+                <div class="p-3 border-round bg-yellow-500">
+                    <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
+                        <span class="text-white font-bold text-7xl md:text-7xl sm:text-3xl">0</span>
+                    </div>   
+                </div>
+                
             </p-panel>
         </div>
     </div>
@@ -172,36 +151,24 @@
         </div>
         <div class="col-12 md:col-7 lg:col-7">
             <div class="grid">
-                <!-- <div class="col-12 lg:col-5">
+                <div class="col-12 lg:col-4">
                     <p-panel styleClass="shadow-3 border-round-3xl">
                         <ng-template pTemplate="header">
                             <span class="text-3xl font-bold" >Renewal Status</span>
                         </ng-template>
-                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-                                [labels]="chartOptions.labels" [fill]="chartOptions.fill" [colors]="chartOptions.colors"
-                                [dataLabels]="chartOptions.dataLabels"  [legend]="chartOptions.legend"
-                                [responsive]="chartOptions.responsive"></apx-chart>
-                    </p-panel>
-                </div> -->
-
-                <div class="col-12 lg:col-5">
-                    <p-panel styleClass="shadow-3 border-round-3xl">
-                        <ng-template pTemplate="header">
-                            <span class="text-3xl font-bold" >Renewal Status</span>
-                        </ng-template>
-                        @for (item of renewalStatus; track $index) {
-                            <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">
-                               
-                                    <div class="flex justify-content-between pl-2 pr-2">
-                                        <div class="flex align-items-center justify-content-center">
-                                            <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key}}</div>
+                            @for (item of renewalStatus; track $index) {
+                                <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">
+                                   
+                                        <div class="flex justify-content-between  pl-2 pr-2">
+                                            <div class="flex align-items-center justify-content-center">
+                                                <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key}}</div>
+                                            </div>
+                                            <div class="flex align-items-center justify-content-center">
+                                                <div class="text-green-500 text-white text-5xl ">{{item.value}}</div>
+                                            </div>
                                         </div>
-                                        <div class="flex align-items-center justify-content-center">
-                                            <div class="text-green-500 text-white text-5xl">{{item.value}}</div>
-                                        </div>
-                                    </div>
-                            </div>
-                        }
+                                </div>
+                            }
                     </p-panel>
                 </div>
 
@@ -220,7 +187,7 @@
                                                 <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key}}</div>
                                             </div>
                                             <div class="flex align-items-center justify-content-center">
-                                                <div class="text-green-500 text-white text-5xl ">0</div>
+                                                <div class="text-green-500 text-white text-5xl ">{{item.value}}</div>
                                             </div>
                                         </div>
                                 </div>
@@ -228,17 +195,24 @@
                     </p-panel>
                 </div>
 
-                <div class="col-12 lg:col-3">
+                <div class="col-12 lg:col-4">
                     <p-panel styleClass="shadow-3 border-round-3xl">
                         <ng-template pTemplate="header">
-                            <span class="text-3xl font-bold" >Alert</span>
+                            <span class="text-3xl font-bold" >Inventory</span>
                         </ng-template>
-                        <div class="p-3 border-round bg-yellow-500">
-                            <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
-                                <span class="text-white font-bold text-7xl md:text-7xl sm:text-3xl">0</span>
-                            </div>   
-                        </div>
-                        
+                            @for (item of inventory; track $index) {
+                                <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">
+                                   
+                                        <div class="flex justify-content-between  pl-2 pr-2">
+                                            <div class="flex align-items-center justify-content-center">
+                                                <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key}}</div>
+                                            </div>
+                                            <div class="flex align-items-center justify-content-center">
+                                                <div class="text-green-500 text-white text-5xl ">{{item.value}}</div>
+                                            </div>
+                                        </div>
+                                </div>
+                            }
                     </p-panel>
                 </div>
                 

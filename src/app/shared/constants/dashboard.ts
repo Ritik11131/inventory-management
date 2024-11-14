@@ -17,6 +17,11 @@ export const totalRegistrationObject = [
   { value: 0, key: 'RFC', bgColor: 'bg-yellow-500' },
 ];
 
+export const inventoryObject = [
+  { value: 0, key: 'Total', bgColor: 'bg-green-500' },
+  { value: 0, key: 'Fitted', bgColor: 'bg-yellow-500' },
+];
+
 
 
 export const vehicleInstallationTypesObject = [
