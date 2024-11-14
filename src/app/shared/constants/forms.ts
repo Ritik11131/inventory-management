@@ -274,7 +274,7 @@ export const fitmentFormFields : any[] = [
             { label: 'New', value: false},
           ],
         },
-        { type: 'text', name: 'vehicleNo', label: 'Vehicle No', validation: true, placeholder: 'Enter your Vehicle No', disabled:false },
+        { type: 'text', name: 'vehicleNo', label: 'Vehicle No', validation: true, placeholder: 'Enter your Vehicle No', disabled:true },
         { type: 'text', name: 'chassisNo', label: 'Chassis No', placeholder: 'Enter your Chassis No', disabled:false },
         { type: 'text', name: 'engineNo', label: 'Engine No', placeholder: 'Enter your Engine No', disabled:false },
         { type: 'text', name: 'vehicleMake', label: 'Vehicle Make', placeholder: 'Enter Vehicle Make', disabled:false },

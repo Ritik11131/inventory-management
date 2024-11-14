@@ -33,7 +33,7 @@
                                 [dateFormat]="field.dateFormat"  (onSelect)="onDateSelect($event, field.name)" />
                             }
                             @case ('dropdown') {
-                            <p-dropdown appendTo="body" styleClass="w-full" [name]="field.name"
+                            <p-dropdown appendTo="body" styleClass="w-full" [name]="field.name" [disabled]="field?.disabled"
                                 [options]="field.options" [optionLabel]="field?.dropdownKeys?.nameKey"
                                 (onChange)="onDropdownChange($event, field)" [(ngModel)]="data[field.name]"
                                 placeholder="{{ field.placeholder }}">

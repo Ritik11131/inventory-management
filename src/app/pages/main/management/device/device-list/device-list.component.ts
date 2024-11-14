@@ -783,6 +783,7 @@ export class DeviceListComponent {
                 return {
                   ...field,
                   label: !selectedValue ? 'Chassis No' : 'Vehicle No',
+                  disabled: false
                 };
               }
               return field;
