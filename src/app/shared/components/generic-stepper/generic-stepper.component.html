@@ -6,6 +6,7 @@
                 <div class="border-2 border-dashed surface-border border-round surface-ground px-4">
                     <div class="formgrid grid mt-3">
                         @for (field of step.fields; track $index) {
+                            @if(!field?.hidden) {   
                         <div class="field col-12 sm:col-12 md:col-4">
                             <div class="flex align-items-center mb-2">
                                 <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
@@ -23,9 +24,10 @@
                             </div>
                             @switch(field.type) {
                             @case ('text') {
-                            <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [disabled]="field?.disabled || false"
-                                (keyup)="onInputChange($event, field)" [required]="field.validation"
-                                placeholder="{{ field.placeholder }}" />
+                                @if(!field?.hidden) {                                    <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [disabled]="field?.disabled || false"
+                                    (keyup)="onInputChange($event, field)" [required]="field.validation"
+                                    placeholder="{{ field.placeholder }}" />
+                                }
                             }
                             @case ('date') {
                                 <p-calendar [disabled]="field?.disabled"  [readonlyInput]="true" appendTo="body" styleClass="w-full" id="{{field.name}}" 
@@ -58,6 +60,8 @@
                             }
                         </div>
                         }
+                    }
+
                     </div>
                 </div>
             </div>

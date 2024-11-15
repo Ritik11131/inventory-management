@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, Signal, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,11 +13,13 @@ import { InputOtpModule } from 'primeng/inputotp';
 import { Subscription, timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ToastService } from '../../../core/services/toast.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [ButtonModule,DividerModule,InputTextModule,CommonModule,FormsModule,IconFieldModule,InputIconModule,StepperModule,InputNumberModule,InputOtpModule],
+  imports: [ButtonModule,DividerModule,InputTextModule,CommonModule,FormsModule,IconFieldModule,InputIconModule,
+            StepperModule,InputNumberModule,InputOtpModule,RouterModule],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
   styles: [
@@ -34,8 +36,26 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
 
   mobileNo!:number;
   otp!:number;
-  remainingTime: number = 150;
+  remainingTime: number = 2;
   isResendEnabled: boolean = false;
+  requestId:any = null;
+  isPasswordToggled: boolean = false;
+  isRetypePasswordToggled: boolean = false;
+
+  resetPasswordObj = {
+    newPassword: signal(''),
+    reTypedPassword: signal('')
+  };
+
+  isValid: Signal<boolean> = computed(() => 
+    [
+      this.resetPasswordObj.newPassword(), 
+      this.resetPasswordObj.reTypedPassword()
+    ].every(val => val !== '') && 
+      this.resetPasswordObj.newPassword() ===  this.resetPasswordObj.reTypedPassword()
+  );
+
+
 
   private timerSubscription!: Subscription;
 
@@ -44,10 +64,12 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
 
   async nextStep(callback : any,nextStep?:string) : Promise<any> {
     if(nextStep === 'otp') {
-      await this.sendOtp();
-      this.startTimer();
+      await this.sendOtp(callback);
+    } else if(nextStep === 'verify-otp') {
+      await this.verifyOtp(callback);
+    } else if(nextStep === 'reset-password') {
+      await this.resetPassword(callback);
     }
-    callback.emit();
   }
 
   ngOnInit() {
@@ -72,14 +94,64 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
   }
 
 
-  async sendOtp() : Promise<any> {
+  async sendOtp(callback : any) : Promise<any> {
     try {
       const response = await this.authService.sendSMSOtp(this.mobileNo);
-      console.log(response);
+      this.requestId = response?.data?.requestId;
+      this.toastService.showSuccess('Success', response.data.message);
+      this.startTimer();
+      callback.emit();
     } catch (error : any) {
       console.log(error);
-      this.toastService.showSuccess('Error', error.error.message);
+      this.toastService.showError('Error', error.error.data);
     }
+  }
+  
+
+  async verifyOtp(callback:any) : Promise<any> {
+    try {
+      const response = await this.authService.validateOtp(this.requestId,this.otp);
+      this.toastService.showSuccess('Success', response.data);
+      callback.emit();
+    } catch (error:any) {
+      this.toastService.showError('Error', error.error.data);
+    }
+  }
+
+
+  async resetPassword(callback:any) : Promise<any> {
+    try {
+      const response = await this.authService.resetPassword({requestId: this.requestId, newPassword: this.resetPasswordObj.newPassword()});
+      console.log(response);
+      this.toastService.showSuccess('Success', response.data);
+      callback.emit();
+    } catch (error:any) {
+      this.toastService.showError('Error', error.error.data);
+    }
+  }
+
+  async resendOtp(): Promise<any> {
+    try {
+      const response = await this.authService.resendOtp(this.requestId);
+      console.log(response);
+      this.toastService.showSuccess('Success', response?.data?.message);
+    } catch (error:any) {
+      this.toastService.showError('Error', error.error.data);
+      
+    }
+  }
+
+
+  togglePassword() {
+    this.isPasswordToggled = !this.isPasswordToggled;
+  }
+
+  toggleRetypePassword() {
+    this.isRetypePasswordToggled = !this.isRetypePasswordToggled;
+  }
+
+  disableEvent(event: ClipboardEvent) {
+    event.preventDefault();
   }
 
 

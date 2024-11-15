@@ -81,7 +81,7 @@ export class AuthService {
     }
   }
 
-  async reseendOtp(requestId : any) : Promise<any> {
+  async resendOtp(requestId : any) : Promise<any> {
     try {
       const response = await this.http.get('Verification/resend-sms-otp', { requestId });
       return response;
@@ -92,7 +92,7 @@ export class AuthService {
 
   async validateOtp(requestId : any,otp:any) : Promise<any> {
     try {
-      const response = await this.http.get('Verification/resend-sms-otp', { requestId,otp });
+      const response = await this.http.get('Verification/validate-sms-otp', { requestId,otp });
       return response;
     } catch (error) {
       throw error;
@@ -100,9 +100,9 @@ export class AuthService {
   }
 
 
-  async resetPassword(resetPasswordObject : any) : Promise<any> {
+  async resetPassword({requestId,newPassword} : any) : Promise<any> {
     try {
-      const response = await this.http.post('Verification/resend-sms-otp', { resetPasswordObject });
+      const response = await this.http.post('Profile/ForgetPassword', { requestId,newPassword });
       return response;
     } catch (error) {
       throw error;

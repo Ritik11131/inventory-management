@@ -784,7 +784,8 @@ export class DeviceListComponent {
                   ...field,
                   label: !selectedValue ? 'Chassis No' : 'Vehicle No',
                   placeholder : !selectedValue ? 'Enter your Chassis No' : 'Enter your Vehicle No',
-                  disabled: false
+                  disabled: false,
+                  hidden : !selectedValue
                 };
               }
               return field;
