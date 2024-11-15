@@ -36,7 +36,7 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
 
   mobileNo!:number;
   otp!:number;
-  remainingTime: number = 2;
+  remainingTime: number = 150;
   isResendEnabled: boolean = false;
   requestId:any = null;
   isPasswordToggled: boolean = false;
