@@ -65,6 +65,14 @@ export class DeviceListComponent {
   bulkUploadHeader:string = 'VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode';
   actions:any[] = [];
   stepFormFields: any[] = [];
+  stepperFieldsToDisable = [
+    'vehicleMake',
+    'vehicleModel',
+    'chassisNo',
+    'engineNo',
+    'manufacturingYear',
+    'permitHolderName'
+  ];
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
   private validationStepperDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
@@ -98,15 +106,6 @@ export class DeviceListComponent {
 
   private async executeStepperValidation(fieldName: string, value: any): Promise<void> {  
 
-    const stepperFieldsToDisable = [
-      'vehicleMake',
-      'vehicleModel',
-      'chassisNo',
-      'engineNo',
-      'manufacturingYear',
-      'permitHolderName'
-    ];
-
     const fieldValidationMapping: { [key: string]: (val: string) => Promise<any> } = {
       vehicleNo : this.fitmentService.isVehicleNoValid.bind(this.deviceService),
     };
@@ -135,7 +134,7 @@ export class DeviceListComponent {
             // Set the `disabled` property for specific fields based on data
             this.stepFormFields.forEach(step => {
               step.fields.forEach((field:any) => {
-                if (stepperFieldsToDisable.includes(field.name)) {
+                if (this.stepperFieldsToDisable.includes(field.name)) {
                   field.disabled = true;
                 }
               });
@@ -154,7 +153,7 @@ export class DeviceListComponent {
             console.log(error);
             this.stepFormFields.forEach(step => {
               step.fields.forEach((field:any) => {
-                if (stepperFieldsToDisable.includes(field.name)) {
+                if (this.stepperFieldsToDisable.includes(field.name)) {
                   field.disabled = false;
                 }
               });
@@ -172,7 +171,7 @@ export class DeviceListComponent {
         } else {
           this.stepFormFields.forEach(step => {
             step.fields.forEach((field:any) => {
-              if (stepperFieldsToDisable.includes(field.name)) {
+              if (this.stepperFieldsToDisable.includes(field.name)) {
                 field.disabled = false;
               }
             });
@@ -637,7 +636,12 @@ export class DeviceListComponent {
 
 
   stepperInputTextChange({ field, value }: any) {
-    console.log(field,value);
+    console.log(field,value);    
+    if(!this.device.isOld && field.name === 'chassisNo') {
+      this.device.vehicleNo = this.device.chassisNo
+    }
+
+
     if(field.hasOwnProperty('validation')) {
       const fieldName = field.name;
       this.validationStepperDebounceSubject.next({ fieldName, value });
@@ -794,8 +798,24 @@ export class DeviceListComponent {
         }
         return step;
       });
-
+      this.stepFormFields.forEach(step => {
+        step.fields.forEach((field:any) => {
+          if (this.stepperFieldsToDisable.includes(field.name)) {
+            field.disabled = false;
+          }
+        });
+      }); 
+      Object.assign(this.device, {
+        vehicleNo: null,
+        vehicleMake: null,
+        vehicleModel: null,
+        chassisNo: null,
+        engineNo: null,
+        manufacturingYear: null,
+        permitHolderName: null
+      });
       this.stepFormFields = updatedFields;
+      this.isValidated = true;
       this.cdr.detectChanges();
       
     }

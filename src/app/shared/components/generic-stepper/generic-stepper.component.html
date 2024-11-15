@@ -24,7 +24,8 @@
                             </div>
                             @switch(field.type) {
                             @case ('text') {
-                                @if(!field?.hidden) {                                    <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [disabled]="field?.disabled || false"
+                                @if(!field?.hidden) {     
+                                    <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [disabled]="field?.disabled || false"
                                     (keyup)="onInputChange($event, field)" [required]="field.validation"
                                     placeholder="{{ field.placeholder }}" />
                                 }
