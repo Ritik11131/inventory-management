@@ -72,6 +72,48 @@ export class AuthService {
   }
 
 
+  async sendSMSOtp(mobileNo : any) : Promise<any> {
+    try {
+      const response = await this.http.get('Verification/send-sms-otp', { mobileNo });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async reseendOtp(requestId : any) : Promise<any> {
+    try {
+      const response = await this.http.get('Verification/resend-sms-otp', { requestId });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async validateOtp(requestId : any,otp:any) : Promise<any> {
+    try {
+      const response = await this.http.get('Verification/resend-sms-otp', { requestId,otp });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async resetPassword(resetPasswordObject : any) : Promise<any> {
+    try {
+      const response = await this.http.post('Verification/resend-sms-otp', { resetPasswordObject });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+
+
+
+
 
 
 }

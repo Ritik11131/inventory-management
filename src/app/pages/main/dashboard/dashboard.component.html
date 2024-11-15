@@ -184,10 +184,10 @@
                                    
                                         <div class="flex justify-content-between  pl-2 pr-2">
                                             <div class="flex align-items-center justify-content-center">
-                                                <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key}}</div>
+                                                <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key || 0}}</div>
                                             </div>
                                             <div class="flex align-items-center justify-content-center">
-                                                <div class="text-green-500 text-white text-5xl ">{{item.value}}</div>
+                                                <div class="text-green-500 text-white text-5xl ">{{item.value || 0}}</div>
                                             </div>
                                         </div>
                                 </div>

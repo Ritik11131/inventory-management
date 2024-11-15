@@ -11,7 +11,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const toastService = inject(ToastService);
 
   // Don't add the Authorization header for the login or refresh token endpoint
-  if (req.url.endsWith('/login') || req.url.endsWith('/Auth/refresh')) {
+  if (req.url.endsWith('/login') || req.url.endsWith('/Auth/refresh') || req.url.endsWith('Verification/send-sms-otp')) {
     return next(req);
   }
 
