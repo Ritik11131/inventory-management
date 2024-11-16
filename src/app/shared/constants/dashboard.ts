@@ -25,14 +25,14 @@ export const inventoryObject = [
 
 
 export const vehicleInstallationTypesObject = [
-    { categoryName: 'Car', deviceCount: 0 }, 
-    { categoryName: 'Car', deviceCount: 0 }, 
-    { categoryName: 'Car', deviceCount: 0 }, 
-    { categoryName: 'Car', deviceCount: 0 }, 
-    { categoryName: 'Car', deviceCount: 0 }, 
-    { categoryName: 'Car', deviceCount: 0 }, 
-    { categoryName: 'Car', deviceCount: 0 }, 
-    { categoryName: 'Car', deviceCount: 0 }, 
+    { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
+    { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
+    { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
+    { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
+    { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
+    { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
+    { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
+    { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
 ];
 
 export const complaintStatsObject = [
