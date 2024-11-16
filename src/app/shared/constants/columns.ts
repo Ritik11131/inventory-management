@@ -21,7 +21,7 @@ export const deviceColumns = [
     // { field: 'simDetails', header: 'Secondary Sim Operator',nested:true, subfield:'secondaryOpt' },
     // { field: 'simDetails', header: 'Secondary Mobile No',nested:true, subfield:'secondarySimNo' },
     // { field: 'simDetails', header: 'Secondary Sim Validity',nested:true, subfield:'secondaryValidTill', type:'date' },
-    { field: 'simDetails', header: 'Activation Date',nested:true, subfield:'activationOn', type:'date' },
+    // { field: 'simDetails', header: 'Activation Date',nested:true, subfield:'activationOn', type:'date' },
     { field: 'inStock', header: 'Stock Status', minWidth: '12rem' },
     { field: 'activationStatusText', header: 'Activation Status', frozen:true, minWidth: '12rem' },
 ];
