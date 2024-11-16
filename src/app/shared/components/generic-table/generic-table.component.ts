@@ -21,13 +21,14 @@ import { AuthService } from '../../../core/services/auth.service';
 import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
 import { tableActions } from '../../interfaces/table';
 import { MenuModule } from 'primeng/menu';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
   imports: [TableModule, RippleModule, ButtonModule, InputTextModule, InputTextareaModule, CommonModule, 
     FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, 
-    InputNumberModule,ToolbarModule,ProgressSpinnerModule,TooltipModule,ConfirmDialogModule,MenuModule],
+    InputNumberModule,ToolbarModule,ProgressSpinnerModule,TooltipModule,ConfirmDialogModule,MenuModule,OverlayPanelModule],
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.scss',
 })
@@ -66,6 +67,8 @@ export class GenericTableComponent implements OnInit {
   fitment = output<any>();
   actionMenuItems!: any[];
   availableActionsList!: any;
+  selectedColumn!: string;
+  selectedOverlayObject!:any
 
 
   constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService) {
@@ -218,4 +221,15 @@ export class GenericTableComponent implements OnInit {
   onFitment(event : Event,item:any) {
     this.fitment.emit({event , item})
   }
+
+  showOverlay(col:any,item: any, event: MouseEvent,op: any) {
+    if(col.field === 'iccid') {
+      this.selectedColumn = col.field;
+      this.selectedOverlayObject = item;
+      op.toggle(event);
+    }
+  }
+
+
+
 }

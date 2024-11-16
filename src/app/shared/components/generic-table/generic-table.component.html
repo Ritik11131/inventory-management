@@ -77,10 +77,40 @@
                     </td>
                 }
                 @for (col of columns; track $index) {
-                    @if(col.field === 'active' || col.field === 'activationStatusText' || col.field === 'inStock') {
+                    @if(col.field === 'active' || col.field === 'activationStatusText' || col.field === 'inStock' || col?.chip) {
                         <td pFrozenColumn alignFrozen="right" [frozen]="col?.frozen">
-                            <p-tag [severity]="col.field === 'activationStatusText' ? (item[col.field] === 'Active' ? 'success' : 'danger') : item[col.field] ? 'success' : 'danger'" 
-                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"  />
+                            <p-tag [severity]="(col.field === 'iccid') ? (item['activationStatus'] ? 'success' : 'danger') : col.field === 'activationStatusText' ? (item[col.field] === 'Active' ? 'success' : 'danger') : item[col.field] ? 'success' : 'danger'" 
+                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"
+                                   (click)="col?.showOverlay ? showOverlay(col,item, $event, op) : null" [ngClass]="{'cursor-pointer': col?.showOverlay}" />
+                                <p-overlayPanel #op appendTo="body">
+                                    <div class="flex flex-column gap-1 w-35rem">
+                                        @if(selectedColumn === 'iccid') {
+                                            @if(selectedOverlayObject.simDetails) {
+                                        <span class="font-medium text-900 block mb-2">SIM Details</span>
+                                        <div class="formgrid grid">
+                                            <div class="field col-12 sm:col-12 md:col-4">
+                                                <p><strong>Provider:</strong> {{ selectedOverlayObject?.simDetails?.provider?.providerName }}</p>
+                                                <p><strong>Primary SIM No:</strong> {{ selectedOverlayObject?.simDetails?.primarySimNo }}</p>
+                                                <p><strong>Primary Operator:</strong> {{ selectedOverlayObject?.simDetails?.primaryOpt }}</p>
+                                            </div>
+                                            <div class="field col-12 sm:col-12 md:col-4">
+                                                <p><strong>Secondary SIM No:</strong> {{ selectedOverlayObject?.simDetails?.secondarySimNo }}</p>
+                                                <p><strong>Secondary Operator:</strong> {{ selectedOverlayObject?.simDetails?.secondaryOpt }}</p>
+                                                <p><strong>Activation On:</strong> {{ selectedOverlayObject?.simDetails?.activationOn | date:'short' }}</p>
+                                            </div>
+                                            <div class="field col-12 sm:col-12 md:col-4">
+                                                <p><strong>Primary Valid Till:</strong> {{ selectedOverlayObject?.simDetails?.primaryValidTill | date:'short' }}
+                                                </p>
+                                                <p><strong>Secondary Valid Till:</strong> {{ selectedOverlayObject?.simDetails?.secondaryValidTill |
+                                                    date:'short' }}</p>
+                                            </div>
+                                        </div>
+                                        } @else {
+                                            <p-button (onClick)="onActivate($event, item)" label="Activate Sim" icon="pi pi-eject" />
+                                        }
+                                        }
+                                    </div>
+                                </p-overlayPanel>
                         </td>
                     }  @else {
                         @if(col.field === 'index') {

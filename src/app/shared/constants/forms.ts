@@ -333,4 +333,4 @@ export const fitmentFormFields : any[] = [
         { type: 'text', name: 'aadhaarNumber', label: 'Aadhar No', placeholder: 'Enter Aadhar No' }
       ]
     }
-  ]
+];
