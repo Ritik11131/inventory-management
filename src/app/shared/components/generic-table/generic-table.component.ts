@@ -22,6 +22,8 @@ import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
 import { tableActions } from '../../interfaces/table';
 import { MenuModule } from 'primeng/menu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DeviceService } from '../../../core/services/device.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-generic-table',
@@ -67,11 +69,12 @@ export class GenericTableComponent implements OnInit {
   fitment = output<any>();
   actionMenuItems!: any[];
   availableActionsList!: any;
-  selectedColumn!: string;
+  selectedColumn!: any;
   selectedOverlayObject!:any
 
 
-  constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService) {
+  constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService,
+              private deviceService:DeviceService,private toastService:ToastService) {
     this.userRole = this.authService.getUserRole();
     this.currentSection = this.breadcrumbService.getBreadCrumbsJson()[this.breadcrumbService.getBreadCrumbsJson().length - 1]?.label?.replace(/\s+/g, '');;
     console.log(this.currentSection,'section');
@@ -222,12 +225,30 @@ export class GenericTableComponent implements OnInit {
     this.fitment.emit({event , item})
   }
 
-  showOverlay(col:any,item: any, event: MouseEvent,op: any) {
-    if(col.field === 'iccid') {
+  async showOverlay(col:any,item: any, event: MouseEvent,op: any) :Promise<any> {
+    this.selectedOverlayObject = null;
+    this.selectedColumn = null;
+    if (col.field === 'iccid') {
       this.selectedColumn = col.field;
       this.selectedOverlayObject = item;
       op.toggle(event);
+    } else if (col.field === 'vehicle' && col.subfield === 'vehicleNo') {
+      this.selectedColumn = col.subfield;
+      if(item?.vehicle) {
+        try {
+          const response = await this.deviceService.getVehicleDetails(item?.vehicle?.vehicleNo);
+          this.selectedOverlayObject = response?.data?.vehicle;
+          op.toggle(event);
+        } catch (error: any) {
+          this.toastService.showError('Error', 'Somethign went Wrong!')
+        }
+      } else if(!item.vehicle && item.activationStatus && item.inStock) {
+        op.toggle(event);
+      } 
     }
+
+    console.log(this.selectedOverlayObject);
+    
   }
 
 

@@ -98,4 +98,14 @@ export class DeviceService {
   }
 
 
+  async getVehicleDetails(vehicleNo:string) : Promise<any> {
+    try { 
+      const response = await this.http.get('Vehicle', {}, vehicleNo);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }

@@ -14,6 +14,7 @@ export const deviceColumns = [
     { field: 'sno', header: 'Device No' },
     { field: 'imei', header: 'IMEI' },
     { field: 'iccid', header: 'ICCID No', chip: true, showOverlay: true },
+    { field: 'vehicle', header: 'Vehicle No', nested:true, subfield:'vehicleNo', chip: true, showOverlay: true },
     // { field: 'simDetails', header: 'Sim Provider',nested:true, subfield:'provider', nextsubfield:'providerName' },
     // { field: 'simDetails', header: 'Primary Sim Operator', nested:true, subfield:'primaryOpt' },
     // { field: 'simDetails', header: 'Primary Mobile No',nested:true, subfield:'primarySimNo' },
