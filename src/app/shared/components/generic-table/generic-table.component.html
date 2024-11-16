@@ -80,7 +80,7 @@
                     @if(col.field === 'active' || col.field === 'activationStatusText' || col.field === 'inStock' || col?.chip) {
                         <td pFrozenColumn alignFrozen="right" [frozen]="col?.frozen">
                             <p-tag [severity]="(col.field === 'iccid') ? (item['activationStatus'] ? 'success' : 'danger') : col.field === 'activationStatusText' ? (item[col.field] === 'Active' ? 'success' : 'danger') : item[col.field] ? 'success' : 'danger'" 
-                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"
+                                   [value]="(col.field === 'iccid') ? (item[col.field]) : (col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"
                                    (click)="col?.showOverlay ? showOverlay(col,item, $event, op) : null" [ngClass]="{'cursor-pointer': col?.showOverlay}" />
                                 <p-overlayPanel #op appendTo="body">
                                     <div class="flex flex-column gap-1 w-35rem">
