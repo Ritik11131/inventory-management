@@ -77,11 +77,86 @@
                     </td>
                 }
                 @for (col of columns; track $index) {
-                    @if(col.field === 'active' || col.field === 'activationStatusText' || col.field === 'inStock' || col?.chip) {
+                    @if(col.field === 'active' || col.field === 'activationStatusText' || col.field === 'inStock') {
                         <td pFrozenColumn alignFrozen="right" [frozen]="col?.frozen">
-                            <p-tag [severity]="(col.field === 'iccid') ? (item['activationStatus'] ? 'success' : 'danger') : col.field === 'activationStatusText' ? (item[col.field] === 'Active' ? 'success' : 'danger') : item[col.field] ? 'success' : 'danger'" 
-                                   [value]="(col.field === 'vehicle' && col.subfield === 'vehicleNo') ? (item[col.field]?.[col.subfield] || '-') : (col.field === 'iccid') ? (item[col.field]) : (col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"
-                                   (click)="col?.showOverlay ? showOverlay(col,item, $event, op) : null" [ngClass]="{'cursor-pointer': col?.showOverlay}" />
+                            <p-tag [severity]="col.field === 'activationStatusText' ? (item[col.field] === 'Active' ? 'success' : 'danger') : item[col.field] ? 'success' : 'danger'" 
+                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"
+                                   /> 
+                        </td>
+                    }  @else {
+                        @if(col.field === 'index') {
+                            <td>{{ rowIndex + 1 }}</td>
+                        } @else if (col.nested) {
+                            <td>
+                                @if (col.subfield) {
+                                    @if (col.nextsubfield) {
+                                        {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield]?.[col.nextsubfield] | date) || '-') : (item[col.field]?.[col.subfield]?.[col.nextsubfield] || '-') }}
+                                    } @else {
+                                        @if(col.hyperlink) {
+                                                <span   (click)="col?.hyperlink ? showOverlay(col,item, $event, op) : null" 
+                                                        class="underline font-bold cursor-pointer"  
+                                                        [ngClass]="{'text-green-500' : col.subfield === 'vehicleNo' ? (item[col.field]?.[col.subfield] && item['activationStatus']) : (col.field === 'user' && col.subfield === 'name') ?  (item[col.field]?.[col.subfield] && item.status === 'Completed') : null, 
+                                                                    'text-red-500' : col.subfield === 'vehicleNo' && item[col.field]?.[col.subfield] && !item['activationStatus'],
+                                                                    'text-orange-500' : (col.field === 'user' && col.subfield === 'name') ? (item[col.field]?.[col.subfield] && item.status === 'Kyc Pending') : null
+                                                                    }">
+                                                {{ (col.field === 'user' && col.subfield === 'name') ? (item[col.field].userType === 'User') ?  (item[col.field]?.[col.subfield] || '-') : '-'  : (item[col.field]?.[col.subfield] || '-') }}
+                                                </span>
+                                        } @else {
+                                            {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield] | date) || '-') : (item[col.field]?.[col.subfield] || '-') }}
+                                        }
+                                        <p-overlayPanel #op appendTo="body">
+                                            <div class="flex flex-column w-30rem">
+                                               @if(selectedColumn === 'vehicleNo') {
+                                                @if(selectedOverlayObject) {
+                                                <span class="font-medium text-900 block mb-2">Vehicle Details</span>
+                                                <div class="formgrid grid">
+                                                    <!-- First Row: Two Columns -->
+                                                    <div class="field col-12 sm:col-6">
+                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleNo }}</p>
+                                                      <p class="mt-0 text-sm text-color-secondary">Vehicle No:</p>
+                                                    </div>
+                                                    <div class="field col-12 sm:col-6 text-right">
+                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.manufacturingYear }}</p>
+                                                      <p class="mt-0 text-sm text-color-secondary">Manufacturing Year:</p>
+                                                    </div>
+                                                  
+                                                    <!-- Second Row: Three Columns -->
+                                                    <div class="field col-12 sm:col-4 text-left">
+                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.chassisNo }}</p>
+                                                      <p class="mt-0 text-sm text-color-secondary">Chassis No:</p>
+                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.engineNo }}</p>
+                                                      <p class="mt-0 text-sm text-color-secondary">Engine No:</p>
+                                                    </div>
+                                                    <div class="field col-12 sm:col-4 text-center">
+                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleMake }}</p>
+                                                      <p class="mt-0 text-sm text-color-secondary">Vehicle Make:</p>
+                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleModel }}</p>
+                                                      <p class="mt-0 text-sm text-color-secondary">Vehicle Model:</p>
+                                                    </div>
+                                                    <div class="field col-12 sm:col-4 text-right">
+                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleCategory?.name }}</p>
+                                                      <p class="mt-0 text-sm text-color-secondary">Vehicle Category:</p>
+                                                    </div>
+                                                  </div>
+                                                } @else if(!selectedOverlayObject && item.activationStatus && item.inStock) {
+                                                <p-button (onClick)="onFitment($event, item)" label="Create Fitment" icon="pi pi-id-card" />
+                                                }
+                                                }
+                                            </div>
+                                        </p-overlayPanel>
+                                    }
+                                } @else {
+                                    {{ '-' }}
+                                }
+                            </td>
+                        } @else {
+                            <td>
+                                @if(col.hyperlink) {
+                                    <span (click)="col?.hyperlink ? showOverlay(col,item, $event, op) : null" class="underline font-bold text-green-500 cursor-pointer" [ngClass]="{'text-green-500' : item['activationStatus'], 'text-red-500' : !item['activationStatus']}">{{item[col.field]}}</span>
+                                } @else {
+                                    {{ item[col.field] || '-' }}
+                                }
+
                                 <p-overlayPanel #op appendTo="body">
                                     <div class="flex flex-column w-30rem">
                                         @if(selectedColumn === 'iccid') {
@@ -124,62 +199,10 @@
                                         } @else {
                                         <p-button (onClick)="onActivate($event, item)" label="Activate Sim" icon="pi pi-eject" />
                                         }
-                                        } @else if(selectedColumn === 'vehicleNo') {
-                                        @if(selectedOverlayObject) {
-                                        <span class="font-medium text-900 block mb-2">Vehicle Details</span>
-                                        <div class="formgrid grid">
-                                            <!-- First Row: Two Columns -->
-                                            <div class="field col-12 sm:col-6">
-                                              <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleNo }}</p>
-                                              <p class="mt-0 text-sm text-color-secondary">Vehicle No:</p>
-                                            </div>
-                                            <div class="field col-12 sm:col-6 text-right">
-                                              <p class="mb-1 font-bold">{{ selectedOverlayObject?.manufacturingYear }}</p>
-                                              <p class="mt-0 text-sm text-color-secondary">Manufacturing Year:</p>
-                                            </div>
-                                          
-                                            <!-- Second Row: Three Columns -->
-                                            <div class="field col-12 sm:col-4 text-left">
-                                              <p class="mb-1 font-bold">{{ selectedOverlayObject?.chassisNo }}</p>
-                                              <p class="mt-0 text-sm text-color-secondary">Chassis No:</p>
-                                              <p class="mb-1 font-bold">{{ selectedOverlayObject?.engineNo }}</p>
-                                              <p class="mt-0 text-sm text-color-secondary">Engine No:</p>
-                                            </div>
-                                            <div class="field col-12 sm:col-4 text-center">
-                                              <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleMake }}</p>
-                                              <p class="mt-0 text-sm text-color-secondary">Vehicle Make:</p>
-                                              <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleModel }}</p>
-                                              <p class="mt-0 text-sm text-color-secondary">Vehicle Model:</p>
-                                            </div>
-                                            <div class="field col-12 sm:col-4 text-right">
-                                              <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleCategory?.name }}</p>
-                                              <p class="mt-0 text-sm text-color-secondary">Vehicle Category:</p>
-                                            </div>
-                                          </div>
-                                        } @else if(!selectedOverlayObject && item.activationStatus && item.inStock) {
-                                        <p-button (onClick)="onFitment($event, item)" label="Create Fitment" icon="pi pi-id-card" />
-                                        }
                                         }
                                     </div>
                                 </p-overlayPanel>
-                        </td>
-                    }  @else {
-                        @if(col.field === 'index') {
-                            <td>{{ rowIndex + 1 }}</td>
-                        } @else if (col.nested) {
-                            <td>
-                                @if (col.subfield) {
-                                    @if (col.nextsubfield) {
-                                        {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield]?.[col.nextsubfield] | date) || '-') : (item[col.field]?.[col.subfield]?.[col.nextsubfield] || '-') }}
-                                    } @else {
-                                        {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield] | date) || '-') : (item[col.field]?.[col.subfield] || '-') }}
-                                    }
-                                } @else {
-                                    {{ '-' }}
-                                }
-                            </td>
-                        } @else {
-                            <td>{{item[col.field] || '-'}}</td>
+                              </td>
                         }
                     }
                 }

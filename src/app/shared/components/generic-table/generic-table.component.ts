@@ -226,6 +226,8 @@ export class GenericTableComponent implements OnInit {
   }
 
   async showOverlay(col:any,item: any, event: MouseEvent,op: any) :Promise<any> {
+    console.log(col,'col');
+    
     this.selectedOverlayObject = null;
     this.selectedColumn = null;
     if (col.field === 'iccid') {
@@ -245,6 +247,8 @@ export class GenericTableComponent implements OnInit {
       } else if(!item.vehicle && item.activationStatus && item.inStock) {
         op.toggle(event);
       } 
+    } else if(col.header === 'Permit Holder' && col.field === 'user' && col.subfield === 'name') {
+      this.selectedColumn = col.subfield;
     }
 
     console.log(this.selectedOverlayObject);
