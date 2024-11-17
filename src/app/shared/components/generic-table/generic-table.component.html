@@ -99,7 +99,7 @@
                                                                     'text-red-500' : col.subfield === 'vehicleNo' && item[col.field]?.[col.subfield] && !item['activationStatus'],
                                                                     'text-orange-500' : (col.field === 'user' && col.subfield === 'name') ? (item[col.field]?.[col.subfield] && item.status === 'Kyc Pending') : null
                                                                     }">
-                                                {{ (col.field === 'user' && col.subfield === 'name') ? (item[col.field].userType === 'User') ?  (item[col.field]?.[col.subfield] || '-') : '-'  : (item[col.field]?.[col.subfield] || '-') }}
+                                                {{ (col.field === 'user' && col.subfield === 'name') ? (item[col.field].userType === 'User') ?  (item[col.field]?.[col.subfield] || '-') : '-'  : ((item.activationStatus && item.inStock) ? 'Click To Create Fitment' : item[col.field]?.[col.subfield] || '-') }}
                                                 </span>
                                         } @else {
                                             {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield] | date) || '-') : (item[col.field]?.[col.subfield] || '-') }}
