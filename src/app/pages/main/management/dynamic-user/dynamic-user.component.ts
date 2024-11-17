@@ -30,7 +30,7 @@ export class DynamicUserComponent {
   users: DynamicUser[] = [];
   columns = dynamicUserColumns
   userDialog: boolean = false;
-  user!: DynamicUser;
+  user!: any;
   selectedUsers!: any;
   isEditing:boolean = false;
   userType!: string;
@@ -113,8 +113,9 @@ export class DynamicUserComponent {
     fields.forEach((field) => {
       if (field.hasOwnProperty('validation') && field.validation === true) {
         // Check if validationState already has the field; if not, initialize it
-        if (this.isEditing) {
+        if (this.isEditing && this.user[field.name]) {
           this.validationState[field.name] = true; // Valid for edit case if data exists
+          console.log(this.validationState,this.isValidated);
         } else {
           this.validationState[field.name] = false; // Invalid or new entry case
         }
