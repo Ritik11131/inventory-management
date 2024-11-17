@@ -106,43 +106,51 @@
                                         }
                                         <p-overlayPanel #op appendTo="body">
                                             <div class="flex flex-column w-30rem">
-                                               @if(selectedColumn === 'vehicleNo') {
-                                                @if(selectedOverlayObject) {
-                                                <span class="font-medium text-900 block mb-2">Vehicle Details</span>
-                                                <div class="formgrid grid">
-                                                    <!-- First Row: Two Columns -->
-                                                    <div class="field col-12 sm:col-6">
-                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleNo }}</p>
-                                                      <p class="mt-0 text-sm text-color-secondary">Vehicle No:</p>
+                                                @if(selectedColumn === 'vehicleNo') {
+                                                  @if(selectedOverlayObject) {
+                                                    <span class="font-medium text-900 block mb-2">Vehicle Details</span>
+                                                    <div class="formgrid grid">
+                                                      <!-- First Row: Two Columns, Space Between -->
+                                                      <div class="field col-12 sm:col-6">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleNo }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Vehicle No:</p>
+                                                      </div>
+                                                      <div class="field col-12 sm:col-6 text-right">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.manufacturingYear }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Manufacturing Year:</p>
+                                                      </div>
+                                                      
+                                                      <!-- Second Row: Three Columns -->
+                                                      <div class="field col-12 sm:col-4 text-left">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.chassisNo }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Chassis No:</p>
+                                                      </div>
+                                                      <div class="field col-12 sm:col-4 text-center">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.engineNo }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Engine No:</p>
+                                                      </div>
+                                                      <div class="field col-12 sm:col-4 text-right">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleCategory?.name }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Vehicle Category:</p>
+                                                      </div>
+                                                      
+                                                      <!-- Third Row: Three Columns -->
+                                                      <div class="field col-12 sm:col-4 text-left">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleMake }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Vehicle Make:</p>
+                                                      </div>
+                                                      <div class="field col-12 sm:col-4 text-center">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleModel }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Vehicle Model:</p>
+                                                      </div>
+                                                      
                                                     </div>
-                                                    <div class="field col-12 sm:col-6 text-right">
-                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.manufacturingYear }}</p>
-                                                      <p class="mt-0 text-sm text-color-secondary">Manufacturing Year:</p>
-                                                    </div>
-                                                  
-                                                    <!-- Second Row: Three Columns -->
-                                                    <div class="field col-12 sm:col-4 text-left">
-                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.chassisNo }}</p>
-                                                      <p class="mt-0 text-sm text-color-secondary">Chassis No:</p>
-                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.engineNo }}</p>
-                                                      <p class="mt-0 text-sm text-color-secondary">Engine No:</p>
-                                                    </div>
-                                                    <div class="field col-12 sm:col-4 text-center">
-                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleMake }}</p>
-                                                      <p class="mt-0 text-sm text-color-secondary">Vehicle Make:</p>
-                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleModel }}</p>
-                                                      <p class="mt-0 text-sm text-color-secondary">Vehicle Model:</p>
-                                                    </div>
-                                                    <div class="field col-12 sm:col-4 text-right">
-                                                      <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleCategory?.name }}</p>
-                                                      <p class="mt-0 text-sm text-color-secondary">Vehicle Category:</p>
-                                                    </div>
-                                                  </div>
-                                                } @else if(!selectedOverlayObject && item.activationStatus && item.inStock) {
-                                                <p-button (onClick)="onFitment($event, item)" label="Create Fitment" icon="pi pi-id-card" />
+                                                  } @else if(!selectedOverlayObject && item.activationStatus && item.inStock) {
+                                                    <p-button (onClick)="onFitment($event, item)" label="Create Fitment" icon="pi pi-id-card" />
+                                                  }
                                                 }
-                                                }
-                                            </div>
+                                              </div>
+                                              
                                         </p-overlayPanel>
                                     }
                                 } @else {
@@ -160,47 +168,54 @@
                                 <p-overlayPanel #op appendTo="body">
                                     <div class="flex flex-column w-30rem">
                                         @if(selectedColumn === 'iccid') {
-                                        @if(selectedOverlayObject.simDetails) {
-                                        <span class="font-medium text-900 block mb-2">SIM Details</span>
-                                        <div class="formgrid grid">
-                                            <!-- First Row: Two Columns -->
-                                            <div class="field col-12 sm:col-6">
-                                                <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.provider?.providerName }}</p>
-                                                <p class="mt-0  text-sm text-color-secondary">Provider</p>
-                                            </div>
-                                            <div class="field col-12 sm:col-6 text-right ">
-                                                <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.activationOn | date}}</p>
-                                                <p class="mt-0  text-sm text-color-secondary">Activation On:</p>
-                                            </div>
-                                
-                                            <!-- Second Row: Three Columns -->
-                                            <div class="field col-12 sm:col-4 text-left">
-                                                <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.primarySimNo }}</p>
-                                                <p class="mt-0  text-sm text-color-secondary">Primary SIM No:</p>
-                                                <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.secondarySimNo }}</p>
-                                                <p class="mt-0  text-sm text-color-secondary">Secondary SIM No:</p>
-                                
-                                            </div>
-                                            <div class="field col-12 sm:col-4 text-center">
-                                                <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.primaryOpt }}</p>
-                                                <p class="mt-0  text-sm text-color-secondary">Primary Operator:</p>
-                                                <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.secondaryOpt }}</p>
-                                                <p class="mt-0  text-sm text-color-secondary">Secondary Operator:</p>
-                                
-                                
-                                            </div>
-                                            <div class="field col-12 sm:col-4 text-right">
-                                                <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.primaryValidTill | date }}</p>
-                                                <p class="mt-0  text-sm text-color-secondary">Primary Valid Till:</p>
-                                                <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.secondaryValidTill | date }}</p>
-                                                <p class="mt-0  text-sm text-color-secondary">Secondary Valid Till:</p>
-                                            </div>
-                                        </div>
-                                        } @else {
-                                        <p-button (onClick)="onActivate($event, item)" label="Activate Sim" icon="pi pi-eject" />
-                                        }
+                                          @if(selectedOverlayObject.simDetails) {
+                                            <span class="font-medium text-900 block mb-2">SIM Details</span>
+                                            <div class="formgrid grid">
+                                                <!-- First Row: Two Columns, Space Between -->
+                                                <div class="field col-12 sm:col-6">
+                                                    <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.provider?.providerName }}</p>
+                                                    <p class="mt-0 text-sm text-color-secondary">Provider</p>
+                                                </div>
+                                                <div class="field col-12 sm:col-6 text-right">
+                                                    <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.activationOn | date }}</p>
+                                                    <p class="mt-0 text-sm text-color-secondary">Activation On:</p>
+                                                </div>
+                                                
+                                                <!-- Second Row: Three Columns -->
+                                                <div class="field col-12 sm:col-4 text-left">
+                                                    <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.primarySimNo }}</p>
+                                                    <p class="mt-0 text-sm text-color-secondary">Primary SIM No:</p>
+                                                </div>
+                                                <div class="field col-12 sm:col-4 text-center">
+                                                    <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.primaryOpt }}</p>
+                                                    <p class="mt-0 text-sm text-color-secondary">Primary Operator:</p>
+                                                </div>
+                                                <div class="field col-12 sm:col-4 text-right">
+                                                    <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.primaryValidTill | date }}</p>
+                                                    <p class="mt-0 text-sm text-color-secondary">Primary Valid Till:</p>
+                                                </div>
+                                                
+                                                <!-- Third Row: Three Columns -->
+                                                <div class="field col-12 sm:col-4 text-left">
+                                                    <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.secondarySimNo }}</p>
+                                                    <p class="mt-0 text-sm text-color-secondary">Secondary SIM No:</p>
+                                                </div>
+                                                <div class="field col-12 sm:col-4 text-center">
+                                                    <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.secondaryOpt }}</p>
+                                                    <p class="mt-0 text-sm text-color-secondary">Secondary Operator:</p>
+                                                </div>
+                                                <div class="field col-12 sm:col-4 text-right">
+                                                    <p class="mb-1 font-bold">{{ selectedOverlayObject?.simDetails?.secondaryValidTill | date }}</p>
+                                                    <p class="mt-0 text-sm text-color-secondary">Secondary Valid Till:</p>
+                                                </div>
+                                                
+                                              </div>
+                                          } @else {
+                                            <p-button (onClick)="onActivate($event, item)" label="Activate Sim" icon="pi pi-eject" />
+                                          }
                                         }
                                     </div>
+                                      
                                 </p-overlayPanel>
                               </td>
                         }
