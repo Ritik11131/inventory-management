@@ -59,7 +59,7 @@
                     {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
                 </th>
                 }
-                @if(actions.length) {
+                @if(actions.length && userRole !== 'Dealer') {
                     <th [style.minWidth]="'8rem'" pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">Actions</th>
                 }
             </tr>
@@ -221,7 +221,7 @@
                         }
                     }
                 }
-                @if(actions.length) {
+                @if(actions.length && userRole !== 'Dealer') {
                     <td pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">
                         <i class="pi pi-ellipsis-h text-md text-primary cursor-pointer" (click)="loadActionMenuItems(item); actionMenu.toggle($event)"></i>
                         <p-menu appendTo="body" #actionMenu [model]="actionMenuItems" popup="true"></p-menu>
