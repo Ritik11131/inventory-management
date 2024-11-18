@@ -67,7 +67,7 @@
 
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
-                    <span class="text-3xl font-bold">SOS</span>
+                    <span class="text-2xl font-bold">SOS <span class="text-color-secondary ">( Today )</span></span>
                 </ng-template>
                 <div class="p-3 border-round bg-red-500">
                     <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
@@ -80,7 +80,7 @@
         <div class="col-12 md:col-6 lg:col-2">
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
-                    <span class="text-3xl font-bold" >Over Speed</span>
+                    <span class="text-2xl font-bold" >Over Speed <span class="text-color-secondary">( Today )</span></span>
                 </ng-template>
                 <div class="p-3 border-round bg-yellow-500">
                     <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
@@ -93,7 +93,7 @@
         <div class="col-12 md:col-6 lg:col-2">
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
-                    <span class="text-3xl font-bold" >Alert</span>
+                    <span class="text-2xl font-bold" >Alert <span class="text-color-secondary ">( Today )</span></span>
                 </ng-template>
                 <div class="p-3 border-round bg-yellow-500">
                     <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
@@ -114,13 +114,13 @@
                     <span class="text-3xl font-bold" >Vehicle Type Wise Installation</span>
                 </ng-template>
                 <ng-template pTemplate="icons">
-                    <button class="p-panel-header-icon p-link mr-2">
+                    <!-- <button class="p-panel-header-icon p-link mr-2">
                         <span class="pi pi-filter"></span>
-                    </button>
+                    </button> -->
                 </ng-template>
                 <div class="grid">
                     <div class="col-12 md:col-6 lg:col-6">
-                        <h2 >Total Vehicles</h2>
+                        <h2 class="text-center" >Installed / Total Vehicles</h2>
                         <div class="flex justify-content-center align-items-center">
                             <p-knob [(ngModel)]="totalvehicleInstallation" [readonly]="true" [size]="300" [strokeWidth]="10" />
                         </div>
@@ -154,30 +154,7 @@
                 <div class="col-12 lg:col-4">
                     <p-panel styleClass="shadow-3 border-round-3xl">
                         <ng-template pTemplate="header">
-                            <span class="text-3xl font-bold" >Renewal Status</span>
-                        </ng-template>
-                            @for (item of renewalStatus; track $index) {
-                                <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">
-                                   
-                                        <div class="flex justify-content-between  pl-2 pr-2">
-                                            <div class="flex align-items-center justify-content-center">
-                                                <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key}}</div>
-                                            </div>
-                                            <div class="flex align-items-center justify-content-center">
-                                                <div class="text-green-500 text-white text-5xl ">{{item.value}}</div>
-                                            </div>
-                                        </div>
-                                </div>
-                            }
-                    </p-panel>
-                </div>
-
-                
-                
-                <div class="col-12 lg:col-4">
-                    <p-panel styleClass="shadow-3 border-round-3xl">
-                        <ng-template pTemplate="header">
-                            <span class="text-3xl font-bold" >Total Registration</span>
+                            <span class="text-3xl font-bold" >Registered</span>
                         </ng-template>
                             @for (item of totalRegistration; track $index) {
                                 <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">
@@ -201,6 +178,28 @@
                             <span class="text-3xl font-bold" >Inventory</span>
                         </ng-template>
                             @for (item of inventory; track $index) {
+                                <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">
+                                   
+                                        <div class="flex justify-content-between  pl-2 pr-2">
+                                            <div class="flex align-items-center justify-content-center">
+                                                <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key}}</div>
+                                            </div>
+                                            <div class="flex align-items-center justify-content-center">
+                                                <div class="text-green-500 text-white text-5xl ">{{item.value}}</div>
+                                            </div>
+                                        </div>
+                                </div>
+                            }
+                    </p-panel>
+                </div>
+
+
+                <div class="col-12 lg:col-4">
+                    <p-panel styleClass="shadow-3 border-round-3xl">
+                        <ng-template pTemplate="header">
+                            <span class="text-3xl font-bold" >Renewal</span>
+                        </ng-template>
+                            @for (item of renewalStatus; track $index) {
                                 <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">
                                    
                                         <div class="flex justify-content-between  pl-2 pr-2">

@@ -8,8 +8,8 @@ export const vehicleStatusOverviewObject = [
 ]
 
 export const renewalStatusObject = [
-  { value : 0, key:'Due',bgColor: 'bg-green-500' },
-  { value: 0, key: 'Lapse', bgColor: 'bg-yellow-500' },
+  { value : 0, key:'Due',bgColor: 'bg-yellow-500' },
+  { value: 0, key: 'Lapse', bgColor: 'bg-red-500' },
 ];
 
 export const totalRegistrationObject = [
@@ -43,7 +43,7 @@ export const complaintStatsObject = [
     icon: 'pi-file-check'
   },
   {
-    status: 'Not Resolved',
+    status: 'Pending',
     count: 0,
     colorClass: 'red',
     icon: 'pi-file-excel'
