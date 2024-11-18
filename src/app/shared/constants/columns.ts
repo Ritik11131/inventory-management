@@ -16,6 +16,7 @@ export const deviceColumns = [
     { field: 'iccid', header: 'ICCID No', hyperlink: true},
     { field: 'vehicle', header: 'Vehicle No', nested:true, subfield:'vehicleNo', hyperlink: true},
     { field: 'user', header: 'Permit Holder',nested:true, subfield:'name', hyperlink: true },
+    { field: 'lastPosition', header: 'Online Status',nested:true, subfield:'status' },
     // { field: 'simDetails', header: 'Sim Provider',nested:true, subfield:'provider', nextsubfield:'providerName' },
     // { field: 'simDetails', header: 'Primary Sim Operator', nested:true, subfield:'primaryOpt' },
     // { field: 'simDetails', header: 'Primary Mobile No',nested:true, subfield:'primarySimNo' },
