@@ -67,7 +67,8 @@ export class DashboardComponent implements OnInit {
       await Promise.all([
         this.fetchUserCountAndDeviceStock(),
         this.fetchVehicleTypesAndCount(),
-        this.fetchTicketsGroupByStatus()
+        this.fetchTicketsGroupByStatus(),
+        this.fetchInventoryStockActivationCount()
       ]);
     
       // Process or assign the results if needed
@@ -83,6 +84,17 @@ export class DashboardComponent implements OnInit {
       this.totalComplaints = response?.data?.closed + response?.data?.open;
       this.complaintStats[0].count = response?.data?.closed;
       this.complaintStats[1].count = response?.data?.open
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  async fetchInventoryStockActivationCount() : Promise<any> {
+    try {
+      const response = await this.dashboardService.getInventoryStockActivationCount()
+      this.inventory[0].value = response?.data?.inStock +  response?.data?.inActivation;
+      this.inventory[1].value = response?.data?.inActivation; 
     } catch (error) {
       console.log(error);
     }

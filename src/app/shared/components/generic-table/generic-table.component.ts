@@ -249,6 +249,15 @@ export class GenericTableComponent implements OnInit {
       } 
     } else if(col.header === 'Permit Holder' && col.field === 'user' && col.subfield === 'name') {
       this.selectedColumn = col.subfield;
+      try {
+        const response = await this.authService.getUserDetails(item?.user);
+        this.selectedOverlayObject = response?.data;
+        op.toggle(event);
+
+      } catch (error) {
+        console.log(error, 'error');
+        op.toggle(event);
+      }
     }
 
     console.log(this.selectedOverlayObject);

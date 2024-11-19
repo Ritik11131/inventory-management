@@ -55,6 +55,15 @@ export class AuthService {
     return this.tokenService.getDecodedToken()?.unique_name;
   }
 
+  async getUserDetails(user:any) : Promise<any> {
+    try {
+      const response = await this.http.get('Verification/send-sms-otp', { }, user?.id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 
   /**

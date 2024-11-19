@@ -154,6 +154,26 @@
                                                   } @else if(!selectedOverlayObject && item.activationStatus && item.inStock) {
                                                     <p-button (onClick)="onFitment($event, item)" label="Create Fitment" icon="pi pi-id-card" />
                                                   }
+                                                } @else if(selectedColumn === 'name' && col.field === 'user') {
+                                                    @if(selectedOverlayObject) {
+                                                        <span class="font-medium text-900 block mb-2">User Details</span>
+                                                    <div class="formgrid grid">                                                      
+                                                      <div class="field col-12 sm:col-4 text-left">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.name }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Name:</p>
+                                                      </div>
+                                                      <div class="field col-12 sm:col-4 text-center">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.mobileNo }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Mobile No:</p>
+                                                      </div>
+                                                      <div class="field col-12 sm:col-4 text-right">
+                                                        <p class="mb-1 font-bold">{{ selectedOverlayObject?.vehicleCategory?.aadhar }}</p>
+                                                        <p class="mt-0 text-sm text-color-secondary">Aadhar No:</p>
+                                                      </div>
+                                                    </div>
+                                                    } @else {
+                                                        <span class="font-medium text-900 block mb-2"><i class="pi pi-info-circle mr-2"></i>No User Details Found !</span>
+                                                    }
                                                 }
                                               </div>
                                               

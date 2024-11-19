@@ -27,4 +27,14 @@ export class DashboardService {
       throw error;
     }
   }
+
+
+  async getInventoryStockActivationCount() : Promise<any> {
+    try {
+      const response = await this.http.get('Dashboard/StockVsActivation');
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
