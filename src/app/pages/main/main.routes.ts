@@ -3,7 +3,6 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MainComponent } from './main.component';
 import { SettingsComponent } from './settings/settings.component';
-import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 export const mainRoutes: Routes = [
   {
@@ -13,10 +12,6 @@ export const mainRoutes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent
-      },
-      {
-        path:'user-dashboard',
-        component: UserDashboardComponent
       },
       {
         path: 'management',
