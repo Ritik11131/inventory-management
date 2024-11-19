@@ -13,6 +13,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { KnobModule } from 'primeng/knob';
 import { TicketsService } from '../../../core/services/tickets.service';
+import { environment } from '../../../../environments/environment';
 
 
 
@@ -29,10 +30,13 @@ export class DashboardComponent implements OnInit {
 
   
   map!: Map;
+  style = 'normal.day';
 
   leafletOptions = {
     layers: [
-      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
+      tileLayer(`https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${this.style}/{z}/{x}/{y}/512/png8?apiKey=${environment.here.apiKey}&ppi=320`, {
+        attribution: '&copy; HERE 2019'
+      })
     ],
     zoom: 5,
     center: latLng(27.54095593, 79.16035184)
