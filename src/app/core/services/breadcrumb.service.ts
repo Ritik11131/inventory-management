@@ -48,8 +48,8 @@ export class BreadcrumbService {
         ],
         'dynamic-user-list': [
           { label: 'Management' },
-          { label: (authService : any) => authService.getUserType() },
-          { label: (authService : any) => `${authService.getUserType()} List` }
+          { label: (authService : any) => authService.getUserType() === 'User' ? 'Permit Holder' : authService.getUserType() },
+          { label: (authService : any) => authService.getUserType() === 'User' ? 'Permit Holder List' : `${authService.getUserType()} List` }
         ],
         'device-list': [
           { label: 'Management' },

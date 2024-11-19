@@ -4,9 +4,7 @@ import { BreadcrumbService } from "../../core/services/breadcrumb.service";
 import { MenuItem } from "primeng/api";
 
 export function getMenuConfig(authService: AuthService, router: Router, breadcrumbService: BreadcrumbService): MenuItem[] {
-    const userType = authService.getUserType();
-    console.log(userType);
-    
+    const userRole = authService.getUserRole();    
 
     // Common menu items for all user types
     const commonItems: MenuItem[] = [
@@ -24,11 +22,11 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
             label: 'Management',
             icon: 'pi pi-server',
             items: [{
-                label: authService.getUserType(),
+                label: userRole === 'Dealer' ? 'Permit Holder' : authService.getUserType(),
                 icon: 'pi pi-users',
                 items: [
                     {
-                        label: `${authService.getUserType()} List`,
+                        label: userRole === 'Dealer' ? 'Permit Holder List' : `${authService.getUserType()} List`,
                         icon: 'pi pi-list',
                         command: () => {
                             router.navigate([`/main/management/dynamic-user-list`]);
@@ -231,20 +229,6 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                     },
                 ]
             },
-            // {
-            //     label: 'Vehicle',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Vehicle Category List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/vehicle-category-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/vehicle-category-list');
-            //             }
-            //         }
-            //     ]
-            // },
         ]
     };
 
