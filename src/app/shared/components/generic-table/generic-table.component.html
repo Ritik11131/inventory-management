@@ -188,7 +188,7 @@
                                 @if(col.hyperlink) {
                                     <span (click)="col?.hyperlink ? showOverlay(col,item, $event, op) : null" class="underline font-bold text-green-500 cursor-pointer" [ngClass]="{'text-green-500' : item['activationStatus'], 'text-red-500' : !item['activationStatus']}">{{item[col.field]}}</span>
                                 } @else if(col.field === 'downloadCertificate') {
-                                    <p-button (onClick)="downloadCertifcate()" icon="pi pi-download" [rounded]="true" [text]="true" />
+                                    <i class="pi pi-download cursor-pointer text-primary-500" (click)="downloadCertifcate()"></i>
                                 }
                                  @else {
                                     {{ item[col.field] || '-' }}
