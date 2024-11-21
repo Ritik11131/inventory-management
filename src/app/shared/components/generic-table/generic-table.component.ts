@@ -24,6 +24,7 @@ import { MenuModule } from 'primeng/menu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DeviceService } from '../../../core/services/device.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { PdfService } from '../../../core/services/pdf.service';
 
 @Component({
   selector: 'app-generic-table',
@@ -74,7 +75,7 @@ export class GenericTableComponent implements OnInit {
 
 
   constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService,
-              private deviceService:DeviceService,private toastService:ToastService) {
+              private deviceService:DeviceService,private toastService:ToastService,private pdfService:PdfService) {
     this.userRole = this.authService.getUserRole();
     this.currentSection = this.breadcrumbService.getBreadCrumbsJson()[this.breadcrumbService.getBreadCrumbsJson().length - 1]?.label?.replace(/\s+/g, '');;
     console.log(this.currentSection,'section');
@@ -264,6 +265,33 @@ export class GenericTableComponent implements OnInit {
     
   }
 
+
+  downloadCertifcate() {
+    const certificateData = {
+      rto: 'PURBA BURDWAN RTO',
+      fitmentDate: '2023-11-24',
+      serialNo: 'GRL6T6I102300029694',
+      vehicleRegNo: 'WB41K0743',
+      ownerName: 'SHUBHANKAR ROY',
+      address: 'BARANILPUR PAL PARA, SRIPALLY, WB 713103',
+      vltdMake: 'GRL ENGINEERS PRIVATE LIMITED',
+      model: 'TRACK TECH/GRL-VTS-15',
+      chassisNo: 'MAT466388E1H12888',
+      engineNo: 'B591803241H63392315',
+      color: 'NA',
+      vehicleModel: '3118 TC BS-3',
+      tacCop: 'CK8052',
+      tacDate: '2019-05-23',
+      imeiNo: '869501068751574',
+      iccId: '8991102305850423114',
+      serviceProvider: 'Taisys',
+      fitmentCenterName: 'GRL ENGINEERS PRIVATE LIMITED',
+      qrCodeContent: 'WB41K0743 | GRL6T6I102300029694 | SHUBHANKAR ROY',
+    };
+  
+    this.pdfService.generateFitmentCertificate(certificateData);
+  }
+ 
 
 
 }
