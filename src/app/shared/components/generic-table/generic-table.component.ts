@@ -25,12 +25,14 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DeviceService } from '../../../core/services/device.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { PdfService } from '../../../core/services/pdf.service';
+import { GenericOverlayComponent } from '../generic-overlay/generic-overlay.component';
+import { simOverlayFields, userOverlayFields, vehicleOverlayFields } from '../../constants/constant';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
   imports: [TableModule, RippleModule, ButtonModule, InputTextModule, InputTextareaModule, CommonModule, 
-    FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, 
+    FileUploadModule, DropdownModule, TagModule, RadioButtonModule, RatingModule, InputTextModule, FormsModule, GenericOverlayComponent,
     InputNumberModule,ToolbarModule,ProgressSpinnerModule,TooltipModule,ConfirmDialogModule,MenuModule,OverlayPanelModule],
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.scss',
@@ -44,6 +46,9 @@ export class GenericTableComponent implements OnInit {
   tableActionsConfigRoleWise : any = tableActionsConfigRoleWise;
   availableHeaderActions: tableActions[] = [];
   menuItems: any[] = [];
+  vehicleOverlayFields = vehicleOverlayFields;
+  userOverlayFields = userOverlayFields;
+  simOverlayFields = simOverlayFields;
 
   @Input() columns: any[] = []; // Dynamic columns
   @Input() data: any[] = []; // Data for the table
@@ -227,13 +232,11 @@ export class GenericTableComponent implements OnInit {
   }
 
   async showOverlay(col:any,item: any, event: MouseEvent,op: any) :Promise<any> {
-    console.log(col,'col');
-    
     this.selectedOverlayObject = null;
     this.selectedColumn = null;
     if (col.field === 'iccid') {
       this.selectedColumn = col.field;
-      this.selectedOverlayObject = item;
+      this.selectedOverlayObject = item;      
       op.toggle(event);
     } else if (col.field === 'vehicle' && col.subfield === 'vehicleNo') {
       this.selectedColumn = col.subfield;
@@ -243,12 +246,12 @@ export class GenericTableComponent implements OnInit {
           this.selectedOverlayObject = response?.data?.vehicle;
           op.toggle(event);
         } catch (error: any) {
-          this.toastService.showError('Error', 'Somethign went Wrong!')
+            op.toggle(event);
         }
       } else if(!item.vehicle && item.activationStatus && item.inStock) {
         op.toggle(event);
       } 
-    } else if(col.header === 'Permit Holder' && col.field === 'user' && col.subfield === 'name') {
+    } else if(col.header === 'Permit Holder' && col.field === 'user' && col.subfield === 'name' && item?.user?.userType === 'User' ) {
       this.selectedColumn = col.subfield;
       try {
         const response = await this.authService.getUserDetails(item?.user);
