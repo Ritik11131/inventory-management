@@ -57,7 +57,7 @@ export class AuthService {
 
   async getUserDetails(user:any) : Promise<any> {
     try {
-      const response = await this.http.get('Verification/send-sms-otp', { }, user?.id);
+      const response = await this.http.get('User', { }, user?.id);
       return response;
     } catch (error) {
       throw error;
