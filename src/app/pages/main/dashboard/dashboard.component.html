@@ -26,7 +26,11 @@
         <div class="col-12 md:col-6 lg:col-6">
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
-                    <span class="text-3xl font-bold" >Total Complaint Lodge</span>
+                    <div class="flex align-items-center">
+                        <span class="text-3xl font-bold">Total Complaint Lodge</span>
+                        <img src="assets/images/complaints.png" alt="complaints" class="ml-3 w-1" />
+                    </div>
+                    <!-- <span class="text-3xl font-bold" >Total Complaint Lodge</span> -->
                 </ng-template>
                 <ng-template pTemplate="icons">
                   <span class="text-3xl text-indigo-500 font-bold">{{ totalComplaints || 0 }}</span>
@@ -58,7 +62,10 @@
         <div class="col-12 md:col-6 lg:col-2">
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
-                    <span class="text-2xl font-bold">SOS <span class="text-color-secondary ">( Today )</span></span>
+                    <div class="flex align-items-center justify-content-between">
+                        <span class="text-2xl font-bold">SOS</span>
+                        <img src="assets/images/sos.png" alt="overspeed" class="ml-2 w-3" />
+                    </div>
                 </ng-template>
                 <div class="p-1 border-round bg-red-500">
                     <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
@@ -74,9 +81,12 @@
         <div class="col-12 md:col-6 lg:col-2">
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
-                    <span class="text-2xl font-bold" >Over Speed <span class="text-color-secondary">( Today )</span></span>
+                    <div class="flex align-items-center justify-content-between">
+                        <span class="text-2xl font-bold">Over Speed</span>
+                        <img src="assets/images/overspeed.png" alt="overspeed" class="ml-2 w-3" />
+                    </div>
                 </ng-template>
-                <div class="p-1 border-round bg-yellow-500">
+                <div class="p-1 border-round bg-orange-500">
                     <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
                         <span class="text-white font-bold text-7xl md:text-7xl sm:text-3xl">0</span>
                     </div>   
@@ -90,7 +100,10 @@
         <div class="col-12 md:col-6 lg:col-2">
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
-                    <span class="text-2xl font-bold" >Alert <span class="text-color-secondary ">( Today )</span></span>
+                    <div class="flex align-items-center justify-content-between">
+                        <span class="text-2xl font-bold">Alert</span>
+                        <img src="assets/images/alert.png" alt="overspeed" class="ml-2 w-3" />
+                    </div>
                 </ng-template>
                 <div class="p-1 border-round bg-yellow-500">
                     <div class="flex justify-content-center align-items-center py-5 md:py-4 sm:py-3">
