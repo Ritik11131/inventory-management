@@ -440,6 +440,7 @@ export class DeviceListComponent {
         await this.fetchAndResetDevice();
       } else if(this.currentAction === 'tranferInventory') {
         await this.transferInventory(data);
+        await this.fetchAndResetDevice();
       } else {
         await this.createDeviceFitment(data);
         await this.fetchAndResetDevice();
@@ -483,10 +484,13 @@ export class DeviceListComponent {
 
 
   async transferInventory({ user, no_of_device } : { user : { sno:number, name:string }, no_of_device : string }) : Promise<any> {
+    const filteredDeviceIds = this.devices?.filter((device: any) => device?.inStock)?.slice(0, +no_of_device)?.map((device: any) => device?.id);
+    
     const payload = { 
-      userId: user.sno,
-      DeviceId: this.devices.slice(0, +no_of_device).map((device: any) => device.id)
-   };
+      userId: user?.sno,
+      DeviceId: filteredDeviceIds
+    };
+
      try {
        const response = await this.inventoryService.transferInventory(payload);
        this.toastService.showSuccess('Success', response.data);
