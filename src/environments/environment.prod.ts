@@ -3,5 +3,8 @@ export const environment = {
     production: true,
     here: {
       apiKey: '3M9vTMCXbAq93ciboJSU13CSkZ4fJezXEcg9bCtlDNw'
+    },
+    trimble: {
+      apiKey:'46245024F7261E4BA868B9738D584270'
     }
   };
