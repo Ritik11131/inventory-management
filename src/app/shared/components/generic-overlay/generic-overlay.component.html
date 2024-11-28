@@ -19,5 +19,11 @@
         </div>
         }
     </div>
+    <!-- Loop through actions to display buttons -->
+    <div class="mt-2">
+        @for (action of actions; track $index) {
+            <p-button  [label]="action?.label" [raised]="true" severity="contrast" (onClick)="handleSelectedAction(action.key)" />
+        }
+    </div>
     }
 </div>

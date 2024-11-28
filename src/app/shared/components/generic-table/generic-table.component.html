@@ -116,7 +116,9 @@
                                                 *ngIf="selectedOverlayObject"
                                                 [title]="selectedColumn === 'vehicleNo' ? 'Vehicle Details' : 'User Details'"
                                                 [data]="selectedOverlayObject"
+                                                [actions]="selectedColumn === 'vehicleNo' ? [] : [{label:'Send Otp',key:'send_otp'}]"
                                                 [fields]="selectedColumn === 'vehicleNo' ? vehicleOverlayFields : userOverlayFields"
+                                                (emitSeelctedAction)="handleSelectedOverlayAction($event)"
                                                 ></app-generic-overlay>
                                             }
 

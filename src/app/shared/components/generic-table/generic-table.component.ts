@@ -294,6 +294,10 @@ export class GenericTableComponent implements OnInit {
   
     this.pdfService.generateFitmentCertificate(certificateData);
   }
+
+  handleSelectedOverlayAction(event:any) {
+    console.log(event);
+  }
  
 
 
