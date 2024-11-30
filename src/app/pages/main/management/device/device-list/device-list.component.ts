@@ -486,10 +486,7 @@ export class DeviceListComponent {
       // Complete KYC
       const kycResponse = await this.fitmentService.completeKYC(this.requestIdOtp);
       this.toastService.showSuccess('KYC Completed', kycResponse.data);
-
-
       await this.fetchAndResetDevice();
-
     } catch (error: any) {
       // Handle errors from either operation
       const errorMessage = error?.error?.data;
