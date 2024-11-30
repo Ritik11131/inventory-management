@@ -881,8 +881,10 @@ export class DeviceListComponent {
 
 
   async handleOverlayAction(event : any) : Promise<any> {
+    console.log(event,'event');
+    
     try {
-      const response = await this.authService.sendSMSOtp('9938830249', event.item.sno);
+      const response = await this.authService.sendSMSOtp(event?.overlayObj?.mobileNo, event.item.sno);
       this.requestIdOtp = response?.data?.requestId;
       this.toastService.showSuccess('Success', response.data.message);
       this.deviceDialog = true;
