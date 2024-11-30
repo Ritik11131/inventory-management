@@ -23,7 +23,7 @@ import { GenericDialogComponent } from '../../../../../shared/components/generic
 import { ToastService } from '../../../../../core/services/toast.service';
 import { deviceColumns } from '../../../../../shared/constants/columns';
 import { DeviceService } from '../../../../../core/services/device.service';
-import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields, fitmentFormFields } from '../../../../../shared/constants/forms';
+import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields, fitmentFormFields, userSmsOtpFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
@@ -61,10 +61,11 @@ export class DeviceListComponent {
   submitted: boolean = false;
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
-  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | 'fitment' | null = null;
+  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | 'fitment' | 'userSendSmsOtp' | null = null;
   bulkUploadHeader:string = 'VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode';
   actions:any[] = [];
   stepFormFields: any[] = [];
+  customSaveLabel = '';
   stepperFieldsToDisable = [
     'vehicleMake',
     'vehicleModel',
@@ -73,6 +74,7 @@ export class DeviceListComponent {
     'manufacturingYear',
     'permitHolderName'
   ];
+  requestIdOtp!: any;
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
   private validationStepperDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
@@ -361,6 +363,12 @@ export class DeviceListComponent {
     }
   }
 
+  resetUserSendSMSotp() {
+    return {
+      otp:null
+    }
+  }
+
 
   resetDeviceFitment(selectedDevice : any) {
     return {
@@ -440,13 +448,49 @@ export class DeviceListComponent {
         await this.fetchAndResetDevice();
       } else if(this.currentAction === 'tranferInventory') {
         await this.transferInventory(data);
-        // await this.fetchAndResetDevice();
+      } else if(this.currentAction === 'userSendSmsOtp') {
+        await this.verifyOtpAndCompleteKYC(data);
+        await this.fetchAndResetDevice();
       } else {
         await this.createDeviceFitment(data);
         await this.fetchAndResetDevice();
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async verifyOtp(callback:any) : Promise<any> {
+    try {
+     
+      callback.emit();
+    } catch (error:any) {
+      this.toastService.showError('Error', error.error.data);
+    }
+  }
+
+
+  async verifyOtpAndCompleteKYC(data: any): Promise<void> {
+    try {
+      // Validate OTP
+      const otpResponse = await this.authService.validateOtp(this.requestIdOtp, data?.otp);
+      this.toastService.showSuccess('OTP Verified', otpResponse.data);
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Show a message indicating KYC processing
+      this.toastService.showInfo('Info', 'Please wait while your KYC is being processed.');
+
+      // Introduce a delay of 2 seconds
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Complete KYC
+      const kycResponse = await this.fitmentService.completeKYC(this.requestIdOtp);
+      this.toastService.showSuccess('KYC Completed', kycResponse.data);
+    } catch (error: any) {
+      // Handle errors from either operation
+      const errorMessage = error?.error?.data;
+      this.toastService.showError('Error', errorMessage);
     }
   }
 
@@ -607,6 +651,8 @@ export class DeviceListComponent {
     this.deviceDialog = isVisible;
     this.isEditing = false;
     this.device = null;
+    this.accesStepForm = false;
+    
   }
 
 
@@ -830,6 +876,24 @@ export class DeviceListComponent {
       this.isValidated = true;
       this.cdr.detectChanges();
       
+    }
+  }
+
+
+  async handleOverlayAction(event : any) : Promise<any> {
+    try {
+      const response = await this.authService.sendSMSOtp('9938830249', event.item.sno);
+      this.requestIdOtp = response?.data?.requestId;
+      this.toastService.showSuccess('Success', response.data.message);
+      this.deviceDialog = true;
+      this.currentAction = 'userSendSmsOtp';
+      this.fields = userSmsOtpFormFields;
+      this.isEditing = false;
+      this.isValidated = true;
+      this.device = this.resetUserSendSMSotp();
+      this.customSaveLabel = 'Verify OTP & Complete KYC'
+    } catch (error:any) {
+      this.toastService.showError('Error', error.error.data);
     }
   }
 

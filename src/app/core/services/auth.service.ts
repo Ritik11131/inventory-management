@@ -85,9 +85,9 @@ export class AuthService {
   }
 
 
-  async sendSMSOtp(mobileNo : any) : Promise<any> {
+  async sendSMSOtp(mobileNo : any, args?: any) : Promise<any> {
     try {
-      const response = await this.http.get('Verification/send-sms-otp', { mobileNo });
+      const response = await this.http.get('Verification/send-sms-otp', { mobileNo, args });
       return response;
     } catch (error) {
       throw error;

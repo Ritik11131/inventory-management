@@ -203,6 +203,16 @@ export const deviceActivationFormFields : FormFields[] = [
         placeholder:'Select a Provider',
         hide: (hideFields: string[]) => hideFields.includes('sim'),
     }
+];
+
+
+export const userSmsOtpFormFields: FormFields[] = [
+    {
+        name: 'otp',
+        label: 'Enter OTP',
+        type: 'otp',
+        hide: (hideFields: string[]) => hideFields.includes('otp'),
+    }
 ]
 
 
@@ -260,8 +270,6 @@ export const bulkUploadDeviceFormFields : FormFields[] = [
         hide: (hideFields: string[]) => hideFields.includes('file'),
     }
 ]
-
-
 
 export const fitmentFormFields : any[] = [
     {

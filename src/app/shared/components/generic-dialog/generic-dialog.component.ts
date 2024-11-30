@@ -20,7 +20,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { InputOtpModule } from 'primeng/inputotp';
 import { GenericStepperComponent } from '../generic-stepper/generic-stepper.component';
+
 
 
 @Component({
@@ -28,7 +30,7 @@ import { GenericStepperComponent } from '../generic-stepper/generic-stepper.comp
   standalone: true,
   imports: [TableModule, DialogModule, RippleModule, ButtonModule, PickListModule, DragDropModule,
     InputTextModule, InputTextareaModule, CommonModule, FileUploadModule,
-    DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule, GenericStepperComponent,
+    DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule, GenericStepperComponent,InputOtpModule,
     InputTextModule, FormsModule, InputNumberModule, ConfirmDialogModule, TooltipModule, IconFieldModule, InputIconModule],
   templateUrl: './generic-dialog.component.html',
   styleUrl: './generic-dialog.component.scss'
@@ -57,6 +59,7 @@ export class GenericDialogComponent implements OnChanges {
   @Input() target:any[] = [];
   @Input() isStepForm : boolean = false;
   @Input() stepFormFields: any[] = [];
+  @Input() customSaveLabel = ''
 
   onHide = output<any>()
   onSave = output<any>()
@@ -106,7 +109,7 @@ export class GenericDialogComponent implements OnChanges {
     this.onHide.emit(false);
   }
 
-  save() {
+  save() {    
     this.onSave.emit(this.data);
   }
 

@@ -39,5 +39,13 @@ export class FitmentService {
     }
   }
 
-  
+
+  async completeKYC(requestId: string) : Promise<any> {
+    try {
+      const response = await this.http.get('Fitment/complete-kyc', { requestId });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

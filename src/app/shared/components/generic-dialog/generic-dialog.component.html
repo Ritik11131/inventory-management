@@ -140,6 +140,28 @@
                     <p-inputNumber id="{{ field.name }}" [(ngModel)]="data[field.name]" />
                 </ng-container>
                 }
+                @case ('otp') {
+                <ng-container>
+                    <div class="p-fluid">
+                        <p-inputOtp [(ngModel)]="data[field.name]" [length]="6" style="gap: 0" [integerOnly]="true">
+                            <ng-template pTemplate="input" let-token let-events="events" let-index="index">
+                                <input 
+                                pInputText
+                                type="text" 
+                                [maxLength]="1" 
+                                (input)="events.input($event)" 
+                                (keydown)="events.keydown($event)"
+                                (paste)="events.paste($event)"
+                                [attr.value]="token" 
+                                class="custom-otp-input" />
+                                <div *ngIf="index === 3" class="px-3">
+                                    <i class="pi pi-minus"></i>
+                                </div>
+                            </ng-template>
+                        </p-inputOtp>
+                    </div>
+                </ng-container>
+                }
                 }
             </div>
             }
@@ -157,7 +179,7 @@
 
     <ng-template pTemplate="footer">
         <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
-        <p-button [disabled]="!isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="isEditing ? 'Update' : 'Save'"
+        <p-button [disabled]="!isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
             [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
     </ng-template>
 </p-dialog>

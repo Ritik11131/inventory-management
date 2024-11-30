@@ -73,6 +73,7 @@ export class GenericTableComponent implements OnInit {
   sampleBulkUpload = output<any>();
   activate = output<any>();
   fitment = output<any>();
+  emitOverlayAction = output<any>();
   actionMenuItems!: any[];
   availableActionsList!: any;
   selectedColumn!: any;
@@ -295,8 +296,9 @@ export class GenericTableComponent implements OnInit {
     this.pdfService.generateFitmentCertificate(certificateData);
   }
 
-  handleSelectedOverlayAction(event:any) {
-    console.log(event);
+  handleSelectedOverlayAction(event:any,item:any,overlayObj:any) {
+    this.emitOverlayAction.emit({event,item,overlayObj})
+
   }
  
 
