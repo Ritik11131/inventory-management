@@ -1,11 +1,11 @@
 // import { ChartPanel } from "../interfaces/dashboard";
 
 export const vehicleStatusOverviewObject = [
-    { label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500' }, 
-    { label: 'Idle Vehicles', count: 0, colorClass: 'yelow', bgColorClass: 'bg-yellow-100', textColorClass: 'text-yellow-400' }, 
-    { label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500' }, 
-    { label: 'Offline Vehicles', count: 0, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700' },
-]
+  { label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500', key: 'RUNNING' },
+  { label: 'Idle Vehicles', count: 0, colorClass: 'yellow', bgColorClass: 'bg-yellow-100', textColorClass: 'text-yellow-400', key: 'DORMANT' },
+  { label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500', key: 'STOP' },
+  { label: 'Offline Vehicles', count: 0, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700', key: 'OFFLINE' },
+];
 
 export const renewalStatusObject = [
   { value : 0, key:'Due',bgColor: 'bg-yellow-500' },
@@ -21,6 +21,13 @@ export const inventoryObject = [
   { value: 0, key: 'Total', bgColor: 'bg-green-500' },
   { value: 0, key: 'Fitted', bgColor: 'bg-yellow-500' },
 ];
+
+export const lastPosStatusColors : any = {
+  "RUNNING": 'green',
+  "STOP": 'red',
+  "DORMANT": 'yellow',
+  "OFFLINE": 'grey'
+};
 
 
 

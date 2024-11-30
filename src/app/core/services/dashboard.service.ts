@@ -37,4 +37,15 @@ export class DashboardService {
       throw error;
     }
   }
+
+  async getLastPositionStats(userId : any) : Promise<any> {
+    try {
+      const response = await this.http.get('LastPosition', {} , userId);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }

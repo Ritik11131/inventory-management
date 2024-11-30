@@ -7,7 +7,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { PanelModule } from 'primeng/panel';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { chartOptions, complaintStatsObject, inventoryObject, renewalStatusObject, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
+import { chartOptions, complaintStatsObject, inventoryObject, lastPosStatusColors, renewalStatusObject, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -15,6 +15,7 @@ import { KnobModule } from 'primeng/knob';
 import { TicketsService } from '../../../core/services/tickets.service';
 import { environment } from '../../../../environments/environment';
 import * as L from 'leaflet';
+import { AuthService } from '../../../core/services/auth.service';
 
 
 
@@ -30,6 +31,9 @@ export class DashboardComponent implements OnInit {
   
   map!: Map;
   style = 'normal.day';
+  private lastPositionMarkersLayer: L.LayerGroup = L.layerGroup();
+  lastPositionData!:any;
+  lastPosStatusColors = lastPosStatusColors;
 
   leafletOptions = {
     layers: [
@@ -61,21 +65,27 @@ export class DashboardComponent implements OnInit {
   totalvehicleInstallation : number = 0;
   public chartOptions: any = chartOptions;
 
-  constructor(private dashboardService: DashboardService, private ticketService:TicketsService) {}
+  constructor(private dashboardService: DashboardService, private ticketService:TicketsService, private authService:AuthService) {}
     
 
   onMapReady(map: Map) {
-    this.map = map
-    L.control.layers(
-      {
-        'Trimble': this.leafletOptions.layers[2],
-        'OpenStreet Map (Hot)': this.leafletOptions.layers[1],
-        'HERE Map (Day)': this.leafletOptions.layers[0],
-      },
-    ).addTo(map);
+    this.map = map;
+    this.lastPositionMarkersLayer = L.layerGroup().addTo(this.map);
+    this.map.on('baselayerchange', this.handleBaseLayerChange.bind(this));
+    this.addLayerControl();   
   }
 
+  private handleBaseLayerChange(e: any) {
+    this.clearMarkers();
+    this.plotVehicles(this.lastPositionData);
+  }
 
+  // Function to clear all markers
+  private clearMarkers(): void {
+    if (this.lastPositionMarkersLayer) {
+      this.lastPositionMarkersLayer.clearLayers();
+    }
+  }
 
   ngOnInit(): void {
     this.initializeDashboard();
@@ -86,6 +96,7 @@ export class DashboardComponent implements OnInit {
     try {
       // Run all promises in parallel to reduce waiting time
       await Promise.all([
+        this.fetchLastPositionStats(),
         this.fetchUserCountAndDeviceStock(),
         this.fetchVehicleTypesAndCount(),
         this.fetchTicketsGroupByStatus(),
@@ -143,6 +154,50 @@ export class DashboardComponent implements OnInit {
       
     } catch (error) {
 
+    }
+  }
+
+  async fetchLastPositionStats() : Promise<any> {
+    try {
+      const response = await this.dashboardService.getLastPositionStats(this.authService.getuserId());
+      this.lastPositionData = response?.data
+      this.updateVehicleStatusCounts(this.lastPositionData);
+      this.plotVehicles(this.lastPositionData)
+    } catch (error) {
+      
+    }
+  }
+
+  private updateVehicleStatusCounts(response: any) {
+    this.vehicleStatusOverview.forEach(item => {
+      item.count = response[item.key]?.length || 0;
+    });
+  }
+
+  private addLayerControl(): void {
+    L.control.layers(
+      {
+        'Trimble': this.leafletOptions.layers[2],
+        'OpenStreet Map (Hot)': this.leafletOptions.layers[1],
+        'HERE Map (Day)': this.leafletOptions.layers[0],
+      },
+    ).addTo(this.map);
+  }
+
+  private plotVehicles(vehicleData : any): void {
+    this.clearMarkers();
+  
+    for (const status in vehicleData) {
+      vehicleData[status].forEach((vehicle  :any) => {
+        if(vehicle?.latitude && vehicle?.longitude) {
+          const marker: any = L.circleMarker([vehicle?.latitude, vehicle?.longitude], {
+            color: this.lastPosStatusColors[status],
+            radius: 5
+          }).addTo(this.map);
+          marker.bindTooltip( `Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
+         this.lastPositionMarkersLayer.addLayer(marker)
+        }
+      });
     }
   }
 
