@@ -450,7 +450,6 @@ export class DeviceListComponent {
         await this.transferInventory(data);
       } else if(this.currentAction === 'userSendSmsOtp') {
         await this.verifyOtpAndCompleteKYC(data);
-        await this.fetchAndResetDevice();
       } else {
         await this.createDeviceFitment(data);
         await this.fetchAndResetDevice();
@@ -487,6 +486,10 @@ export class DeviceListComponent {
       // Complete KYC
       const kycResponse = await this.fitmentService.completeKYC(this.requestIdOtp);
       this.toastService.showSuccess('KYC Completed', kycResponse.data);
+
+
+      await this.fetchAndResetDevice();
+
     } catch (error: any) {
       // Handle errors from either operation
       const errorMessage = error?.error?.data;
