@@ -7,7 +7,7 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
     const userRole = authService.getUserRole();    
 
     // Common menu items for all user types
-    const commonItems: MenuItem[] = [
+    let commonItems: MenuItem[] = [
         {
             key: 'dashboard',
             label: 'Dashboard',
@@ -238,5 +238,8 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
         managementMenu.items.push(...userMenuItems[authService.getUserRole()]);
     }
 
+    commonItems = (userRole === 'Dealer' || userRole === 'Distributor') ? commonItems?.filter((item: any) => item?.key !== 'dashboard') : commonItems;
+
+    
     return commonItems;
 }

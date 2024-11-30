@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
 import { icon, latLng, Map, Marker, marker, tileLayer } from "leaflet";
 import { ChartModule } from 'primeng/chart';
@@ -14,8 +14,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { KnobModule } from 'primeng/knob';
 import { TicketsService } from '../../../core/services/tickets.service';
 import { environment } from '../../../../environments/environment';
-
-
+import * as L from 'leaflet';
 
 
 
@@ -36,6 +35,17 @@ export class DashboardComponent implements OnInit {
     layers: [
       tileLayer(`https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${this.style}/{z}/{x}/{y}/512/png8?apiKey=${environment.here.apiKey}&ppi=320`, {
         attribution: '&copy; HERE 2019'
+      }),
+      tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+          attribution: '&copy; Open Street Hot',
+          maxZoom: 18,
+      }),
+      tileLayer(`https://pcmiler.alk.com/apis/rest/v1.0/Service.svc/maptile?&dataset=Current&region:NA&SRS=EPSG:900913&authtoken=${environment.trimble.apiKey}&X={x}&Y={y}&Z={z}`,{
+        attribution: '&copy; Trimble PCMiler Maps',
+        subdomains: ['a', 'b', 'c', 'd'], // Leaflet supports subdomains for tile servers
+        maxZoom: 18,
+        tileSize: 256,
+        zoomOffset: 0
       })
     ],
     zoom: 5,
@@ -55,7 +65,14 @@ export class DashboardComponent implements OnInit {
     
 
   onMapReady(map: Map) {
-    this.map = map;
+    this.map = map
+    L.control.layers(
+      {
+        'Trimble': this.leafletOptions.layers[2],
+        'OpenStreet Map (Hot)': this.leafletOptions.layers[1],
+        'HERE Map (Day)': this.leafletOptions.layers[0],
+      },
+    ).addTo(map);
   }
 
 
