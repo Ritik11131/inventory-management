@@ -30,6 +30,43 @@ export const lastPosStatusColors : any = {
 };
 
 
+export const SOSALertOverSpeed = [
+  {
+    title: 'SOS',
+    image: 'assets/images/sos.png',
+    fields: [],
+    bgClass: 'bg-red-500',
+    value: 0
+  },
+  {
+    title: 'Over Speed',
+    image: 'assets/images/overspeed.png',
+    fields: [],
+    bgClass: 'bg-orange-500',
+    value: 0
+  },
+  {
+    title: 'Alert',
+    image: 'assets/images/alert.png',
+    fields:[
+      { key: 'ignitionOn', label: 'Ignition On', colSpan: '4', textAlign: 'left' },
+      { key: 'ignitionOff', label: 'Ignition Off', colSpan: '4', textAlign: 'center' },
+      { key: 'tampering', label: 'Tampering', colSpan: '4', textAlign: 'right' },
+      { key: 'powerCut', label: 'Power Cut', colSpan: '4', textAlign: 'left' },
+      { key: 'powerRestored', label: 'Power Resume', colSpan: '4', textAlign: 'center' },
+      { key: 'lowBattery', label: 'Power Low Battery', colSpan: '4', textAlign: 'right' },
+      { key: 'hardAcceleration', label: 'Hasrh Acceleration', colSpan: '4', textAlign: 'left' },
+      { key: 'hardBraking', label: 'Harsh Breaking', colSpan: '4', textAlign: 'center' },
+      { key: 'hardCornering', label: 'Harsh Turning', colSpan: '4', textAlign: 'right' },
+      { key: 'geofenceEnter', label: 'Geofence In', colSpan: '4', textAlign: 'left' },
+      { key: 'geofenceExit', label: 'Geofence Out', colSpan: '4', textAlign: 'center' }
+    ],
+    response:{},
+    bgClass: 'bg-yellow-500',
+    value: 0
+  }
+];
+
 
 export const vehicleInstallationTypesObject = [
     { categoryName: 'Car', deviceCount: 0, totalCount:0 }, 
@@ -102,155 +139,3 @@ export const complaintStatsObject = [
       }
     ]
   };
-
-
-// export const secondRowCharts: ChartPanel[] = [
-//     {
-//       header: 'Total Registration',
-//       type: 'pie',
-//       data: {
-//         labels: [],
-//         datasets: [{
-//           data: [],
-//           backgroundColor: [
-//             '#007BFF', // Cerulean Blue
-//             '#FF5733', // Sunset Orange
-//             '#28A745', // Lime Green
-//             '#FFC107'  // Golden Yellow
-//           ],
-//           hoverOffset: 4
-
-
-//         }]
-//       },
-//       options: {
-//         responsive: true,
-//         plugins: {
-//           legend: { position: 'right', labels: { usePointStyle: true, } }
-//         }
-//       }
-//     },
-//     {
-//       header: 'Last 7 days Activation',
-//       type: 'bar',
-//       data: {
-//         labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-//         datasets: [
-//             {
-//               label: 'Activations 1',
-//               backgroundColor: '#3357FF', // Sky Blue
-//               data: [65, 59, 80, 81, 56, 55, 40]
-//             },
-//             {
-//               label: 'Activations 2',
-//               backgroundColor: '#FFC733', // Coral
-//               data: [40, 50, 90, 65, 70, 40, 30] // Example data for the second dataset
-//             }
-//           ]
-//       },
-//       options: {
-//         responsive: true,
-//         scales: {
-//           x: { display: true },
-//           y: { display: true }
-//         },
-//         plugins: {
-//           legend: { position: 'bottom',labels: { usePointStyle: true, } }
-//         },
-//         elements: {
-//             bar: {
-//               borderRadius: {
-//                 topLeft: 8,
-//                 topRight: 8,
-//                 bottomLeft: 0,
-//                 bottomRight: 0
-//               },
-//             }
-//           }
-//       }
-//     }
-//   ];
-
-
-//   // Define chart panel configurations in your component TypeScript file.
-// export const thirdRowCharts: ChartPanel[] = [
-//   {
-//     header: 'Vehicle Type Wise Installation',
-//     type: 'bar',
-//     data: {
-//       labels: [],
-//       datasets: [
-//         {
-//           label: 'Installations',
-//           backgroundColor: '#42A5F5',
-//           data: [],
-//           barThickness:50
-//         },
-//       ],
-//     },
-//     options: {
-//       responsive: true,
-//       scales: {
-//         x: { display: true },
-//         y: { display: true },
-//       },
-//       plugins: {
-//         legend: { position: 'bottom',labels: { usePointStyle: true, } },
-//       },
-//       elements: {
-//         bar: {
-//           borderRadius: {
-//             topLeft: 8,
-//             topRight: 8,
-//             bottomLeft: 0,
-//             bottomRight: 0
-//           },
-//         }
-//       }
-//     },
-//   },
-//   {
-//     header: 'Total Inventory',
-//     type: 'doughnut',
-//     data: {
-//       labels: [],
-//       datasets: [
-//         {
-//           data: [],
-//           backgroundColor: [
-//             '#66BB6A', // OEM - Vibrant Green
-//             '#FFA726', // Dealer - Bright Orange
-//             '#42A5F5', // Distributor - Sky Blue
-//             '#EF5350'  // Others - Crimson Red
-//           ],
-//         },
-//       ],
-//     },
-//     options: {
-//         cutout: 120,
-//       responsive: true,
-//       plugins: {
-//         legend: { position: 'right',labels: { usePointStyle: true, } },
-//       },
-//     },
-//   },
-//   {
-//     header: 'Total Complaints Lodge',
-//     type: 'doughnut',
-//     data: {
-//       labels: ['Resolved', 'Pending', 'In Progress'],
-//       datasets: [
-//         {
-//           data: [180, 40, 30],
-//           backgroundColor: ['#FF6384', '#FFCD56', '#36A2EB'],
-//         },
-//       ],
-//     },
-//     options: {
-//       responsive: true,
-//       plugins: {
-//         legend: { position: 'right',labels: { usePointStyle: true, } },
-//       },
-//     },
-//   },
-// ];

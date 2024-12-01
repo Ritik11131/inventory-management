@@ -7,7 +7,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { PanelModule } from 'primeng/panel';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { chartOptions, complaintStatsObject, inventoryObject, lastPosStatusColors, renewalStatusObject, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
+import { chartOptions, complaintStatsObject, inventoryObject, lastPosStatusColors, renewalStatusObject, SOSALertOverSpeed, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -21,12 +21,15 @@ import { concatMap, interval, Subscription, switchMap } from 'rxjs';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import { GenericOverlayComponent } from '../../../shared/components/generic-overlay/generic-overlay.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, CommonModule,ScrollPanelModule,NgApexchartsModule,KnobModule,LeafletMarkerClusterModule],
+  imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, OverlayPanelModule,
+            CommonModule,ScrollPanelModule,NgApexchartsModule,KnobModule,LeafletMarkerClusterModule,GenericOverlayComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -39,7 +42,7 @@ export class DashboardComponent implements OnInit {
   lastPositionData!:any;
   lastPosStatusColors = lastPosStatusColors;
   markerClusterGroup!: L.MarkerClusterGroup;
-  markerClusterData: any[] = []; // Your marker data
+  selectedOverlayObj!:any;
 
   markerClusterOptions = {
     showCoverageOnHover: true,
@@ -73,6 +76,7 @@ export class DashboardComponent implements OnInit {
   renewalStatus = renewalStatusObject;
   vehicleInstallationTypes = vehicleInstallationTypesObject;
   complaintStats = complaintStatsObject;
+  SOSALertOverSpeed = SOSALertOverSpeed;
   totalComplaints:number = 0;
   totalvehicleInstallation : number = 0;
   public chartOptions: any = chartOptions;
@@ -139,7 +143,9 @@ export class DashboardComponent implements OnInit {
         this.fetchUserCountAndDeviceStock(),
         this.fetchVehicleTypesAndCount(),
         this.fetchTicketsGroupByStatus(),
-        this.fetchInventoryStockActivationCount()
+        this.fetchInventoryStockActivationCount(),
+        this.fetchSOSAlertCount(),
+        this.fetchRenewalDueCounts()
       ]);
     
       // Process or assign the results if needed
@@ -197,10 +203,34 @@ export class DashboardComponent implements OnInit {
 
   async fetchLastPositionStats() : Promise<any> {
     try {
-      const response = await this.dashboardService.getLastPositionStats(this.authService.getuserId());
+      const response = await this.dashboardService.getLastPositionStats();
       this.lastPositionData = response?.data
       this.updateVehicleStatusCounts(this.lastPositionData);
       this.plotVehicles(this.lastPositionData)
+    } catch (error) {
+      
+    }
+  }
+
+  async fetchRenewalDueCounts() :Promise<any> {
+    try {
+      const response = await this.dashboardService.getRenewalDueCounts();
+      console.log(response,'ress');
+      this.renewalStatus[0].value = response?.data?.Due?.length;
+      this.renewalStatus[1].value =  response?.data?.Laps?.length;
+      
+    } catch (error) {
+      
+    }
+  }
+
+
+  async fetchSOSAlertCount() : Promise<any> {
+    try {
+      const response = await this.dashboardService.getSOSAletCounts();
+      this.updatePanelValues(response?.data);
+      console.log(response,'responseeee');
+      
     } catch (error) {
       
     }
@@ -212,14 +242,39 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  private updatePanelValues(data: any): void {
+    // Update SOS and OverSpeed directly
+    this.SOSALertOverSpeed[0].value = data.SOS;
+    this.SOSALertOverSpeed[1].value = data.OverSpeed;
+
+    const alertTotal = (Object.values(data.Other) as number[]).reduce(
+      (sum, count) => sum + count,
+      0
+    );
+
+    this.SOSALertOverSpeed[2].value = alertTotal;
+    this.SOSALertOverSpeed[2].response = data.Other
+  }
+
   private addLayerControl(): void {
     L.control.layers(
       {
         'Trimble': this.leafletOptions.layers[2],
-        'OpenStreet Map (Hot)': this.leafletOptions.layers[1],
         'HERE Map (Day)': this.leafletOptions.layers[0],
+        'OpenStreet Map (Hot)': this.leafletOptions.layers[1],
       },
     ).addTo(this.map);
+
+
+  //   const customButton = new L.Control({ position: 'topright' });
+  //   customButton.onAdd = () => {
+  //      const buttonDiv = L.DomUtil.create('div', 'button-wrapper');
+   
+  //      buttonDiv.innerHTML = `<button>Running</button>`;
+  //      buttonDiv.addEventListener('click', () => console.log('click'))
+  //      return buttonDiv;
+  //  };
+  //  customButton.addTo(this.map)
   }
 
   private plotVehicles(vehicleData: any): void {
@@ -257,12 +312,18 @@ export class DashboardComponent implements OnInit {
     this.totalRegistration = totalRegistrationObject;
     this.lastPositionData = null;
     this.vehicleStatusOverview.forEach(item => { item.count = 0; });
-    this.markerClusterGroup.clearLayers(); // Clear existing markers if using Leaflet
+    // this.markerClusterGroup.clearLayers(); // Clear existing markers if using Leaflet
   }
 
   onClick(event  :any) {
     console.log(event);
     
+  }
+
+  onInfoClick(event: MouseEvent,panel: any,op:any) {
+    op.toggle(event);
+    console.log(`Info clicked for ${panel.title}`);
+    // Add additional logic if needed
   }
 
 }

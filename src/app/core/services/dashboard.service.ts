@@ -38,14 +38,33 @@ export class DashboardService {
     }
   }
 
-  async getLastPositionStats(userId : any) : Promise<any> {
+  async getLastPositionStats() : Promise<any> {
     try {
-      const response = await this.http.get('LastPosition', {} , userId);
+      const response = await this.http.get('LastPosition');
       return response;
     } catch (error) {
       throw error;
     }
   }
+
+  async getSOSAletCounts() : Promise<any> {
+    try {
+      const response = await this.http.get('Dashboard/GetAlertCount');
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async getRenewalDueCounts() : Promise<any> {
+    try {
+      const response = await this.http.get('Dashboard/Renewal');
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  } 
 
 
 }
