@@ -27,6 +27,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { PdfService } from '../../../core/services/pdf.service';
 import { GenericOverlayComponent } from '../generic-overlay/generic-overlay.component';
 import { simOverlayFields, userOverlayFields, vehicleOverlayFields } from '../../constants/constant';
+import { FitmentService } from '../../../core/services/fitment.service';
 
 @Component({
   selector: 'app-generic-table',
@@ -80,7 +81,7 @@ export class GenericTableComponent implements OnInit {
   selectedOverlayObject!:any
 
 
-  constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService,
+  constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService,private fitmentService:FitmentService,
               private deviceService:DeviceService,private toastService:ToastService,private pdfService:PdfService) {
     this.userRole = this.authService.getUserRole();
     this.currentSection = this.breadcrumbService.getBreadCrumbsJson()[this.breadcrumbService.getBreadCrumbsJson().length - 1]?.label?.replace(/\s+/g, '');;
@@ -255,7 +256,7 @@ export class GenericTableComponent implements OnInit {
     } else if(col.header === 'Permit Holder' && col.field === 'user' && col.subfield === 'name' && item?.user?.userType === 'User' ) {
       this.selectedColumn = col.subfield;
       try {
-        const response = await this.authService.getUserDetails(item?.user);
+        const response = await this.fitmentService.getPermitHolderDetails(item?.user);
         this.selectedOverlayObject = response?.data;
         op.toggle(event);
 

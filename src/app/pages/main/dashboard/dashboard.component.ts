@@ -83,9 +83,9 @@ export class DashboardComponent implements OnInit {
 
   onMapReady(map: Map) {
     this.map = map;
-    this.lastPositionMarkersLayer = L.layerGroup().addTo(this.map);
-    this.markerClusterGroup = L.markerClusterGroup();
-    this.map.addLayer(this.markerClusterGroup);
+    // this.lastPositionMarkersLayer = L.layerGroup().addTo(this.map);
+    // this.markerClusterGroup = L.markerClusterGroup();
+    // this.map.addLayer(this.markerClusterGroup);
     this.map.on('baselayerchange', this.handleBaseLayerChange.bind(this));
     this.addLayerControl();   
   }
@@ -233,7 +233,7 @@ export class DashboardComponent implements OnInit {
             radius: 5
           });
           marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
-          this.markerClusterGroup.addLayer(marker);
+          // this.markerClusterGroup.addLayer(marker);
           markers.push(marker); // Add marker to the array
         }
       });

@@ -9,9 +9,9 @@ export const vehicleOverlayFields = [
   ];
   
   export const userOverlayFields = [
-    { key: 'name', label: 'Name', colSpan: '4', textAlign: 'left' },
-    { key: 'mobileNo', label: 'Mobile No', colSpan: '4', textAlign: 'center' },
-    { key: 'aadhar', label: 'Aadhar No', colSpan: '4', textAlign: 'right' },
+    { key: 'permitHolderName', label: 'Name', colSpan: '4', textAlign: 'left' },
+    { key: 'permitHolderMobile', label: 'Mobile No', colSpan: '4', textAlign: 'center' },
+    { key: 'aadhaarNumber', label: 'Aadhar No', colSpan: '4', textAlign: 'right' },
   ];
 
   export const simOverlayFields = [

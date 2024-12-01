@@ -48,4 +48,13 @@ export class FitmentService {
       throw error;
     }
   }
+
+  async getPermitHolderDetails(user: any) : Promise<any> {
+    try {
+      const response = await this.http.get('Fitment/permitholder-details', { }, user?.id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
