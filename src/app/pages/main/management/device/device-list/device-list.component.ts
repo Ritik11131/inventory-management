@@ -393,8 +393,8 @@ export class DeviceListComponent {
           rtoName: ""
       },
       permitHolderName: "",
-      permitHolderMobile: "",
-      aadhaarNumber: ""
+      permitHolderMobile: null,
+      aadhaarNumber: null
   };
   }
 
@@ -652,6 +652,7 @@ export class DeviceListComponent {
     this.isEditing = false;
     this.device = null;
     this.accesStepForm = false;
+    this.customSaveLabel = '';
     
   }
 

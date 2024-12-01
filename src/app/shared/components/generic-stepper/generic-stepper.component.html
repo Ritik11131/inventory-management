@@ -48,8 +48,8 @@
                           </textarea>
                             }
                             @case ('number') {
-                            <p-inputNumber id="{{ field.name }}" [(ngModel)]="data[field.name]"
-                                [required]="field.validation" placeholder="{{ field.placeholder }}">
+                            <p-inputNumber id="{{ field.name }}" [(ngModel)]="data[field.name]" [mode]="field?.mode" [useGrouping]="field?.useGrouping"
+                              [inputId]="field?.inputId"  [required]="field.validation" placeholder="{{ field.placeholder }}">
                             </p-inputNumber>
                             }
                             @case('non-editable') {
