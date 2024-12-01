@@ -8,21 +8,19 @@ import { PanelModule } from 'primeng/panel';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { chartOptions, complaintStatsObject, inventoryObject, lastPosStatusColors, renewalStatusObject, SOSALertOverSpeed, totalRegistrationObject, vehicleInstallationTypesObject, vehicleStatusOverviewObject } from '../../../shared/constants/dashboard';
+import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { KnobModule } from 'primeng/knob';
 import { TicketsService } from '../../../core/services/tickets.service';
 import { environment } from '../../../../environments/environment';
-import * as L from 'leaflet';
 import { AuthService } from '../../../core/services/auth.service';
-import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import { concatMap, interval, Subscription, switchMap } from 'rxjs';
-import 'leaflet.markercluster';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import { GenericOverlayComponent } from '../../../shared/components/generic-overlay/generic-overlay.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
 
 
 @Component({
@@ -41,7 +39,7 @@ export class DashboardComponent implements OnInit {
   private lastPositionMarkersLayer: L.LayerGroup = L.layerGroup();
   lastPositionData!:any;
   lastPosStatusColors = lastPosStatusColors;
-  markerClusterGroup!: L.MarkerClusterGroup;
+  // markerClusterGroup!: L.MarkerClusterGroup;
   selectedOverlayObj!:any;
 
   markerClusterOptions = {
@@ -87,9 +85,6 @@ export class DashboardComponent implements OnInit {
 
   onMapReady(map: Map) {
     this.map = map;
-    // this.lastPositionMarkersLayer = L.layerGroup().addTo(this.map);
-    this.markerClusterGroup = L.markerClusterGroup();
-    this.map.addLayer(this.markerClusterGroup);
     this.map.on('baselayerchange', this.handleBaseLayerChange.bind(this));
     this.addLayerControl();   
   }
@@ -279,6 +274,7 @@ export class DashboardComponent implements OnInit {
 
   private plotVehicles(vehicleData: any): void {
     const markers: L.CircleMarker[] = []; // Array to hold markers for fitBounds
+    const markerClusterGroup = L.markerClusterGroup();
 
     for (const status in vehicleData) {
       vehicleData[status].forEach((vehicle: any) => {
@@ -289,10 +285,12 @@ export class DashboardComponent implements OnInit {
           })
           marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
           markers.push(marker); // Add marker to the array
-          this.markerClusterGroup.addLayer(marker);
+          markerClusterGroup.addLayer(marker);
         }
       });
     }
+
+    this.map.addLayer(markerClusterGroup);
 
     // Fit the map bounds to the markers
     if (markers.length > 0) {
