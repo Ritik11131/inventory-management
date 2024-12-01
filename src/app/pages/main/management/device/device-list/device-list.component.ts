@@ -706,7 +706,7 @@ export class DeviceListComponent {
       this.validationStepperDebounceSubject.next({ fieldName, value });
     }
 
-    if(field.hasOwnProperty('mandatory')) {
+    if(field.hasOwnProperty('mandatory') && field.mandatory) {
         this.validationState[field.name] = value ? true : false;
         this.isValidated = Object.values(this.validationState).every(val => val === true);
     }
@@ -749,7 +749,7 @@ export class DeviceListComponent {
         this.validationState[object.name] = false; // Invalid or new entry case
       }
 
-      if(object.hasOwnProperty('mandatory')) {
+      if(object.hasOwnProperty('mandatory') && object.mandatory) {
         this.validationState[object.name] = false;
       }
     })
@@ -852,6 +852,8 @@ export class DeviceListComponent {
             ...step,
             fields: step.fields.map((field : any) => {
               if (field.name === 'vehicleNo') {
+              this.validationState[field?.name] = true;
+
                 return {
                   ...field,
                   label: !selectedValue ? 'Chassis No' : 'Vehicle No',
@@ -883,7 +885,7 @@ export class DeviceListComponent {
         permitHolderName: null
       });
       this.stepFormFields = updatedFields;
-      this.isValidated = true;
+      this.isValidated = Object.values(this.validationState).every(val => val === true);
       this.cdr.detectChanges();
       
     }
