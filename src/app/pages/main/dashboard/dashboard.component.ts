@@ -88,8 +88,8 @@ export class DashboardComponent implements OnInit {
   onMapReady(map: Map) {
     this.map = map;
     // this.lastPositionMarkersLayer = L.layerGroup().addTo(this.map);
-    // this.markerClusterGroup = L.markerClusterGroup();
-    // this.map.addLayer(this.markerClusterGroup);
+    this.markerClusterGroup = L.markerClusterGroup();
+    this.map.addLayer(this.markerClusterGroup);
     this.map.on('baselayerchange', this.handleBaseLayerChange.bind(this));
     this.addLayerControl();   
   }
@@ -286,10 +286,10 @@ export class DashboardComponent implements OnInit {
           const marker: L.CircleMarker = L.circleMarker([vehicle.latitude, vehicle.longitude], {
             color: this.lastPosStatusColors[status],
             radius: 5
-          }).addTo(this.map);
+          })
           marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
-          // this.markerClusterGroup.addLayer(marker);
           markers.push(marker); // Add marker to the array
+          this.markerClusterGroup.addLayer(marker);
         }
       });
     }
