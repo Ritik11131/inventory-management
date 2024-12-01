@@ -231,7 +231,7 @@ export class DashboardComponent implements OnInit {
           const marker: L.CircleMarker = L.circleMarker([vehicle.latitude, vehicle.longitude], {
             color: this.lastPosStatusColors[status],
             radius: 5
-          });
+          }).addTo(this.map);
           marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
           // this.markerClusterGroup.addLayer(marker);
           markers.push(marker); // Add marker to the array
