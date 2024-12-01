@@ -744,7 +744,7 @@ export class DeviceListComponent {
       }
     })
     })
-
+    
     this.isValidated = Object.values(this.validationState).every(val => val === true);
   }
 
@@ -884,7 +884,7 @@ export class DeviceListComponent {
     console.log(event,'event');
     
     try {
-      const response = await this.authService.sendSMSOtp(event?.overlayObj?.mobileNo, event.item.sno);
+      const response = await this.authService.sendSMSOtp(event?.overlayObj?.mobileNo, event?.item?.id);
       this.requestIdOtp = response?.data?.requestId;
       this.toastService.showSuccess('Success', response.data.message);
       this.deviceDialog = true;

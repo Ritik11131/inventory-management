@@ -243,8 +243,8 @@ export class GenericTableComponent implements OnInit {
       this.selectedColumn = col.subfield;
       if(item?.vehicle) {
         try {
-          const response = await this.deviceService.getVehicleDetails(item?.vehicle?.vehicleNo);
-          this.selectedOverlayObject = response?.data?.vehicle;
+          const response = await this.deviceService.getVehicleDetailsBySno(item?.vehicle?.id);
+          this.selectedOverlayObject = response?.data;
           op.toggle(event);
         } catch (error: any) {
             op.toggle(event);

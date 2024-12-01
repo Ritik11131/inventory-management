@@ -95,7 +95,7 @@
                                         @if(col.hyperlink) {
                                                 <span   (click)="col?.hyperlink ? showOverlay(col,item, $event, op) : null" 
                                                         class="underline font-bold cursor-pointer"  
-                                                        [ngClass]="{'text-green-500' : col.subfield === 'vehicleNo' ? (item[col.field]?.[col.subfield] && item['activationStatus']) : (col.field === 'user' && col.subfield === 'name') ?  (item[col.field]?.[col.subfield] && item.status === 'Completed') : null, 
+                                                        [ngClass]="{'text-green-500' : col.subfield === 'vehicleNo' ? (item[col.field]?.[col.subfield] && item['activationStatus']) : (col.field === 'user' && col.subfield === 'name') ?  (item[col.field]?.[col.subfield] && item.status === 'Activated') : null, 
                                                                     'text-red-500' : col.subfield === 'vehicleNo' && item[col.field]?.[col.subfield] && !item['activationStatus'],
                                                                     'text-orange-500' : (col.field === 'user' && col.subfield === 'name') ? (item[col.field]?.[col.subfield] && item.status === 'Kyc Pending') : null
                                                                     }">

@@ -107,5 +107,14 @@ export class DeviceService {
     }
   }
 
+  async getVehicleDetailsBySno(sno:string) : Promise<any> {
+    try { 
+      const response = await this.http.get('Vehicle/GetVehicleBySo', {}, sno);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 }
