@@ -16,13 +16,16 @@ import { TicketsService } from '../../../core/services/tickets.service';
 import { environment } from '../../../../environments/environment';
 import * as L from 'leaflet';
 import { AuthService } from '../../../core/services/auth.service';
+import 'leaflet.markercluster';
+import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
+import { concatMap, interval, Subscription, switchMap } from 'rxjs';
 
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, CommonModule,ScrollPanelModule,NgApexchartsModule,KnobModule],
+  imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, CommonModule,ScrollPanelModule,NgApexchartsModule,KnobModule,LeafletMarkerClusterModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -34,6 +37,14 @@ export class DashboardComponent implements OnInit {
   private lastPositionMarkersLayer: L.LayerGroup = L.layerGroup();
   lastPositionData!:any;
   lastPosStatusColors = lastPosStatusColors;
+  markerClusterGroup!: L.MarkerClusterGroup;
+  markerClusterData: any[] = []; // Your marker data
+
+  markerClusterOptions = {
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    spiderfyOnMaxZoom: true
+  };
 
   leafletOptions = {
     layers: [
@@ -64,6 +75,7 @@ export class DashboardComponent implements OnInit {
   totalComplaints:number = 0;
   totalvehicleInstallation : number = 0;
   public chartOptions: any = chartOptions;
+  private pollingSubscription!: Subscription | null; 
 
   constructor(private dashboardService: DashboardService, private ticketService:TicketsService, private authService:AuthService) {}
     
@@ -71,13 +83,15 @@ export class DashboardComponent implements OnInit {
   onMapReady(map: Map) {
     this.map = map;
     this.lastPositionMarkersLayer = L.layerGroup().addTo(this.map);
+    this.markerClusterGroup = L.markerClusterGroup();
+    this.map.addLayer(this.markerClusterGroup);
     this.map.on('baselayerchange', this.handleBaseLayerChange.bind(this));
     this.addLayerControl();   
   }
 
   private handleBaseLayerChange(e: any) {
-    this.clearMarkers();
-    this.plotVehicles(this.lastPositionData);
+    // this.clearMarkers();
+    // this.plotVehicles(this.lastPositionData);
   }
 
   // Function to clear all markers
@@ -89,6 +103,30 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeDashboard();
+    this.startPolling();
+  }
+
+  startPolling() {
+    this.pollingSubscription = interval(60000)
+      .pipe(concatMap(() => {
+        this.resetDashboardData(); // Reset data before initializing the dashboard
+        return this.initializeDashboard(); // Return the observable from initializeDashboard
+      }))
+      .subscribe({
+        next: () => {
+          // Handle successful polling if needed
+        },
+        error: (error) => {
+          console.error("Error during polling:", error);
+        }
+      });
+  }
+
+  stopPolling() {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = null;
+    }
   }
 
 
@@ -148,7 +186,6 @@ export class DashboardComponent implements OnInit {
   async fetchUserCountAndDeviceStock(): Promise<any> {
     try {
       const response = await this.dashboardService.getUserCountAndDeviceStock();
-      console.log(response, 'response');
       this.totalRegistration[0].value = response.data.userCountTask.OEM;
       this.totalRegistration[1].value = response.data.userCountTask.Dealer;
       
@@ -184,21 +221,42 @@ export class DashboardComponent implements OnInit {
     ).addTo(this.map);
   }
 
-  private plotVehicles(vehicleData : any): void {
-    this.clearMarkers();
-  
+  private plotVehicles(vehicleData: any): void {
+    const markers: L.CircleMarker[] = []; // Array to hold markers for fitBounds
+
     for (const status in vehicleData) {
-      vehicleData[status].forEach((vehicle  :any) => {
-        if(vehicle?.latitude && vehicle?.longitude) {
-          const marker: any = L.circleMarker([vehicle?.latitude, vehicle?.longitude], {
+      vehicleData[status].forEach((vehicle: any) => {
+        if (vehicle?.latitude && vehicle?.longitude) {
+          const marker: L.CircleMarker = L.circleMarker([vehicle.latitude, vehicle.longitude], {
             color: this.lastPosStatusColors[status],
             radius: 5
-          }).addTo(this.map);
-          marker.bindTooltip( `Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
-         this.lastPositionMarkersLayer.addLayer(marker)
+          });
+          marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
+          this.markerClusterGroup.addLayer(marker);
+          markers.push(marker); // Add marker to the array
         }
       });
     }
+
+    // Fit the map bounds to the markers
+    if (markers.length > 0) {
+      const group = L.featureGroup(markers);
+      this.map.fitBounds(group.getBounds());
+    }
+  }
+
+
+  resetDashboardData() {
+    // Reset all relevant properties to their initial state
+    this.totalComplaints = 0;
+    this.complaintStats = complaintStatsObject;
+    this.inventory = inventoryObject;
+    this.totalvehicleInstallation = 0;
+    this.vehicleInstallationTypes = [];
+    this.totalRegistration = totalRegistrationObject;
+    this.lastPositionData = null;
+    this.vehicleStatusOverview.forEach(item => { item.count = 0; });
+    this.markerClusterGroup.clearLayers(); // Clear existing markers if using Leaflet
   }
 
   onClick(event  :any) {

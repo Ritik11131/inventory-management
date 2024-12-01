@@ -511,8 +511,8 @@ export class DeviceListComponent {
       rto: rto.id,
       deviceSno,
       permitHolderName,
-      permitHolderMobile,
-      aadhaarNumber
+      permitHolderMobile: String(permitHolderMobile), // Explicitly convert to string
+      aadhaarNumber: String(aadhaarNumber) // Explicitly convert to string
     };
 
 
