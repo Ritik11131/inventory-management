@@ -24,10 +24,16 @@
                             </div>
                             @switch(field.type) {
                             @case ('text') {
-                                @if(!field?.hidden) {     
-                                    <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [disabled]="field?.disabled || false"
-                                    (keyup)="onInputChange($event, field)" [required]="field.validation"
-                                    placeholder="{{ field.placeholder }}" />
+                                @if(!field?.hidden) {  
+                                    @if(field?.name === 'permitHolderMobile' || field?.name === 'aadhaarNumber') {
+                                        <input appNumericMaxLength [maxLength]="field?.name === 'permitHolderMobile' ? 10 : field?.name === 'aadhaarNumber' ? 15 : 20 " class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [disabled]="field?.disabled || false"
+                                        (keyup)="onInputChange($event, field)" [required]="field.validation"
+                                        placeholder="{{ field.placeholder }}" />
+                                    } @else {
+                                        <input class="w-full" pInputText id="{{ field.name }}" [(ngModel)]="data[field.name]" [disabled]="field?.disabled || false"
+                                        (keyup)="onInputChange($event, field)" [required]="field.validation"
+                                        placeholder="{{ field.placeholder }}" />
+                                    }   
                                 }
                             }
                             @case ('date') {

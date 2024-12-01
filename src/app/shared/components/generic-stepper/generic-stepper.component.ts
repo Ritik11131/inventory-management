@@ -16,12 +16,13 @@ import { StepperModule } from 'primeng/stepper';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
+import { NumericMaxLengthDirective } from '../../../core/directives/numeric-max-length.directive';
 
 @Component({
   selector: 'app-generic-stepper',
   standalone: true,
   imports: [StepperModule,ButtonModule, InputTextareaModule, CommonModule, FileUploadModule,CalendarModule,
-    DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule, FormsModule,
+    DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule, FormsModule, NumericMaxLengthDirective,
     InputTextModule, FormsModule, InputNumberModule,TooltipModule, IconFieldModule, InputIconModule],
   templateUrl: './generic-stepper.component.html',
   styleUrl: './generic-stepper.component.scss',
