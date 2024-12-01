@@ -896,7 +896,7 @@ export class DeviceListComponent {
     console.log(event,'event');
     
     try {
-      const response = await this.authService.sendSMSOtp(event?.overlayObj?.mobileNo, event?.item?.id);
+      const response = await this.authService.sendSMSOtp(event?.overlayObj?.permitHolderMobile, event?.item?.id);
       this.requestIdOtp = response?.data?.requestId;
       this.toastService.showSuccess('Success', response.data.message);
       this.deviceDialog = true;
