@@ -705,6 +705,11 @@ export class DeviceListComponent {
       const fieldName = field.name;
       this.validationStepperDebounceSubject.next({ fieldName, value });
     }
+
+    if(field.hasOwnProperty('mandatory')) {
+        this.validationState[field.name] = value ? true : false;
+        this.isValidated = Object.values(this.validationState).every(val => val === true);
+    }
   }
 
 
@@ -742,6 +747,10 @@ export class DeviceListComponent {
     field.fields.map((object:any)=> {
       if (object.hasOwnProperty('validation') && object.validation) {
         this.validationState[object.name] = false; // Invalid or new entry case
+      }
+
+      if(object.hasOwnProperty('mandatory')) {
+        this.validationState[object.name] = false;
       }
     })
     })

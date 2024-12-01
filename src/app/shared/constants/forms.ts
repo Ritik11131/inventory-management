@@ -337,8 +337,8 @@ export const fitmentFormFields : any[] = [
       header: 'Permit Holder Details',
       fields: [
         { type: 'text', name: 'permitHolderName', label: 'Permit Holder Name', placeholder: 'Enter Permit Holder Name' },
-        { type: 'text', name: 'permitHolderMobile', label: 'Contact No', placeholder: 'Enter Contact No', },
-        { type: 'text', name: 'aadhaarNumber', label: 'Aadhar No', placeholder: 'Enter Aadhar No',  }
+        { type: 'text', name: 'permitHolderMobile', label: 'Contact No', placeholder: 'Enter Contact No', mandatory:true },
+        { type: 'text', name: 'aadhaarNumber', label: 'Aadhar No', placeholder: 'Enter Aadhar No', mandatory:true  }
       ]
     }
 ];

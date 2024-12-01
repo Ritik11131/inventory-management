@@ -10,13 +10,13 @@
                         <div class="field col-12 sm:col-12 md:col-4">
                             <div class="flex align-items-center mb-2">
                                 <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
-                                @if(field.validation) {
+                                @if(field.validation || field?.mandatory) {
                                 <i style="font-size: 7px;" class="pi pi-asterisk text-red-500 mr-2"></i>
-                                @if(!validationState[field.name] && data[field.name]?.length) {
+                                @if(!validationState[field.name] && data[field.name]?.length && !field?.mandatory) {
                                 <i class="pi pi-exclamation-circle text-red-500"
                                     [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'"
                                     tooltipPosition="right"></i>
-                                } @else if (validationState[field.name] && data[field.name]?.length) {
+                                } @else if (validationState[field.name] && data[field.name]?.length && !field?.mandatory) {
                                 <i class="pi pi-check-circle text-green-500" [pTooltip]="'Looks Good'"
                                     tooltipPosition="right"></i>
                                 }
@@ -74,10 +74,10 @@
             </div>
             <div class="flex pt-4 justify-content-between">
                 @if ($index > 0) {
-                <p-button severity="secondary" [disabled]="!isValidated" label="Back" icon="pi pi-arrow-left"
+                <p-button severity="secondary" label="Back" icon="pi pi-arrow-left"
                     (onClick)="prevStep()"></p-button>
                 }
-                @if ($index < steps.length - 1) { <p-button [disabled]="!isValidated" label="Next"
+                @if ($index < steps.length - 1) { <p-button label="Next"
                     icon="pi pi-arrow-right" iconPos="right" (onClick)="nextStep()"></p-button>
                     }
             </div>

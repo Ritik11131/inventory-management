@@ -50,7 +50,7 @@ export class GenericStepperComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
       console.log(this.data,'yeahhhh');
-      
+        
   }
 
 
