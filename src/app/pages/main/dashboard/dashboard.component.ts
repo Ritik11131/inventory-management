@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
   private lastPositionMarkersLayer: L.LayerGroup = L.layerGroup();
   lastPositionData!:any;
   lastPosStatusColors = lastPosStatusColors;
-  // markerClusterGroup!: L.MarkerClusterGroup;
+  private markerClusterGroup!: L.MarkerClusterGroup;
   selectedOverlayObj!:any;
 
   markerClusterOptions = {
@@ -85,6 +85,7 @@ export class DashboardComponent implements OnInit {
 
   onMapReady(map: Map) {
     this.map = map;
+    this.markerClusterGroup = L.markerClusterGroup();
     this.map.on('baselayerchange', this.handleBaseLayerChange.bind(this));
     this.addLayerControl();   
   }
@@ -260,44 +261,46 @@ export class DashboardComponent implements OnInit {
       },
     ).addTo(this.map);
 
+    this.addMarkerFilterControl();
 
-  //   const customButton = new L.Control({ position: 'topright' });
-  //   customButton.onAdd = () => {
-  //      const buttonDiv = L.DomUtil.create('div', 'button-wrapper');
-   
-  //      buttonDiv.innerHTML = `<button>Running</button>`;
-  //      buttonDiv.addEventListener('click', () => console.log('click'))
-  //      return buttonDiv;
-  //  };
-  //  customButton.addTo(this.map)
   }
 
-  private plotVehicles(vehicleData: any): void {
+  private plotVehicles(vehicleData: any, filterStatus?: string): void {
     const markers: L.CircleMarker[] = []; // Array to hold markers for fitBounds
-    const markerClusterGroup = L.markerClusterGroup();
+     // Remove existing markers from the map
+     this.map.removeLayer(this.markerClusterGroup);
 
+     // Clear the marker cluster group
+     this.markerClusterGroup.clearLayers();
+
+    // Iterate through vehicle statuses
     for (const status in vehicleData) {
-      vehicleData[status].forEach((vehicle: any) => {
-        if (vehicle?.latitude && vehicle?.longitude) {
-          const marker: L.CircleMarker = L.circleMarker([vehicle.latitude, vehicle.longitude], {
-            color: this.lastPosStatusColors[status],
-            radius: 5
-          })
-          marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
-          markers.push(marker); // Add marker to the array
-          markerClusterGroup.addLayer(marker);
+        // If a filter is provided, only plot vehicles of that status
+        if (filterStatus && filterStatus !== status) {
+            continue; // Skip this status if it doesn't match the filter
         }
-      });
+
+        vehicleData[status].forEach((vehicle: any) => {
+            if (vehicle?.latitude && vehicle?.longitude) {
+                const marker: L.CircleMarker = L.circleMarker([vehicle.latitude, vehicle.longitude], {
+                    color: this.lastPosStatusColors[status],
+                    radius: 5
+                });
+                marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
+                markers.push(marker); // Add marker to the array
+                this.markerClusterGroup.addLayer(marker);
+            }
+        });
     }
 
-    this.map.addLayer(markerClusterGroup);
+    this.map.addLayer(this.markerClusterGroup);
 
     // Fit the map bounds to the markers
     if (markers.length > 0) {
-      const group = L.featureGroup(markers);
-      this.map.fitBounds(group.getBounds());
+        const group = L.featureGroup(markers);
+        this.map.fitBounds(group.getBounds());
     }
-  }
+}
 
 
   resetDashboardData() {
@@ -322,6 +325,48 @@ export class DashboardComponent implements OnInit {
     op.toggle(event);
     console.log(`Info clicked for ${panel.title}`);
     // Add additional logic if needed
+  }
+
+
+  private addMarkerFilterControl(): void {
+    const filterControl = new L.Control({ position: 'topright' });
+
+    filterControl.onAdd = (map: L.Map) => {
+        const div = L.DomUtil.create('div', 'filter-control');
+
+        // Use PrimeIcons for the filter control
+        div.innerHTML = `
+            <i class="pi pi-car" id="show-running" style="color: green; cursor: pointer; font-size:22px; margin-bottom:8px;margin-right:10px" title="Show Running"></i><br>
+            <i class="pi pi-car" id="show-stop" style="color: red; cursor: pointer; font-size:22px; margin-bottom:8px;margin-right:10px" title="Show Stop"></i><br>
+             <i class="pi pi-car" id="show-idle" style="color: orange; cursor: pointer; font-size:22px; margin-bottom:8px;margin-right:10px" title="Show Idle"></i><br>
+            <i class="pi pi-car" id="show-offline" style="color: gray; cursor: pointer; font-size:22px; margin-bottom:8px;margin-right:10px" title="Show Offline"></i><br>
+            <i class="pi pi-car" id="show-all" style="color: blue;cursor: pointer; font-size:22px;margin-right:10px" title="Show All"></i>
+        `;
+        return div;
+    };
+
+    filterControl.addTo(this.map);
+
+    // Event listeners for the filter icons
+    document.getElementById('show-running')?.addEventListener('click', () => {
+      this.plotVehicles(this.lastPositionData, 'RUNNING'); // Plot only running vehicles
+    });
+
+    document.getElementById('show-stop')?.addEventListener('click', () => {
+      this.plotVehicles(this.lastPositionData, 'STOP'); // Plot only stopped vehicles
+    });
+
+    document.getElementById('show-all')?.addEventListener('click', () => {
+      this.plotVehicles(this.lastPositionData); // Plot all vehicles
+    });
+
+    document.getElementById('show-idle')?.addEventListener('click', () => {
+      this.plotVehicles(this.lastPositionData, 'DORMANT'); // Plot only idle vehicles
+    });
+
+    document.getElementById('show-offline')?.addEventListener('click', () => {
+      this.plotVehicles(this.lastPositionData, 'OFFLINE'); // Plot only offline vehicles
+    });
   }
 
 }
