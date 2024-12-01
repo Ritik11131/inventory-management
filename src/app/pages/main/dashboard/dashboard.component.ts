@@ -16,10 +16,11 @@ import { TicketsService } from '../../../core/services/tickets.service';
 import { environment } from '../../../../environments/environment';
 import * as L from 'leaflet';
 import { AuthService } from '../../../core/services/auth.service';
-import 'leaflet.markercluster';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import { concatMap, interval, Subscription, switchMap } from 'rxjs';
-
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 
 @Component({
