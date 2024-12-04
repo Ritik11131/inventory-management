@@ -6,6 +6,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import {ConfirmationService, MessageService, PrimeNGConfig} from 'primeng/api';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideCacheableAnimationLoader, provideLottieOptions } from 'ngx-lottie';
 
 
 export const appConfig: ApplicationConfig = {
@@ -17,6 +18,10 @@ export const appConfig: ApplicationConfig = {
     PrimeNGConfig,
     provideClientHydration(),
     importProvidersFrom(HttpClientModule),
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideLottieOptions({
+      player: () => import('lottie-web'),
+    }),
+    provideCacheableAnimationLoader(),
   ]
 };

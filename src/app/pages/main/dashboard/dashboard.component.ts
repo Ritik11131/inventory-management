@@ -21,18 +21,24 @@ import { GenericOverlayComponent } from '../../../shared/components/generic-over
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
+import { AnimationItem } from 'lottie-web';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, OverlayPanelModule,
+  imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, OverlayPanelModule, LottieComponent,
             CommonModule,ScrollPanelModule,NgApexchartsModule,KnobModule,LeafletMarkerClusterModule,GenericOverlayComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
 
+
+  options: AnimationOptions = {
+    path: '/assets/lottie/over-speed.json',
+  };
   
   map!: Map;
   style = 'normal.day';

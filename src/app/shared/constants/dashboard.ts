@@ -1,25 +1,25 @@
 // import { ChartPanel } from "../interfaces/dashboard";
 
 export const vehicleStatusOverviewObject = [
-  { label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500', key: 'RUNNING' },
-  { label: 'Idle Vehicles', count: 0, colorClass: 'yellow', bgColorClass: 'bg-yellow-100', textColorClass: 'text-yellow-400', key: 'DORMANT' },
-  { label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500', key: 'STOP' },
-  { label: 'Offline Vehicles', count: 0, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700', key: 'OFFLINE' },
+  { label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500', key: 'RUNNING',lottiePath: '/assets/lottie/running-truck.json'  },
+  { label: 'Idle Vehicles', count: 0, colorClass: 'yellow', bgColorClass: 'bg-yellow-100', textColorClass: 'text-yellow-400', key: 'DORMANT',lottiePath: '/assets/lottie/idle-truck.json'  },
+  { label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500', key: 'STOP',lottiePath: '/assets/lottie/stop-truck.json'  },
+  { label: 'Offline Vehicles', count: 0, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700', key: 'OFFLINE',lottiePath: '/assets/lottie/offline-truck.json' },
 ];
 
 export const renewalStatusObject = [
-  { value : 0, key:'Due',bgColor: 'bg-yellow-500' },
-  { value: 0, key: 'Lapse', bgColor: 'bg-red-500' },
+  { value : 0, key:'Due',bgColor: 'bg-yellow-500',lottiePath: '/assets/lottie/deadline.json' },
+  { value: 0, key: 'Lapse', bgColor: 'bg-red-500',lottiePath: '/assets/lottie/expired.json' },
 ];
 
 export const totalRegistrationObject = [
-  { value: 0, key: 'OEM', bgColor: 'bg-green-500' },
-  { value: 0, key: 'RFC', bgColor: 'bg-yellow-500' },
+  { value: 0, key: 'OEM', bgColor: 'bg-green-500',lottiePath: '/assets/lottie/factory.json' },
+  { value: 0, key: 'RFC', bgColor: 'bg-yellow-500',lottiePath: '/assets/lottie/rfc.json' },
 ];
 
 export const inventoryObject = [
-  { value: 0, key: 'Total', bgColor: 'bg-green-500' },
-  { value: 0, key: 'Fitted', bgColor: 'bg-yellow-500' },
+  { value: 0, key: 'Total', bgColor: 'bg-green-500',lottiePath: '/assets/lottie/total.json' },
+  { value: 0, key: 'Fitted', bgColor: 'bg-yellow-500',lottiePath: '/assets/lottie/fitted.json' },
 ];
 
 export const lastPosStatusColors : any = {
@@ -36,14 +36,16 @@ export const SOSALertOverSpeed = [
     image: 'assets/images/sos.png',
     fields: [],
     bgClass: 'bg-red-500',
-    value: 0
+    value: 0,
+    lottiePath: '/assets/lottie/push-button.json'
   },
   {
     title: 'Over Speed',
     image: 'assets/images/overspeed.png',
     fields: [],
     bgClass: 'bg-orange-500',
-    value: 0
+    value: 0,
+    lottiePath: '/assets/lottie/over-speed.json'
   },
   {
     title: 'Alert',
@@ -63,7 +65,8 @@ export const SOSALertOverSpeed = [
     ],
     response:{},
     bgClass: 'bg-yellow-500',
-    value: 0
+    value: 0,
+    lottiePath: '/assets/lottie/alert.json'
   }
 ];
 
