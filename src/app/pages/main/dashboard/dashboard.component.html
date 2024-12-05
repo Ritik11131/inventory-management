@@ -114,7 +114,7 @@
                     <div class="col-12 md:col-6 lg:col-6">
                         <h2 class="text-center" >Installed / Total Vehicles</h2>
                         <div class="flex justify-content-center align-items-center">
-                            <p-knob [(ngModel)]="totalvehicleInstallation" [readonly]="true" [size]="300" [strokeWidth]="10" />
+                            <p-knob min="0" [max]="maxKnobvalue" [(ngModel)]="totalvehicleInstallation" [readonly]="true" [size]="300" [strokeWidth]="10" />
                         </div>
                     </div>
                     <div class="col-12 md:col-6 lg:col-6">

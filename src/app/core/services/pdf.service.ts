@@ -34,7 +34,7 @@ export class PdfService {
                   alignment: 'center', // Center the title
                 },
                 {
-                  text: 'VLTD FITMENT CERTIFICATE', // New text below the state title
+                  text: '(VLTD FITMENT CERTIFICATE)', // New text below the state title
                   style: 'subHeaderTitle',
                   decoration: 'underline', // Underline the subheader
                   alignment: 'center', // Center the subheader

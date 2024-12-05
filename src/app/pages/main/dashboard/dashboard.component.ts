@@ -83,6 +83,7 @@ export class DashboardComponent implements OnInit {
   SOSALertOverSpeed = SOSALertOverSpeed;
   totalComplaints:number = 0;
   totalvehicleInstallation : number = 0;
+  maxKnobvalue:number = 0
   public chartOptions: any = chartOptions;
   private pollingSubscription!: Subscription | null; 
 
@@ -183,8 +184,9 @@ export class DashboardComponent implements OnInit {
     try {
       const response = await this.dashboardService.getvehicleTypesAndCount();
       response?.data?.forEach((obj : any) => {
-        this.totalvehicleInstallation += obj.deviceCount;
-      });
+        this.totalvehicleInstallation += obj?.deviceCount;
+        this.maxKnobvalue += obj?.totalCount
+      });      
       this.vehicleInstallationTypes = response?.data;
       
     } catch (error) {
