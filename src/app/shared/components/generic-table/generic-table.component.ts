@@ -28,6 +28,7 @@ import { PdfService } from '../../../core/services/pdf.service';
 import { GenericOverlayComponent } from '../generic-overlay/generic-overlay.component';
 import { simOverlayFields, userOverlayFields, vehicleOverlayFields } from '../../constants/constant';
 import { FitmentService } from '../../../core/services/fitment.service';
+import { parseFitemtCertificateData } from '../../utils/common';
 
 @Component({
   selector: 'app-generic-table',
@@ -271,47 +272,19 @@ export class GenericTableComponent implements OnInit {
   }
 
 
-  downloadCertifcate() {
-    const certificateData = {
-      vehicleRegNo: 'HR00B0001',
-      serialNo: 'GRL6T6I102300029694',
-      ownerName: 'John Doe',
-      engineNo: '11B62988613',
-      chassisNo: 'MAT447212BAB01353',
-      make: 'TATA MOTORS LTD',
-      model: 'LP 2515',
-      category: 'Car',
-      mfgYear: '2023',
-      certificateNo: 'HR/HR22/00053',
-      issueDate: '07-Oct-23',
-      validUpto: '06-Oct-24',
-      fitmentDate: '01-Oct-23',
-      mfgName: 'ABC Pvt. Ltd',
-      uidNo: 'ABC6T6I11230000001',
-      iccidNo: '899110111224455',
-      imeiNo: '868566552662444',
-      primarySimNo: '575211556644',
-      primaryOperator: 'BSNL',
-      fallbackSimNo: '575411556644',
-      fallbackOperator: 'Airtel',
-      testAgency: 'ICAT',
-      copNo: 'CC00GG0001',
-      copValidity: '31-Mar-2025',
-      esimValidity: '31-Mar-2026',
-      rfcName: 'M/s Retro Center',
-      rfcOwnerName: 'John Doe',
-      rfcMobileNo: '9999999999',
-      rfcEmail: 'retro@example.com',
-      rfcAddress: '123 Fitment Street, City, State',
-      retroFitmentCenterName: 'RetroFit Center',
-      vltdManufacturer: 'XYZ Pvt. Ltd',
-      rtoName: 'RTO Name',
-      rtoCode: 'RTO123',
-      stateName: 'State Name',
-      retroCenterName: 'Retro Center XYZ',
-    };;
+  async downloadCertifcate(obj:any) : Promise<any> {
+    try {
+      const response = await this.fitmentService.getFitmentCertificateData(obj);
+      const certificateData : any = parseFitemtCertificateData(response?.data?.attribute);
+      console.log(certificateData);
+      this.pdfService.generateFitmentCertificate(certificateData);
+    } catch (error:any) {
+      console.log(error);
+      this.toastService.showError('Error',error.error.data);
+      
+    }
+    
   
-    this.pdfService.generateFitmentCertificate(certificateData);
   }
 
   handleSelectedOverlayAction(event:any,item:any,overlayObj:any) {

@@ -52,4 +52,70 @@ export const downloadFile = (data: any, fileName: string, fileType: string): voi
       console.error('Browser does not support the required Blob functionality.');
     }
 }
+
+
+export const parseFitemtCertificateData = (jsonString:any) => {
+  try {
+      // Parse the JSON string into an object
+      const data = JSON.parse(jsonString);
+
+      // Extract and structure the data
+      const parsedData = {
+          rfc: {
+              name: data.rfc.name,
+              email: data.rfc.email,
+              address: data.rfc.address,
+              orgName: data.rfc.orgName,
+              mobileNo: data.rfc.mobileNo,
+          },
+          rto: {
+              rtoId: data.rto.rtoId,
+              rtoCode: data.rto.rtoCode,
+              rtoName: data.rto.rtoName,
+              stateId: data.rto.stateId,
+              stateCode: data.rto.stateCode,
+              stateName: data.rto.stateName,
+          },
+          esim: {
+              iccid: data.esim.iccid,
+              pSimNo: data.esim.pSimNo,
+              sSimNo: data.esim.sSimNo,
+              provider: data.esim.provider,
+              validity: data.esim.validity,
+              pOperator: data.esim.pOperator,
+              sOperator: data.esim.sOperator,
+          },
+          device: {
+              uid: data.device.uid,
+              copNo: data.device.copNo,
+              imeiNo: data.device.imeiNo,
+              mfgName: data.device.mfgName,
+              modelNo: data.device.modelNo,
+              testAgency: data.device.testAgency,
+              copValidity: data.device.copValidity,
+          },
+          fitment: {
+              certNo: data.fitment.certNo,
+              issueDate: data.fitment.issueDate,
+              validUpto: data.fitment.validUpto,
+              permitHolderName: data.fitment.permitHolderName,
+              permitHolderMobile: data.fitment.permitHolderMobile,
+          },
+          vehicle: {
+              make: data.vehicle.make,
+              model: data.vehicle.model,
+              regNo: data.vehicle.regNo,
+              engine: data.vehicle.engine,
+              chassis: data.vehicle.chassis,
+              mfgYear: data.vehicle.mfgYear,
+              category: data.vehicle.category,
+          },
+      };
+
+      return parsedData;
+  } catch (error) {
+      console.error("Error parsing JSON:", error);
+      return null;
+  }
+}
   

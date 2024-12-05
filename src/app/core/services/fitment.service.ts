@@ -57,4 +57,16 @@ export class FitmentService {
       throw error;
     }
   }
+
+
+  async getFitmentCertificateData(device: any) : Promise<any> {
+    try {
+      const response = await this.http.get('Fitment/fitment-details', { }, device?.id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }
