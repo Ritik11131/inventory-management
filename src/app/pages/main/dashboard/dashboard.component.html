@@ -6,8 +6,7 @@
             <div class="surface-card shadow-2 p-3 border-round">
                     <div class="flex justify-content-between">
                         <div class="mb-3" [ngClass]="vehicle.textColorClass + ' text-5xl'">{{ vehicle.count }}</div>
-                        <div class="flex align-items-center justify-content-center"
-                            [ngClass]="vehicle.bgColorClass + ' border-round'" style="width:5rem;height:5rem">
+                        <div class="flex align-items-center justify-content-center">
                         <ng-lottie  width="60px" height="60px" [options]="{ path: vehicle.lottiePath }" /> 
                             <!-- <i class="pi pi-car" [ngClass]="vehicle.textColorClass + ' text-5xl'"></i> -->
                         </div>
@@ -46,9 +45,9 @@
                                     <div class="mb-3" [ngClass]="'text-' + stat.colorClass + '-500 text-5xl'">{{ stat.count }}</div>
                                     <span class="block text-500 font-bold text-2xl">{{ stat.status }}</span>
                                 </div>
-                                <div class="flex align-items-center justify-content-center"
-                                    [ngClass]="'bg-' + stat.colorClass + '-100 border-round'" style="width:5rem;height:5rem">
-                                    <i class="pi" [ngClass]="stat.icon + ' text-' + stat.colorClass + '-500 text-5xl'"></i>
+                                <div class="flex align-items-center justify-content-center" style="width:5rem;height:5rem">
+                                <ng-lottie  width="100px" height="100px" [options]="{ path: stat.lottiePath }" /> 
+                                    <!-- <i class="pi" [ngClass]="stat.icon + ' text-' + stat.colorClass + '-500 text-5xl'"></i> -->
                                 </div>
                             </div>
                             <div class="flex justify-content-between mt-2 align-items-center">
@@ -102,7 +101,7 @@
         <div class="col-12 md:col-6 lg:col-5">
             <p-panel styleClass="shadow-3 border-round-3xl">
                 <ng-template pTemplate="header">
-                    <span class="text-3xl font-bold" >Vehicle Type Wise Installation</span>
+                    <span class="text-3xl font-bold" >Vehicle Category Wise Installation</span>
                     <ng-lottie  width="65px" height="65px" [options]="{ path: '/assets/lottie/installation.json' }" /> 
                 </ng-template>
                 <ng-template pTemplate="icons">
@@ -140,8 +139,8 @@
                         <ng-template pTemplate="header">
                             <div class="flex align-items-center justify-content-between">
                                 <span class="text-3xl font-bold" >Registered</span>
-                                <ng-lottie  width="50px" height="50px" [options]="{ path: '/assets/lottie/complaint.json' }" /> 
-                                <!-- <img src="assets/images/register.png" alt="register" class="ml-3" width="45px" /> -->
+                                <!-- <ng-lottie  width="50px" height="50px" [options]="{ path: '/assets/lottie/complaint.json' }" />  -->
+                                <img src="assets/images/registered.png" alt="register" class="ml-3" width="50px" height="50px" />
                             </div>
                         </ng-template>
                             @for (item of totalRegistration; track $index) {
@@ -195,7 +194,8 @@
                     <p-panel styleClass="shadow-3 border-round-3xl">
                         <ng-template pTemplate="header">
                             <span class="text-3xl font-bold" >Renewal</span>
-                            <ng-lottie  width="50px" height="50px" [options]="{ path: '/assets/lottie/complaint.json' }" /> 
+                            <img src="assets/images/renewal.png" alt="register" class="ml-3" width="50px" height="50px" />
+                            <!-- <ng-lottie  width="50px" height="50px" [options]="{ path: '/assets/lottie/complaint.json' }" />  -->
                         </ng-template>
                             @for (item of renewalStatus; track $index) {
                                 <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">

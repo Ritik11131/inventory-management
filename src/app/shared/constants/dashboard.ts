@@ -9,7 +9,7 @@ export const vehicleStatusOverviewObject = [
 
 export const renewalStatusObject = [
   { value : 0, key:'Due',bgColor: 'bg-yellow-500',lottiePath: '/assets/lottie/deadline.json' },
-  { value: 0, key: 'Lapse', bgColor: 'bg-red-500',lottiePath: '/assets/lottie/expired.json' },
+  { value: 0, key: 'Expiry', bgColor: 'bg-red-500',lottiePath: '/assets/lottie/expired.json' },
 ];
 
 export const totalRegistrationObject = [
@@ -19,7 +19,7 @@ export const totalRegistrationObject = [
 
 export const inventoryObject = [
   { value: 0, key: 'Total', bgColor: 'bg-green-500',lottiePath: '/assets/lottie/total.json' },
-  { value: 0, key: 'Fitted', bgColor: 'bg-yellow-500',lottiePath: '/assets/lottie/fitted.json' },
+  { value: 0, key: 'Fitted', bgColor: 'bg-bluegray-600',lottiePath: '/assets/lottie/fitted.json' },
 ];
 
 export const lastPosStatusColors : any = {
@@ -87,13 +87,15 @@ export const complaintStatsObject = [
     status: 'Resolved',
     count: 0,
     colorClass: 'green',
-    icon: 'pi-file-check'
+    icon: 'pi-file-check',
+    lottiePath: '/assets/lottie/resolved.json'
   },
   {
     status: 'Pending',
     count: 0,
-    colorClass: 'red',
-    icon: 'pi-file-excel'
+    colorClass: 'orange',
+    icon: 'pi-file-excel',
+    lottiePath: '/assets/lottie/pending.json'
   }
 ];
 
