@@ -190,6 +190,7 @@ export class DashboardComponent implements OnInit {
     try {
       const response = await this.dashboardService.getvehicleTypesAndCount();
       response?.data?.forEach((obj : any) => {
+        obj.key = 'vehicle_installation'
         this.totalvehicleInstallation += obj?.deviceCount;
         this.maxKnobvalue += obj?.totalCount
       });      
@@ -335,13 +336,13 @@ export class DashboardComponent implements OnInit {
     
   }
 
-  async onInfoClick(event: MouseEvent, panel: any, op?: { toggle: (e: MouseEvent) => void }): Promise<void> {
+  async onInfoClick(event: MouseEvent, panel: any, op?: { toggle: (e: MouseEvent) => void }): Promise<void> {    
     if (event.type === 'click') {
       console.log(panel);
       this.infoDialog = true;
-      this.currentInfoColumns = panel.key === 'alert' 
-  ? [{ field: 'eventType', header: 'Event Type', minWidth: '10rem' }, ...alertInfotableColumns]
-  : [...alertInfotableColumns];
+      this.currentInfoColumns = panel.key === 'alert' ? [{ field: 'eventType', header: 'Event Type', minWidth: '10rem' }, ...alertInfotableColumns] 
+                                : (panel.key === 'vehicle_installation' ? alertInfotableColumns.slice(0, alertInfotableColumns.length - 2) 
+                                : [...alertInfotableColumns]);
 
   
       const keyToEndpointMap: Record<string, string> = {
@@ -351,18 +352,20 @@ export class DashboardComponent implements OnInit {
         RUNNING: 'LastPosition/Filter/RUNNING',
         STOP: 'LastPosition/Filter/STOP',
         DORMANT: 'LastPosition/Filter/DORMANT',
-        OFFLINE: 'LastPosition/Filter/OFFLINE'
-
+        OFFLINE: 'LastPosition/Filter/OFFLINE',
+        vehicle_installation:`Dashboard/GetDetailsVehicleType/${panel.categoryId}`
       };
-      const endpoint = `${keyToEndpointMap[panel.key]}`;
-  
-      try {
-        // Flattened response
-        const unflattenedData = (await this.fetchSelectedInfoData(endpoint))?.data;
-        this.currentInfoData = unflattenedData.map((unflattenedObject : any) => this.flattenInfoTableResponse(unflattenedObject))
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-        this.currentInfoData = [];
+      const endpoint = keyToEndpointMap[panel.key];
+      
+      if(endpoint) { 
+        try {
+          // Flattened response
+          const unflattenedData = (await this.fetchSelectedInfoData(endpoint))?.data;
+          this.currentInfoData = unflattenedData.map((unflattenedObject : any) => this.flattenInfoTableResponse(unflattenedObject))
+        } catch (error) {
+          console.error('Failed to fetch data:', error);
+          this.currentInfoData = [];
+        }
       }
     } else {
       if (op && typeof op.toggle === 'function') {
@@ -400,10 +403,8 @@ export class DashboardComponent implements OnInit {
   async fetchSelectedInfoData(endpoint:string) : Promise<any> {
     try {
       const response = await this.dashboardService.getInfoTableData(endpoint);
-      console.log(response,'ress');
       return response;
     } catch (error) {
-      console.log(error,'error');
       return [];
     }
   }

@@ -120,9 +120,9 @@
                         <div style="height: 575px;" class="p-5 overflow-auto">
                             @for (vehicle of vehicleInstallationTypes; track $index) {
                                 <div class="col-12 md:col-12 lg:col-12">
-                                    <div class="card surface-300 shadow-3 flex border-round align-items-center justify-content-between p-4">
-                                            <span class="text-xl font-bold">{{vehicle.categoryName}}</span>
-                                            <span class="text-lg mb-2">{{vehicle?.deviceCount}} / {{!vehicle?.totalCount ? vehicle?.deviceCount : vehicle?.totalCount}}</span>
+                                    <div (click)="onInfoClick($event,vehicle)" class="card surface-300 shadow-3 flex border-round align-items-center justify-content-between p-4 hover:bg-primary hover:shadow-5 transition-all cursor-pointer">
+                                        <span class="text-xl font-bold">{{vehicle.categoryName}}</span>
+                                        <span class="text-lg mb-2">{{vehicle?.deviceCount}} / {{!vehicle?.totalCount ? vehicle?.deviceCount : vehicle?.totalCount}}</span>
                                     </div>
                                 </div>
                                 
