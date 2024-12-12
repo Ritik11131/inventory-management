@@ -69,4 +69,15 @@ export class FitmentService {
   }
 
 
+  async validateSimValidity(deviceSno:any, vehicleType:any) : Promise<any> {
+    try {
+      const response = await this.http.get('Fitment/validate-sim-validity', { deviceSno, vehicleType });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+
 }

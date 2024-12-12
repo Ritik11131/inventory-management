@@ -170,7 +170,7 @@
         </div>
         } @else {
             <ng-container>
-            <app-generic-stepper [data]="data" [steps]="stepFormFields" (onDialogDropdownChange)="onStepperDropDownChange($event)" 
+            <app-generic-stepper [data]="data" [steps]="stepFormFields" [isNextDisabled]="disableStepperNextBtn" (onDialogDropdownChange)="onStepperDropDownChange($event)" 
              (onStepperInputTextChange)="onStepperInputTextChange($event)" [validationState]="validationState" [isValidated]="isValidated"
               (emitCurrentStepIndex)="emitCurrentStepIndex($event)" />
             </ng-container>

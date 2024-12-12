@@ -75,6 +75,7 @@ export class DeviceListComponent {
     'permitHolderName'
   ];
   requestIdOtp!: any;
+  disableStepperNextBtn!:boolean
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
   private validationStepperDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
@@ -887,7 +888,14 @@ export class DeviceListComponent {
       this.stepFormFields = updatedFields;
       this.isValidated = Object.values(this.validationState).every(val => val === true);
       this.cdr.detectChanges();
-      
+
+      try {
+        const response = await this.fitmentService.validateSimValidity(this.device.deviceSno, selectedValue ? 'old' : 'new')
+        this.disableStepperNextBtn = response.data.validity;
+      } catch (error:any) {
+       this.toastService.showError('Error',error.error.data);
+       this.disableStepperNextBtn = true;
+      }
     }
   }
 

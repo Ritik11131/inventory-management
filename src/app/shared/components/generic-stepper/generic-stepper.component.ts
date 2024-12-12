@@ -42,13 +42,14 @@ export class GenericStepperComponent implements OnChanges {
   @Input() validationState: { [key: string]: boolean } = {};
   @Input() isValidated: boolean = true;
   @Input() hideFields: string[] = [];
+  @Input() isNextDisabled:boolean = true;
   
   emitCurrentStepIndex = output<any>();
   onDialogDropdownChange = output<any>();
   onStepperInputTextChange = output<any>();
 
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {    
       console.log(this.data,'yeahhhh');
         
   }

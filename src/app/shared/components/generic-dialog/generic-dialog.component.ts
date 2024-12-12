@@ -64,6 +64,7 @@ export class GenericDialogComponent implements OnChanges {
   @Input() tableColumns:any[] = [];
   @Input() tableData:any[] = []
   @Input() enableSaveBtn:boolean = true;
+  @Input() disableStepperNextBtn:boolean = false;
 
   onHide = output<any>()
   onSave = output<any>()
@@ -82,7 +83,7 @@ export class GenericDialogComponent implements OnChanges {
   constructor() { }
 
 
-  ngOnChanges(changes: SimpleChanges): void {            
+  ngOnChanges(changes: SimpleChanges): void {                
     if (changes['data'] && changes['data'].currentValue) {
       console.log(this.data, 'dataaa');
     }

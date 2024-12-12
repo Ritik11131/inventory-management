@@ -77,7 +77,7 @@
                 <p-button severity="secondary" label="Back" icon="pi pi-arrow-left"
                     (onClick)="prevStep()"></p-button>
                 }
-                @if ($index < steps.length - 1) { <p-button label="Next"
+                @if ($index < steps.length - 1) { <p-button label="Next" [disabled]="isNextDisabled"
                     icon="pi pi-arrow-right" iconPos="right" (onClick)="nextStep()"></p-button>
                     }
             </div>
