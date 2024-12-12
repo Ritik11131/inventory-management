@@ -14,7 +14,7 @@
                     <div class="flex justify-content-between mt-2">
                         <span class="block text-2xl text-500 font-bold">{{ vehicle.label }}</span>
                         <div class="flex align-items-center justify-content-center">
-                            <i class="pi pi-info-circle font-bold text-xl text-primary-500 cursor-pointer"></i>
+                            <i (click)="onInfoClick($event,vehicle)" class="pi pi-info-circle font-bold text-xl text-primary-500 cursor-pointer"></i>
                         </div>
                     </div>
             </div>
@@ -85,10 +85,10 @@
                                 <app-generic-overlay
                                 [title]="panel.title" [data]="panel?.response" [fields]="panel?.fields ?? []"/>
                             </p-overlayPanel>
-                    </i>
-                </div>
-            </p-panel>
-        </div>
+                        </i>
+                    </div>
+                </p-panel>
+            </div>
         }
           
 
@@ -281,3 +281,9 @@
         </div>
     </div> -->
 </div>
+
+<app-generic-dialog 
+    [enableSaveBtn]="false" 
+    [isTable]="true" [tableData]="currentInfoData" [tableColumns]="currentInfoColumns" 
+    [header]="'Info'" [modal]="true" [visible]="infoDialog" (onHide)="onHideDialog($event)"
+/>

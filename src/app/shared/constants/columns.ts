@@ -68,3 +68,15 @@ export const vehicleCategoryColumns = [
     { field:'name',header: 'Name', minWidth: '10rem' },
     { field:'totalCount',header: 'Total', minWidth: '10rem' },
 ];
+
+
+export const alertInfotableColumns = [
+    { field: 'vehicleNo', header: 'Vehicle No.', minWidth: '10rem' },
+    { field: 'oem', header: 'OEM', minWidth: '8rem' },
+    { field: 'permitHolderName', header: 'Permit Holder Name', minWidth: '12rem' },
+    { field: 'permitHolderMobile', header: 'Permit Holder Mobile', minWidth: '12rem' },
+    { field: 'deviceSno', header: 'Device SNo.', minWidth: '10rem' },
+    { field: 'deviceImei', header: 'Device IMEI', minWidth: '12rem' },
+    { field: 'alertTime', header: 'Alert Time', minWidth: '10rem', type:'date' },
+    { field: 'latLng', header: 'Lat/Lng', minWidth: '12rem' }
+  ];

@@ -174,12 +174,48 @@
              (onStepperInputTextChange)="onStepperInputTextChange($event)" [validationState]="validationState" [isValidated]="isValidated"
               (emitCurrentStepIndex)="emitCurrentStepIndex($event)" />
             </ng-container>
+        } 
+        
+        
+        @if(isTable) {
+            <ng-container>
+                <p-table 
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+                [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" 
+                [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" [columns]="tableColumns" 
+                [value]="tableData" [tableStyle]="{ 'min-width': '100rem' }">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{ col.header }}
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns">
+                                {{ col?.type && col?.type === 'date' ? (rowData[col.field] | date) : rowData[col.field] }}
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7" class="sm:text-center text-left">
+                                  No Data Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
         }
     </ng-template>
 
     <ng-template pTemplate="footer">
         <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
-        <p-button [disabled]="!isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
+        @if(enableSaveBtn) {
+            <p-button [disabled]="!isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
             [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
+        }
     </ng-template>
 </p-dialog>

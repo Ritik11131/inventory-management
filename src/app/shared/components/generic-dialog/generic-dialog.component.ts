@@ -59,7 +59,11 @@ export class GenericDialogComponent implements OnChanges {
   @Input() target:any[] = [];
   @Input() isStepForm : boolean = false;
   @Input() stepFormFields: any[] = [];
-  @Input() customSaveLabel = ''
+  @Input() customSaveLabel = '';
+  @Input() isTable = false;
+  @Input() tableColumns:any[] = [];
+  @Input() tableData:any[] = []
+  @Input() enableSaveBtn:boolean = true;
 
   onHide = output<any>()
   onSave = output<any>()

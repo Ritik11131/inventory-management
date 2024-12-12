@@ -32,6 +32,7 @@ export const lastPosStatusColors : any = {
 
 export const SOSALertOverSpeed = [
   {
+    key:'sos',
     title: 'SOS',
     image: 'assets/images/sos.png',
     fields: [],
@@ -40,6 +41,7 @@ export const SOSALertOverSpeed = [
     lottiePath: '/assets/lottie/push-button.json'
   },
   {
+    key:'overspeed',
     title: 'Over Speed',
     image: 'assets/images/overspeed.png',
     fields: [],
@@ -48,6 +50,7 @@ export const SOSALertOverSpeed = [
     lottiePath: '/assets/lottie/over-speed.json'
   },
   {
+    key:'alert',
     title: 'Alert',
     image: 'assets/images/alert.png',
     fields:[

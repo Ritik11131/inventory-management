@@ -16,20 +16,21 @@ import { KnobModule } from 'primeng/knob';
 import { TicketsService } from '../../../core/services/tickets.service';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../../core/services/auth.service';
-import { concatMap, interval, Subscription, switchMap } from 'rxjs';
+import { concatMap, interval, Subscription } from 'rxjs';
 import { GenericOverlayComponent } from '../../../shared/components/generic-overlay/generic-overlay.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import { AnimationItem } from 'lottie-web';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import { GenericDialogComponent } from "../../../shared/components/generic-dialog/generic-dialog.component";
+import { alertInfotableColumns } from '../../../shared/constants/columns';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, OverlayPanelModule, LottieComponent,
-            CommonModule,ScrollPanelModule,NgApexchartsModule,KnobModule,LeafletMarkerClusterModule,GenericOverlayComponent],
+    CommonModule, ScrollPanelModule, NgApexchartsModule, KnobModule, LeafletMarkerClusterModule, GenericOverlayComponent, GenericDialogComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -86,6 +87,11 @@ export class DashboardComponent implements OnInit {
   maxKnobvalue:number = 0
   public chartOptions: any = chartOptions;
   private pollingSubscription!: Subscription | null; 
+
+
+  infoDialog:boolean = false;
+  currentInfoData : any[] = [];
+  currentInfoColumns:any[] = [];
 
   constructor(private dashboardService: DashboardService, private ticketService:TicketsService, private authService:AuthService) {}
     
@@ -329,10 +335,77 @@ export class DashboardComponent implements OnInit {
     
   }
 
-  onInfoClick(event: MouseEvent,panel: any,op:any) {
-    op.toggle(event);
-    console.log(`Info clicked for ${panel.title}`);
-    // Add additional logic if needed
+  async onInfoClick(event: MouseEvent, panel: any, op?: { toggle: (e: MouseEvent) => void }): Promise<void> {
+    if (event.type === 'click') {
+      console.log(panel);
+      this.infoDialog = true;
+      this.currentInfoColumns = panel.key === 'alert' 
+  ? [{ field: 'eventType', header: 'Event Type', minWidth: '10rem' }, ...alertInfotableColumns]
+  : [...alertInfotableColumns];
+
+  
+      const keyToEndpointMap: Record<string, string> = {
+        sos: 'Alert/details/SOS',
+        overspeed: 'Alert/details/OverSpeed',
+        alert: 'Alert/others',
+        RUNNING: 'LastPosition/Filter/RUNNING',
+        STOP: 'LastPosition/Filter/STOP',
+        DORMANT: 'LastPosition/Filter/DORMANT',
+        OFFLINE: 'LastPosition/Filter/OFFLINE'
+
+      };
+      const endpoint = `${keyToEndpointMap[panel.key]}`;
+  
+      try {
+        // Flattened response
+        const unflattenedData = (await this.fetchSelectedInfoData(endpoint))?.data;
+        this.currentInfoData = unflattenedData.map((unflattenedObject : any) => this.flattenInfoTableResponse(unflattenedObject))
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        this.currentInfoData = [];
+      }
+    } else {
+      if (op && typeof op.toggle === 'function') {
+        op.toggle(event);
+        console.log(`Info clicked for ${panel.title}`);
+      } else {
+        console.warn('op is not defined or does not have a toggle function');
+      }
+    }
+  }
+
+  flattenInfoTableResponse(response:any) {
+    return {
+      eventType:response.eventType || '',
+      vehicleNo: response.vehicle?.vehicleno || '',
+      oem: response.oem?.oemorgname || '',
+      permitHolderName: response.permitHolder?.permitholdername || '',
+      permitHolderMobile: response.permitHolder?.permitholdermobile || '',
+      deviceSno: response.device?.devicesno || '',
+      deviceImei: response.device?.imei || '',
+      alertTime: response.position?.lastUpdateOn || '',
+      latLng: response.position
+        ? `${response.position.latitude}, ${response.position.longitude}`
+        : ''
+    };
+  }
+
+  onHideDialog(isVisible: boolean) {
+    this.infoDialog = isVisible;
+    this.currentInfoColumns = [];
+    this.currentInfoData = [];
+  }
+
+
+  async fetchSelectedInfoData(endpoint:string) : Promise<any> {
+    try {
+      const response = await this.dashboardService.getInfoTableData(endpoint);
+      console.log(response,'ress');
+      return response;
+    } catch (error) {
+      console.log(error,'error');
+      return [];
+    }
   }
 
 

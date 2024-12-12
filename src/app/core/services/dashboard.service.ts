@@ -66,5 +66,14 @@ export class DashboardService {
     }
   } 
 
+  async getInfoTableData(endpoint:string) : Promise<any> {
+    try {
+      const response = await this.http.get(endpoint);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 }

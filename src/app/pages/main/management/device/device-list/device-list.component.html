@@ -4,8 +4,9 @@
    (transferInventory)="onTransferInventory($event)" (activate)="onActivate($event)" (fitment)="onFitment($event)" (emitOverlayAction)="handleOverlayAction($event)" />
 
 
-<app-generic-dialog [customSaveLabel]="customSaveLabel" [stepFormFields]="stepFormFields" [isStepForm]="accesStepForm" [isValidated]="isValidated" [validationState]="validationState" [visible]="deviceDialog"
-     [header]="'Device'" [width]="'600px'" [modal]="true" [isEditing]="isEditing"
+<app-generic-dialog [customSaveLabel]="customSaveLabel" [stepFormFields]="stepFormFields" 
+   [isStepForm]="accesStepForm" [isValidated]="isValidated" [validationState]="validationState" [visible]="deviceDialog"
+    [header]="'Device'" [width]="'600px'" [modal]="true" [isEditing]="isEditing"
     [styleClass]="''" [fields]="fields" [data]="device" (onHide)="onHideDialog($event)"
     (onSave)="onSaveDevice($event)" (onInputTextChange)="onInputTextChange($event)" 
     (stepperDropDownChange)="stepperDropdwonChange($event)" (stepperInputTextChange)="stepperInputTextChange($event)" />
