@@ -179,11 +179,20 @@
         
         @if(isTable) {
             <ng-container>
-                <p-table 
+                <p-table #dt
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
                 [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" 
                 [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" [columns]="tableColumns" 
                 [value]="tableData" [tableStyle]="{ 'min-width': '100rem' }">
+
+                <!-- Table Caption -->
+                <ng-template pTemplate="caption">
+                    <div class="table-caption">
+                        <button pButton type="button" icon="pi pi-download" label="Export to CSV" class="p-button-sm"
+                            (click)="dt.exportCSV()">
+                        </button>
+                    </div>
+                </ng-template>
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th *ngFor="let col of columns">
