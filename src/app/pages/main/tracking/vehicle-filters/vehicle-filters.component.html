@@ -4,7 +4,9 @@
     </div>
     <div class="p-toolbar-group-center">
         @for (item of vehicleFilterCount; track $index) {
-            <p-button (onClick)="onVehicleFilter(item)" [label]="item.label" styleClass="w-full p-3" icon="pi pi-car" [severity]="item.severity" class="mr-2"/>
+            @if(item?.label) {
+                <p-button (onClick)="onVehicleFilter(item)" [label]="item.label" styleClass="w-full p-3" icon="pi pi-car" [severity]="item.severity" class="mr-2"/>
+            }
         }
     </div>
     <div class="p-toolbar-group-end"></div>

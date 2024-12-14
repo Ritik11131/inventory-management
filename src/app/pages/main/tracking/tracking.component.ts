@@ -86,7 +86,7 @@ export class TrackingComponent implements OnInit {
   }
 
   toggleCollapse() {
-    this.isCollapsed = !this.isCollapsed;
+    this.isCollapsed = !this.isCollapsed;    
   }
 
   async fetchLastPositionStats(): Promise<any> {
@@ -211,11 +211,12 @@ export class TrackingComponent implements OnInit {
         // For other keys, just use their respective counts
         item.label = response[item.key]?.length || 0;
       }
-    });
+    });    
   }
 
   async handleFilterClick(event: any): Promise<any> {
     this.selectedVehicle = null;
+    this.isCollapsed = false;
     this.clearReplayObjects();
 
     if (event?.status && event?.latitude && event?.longitude) {
