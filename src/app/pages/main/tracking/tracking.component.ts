@@ -11,6 +11,7 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { CommonModule } from '@angular/common';
+import { trigger,state, style, animate, transition } from '@angular/animations';
 
 
 
@@ -20,7 +21,24 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [VehicleFiltersComponent,VehicleListComponent,VehicleStatsComponent,LeafletModule,LeafletMarkerClusterModule,ButtonModule,CommonModule],
   templateUrl: './tracking.component.html',
-  styleUrl: './tracking.component.scss'
+  styleUrl: './tracking.component.scss',
+  animations: [
+    trigger('collapse', [
+      state('expanded', style({
+        height: '*',
+        opacity: 1,
+        overflow: 'hidden'
+      })),
+      state('collapsed', style({
+        height: '0px',
+        opacity: 0,
+        overflow: 'hidden'
+      })),
+      transition('expanded <=> collapsed', [
+        animate('300ms ease-out')
+      ]),
+    ])
+  ]
 })
 export class TrackingComponent implements OnInit {
   map!: Map;
@@ -30,6 +48,7 @@ export class TrackingComponent implements OnInit {
   vehicleFilterCount = vehicleFilterCountObject;
   totalvehicleCount:number = 0;
   selectedVehicle: any = null; // Tracks the currently selected vehicle
+  isCollapsed:boolean = false;
 
 
     leafletOptions = {
@@ -54,6 +73,10 @@ export class TrackingComponent implements OnInit {
     onMapReady(map: Map) {
         this.map = map;
         this.markerClusterGroup = L.markerClusterGroup();
+    }
+
+    toggleCollapse() {
+      this.isCollapsed = !this.isCollapsed;
     }
 
     async fetchLastPositionStats() : Promise<any> {
