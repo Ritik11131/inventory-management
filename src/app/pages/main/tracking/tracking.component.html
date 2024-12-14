@@ -1,0 +1,22 @@
+<div class=" bg-gray-200 px-4 py-5 md:px-6 lg:px-8">
+    <div class="grid">
+        <div class="col-4">
+            <div class="flex-column h-full">
+                <app-vehicle-stats [total]="totalvehicleCount"></app-vehicle-stats>
+                <app-vehicle-filters [vehicleFilterCount]="vehicleFilterCount" (emitSelectedFilter)="handleFilterClick($event)"></app-vehicle-filters>
+                <app-vehicle-list [list]="filteredVehiclesList"></app-vehicle-list>
+            </div>
+        </div>
+        <div class="col-8">
+            <div 
+            style="height: 80vh;"
+                leaflet (leafletMapReady)="onMapReady($event)"
+                [leafletOptions]="leafletOptions"
+                >
+            </div>
+        </div>
+</div>
+
+
+
+

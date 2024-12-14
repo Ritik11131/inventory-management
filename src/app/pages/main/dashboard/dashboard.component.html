@@ -231,55 +231,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-    <!-- <div class="grid">
-        <div *ngFor="let panel of secondRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'pie' ? '4' : '8' }}">
-            <p-panel [header]="panel.header">
-                    <div class="flex flex-column justify-content-between">
-                        <div class="flex justify-content-between mb-3">
-                            <p-chart [responsive]="true" class="w-full" height="300px" [type]="panel.type"
-                                [data]="panel.data" [options]="panel.options" (onDataSelect)="onClick($event)"></p-chart>
-                        </div>
-                    </div>
-             </p-panel>
-        </div>
-    </div>
-
-
-    <div class="grid">
-        <div *ngFor="let panel of thirdRowCharts" class="col-12 md:col-6 lg:col-{{ panel.type === 'bar' ? '4' : '4' }}">
-          <p-panel [header]="panel.header">
-              <div class="flex flex-column justify-content-between">
-                <div class="flex justify-content-between mb-3">
-                  <p-chart
-                    [responsive]="true"
-                    class="w-full"
-                    [height]="'300px'"
-                    [type]="panel.type"
-                    [data]="panel.data"
-                    [options]="panel.options"
-                  ></p-chart>
-                </div>
-              </div>
-          </p-panel>
-        </div>
-      </div> -->
-
-
-
-
-    <!-- <div class="grid">
-        <div class="col-12 md:col-6 lg:col-12">
-            <div class="surface-card shadow-2 p-3 border-round">
-                <div style="height: 500px;" leaflet (leafletMapReady)="onMapReady($event)"
-                    [leafletOptions]="leafletOptions">
-                </div>
-            </div>
-        </div>
-    </div> -->
 </div>
 
 <app-generic-dialog 

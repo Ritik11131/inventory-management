@@ -7,6 +7,14 @@ export const vehicleStatusOverviewObject = [
   { label: 'Offline Vehicles', count: 0, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700', key: 'OFFLINE',lottiePath: '/assets/lottie/offline-truck.json' },
 ];
 
+export const vehicleFilterCountObject = [
+  { label: '0', icon: 'pi pi-car', severity: 'contrast' ,key:'ALL' },
+  { label: '0', icon: 'pi pi-car', severity: 'success' ,key:'RUNNING' },
+  { label: '0', icon: 'pi pi-car', severity: 'danger' ,key:'STOP' },
+  { label: '0', icon: 'pi pi-car', severity: 'warning' ,key:'DORMANT' },
+  { label: '0', icon: 'pi pi-car', severity: 'secondary' ,key:'OFFLINE' }
+];
+
 export const renewalStatusObject = [
   { value : 0, key:'Due',bgColor: 'bg-yellow-500',lottiePath: '/assets/lottie/deadline.json' },
   { value: 0, key: 'Expiry', bgColor: 'bg-red-500',lottiePath: '/assets/lottie/expired.json' },
@@ -25,7 +33,7 @@ export const inventoryObject = [
 export const lastPosStatusColors : any = {
   "RUNNING": 'green',
   "STOP": 'red',
-  "DORMANT": 'yellow',
+  "DORMANT": 'orange',
   "OFFLINE": 'grey'
 };
 

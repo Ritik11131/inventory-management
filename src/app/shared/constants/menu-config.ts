@@ -18,6 +18,15 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
             },
         },
         {
+            key: 'tracking',
+            label: 'Tracking',
+            icon: 'pi pi-map',
+            command: () => {
+                router.navigate(['/main/tracking']);
+                breadcrumbService.generateBreadcrumbs('/main/tracking');
+            },
+        },
+        {
             key: 'management',
             label: 'Management',
             icon: 'pi pi-server',
@@ -238,7 +247,7 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
         managementMenu.items.push(...userMenuItems[authService.getUserRole()]);
     }
 
-    commonItems = (userRole === 'Dealer' || userRole === 'Distributor') ? commonItems?.filter((item: any) => item?.key !== 'dashboard') : commonItems;
+    commonItems = (userRole === 'Dealer' || userRole === 'Distributor') ? commonItems?.filter((item: any) => item?.key !== 'dashboard' || item?.key !== 'tracking') : commonItems;
 
     
     return commonItems;

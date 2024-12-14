@@ -1,7 +1,7 @@
 import { oemInfoTableColumns, rfcInfoTableColumns } from './../../../shared/constants/columns';
 import { Component, OnInit } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
-import { icon, latLng, Map, Marker, marker, tileLayer } from "leaflet";
+import { latLng, Map, tileLayer } from "leaflet";
 import { ChartModule } from 'primeng/chart';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit {
       tileLayer(`https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${this.style}/{z}/{x}/{y}/512/png8?apiKey=${environment.here.apiKey}&ppi=320`, {
         attribution: '&copy; HERE 2019'
       }),
-      tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; Open Street Hot',
           maxZoom: 18,
       }),
