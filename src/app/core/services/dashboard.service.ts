@@ -75,5 +75,15 @@ export class DashboardService {
     }
   }
 
+  async getInfoWindowDetails(deviceSno:any) : Promise<any> {
+    try {
+      const response = await this.http.get('LastPosition/GetVehicleDetails', {}, deviceSno);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 
 }

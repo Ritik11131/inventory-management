@@ -1,0 +1,19 @@
+.info-window {
+    position: absolute;
+    z-index: 999;
+    bottom: 20px;
+    right:20px;
+    font-family: 'Urbanist', sans-serif;
+}
+
+
+.info-window-contents{
+    height: 160px;
+    overflow: hidden; /* Hide the scrollbar */
+    -ms-overflow-style: none; /* Hide scrollbar in IE */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.info-window-contents::-webkit-scrollbar {
+    display: none; /* Hide the scrollbar in WebKit-based browsers (Chrome, Safari) */
+}

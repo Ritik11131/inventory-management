@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { lastPosStatusColors } from '../../../../shared/constants/dashboard';
 import { CommonModule } from '@angular/common';
 
@@ -13,6 +13,14 @@ import { CommonModule } from '@angular/common';
 export class VehicleListComponent {
 
   lastPosStatusColors = lastPosStatusColors;
-  @Input() list:any[] = []
+  @Input() list:any[] = [];
+  emitSelectedVehicle = output<any>();
+  
+
+
+
+  onVehicleSelect(vehicle:any) {
+    this.emitSelectedVehicle.emit(vehicle);    
+  }
 
 }

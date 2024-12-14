@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
 export class VehicleFiltersComponent {
 
   @Input() vehicleFilterCount:any;
-  emitSelectedFilter = output<any>()
+  emitSelectedFilter = output<any>();
 
 
   onVehicleFilter(item:any) {

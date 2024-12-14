@@ -3,20 +3,195 @@
         <div class="col-4">
             <div class="flex-column h-full">
                 <app-vehicle-stats [total]="totalvehicleCount"></app-vehicle-stats>
-                <app-vehicle-filters [vehicleFilterCount]="vehicleFilterCount" (emitSelectedFilter)="handleFilterClick($event)"></app-vehicle-filters>
-                <app-vehicle-list [list]="filteredVehiclesList"></app-vehicle-list>
+                <app-vehicle-filters [vehicleFilterCount]="vehicleFilterCount"
+                    (emitSelectedFilter)="handleFilterClick($event)"></app-vehicle-filters>
+                <app-vehicle-list [list]="filteredVehiclesList"
+                    (emitSelectedVehicle)="handleFilterClick($event)"></app-vehicle-list>
             </div>
         </div>
         <div class="col-8">
-            <div 
-            style="height: 80vh;"
-                leaflet (leafletMapReady)="onMapReady($event)"
-                [leafletOptions]="leafletOptions"
-                >
+            <div style="height: 80vh;" leaflet (leafletMapReady)="onMapReady($event)" [leafletOptions]="leafletOptions">
+
+                @if(selectedVehicle) {
+                <div (mouseenter)="disableMapInteractions()" (mouseleave)="enableMapInteractions()"
+                    class="info-window p-3 surface-card border-round shadow-8">
+                    <div class="flex justify-content-between align-items-center">
+                        <div class="flex flex-column">
+                            <span [ngClass]="{
+                                'text-green-500': selectedVehicle?.status === 'RUNNING',
+                                'text-red-500': selectedVehicle?.status === 'STOP',
+                                'text-orange-500': selectedVehicle?.status === 'DORMANT',
+                                'text-gray-500': selectedVehicle?.status === 'OFFLINE',
+                                'flex align-items-center justify-content-center border-round': true
+                              }" class="text-2xl font-bold">{{selectedVehicle?.vehicleNo}}</span>
+                            <span class="text-sm">{{selectedVehicle.location?.lastUpdate | date:'medium'}}</span>
+                            <span class="text-sm">Address Aaega Idhrr</span>
+                        </div>
+                        <div class="align-items-center">
+                            <i class="pi pi-play text-blue-500 cursor-pointer text-xl mb-1 mr-2"></i>
+                            <i class="pi pi-angle-down text-blue-500 cursor-pointer text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="info-window-contents overflow-auto">
+
+                        <!-- Device Information Title -->
+                        <h3 class="text-lg font-bold mb-3 text-700">Device Information</h3>
+
+                        <!-- Device Information Grid -->
+                        <div class="grid grid-nogutter">
+                            <!-- First Row of 3 Items -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Serial No:</p>
+                                <p>{{ selectedVehicle?.device?.sno || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Device SNo:</p>
+                                <p>{{ selectedVehicle?.device?.deviceSno || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">IMEI:</p>
+                                <p>{{ selectedVehicle?.device?.imei || 'N/A' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- SIM Details Title -->
+                        <h3 class="text-lg font-bold mb-3 mt-5 text-700">SIM Details</h3>
+
+                        <!-- SIM Details Grid -->
+                        <div class="grid grid-nogutter">
+                            <!-- First Row of 3 Items -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Provider:</p>
+                                <p>{{ selectedVehicle?.sim?.provider || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">ICCID:</p>
+                                <p>{{ selectedVehicle?.sim?.iccid || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Primary SIM:</p>
+                                <p>{{ selectedVehicle?.sim?.pSim || 'N/A' }}</p>
+                            </div>
+
+                            <!-- Second Row of SIM Details -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Primary Operator:</p>
+                                <p>{{ selectedVehicle?.sim?.pOpt || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Secondary SIM:</p>
+                                <p>{{ selectedVehicle?.sim?.sSim || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Secondary Operator:</p>
+                                <p>{{ selectedVehicle?.sim?.sOpt || 'N/A' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Location Information Title -->
+                        <h3 class="text-lg font-bold mb-3 mt-5">Location Information</h3>
+
+                        <!-- Location Information Grid -->
+                        <div class="grid grid-nogutter">
+                            <!-- First Row of Location Info -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Latitude:</p>
+                                <p>{{ selectedVehicle?.location?.latitude || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Longitude:</p>
+                                <p>{{ selectedVehicle?.location?.longitude || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Speed:</p>
+                                <p>{{ selectedVehicle?.location?.speed || 'N/A' }} km/h</p>
+                            </div>
+
+                            <!-- Second Row of Location Info -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Heading:</p>
+                                <p>{{ selectedVehicle?.location?.heading || 'N/A' }}°</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Last Update:</p>
+                                <p>{{ selectedVehicle?.location?.lastUpdate || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">GPS Fix:</p>
+                                <p>{{ selectedVehicle?.location?.gpsFix || 'N/A' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Location Attributes Title -->
+                        <h3 class="text-lg font-bold mb-3 mt-5">Location Attributes</h3>
+
+                        <!-- Location Attributes Grid -->
+                        <div class="grid grid-nogutter">
+                            <!-- First Row of Location Attributes -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">ADC1:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.adc1 || 'N/A' }} V</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">ADC2:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.adc2 || 'N/A' }} V</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Battery:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.battery || 'N/A' }}%</p>
+                            </div>
+
+                            <!-- Second Row of Location Attributes -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Charge:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.charge || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Distance:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.distance || 'N/A' }} km</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Engine Hours:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.engHours || 'N/A' }} hrs</p>
+                            </div>
+
+                            <!-- Third Row of Location Attributes -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">HDOP:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.hdop || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">RSSI:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.rssi || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Satellites:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.sat || 'N/A' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Additional Location Attributes -->
+                        <div class="grid grid-nogutter">
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Status:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.status || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">V Status:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.vStatus || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Version FW:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.versionFw || 'N/A' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                }
+
             </div>
         </div>
-</div>
 
 
-
-
+    </div>

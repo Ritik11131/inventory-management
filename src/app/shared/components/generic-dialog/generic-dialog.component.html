@@ -205,10 +205,10 @@
                             <td *ngFor="let col of columns">
                                 {{ 
                                     col.nested ? col?.type && col?.type === 'date' ? 
-                                        ((rowData[col.field]?.[col.subfield] | date) || '-') : 
+                                        ((rowData[col.field]?.[col.subfield] | date:'medium') || '-') : 
                                         (rowData[col.field]?.[col.subfield] || '-')
                                     :
-                                    col?.type && col?.type === 'date' ? (rowData[col.field] | date) : (rowData[col.field] || '-')
+                                    col?.type && col?.type === 'date' ? (rowData[col.field] | date:'medium') : (rowData[col.field] || '-')
                                  }}
                             </td>
                         </tr>
