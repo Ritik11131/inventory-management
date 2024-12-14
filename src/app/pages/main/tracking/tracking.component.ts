@@ -12,6 +12,7 @@ import 'leaflet.markercluster';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { trigger,state, style, animate, transition } from '@angular/animations';
+import { GenericDatepickerComponent } from "../../../shared/components/generic-datepicker/generic-datepicker.component";
 
 
 
@@ -19,7 +20,7 @@ import { trigger,state, style, animate, transition } from '@angular/animations';
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [VehicleFiltersComponent,VehicleListComponent,VehicleStatsComponent,LeafletModule,LeafletMarkerClusterModule,ButtonModule,CommonModule],
+  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, ButtonModule, CommonModule, GenericDatepickerComponent],
   templateUrl: './tracking.component.html',
   styleUrl: './tracking.component.scss',
   animations: [
@@ -49,6 +50,7 @@ export class TrackingComponent implements OnInit {
   totalvehicleCount:number = 0;
   selectedVehicle: any = null; // Tracks the currently selected vehicle
   isCollapsed:boolean = false;
+  makeDatepickerVisible:boolean = false;
 
 
     leafletOptions = {
@@ -216,6 +218,15 @@ export class TrackingComponent implements OnInit {
           const filterStatus = event?.key === 'ALL' ? null : event?.key;
           this.plotVehicles(this.lastPositionData, filterStatus);
       }
+  }
+
+
+  handlePlayback() {
+    this.makeDatepickerVisible = true
+  }
+
+  onHideDatepicker(event:any) {
+    this.makeDatepickerVisible = event
   }
     
 

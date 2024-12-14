@@ -1,0 +1,67 @@
+<p-dialog [closable]="false" [(visible)]="visible" [style]="{ width: '25rem' }"
+    header="{{ header }}" [modal]="modal">
+    <div class="grid p-fluid mt-2">
+        @if (showCustomCalendar) {
+          <div class="col-12">
+            <p-calendar
+            appendTo="body"
+              [(ngModel)]="customDateRange"
+              selectionMode="range"
+              [showTime]="true"
+              [numberOfMonths]="2"
+              [showButtonBar]="true"
+              placeholder="Select Date Range">
+            </p-calendar>
+          </div>
+        }
+
+        <div class="col-12 grid">
+          <div class="col-6">
+            <p-button 
+              label="1 Hour" 
+              (onClick)="selectPreset('1 Hour')"
+              [outlined]="selectedOption !== '1 Hour'"
+              styleClass="w-full">
+            </p-button>
+          </div>
+          <div class="col-6">
+            <p-button 
+              label="6 Hours" 
+              (onClick)="selectPreset('6 Hours')"
+              [outlined]="selectedOption !== '6 Hours'"
+              styleClass="w-full">
+            </p-button>
+          </div>
+          <div class="col-6">
+            <p-button 
+              label="Yesterday" 
+              (onClick)="selectPreset('Yesterday')"
+              [outlined]="selectedOption !== 'Yesterday'"
+              styleClass="w-full">
+            </p-button>
+          </div>
+          <div class="col-6">
+            <p-button 
+              label="Today" 
+              (onClick)="selectPreset('Today')"
+              [outlined]="selectedOption !== 'Today'"
+              styleClass="w-full">
+            </p-button>
+          </div>
+          <div class="col-12">
+            <p-button 
+              label="Custom Date" 
+              (onClick)="selectPreset('Custom Date')"
+              [outlined]="selectedOption !== 'Custom Date'"
+              styleClass="w-full">
+            </p-button>
+          </div>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+          <p-button label="Cancel" (onClick)="hideDialog()" severity="secondary"></p-button>
+          <p-button label="Apply" (onClick)="applySelection()"></p-button>
+        </div>
+      </ng-template>
+</p-dialog>

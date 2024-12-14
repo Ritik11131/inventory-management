@@ -14,7 +14,8 @@
 
                 @if(selectedVehicle) {
                 <div (mouseenter)="disableMapInteractions()" (mouseleave)="enableMapInteractions()"
-                    class="info-window p-3 surface-card border-round shadow-8"  [@collapse]="isCollapsed ? 'collapsed' : 'expanded'">
+                    class="info-window p-3 surface-card border-round shadow-8"
+                    [@collapse]="isCollapsed ? 'collapsed' : 'expanded'">
                     <div class="flex justify-content-between align-items-center">
                         <div class="flex flex-column">
                             <span [ngClass]="{
@@ -28,8 +29,9 @@
                             <span class="text-sm">Address Aaega Idhrr</span>
                         </div>
                         <div class="align-items-center">
-                            <i class="pi pi-play text-blue-500 cursor-pointer text-xl mb-1 mr-2"></i>
-                            <i (click)="toggleCollapse()" class="pi pi-angle-down text-blue-500 cursor-pointer text-xl"></i>
+                            <i (click)="handlePlayback()" class="pi pi-play text-blue-500 cursor-pointer text-xl mb-1 mr-2"></i>
+                            <i (click)="toggleCollapse()"
+                                class="pi pi-angle-down text-blue-500 cursor-pointer text-xl"></i>
                         </div>
                     </div>
                     <div class="info-window-contents overflow-auto">
@@ -188,11 +190,13 @@
                     </div>
                 </div>
 
-                @if(isCollapsed) {
-                    <div class="info-window">
-                        <p-button [rounded]="true" [severity]="(selectedVehicle?.status === 'RUNNING') ? 'success' : (selectedVehicle?.status === 'STOP') ? 'danger' : (selectedVehicle?.status === 'DORMANT') ? 'warning' : 'secondary'" (onClick)="toggleCollapse()" icon="pi pi-info-circle" [label]="selectedVehicle?.vehicleNo"/>
-                    </div>
                 }
+                @if(isCollapsed) {
+                <div class="info-window">
+                    <p-button [rounded]="true"
+                        [severity]="(selectedVehicle?.status === 'RUNNING') ? 'success' : (selectedVehicle?.status === 'STOP') ? 'danger' : (selectedVehicle?.status === 'DORMANT') ? 'warning' : 'secondary'"
+                        (onClick)="toggleCollapse()" icon="pi pi-info-circle" [label]="selectedVehicle?.vehicleNo" />
+                </div>
                 }
 
             </div>
@@ -200,3 +204,5 @@
 
 
     </div>
+
+    <app-generic-datepicker [header]="'Select Date'" [modal]="true" [visible]="makeDatepickerVisible" (onHide)="onHideDatepicker($event)" />
