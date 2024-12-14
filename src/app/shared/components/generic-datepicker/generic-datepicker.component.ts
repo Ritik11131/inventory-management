@@ -20,7 +20,8 @@ export class GenericDatepickerComponent {
   @Input() width: string = '';
   @Input() modal: boolean = false;
 
-  onHide = output<any>()
+  onHide = output<any>();
+  selectedDateRange = output<any>();
 
 
 
@@ -79,8 +80,7 @@ export class GenericDatepickerComponent {
     } else {
       result = this.selectedRange;
     }
-
-    console.log('Selected time range:', result);
+    this.selectedDateRange.emit(result);
     this.hideDialog();
   }
 

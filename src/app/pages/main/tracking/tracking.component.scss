@@ -7,6 +7,14 @@
     transition: height 0.3s ease, opacity 0.3s ease;
 }
 
+.playback-loader {
+    position: absolute;
+    z-index: 999;
+    top: 20px;
+    right:20px;
+    font-family: 'Urbanist', sans-serif;
+}
+
 
 .info-window-contents{
     height: 160px;

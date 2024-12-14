@@ -198,6 +198,11 @@
                         (onClick)="toggleCollapse()" icon="pi pi-info-circle" [label]="selectedVehicle?.vehicleNo" />
                 </div>
                 }
+                @if(creatingPlaybackPath) {
+                    <div class="playback-loader p-2 surface-card border-round shadow-8">
+                        <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem"  />
+                    </div>
+                }
 
             </div>
         </div>
@@ -205,4 +210,4 @@
 
     </div>
 
-    <app-generic-datepicker [header]="'Select Date'" [modal]="true" [visible]="makeDatepickerVisible" (onHide)="onHideDatepicker($event)" />
+    <app-generic-datepicker [header]="'Select Date'" [modal]="true" [visible]="makeDatepickerVisible" (selectedDateRange)="onDateSelected($event)" (onHide)="onHideDatepicker($event)" />
