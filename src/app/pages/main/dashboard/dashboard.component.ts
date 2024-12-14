@@ -23,7 +23,7 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { GenericDialogComponent } from "../../../shared/components/generic-dialog/generic-dialog.component";
-import { alertInfotableColumns } from '../../../shared/constants/columns';
+import { alertInfotableColumns, inventoryInfoTableColumns, lastUpdateInfoColumns, overspeedInfotableColumns, renewalInfoTableColumns, sosInfotableColumns, vehicleTypeInstallationInfotableColumns } from '../../../shared/constants/columns';
 
 
 @Component({
@@ -91,6 +91,7 @@ export class DashboardComponent implements OnInit {
 
   infoDialog:boolean = false;
   currentInfoData : any[] = [];
+  currentInfoTitle : string = '';
   currentInfoColumns:any[] = [];
 
   constructor(private dashboardService: DashboardService, private ticketService:TicketsService, private authService:AuthService) {}
@@ -339,10 +340,14 @@ export class DashboardComponent implements OnInit {
   async onInfoClick(event: MouseEvent, panel: any, op?: { toggle: (e: MouseEvent) => void }): Promise<void> {    
     if (event.type === 'click') {
       console.log(panel);
+      this.currentInfoTitle = panel?.title || panel?.label || panel?.categoryName || panel.toUpperCase();
       this.infoDialog = true;
-      this.currentInfoColumns = panel.key === 'alert' ? [{ field: 'eventType', header: 'Event Type', minWidth: '10rem' }, ...alertInfotableColumns] 
-                                : (panel.key === 'vehicle_installation' ? alertInfotableColumns.slice(0, alertInfotableColumns.length - 2) 
-                                : [...alertInfotableColumns]);
+      this.currentInfoColumns = panel.key === 'alert' ? alertInfotableColumns : 
+                                (panel.key === 'vehicle_installation') ? vehicleTypeInstallationInfotableColumns : 
+                                (panel.key === 'RUNNING' || panel.key === 'STOP' || panel.key === 'DORMANT' || panel.key === 'OFFLINE') ? lastUpdateInfoColumns : 
+                                (panel.key === 'overspeed') ? overspeedInfotableColumns : 
+                                (panel === 'inventory') ? inventoryInfoTableColumns : 
+                                (panel === 'renewal') ? renewalInfoTableColumns : sosInfotableColumns;
 
   
       const keyToEndpointMap: Record<string, string> = {
@@ -353,15 +358,25 @@ export class DashboardComponent implements OnInit {
         STOP: 'LastPosition/Filter/STOP',
         DORMANT: 'LastPosition/Filter/DORMANT',
         OFFLINE: 'LastPosition/Filter/OFFLINE',
-        vehicle_installation:`Dashboard/GetDetailsVehicleType/${panel.categoryId}`
+        vehicle_installation:`Dashboard/GetDetailsVehicleType/${panel.categoryId}`,
+        inventory: 'Dashboard/StockVsActivationDetails',
+        renewal : 'Dashboard/RenewalDetails'
       };
-      const endpoint = keyToEndpointMap[panel.key];
+      
+      const endpoint = keyToEndpointMap[(panel === 'inventory' || panel === 'renewal') ? panel : panel?.key];
       
       if(endpoint) { 
         try {
           // Flattened response
           const unflattenedData = (await this.fetchSelectedInfoData(endpoint))?.data;
-          this.currentInfoData = unflattenedData.map((unflattenedObject : any) => this.flattenInfoTableResponse(unflattenedObject))
+          this.currentInfoData = (panel === 'inventory' || panel === 'renewal') ? unflattenedData : unflattenedData.map((unflattenedObject: any) => {
+            const obj = this.flattenInfoTableResponse(unflattenedObject);
+            return obj.eventType
+              ? { ...obj, eventType: obj.eventType.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^\w|\s\w/g, (match:any) => match.toUpperCase()) }
+              : obj;
+          });
+          
+          
         } catch (error) {
           console.error('Failed to fetch data:', error);
           this.currentInfoData = [];
@@ -386,7 +401,8 @@ export class DashboardComponent implements OnInit {
       permitHolderMobile: response.permitHolder?.permitholdermobile || '',
       deviceSno: response.device?.devicesno || '',
       deviceImei: response.device?.imei || '',
-      alertTime: response.position?.lastUpdateOn || '',
+      lastUpdateOn: response.position?.lastUpdateOn || '',
+      speed : response.position?.speed || '-',
       latLng: response.position
         ? `${response.position.latitude}, ${response.position.longitude}`
         : ''

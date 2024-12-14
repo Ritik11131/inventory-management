@@ -183,7 +183,7 @@
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
                 [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" 
                 [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" [columns]="tableColumns" 
-                [value]="tableData" [tableStyle]="{ 'min-width': '100rem' }">
+                [value]="tableData" [tableStyle]="{ 'min-width': '100rem' }" styleClass="p-datatable-sm p-datatable-gridlines">
 
                 <!-- Table Caption -->
                 <ng-template pTemplate="caption">

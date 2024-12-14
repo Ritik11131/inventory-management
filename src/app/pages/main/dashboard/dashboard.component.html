@@ -184,7 +184,7 @@
                                 </div>
                             }
                             <div class="text-right">
-                                <i class="pi pi-info-circle mt-3 text-right cursor-pointer font-bold text-xl text-primary-500"></i>
+                                <i (click)="onInfoClick($event,'inventory')" class="pi pi-info-circle mt-3 text-right cursor-pointer font-bold text-xl text-primary-500"></i>
                             </div>
                     </p-panel>
                 </div>
@@ -212,7 +212,7 @@
                                 </div>
                             }
                             <div class="text-right">
-                                <i class="pi pi-info-circle mt-3 text-right cursor-pointer font-bold text-xl text-primary-500"></i>
+                                <i (click)="onInfoClick($event,'renewal')" class="pi pi-info-circle mt-3 text-right cursor-pointer font-bold text-xl text-primary-500"></i>
                             </div>
                     </p-panel>
                 </div>
@@ -283,7 +283,7 @@
 </div>
 
 <app-generic-dialog 
-    [enableSaveBtn]="false" 
-    [isTable]="true" [tableData]="currentInfoData" [tableColumns]="currentInfoColumns" 
-    [header]="'Info'" [modal]="true" [visible]="infoDialog" (onHide)="onHideDialog($event)"
+    [enableSaveBtn]="false" [header]="currentInfoTitle"
+    [isTable]="true" [tableData]="currentInfoData" [tableColumns]="currentInfoColumns"
+    [modal]="true" [visible]="infoDialog" (onHide)="onHideDialog($event)"
 />

@@ -71,12 +71,69 @@ export const vehicleCategoryColumns = [
 
 
 export const alertInfotableColumns = [
+    { field: 'eventType', header: 'Event Type', minWidth: '10rem' },
     { field: 'vehicleNo', header: 'Vehicle No.', minWidth: '10rem' },
     { field: 'oem', header: 'OEM', minWidth: '8rem' },
     { field: 'permitHolderName', header: 'Permit Holder Name', minWidth: '12rem' },
     { field: 'permitHolderMobile', header: 'Permit Holder Mobile', minWidth: '12rem' },
     { field: 'deviceSno', header: 'Device SNo.', minWidth: '10rem' },
     { field: 'deviceImei', header: 'Device IMEI', minWidth: '12rem' },
-    { field: 'alertTime', header: 'Alert Time', minWidth: '10rem', type:'date' },
+    { field: 'lastUpdateOn', header: 'Alert Time', minWidth: '10rem', type:'date' },
     { field: 'latLng', header: 'Lat/Lng', minWidth: '12rem' }
-  ];
+];
+
+export const vehicleTypeInstallationInfotableColumns = [
+    { field: 'vehicleNo', header: 'Vehicle No.', minWidth: '10rem' },
+    { field: 'oem', header: 'OEM', minWidth: '8rem' },
+    { field: 'permitHolderName', header: 'Permit Holder Name', minWidth: '12rem' },
+    { field: 'permitHolderMobile', header: 'Permit Holder Mobile', minWidth: '12rem' },
+    { field: 'deviceSno', header: 'Device SNo.', minWidth: '10rem' },
+    { field: 'deviceImei', header: 'Device IMEI', minWidth: '12rem' },
+];
+
+export const lastUpdateInfoColumns = [
+    { field: 'vehicleNo', header: 'Vehicle No.', minWidth: '10rem' },
+    { field: 'oem', header: 'OEM', minWidth: '8rem' },
+    { field: 'permitHolderName', header: 'Permit Holder Name', minWidth: '12rem' },
+    { field: 'permitHolderMobile', header: 'Permit Holder Mobile', minWidth: '12rem' },
+    { field: 'deviceSno', header: 'Device SNo.', minWidth: '10rem' },
+    { field: 'deviceImei', header: 'Device IMEI', minWidth: '12rem' },
+    { field: 'lastUpdateOn', header: 'Last Update Time', minWidth: '10rem', type:'date' },
+    { field: 'speed', header: 'Speed (Km/hr)', minWidth: '10rem' },
+    { field: 'latLng', header: 'Lat/Lng', minWidth: '12rem' }
+];
+
+export const overspeedInfotableColumns = [
+    { field: 'vehicleNo', header: 'Vehicle No.', minWidth: '10rem' },
+    { field: 'oem', header: 'OEM', minWidth: '8rem' },
+    { field: 'permitHolderName', header: 'Permit Holder Name', minWidth: '12rem' },
+    { field: 'permitHolderMobile', header: 'Permit Holder Mobile', minWidth: '12rem' },
+    { field: 'deviceSno', header: 'Device SNo.', minWidth: '10rem' },
+    { field: 'deviceImei', header: 'Device IMEI', minWidth: '12rem' },
+    { field: 'lastUpdateOn', header: 'Over Speed Time', minWidth: '10rem', type:'date' },
+    { field: 'speed', header: 'Over Speed (Km/hr)', minWidth: '10rem' },
+    { field: 'latLng', header: 'Lat/Lng', minWidth: '12rem' }
+];
+
+export const sosInfotableColumns = [
+    { field: 'vehicleNo', header: 'Vehicle No.', minWidth: '10rem' },
+    { field: 'oem', header: 'OEM', minWidth: '8rem' },
+    { field: 'permitHolderName', header: 'Permit Holder Name', minWidth: '12rem' },
+    { field: 'permitHolderMobile', header: 'Permit Holder Mobile', minWidth: '12rem' },
+    { field: 'deviceSno', header: 'Device SNo.', minWidth: '10rem' },
+    { field: 'deviceImei', header: 'Device IMEI', minWidth: '12rem' },
+    { field: 'lastUpdateOn', header: 'Alert Time', minWidth: '10rem', type:'date' },
+    { field: 'latLng', header: 'Lat/Lng', minWidth: '12rem' }
+];
+
+export const inventoryInfoTableColumns = [
+    { field: 'oemOrgname', header: 'OEM Name', minWidth: '8rem' },
+    { field: 'InStock', header: 'Inventory Count', minWidth: '8rem' },
+    { field: 'Fitted', header: 'Fitted Count', minWidth: '8rem' },
+];
+
+export const renewalInfoTableColumns = [
+    { field: 'oemOrgname', header: 'OEM Name', minWidth: '8rem' },
+    { field: 'Due', header: 'Due Count', minWidth: '8rem' },
+    { field: 'Laps', header: 'Lapse Count', minWidth: '8rem' },
+]
