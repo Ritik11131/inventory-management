@@ -374,12 +374,12 @@ export class DashboardComponent implements OnInit {
         try {
           // Flattened response
           const unflattenedData = (await this.fetchSelectedInfoData(endpoint))?.data;
-          this.currentInfoData = (panel === 'inventory' || panel === 'renewal' || panel.key === 'OEM' || panel.key === 'RFC') ? unflattenedData : unflattenedData.map((unflattenedObject: any) => {
-            const obj = this.flattenInfoTableResponse(unflattenedObject);
-            return obj.eventType
-              ? { ...obj, eventType: obj.eventType.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^\w|\s\w/g, (match:any) => match.toUpperCase()) }
-              : obj;
-          });
+          this.currentInfoData = (panel === 'inventory' || panel === 'renewal' || panel.key === 'OEM' || panel.key === 'RFC')
+            ? unflattenedData
+            : unflattenedData.map((unflattenedObject: any) => {
+              const obj = this.flattenInfoTableResponse(unflattenedObject, panel);
+              return obj;
+            });
           
           
         } catch (error) {
@@ -397,9 +397,8 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  flattenInfoTableResponse(response:any) {
-    return {
-      eventType:response.eventType || '',
+  flattenInfoTableResponse(response: any,selectedPanel:any) {
+    const result: any = {
       vehicleNo: response.vehicle?.vehicleno || '',
       oem: response.oem?.oemorgname || '',
       permitHolderName: response.permitHolder?.permitholdername || '',
@@ -407,11 +406,17 @@ export class DashboardComponent implements OnInit {
       deviceSno: response.device?.devicesno || '',
       deviceImei: response.device?.imei || '',
       lastUpdateOn: response.position?.lastUpdateOn || '',
-      speed : response.position?.speed || '-',
+      speed: response.position?.speed || '-',
       latLng: response.position
         ? `${response.position.latitude}, ${response.position.longitude}`
         : ''
     };
+  
+    if (selectedPanel.key === 'alert') {
+      result.eventType = response.eventType.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^\w|\s\w/g, (match: any) => match.toUpperCase());
+    }
+  
+    return result;
   }
 
   onHideDialog(isVisible: boolean) {

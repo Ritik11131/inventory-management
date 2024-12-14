@@ -22,6 +22,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputOtpModule } from 'primeng/inputotp';
 import { GenericStepperComponent } from '../generic-stepper/generic-stepper.component';
+import { ExportService } from '../../../core/services/export.service';
 
 
 
@@ -80,7 +81,7 @@ export class GenericDialogComponent implements OnChanges {
   uploadedFiles: any[] = [];
   stepperCurrentIndex!: number;
 
-  constructor() { }
+  constructor(private exportService:ExportService) { }
 
 
   ngOnChanges(changes: SimpleChanges): void {                
@@ -168,6 +169,10 @@ export class GenericDialogComponent implements OnChanges {
 
   emitCurrentStepIndex(index: number) {
     this.stepperCurrentIndex = index;
+  }
+
+  export() {
+    this.exportService.exportToExcel(this.tableData, 'data');
   }
 
 
