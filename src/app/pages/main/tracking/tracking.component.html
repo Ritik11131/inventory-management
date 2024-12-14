@@ -2,7 +2,7 @@
     <div class="grid">
         <div class="col-4">
             <div class="flex-column h-full">
-                <app-vehicle-stats [total]="totalvehicleCount"></app-vehicle-stats>
+                <app-vehicle-stats [total]="totalvehicleCount" (emitSearchedTerm)="handleSearch($event)"></app-vehicle-stats>
                 <app-vehicle-filters [vehicleFilterCount]="vehicleFilterCount"
                     (emitSelectedFilter)="handleFilterClick($event)"></app-vehicle-filters>
                 <app-vehicle-list [list]="filteredVehiclesList"

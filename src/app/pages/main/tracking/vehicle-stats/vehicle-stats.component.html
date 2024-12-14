@@ -5,7 +5,7 @@
     <div class="p-toolbar-group-end">
         <span class="p-input-icon-left">
             <i class="pi pi-search"></i>
-            <input pInputText placeholder="Search" />
+            <input pInputText placeholder="Search" (input)="onSearch($event)" />
         </span>
     </div>
 </p-toolbar>

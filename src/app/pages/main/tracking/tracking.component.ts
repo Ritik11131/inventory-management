@@ -15,6 +15,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { GenericDatepickerComponent } from "../../../shared/components/generic-datepicker/generic-datepicker.component";
 import { TrackingService } from '../../../core/services/tracking.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastService } from '../../../core/services/toast.service';
 
 
 
@@ -46,6 +47,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 export class TrackingComponent implements OnInit {
   map!: Map;
   private markerClusterGroup!: L.MarkerClusterGroup;
+  vehicleList:any[] = []
   filteredVehiclesList: any[] = [];
   lastPositionData: any[] = []
   vehicleFilterCount = vehicleFilterCountObject;
@@ -71,7 +73,7 @@ export class TrackingComponent implements OnInit {
   };
 
 
-  constructor(private dashboardService: DashboardService, private trackingService: TrackingService) { }
+  constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService) { }
 
   ngOnInit() {
     this.fetchLastPositionStats().then();
@@ -151,6 +153,7 @@ export class TrackingComponent implements OnInit {
 
       // Filtered list of vehicles to display in HTML
       this.filteredVehiclesList = [];
+      this.vehicleList = [];
 
       for (const status in vehicleData) {
         if (filterStatus && filterStatus !== status) {
@@ -169,6 +172,11 @@ export class TrackingComponent implements OnInit {
             this.markerClusterGroup.addLayer(marker);
 
             this.filteredVehiclesList.push({
+              status,
+              ...vehicle,
+            });
+
+            this.vehicleList.push({
               status,
               ...vehicle,
             });
@@ -226,6 +234,24 @@ export class TrackingComponent implements OnInit {
     }
   }
 
+  handleSearch(event: any) {
+    const searchTerm = event?.target?.value?.trim()?.toLowerCase();    
+  
+    // If there's no search term, reset filtered list to the original list
+    if (!searchTerm) {
+      this.filteredVehiclesList = [...this.vehicleList];  // Make sure we reset to a copy of the original list
+      return;
+    }
+  
+    // Apply filter based on the search term
+    this.filteredVehiclesList = this.vehicleList.filter((vehicle) => {
+      return vehicle.vehicleNo.toLowerCase().includes(searchTerm);
+    });
+  
+  }
+  
+  
+
 
   handlePlayback() {
     this.makeDatepickerVisible = true;
@@ -242,9 +268,14 @@ export class TrackingComponent implements OnInit {
     try {
       const response = await this.trackingService.getLastPositionRelay({ sno: this.selectedVehicle?.device?.sno, FromTime: start, ToTime: end });
       this.isCollapsed = true;
-      this.updateTrackData(response?.data);
+      if(response?.data.length) {
+        this.updateTrackData(response?.data);
+      } else {
+        this.toastService.showInfo('Info','No Data Found');
+      }
     } catch (error) {
       console.log(error);
+      this.toastService.showError('Error','Something Went Wrong')
     } finally {
       this.creatingPlaybackPath = false;
     }
