@@ -137,3 +137,25 @@ export const renewalInfoTableColumns = [
     { field: 'Due', header: 'Due Count', minWidth: '8rem' },
     { field: 'Laps', header: 'Lapse Count', minWidth: '8rem' },
 ]
+
+export const oemInfoTableColumns = [
+    { field: 'orgname', header: 'Organization Name', minWidth: '12rem' },
+    { field: 'contactpersonname', header: 'Contact Person', minWidth: '12rem' },
+    { field: 'mobileno', header: 'Mobile Number', minWidth: '10rem' },
+    { field: 'email', header: 'Email', minWidth: '14rem' },
+    { field: 'usertype', header: 'User Type', minWidth: '8rem' },
+    { field: 'certificate', header: 'Certificate', minWidth: '10rem' },
+    { field: 'tac', header: 'TAC', minWidth: '8rem' },
+    { field: 'cop', header: 'COP Valid Upto', minWidth: '10rem', type:'date', nested: true, subfield: 'validUpTo' }
+];
+
+export const rfcInfoTableColumns = [
+    { field: 'oem', header: 'OEM Name', minWidth: '12rem', type: 'string', nested: true, subfield: 'orgname' },
+    { field: 'rfc', header: 'RFC Name', minWidth: '12rem', type: 'string', nested: true, subfield: 'orgname' },
+    { field: 'oem', header: 'Oem Contact Person Name', minWidth: '14rem', type: 'string', nested: true, subfield: 'contactpersonname' },
+    { field: 'rfc', header: 'Rfc Contact Person Name', minWidth: '14rem', type: 'string', nested: true, subfield: 'contactpersonname' },
+    { field: 'oem', header: 'Oem Contact Person Mobile', minWidth: '12rem', type: 'string', nested: true, subfield: 'mobileno' },
+    { field: 'rfc', header: 'Rfc Contact Person Mobile', minWidth: '12rem', type: 'string', nested: true, subfield: 'mobileno' },
+    { field: 'oem', header: 'Address', minWidth: '18rem', type: 'string', nested: true, subfield: 'address' }
+  ];
+  

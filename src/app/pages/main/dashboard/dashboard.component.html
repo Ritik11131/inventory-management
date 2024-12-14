@@ -146,7 +146,7 @@
                             @for (item of totalRegistration; track $index) {
                                 <div [ngClass]="'col-12 md:col-12 lg:col-12 mb-3 border-round ' + item.bgColor">
                                    
-                                        <div class="flex justify-content-between  pl-2 pr-2">
+                                        <div (click)="onInfoClick($event,item)" class="flex justify-content-between cursor-pointer  pl-2 pr-2">
                                             <div class="flex align-items-center justify-content-center">
                                                 <div  [ngClass]="'text-green-500 text-white font-bold' + ' text-2xl'">{{item.key || 0}}</div>
                                                 <ng-lottie  width="40px" height="40px" [options]="{ path: item.lottiePath}" /> 

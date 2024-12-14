@@ -1,3 +1,4 @@
+import { oemInfoTableColumns, rfcInfoTableColumns } from './../../../shared/constants/columns';
 import { Component, OnInit } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
 import { icon, latLng, Map, Marker, marker, tileLayer } from "leaflet";
@@ -340,14 +341,16 @@ export class DashboardComponent implements OnInit {
   async onInfoClick(event: MouseEvent, panel: any, op?: { toggle: (e: MouseEvent) => void }): Promise<void> {    
     if (event.type === 'click') {
       console.log(panel);
-      this.currentInfoTitle = panel?.title || panel?.label || panel?.categoryName || panel.toUpperCase();
+      this.currentInfoTitle = panel?.title || panel?.label || panel?.categoryName || panel?.key || panel?.toUpperCase();
       this.infoDialog = true;
       this.currentInfoColumns = panel.key === 'alert' ? alertInfotableColumns : 
                                 (panel.key === 'vehicle_installation') ? vehicleTypeInstallationInfotableColumns : 
                                 (panel.key === 'RUNNING' || panel.key === 'STOP' || panel.key === 'DORMANT' || panel.key === 'OFFLINE') ? lastUpdateInfoColumns : 
                                 (panel.key === 'overspeed') ? overspeedInfotableColumns : 
                                 (panel === 'inventory') ? inventoryInfoTableColumns : 
-                                (panel === 'renewal') ? renewalInfoTableColumns : sosInfotableColumns;
+                                (panel === 'renewal') ? renewalInfoTableColumns : 
+                                (panel.key === 'OEM') ? oemInfoTableColumns : 
+                                (panel.key === 'RFC') ? rfcInfoTableColumns : sosInfotableColumns;
 
   
       const keyToEndpointMap: Record<string, string> = {
@@ -360,16 +363,18 @@ export class DashboardComponent implements OnInit {
         OFFLINE: 'LastPosition/Filter/OFFLINE',
         vehicle_installation:`Dashboard/GetDetailsVehicleType/${panel.categoryId}`,
         inventory: 'Dashboard/StockVsActivationDetails',
-        renewal : 'Dashboard/RenewalDetails'
+        renewal : 'Dashboard/RenewalDetails',
+        OEM:'Dashboard/GetOemList',
+        RFC:'Dashboard/GetRfcList'
       };
-      
+
       const endpoint = keyToEndpointMap[(panel === 'inventory' || panel === 'renewal') ? panel : panel?.key];
       
       if(endpoint) { 
         try {
           // Flattened response
           const unflattenedData = (await this.fetchSelectedInfoData(endpoint))?.data;
-          this.currentInfoData = (panel === 'inventory' || panel === 'renewal') ? unflattenedData : unflattenedData.map((unflattenedObject: any) => {
+          this.currentInfoData = (panel === 'inventory' || panel === 'renewal' || panel.key === 'OEM' || panel.key === 'RFC') ? unflattenedData : unflattenedData.map((unflattenedObject: any) => {
             const obj = this.flattenInfoTableResponse(unflattenedObject);
             return obj.eventType
               ? { ...obj, eventType: obj.eventType.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^\w|\s\w/g, (match:any) => match.toUpperCase()) }

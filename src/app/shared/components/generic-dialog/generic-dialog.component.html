@@ -203,7 +203,13 @@
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
                         <tr>
                             <td *ngFor="let col of columns">
-                                {{ col?.type && col?.type === 'date' ? (rowData[col.field] | date) : rowData[col.field] }}
+                                {{ 
+                                    col.nested ? col?.type && col?.type === 'date' ? 
+                                        ((rowData[col.field]?.[col.subfield] | date) || '-') : 
+                                        (rowData[col.field]?.[col.subfield] || '-')
+                                    :
+                                    col?.type && col?.type === 'date' ? (rowData[col.field] | date) : (rowData[col.field] || '-')
+                                 }}
                             </td>
                         </tr>
                     </ng-template>
