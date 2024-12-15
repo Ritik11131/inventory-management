@@ -1,3 +1,4 @@
+import 'leaflet-trackplayer';
 import { lastPosStatusColors, vehicleFilterCountObject } from './../../../shared/constants/dashboard';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,7 +15,6 @@ import * as L from 'leaflet';
 import { VehicleStatsComponent } from './vehicle-stats/vehicle-stats.component';
 import { latLng, Map, tileLayer } from "leaflet";
 import 'leaflet.markercluster';
-import 'leaflet-trackplayer';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { GenericDatepickerComponent } from "../../../shared/components/generic-datepicker/generic-datepicker.component";
@@ -59,10 +59,7 @@ export class TrackingComponent implements OnInit {
   makeDatepickerVisible: boolean = false;
   creatingPlaybackPath:boolean = false;
   showPlaybackControls:boolean = false;
-  private trackLine!: L.Polyline;
-  private startMarker!: L.Marker;
-  private endMarker!: L.Marker;
-  trackPlayer: any;
+  trackPlayer!: any;
   
 
   playbackControlObject: any = {};
@@ -307,7 +304,7 @@ export class TrackingComponent implements OnInit {
       this.trackPlayer.remove();
       this.trackPlayer = null; // Reset the TrackPlayer instance
     }
-    this.trackPlayer = (L as any).TrackPlayer(trackPathData, {
+    this.trackPlayer = new (L as any).TrackPlayer(trackPathData, {
       speed: 500,
       markerIcon: L.icon({
         iconUrl: 'assets/images/car.png',
