@@ -307,7 +307,7 @@ export class TrackingComponent implements OnInit {
       this.trackPlayer.remove();
       this.trackPlayer = null; // Reset the TrackPlayer instance
     }
-    this.trackPlayer = new (L as any).TrackPlayer(trackPathData, {
+    this.trackPlayer = (L as any).TrackPlayer(trackPathData, {
       speed: 500,
       markerIcon: L.icon({
         iconUrl: 'assets/images/car.png',
