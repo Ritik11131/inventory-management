@@ -1,5 +1,5 @@
 import { oemInfoTableColumns, rfcInfoTableColumns } from './../../../shared/constants/columns';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
 import { latLng, Map, tileLayer } from "leaflet";
 import { ChartModule } from 'primeng/chart';
@@ -35,7 +35,7 @@ import { alertInfotableColumns, inventoryInfoTableColumns, lastUpdateInfoColumns
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
 
   options: AnimationOptions = {
@@ -475,6 +475,11 @@ export class DashboardComponent implements OnInit {
     document.getElementById('show-offline')?.addEventListener('click', () => {
       this.plotVehicles(this.lastPositionData, 'OFFLINE'); // Plot only offline vehicles
     });
+  }
+
+
+  ngOnDestroy(): void {
+      this.stopPolling()
   }
 
 }

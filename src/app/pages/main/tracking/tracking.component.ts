@@ -11,7 +11,7 @@ import { SliderModule } from 'primeng/slider';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { VehicleFiltersComponent } from './vehicle-filters/vehicle-filters.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
-import  L from 'leaflet';
+import * as L from 'leaflet';
 import { VehicleStatsComponent } from './vehicle-stats/vehicle-stats.component';
 import { latLng, Map, tileLayer } from "leaflet";
 import 'leaflet.markercluster';
@@ -279,7 +279,7 @@ export class TrackingComponent implements OnInit {
         const trackPath = response?.data?.map((obj:any)=>{
           return { lat:obj.latitude, lng:obj.longitude }
         })
-
+        
         this.map.fitBounds(trackPath);
         this.initilizeTrackPlayer(trackPath);
         this.showPlaybackControls = true;
