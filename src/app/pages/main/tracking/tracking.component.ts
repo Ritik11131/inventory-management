@@ -1,6 +1,8 @@
 import { lastPosStatusColors, vehicleFilterCountObject } from './../../../shared/constants/dashboard';
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { SliderModule } from 'primeng/slider';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { VehicleFiltersComponent } from './vehicle-filters/vehicle-filters.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 import { VehicleStatsComponent } from './vehicle-stats/vehicle-stats.component';
@@ -9,6 +11,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
+import  "leaflet-trackplayer";
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -16,6 +19,7 @@ import { GenericDatepickerComponent } from "../../../shared/components/generic-d
 import { TrackingService } from '../../../core/services/tracking.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastService } from '../../../core/services/toast.service';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -23,7 +27,8 @@ import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, ButtonModule, CommonModule, GenericDatepickerComponent,ProgressSpinnerModule],
+  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, 
+            ButtonModule, CommonModule, GenericDatepickerComponent,ProgressSpinnerModule,SliderModule,ProgressBarModule,FormsModule],
   templateUrl: './tracking.component.html',
   styleUrl: './tracking.component.scss',
   animations: [
@@ -56,10 +61,14 @@ export class TrackingComponent implements OnInit {
   isCollapsed: boolean = false;
   makeDatepickerVisible: boolean = false;
   creatingPlaybackPath:boolean = false;
+  showPlaybackControls:boolean = false;
   private trackLine!: L.Polyline;
   private startMarker!: L.Marker;
   private endMarker!: L.Marker;
+  trackPlayer: any;
   
+
+  playbackControlObject: any = {};
 
   leafletOptions = {
     layers: [
@@ -120,7 +129,7 @@ export class TrackingComponent implements OnInit {
   }
 
 
-  private plotVehicles(vehicleDataOrSingleVehicle: any, filterStatus?: string): void {
+  private plotVehicles(vehicleDataOrSingleVehicle: any, filterStatus?: string | null): void {
     const markers: L.CircleMarker[] = []; // Array to hold markers for fitBounds
 
     // Remove existing markers from the map
@@ -217,7 +226,10 @@ export class TrackingComponent implements OnInit {
   async handleFilterClick(event: any): Promise<any> {
     this.selectedVehicle = null;
     this.isCollapsed = false;
-    this.clearReplayObjects();
+    this.showPlaybackControls = false;
+    if(this.trackPlayer) {
+      this.trackPlayer.remove();
+    }
 
     if (event?.status && event?.latitude && event?.longitude) {
       // If the event contains a single vehicle's details
@@ -270,7 +282,13 @@ export class TrackingComponent implements OnInit {
       const response = await this.trackingService.getLastPositionRelay({ sno: this.selectedVehicle?.device?.sno, FromTime: start, ToTime: end });
       this.isCollapsed = true;
       if(response?.data.length) {
-        this.updateTrackData(response?.data);
+        const trackPath = response?.data?.map((obj:any)=>{
+          return { lat:obj.latitude, lng:obj.longitude }
+        })
+
+        this.map.fitBounds(trackPath);
+        this.initilizeTrackPlayer(trackPath);
+        this.showPlaybackControls = true;
       } else {
         this.toastService.showInfo('Info','No Data Found');
       }
@@ -282,94 +300,107 @@ export class TrackingComponent implements OnInit {
     }
   }
 
-
-
-  public updateTrackData(trackData: any[]): void {
-
+  public initilizeTrackPlayer(trackPathData: any[]) {
     // Remove existing markers from the map
     this.map.removeLayer(this.markerClusterGroup);
     // Clear the marker cluster group
     this.markerClusterGroup.clearLayers();
-    this.clearReplayObjects();
-    
-    // Create polyline
-    const coordinates = trackData.map(point => [point.latitude, point.longitude]);
-    this.trackLine = L.polyline(coordinates as L.LatLngExpression[], {
-      color: '#1E90FF',
-      weight: 5
-    }).addTo(this.map);
-
-    // Add click event to polyline for popup
-    this.trackLine.on('click', (e: L.LeafletMouseEvent) => {
-      const closest = this.findClosestPoint(e.latlng, trackData);
-      if (closest) {
-        L.popup()
-          .setLatLng(e.latlng)
-          .setContent(this.createPopupContent(closest))
-          .openOn(this.map);
-      }
+    // Check if TrackPlayer already exists, and remove it from the map if present
+    if (this.trackPlayer) {
+      this.trackPlayer.remove();
+      this.trackPlayer = null; // Reset the TrackPlayer instance
+    }
+    this.trackPlayer = new (L as any).TrackPlayer(trackPathData, {
+      speed: 500,
+      markerIcon: L.icon({
+        iconUrl: 'assets/images/car.png',
+        iconSize: [27, 54],
+        iconAnchor: [13.5, 27],
+      }),
+      passedLineColor: '#00ff00',
+      notPassedLineColor: '#ff0000',
     });
 
-    // Add start and end markers
-    if (trackData.length > 0) {
-      const startPoint = trackData[0];
-      const endPoint = trackData[trackData.length - 1];
+    // Add the TrackPlayer to the map
+    this.trackPlayer.addTo(this.map);
 
-      this.startMarker = L.marker([startPoint.latitude, startPoint.longitude], {
-        icon: L.icon({
-          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41]
-        })
-      }).addTo(this.map);
-
-      this.endMarker = L.marker([endPoint.latitude, endPoint.longitude], {
-        icon: L.icon({
-          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41]
-        })
-      }).addTo(this.map);
-    }
-
-    // Fit bounds to show all points
-    this.map.fitBounds(this.trackLine.getBounds());
+    this.initializetrackListeners();
+    this.playbackControlObject = this.initializePlayBackControlObject();
   }
 
-  private findClosestPoint(clickPoint: L.LatLng, points: any[]): any | null {
-    let minDist = Infinity;
-    let closest: any | null = null;
+  initializePlayBackControlObject() {
+    return {
+      speed: this.trackPlayer.options.speed,
+      progress: this.trackPlayer.options.progress * 100,
+      start: () => {
+        this.map.setZoom(17, {
+          animate: false,
+        });
+        this.trackPlayer.start();
+      },
+      pause: () => {
+        this.trackPlayer.pause();
+      },
+      remove: () => {
+        this.trackPlayer.remove();
+        this.showPlaybackControls = false;
+        this.plotVehicles(this.lastPositionData, null);
+        this.selectedVehicle = null;
+        this.isCollapsed = false;
+      },
+      updateSpeed: (updatedSpeed:any) => {
+        this.playbackControlObject.speed = updatedSpeed;
+        this.trackPlayer.setSpeed(updatedSpeed);
+      },
+      updateProgress: (updatedProgress:any) => {
+        this.playbackControlObject.progress = updatedProgress
+        this.trackPlayer.setProgress(updatedProgress);
+      },
+      reset: () => {
+        this.playbackControlObject.progress = 0;
+        this.playbackControlObject.speed = 500;
+        this.trackPlayer.setSpeed(500);
+        this.trackPlayer.setProgress(0);
+      },
+      status: "PlayBack",
+    };
+  }
 
-    points.forEach(point => {
-      const dist = clickPoint.distanceTo(L.latLng(point.latitude, point.longitude));
-      if (dist < minDist) {
-        minDist = dist;
-        closest = point;
-      }
+  handlePlaybackControls(control:string,event?:any) {    
+    if(control === 'play') {
+      this.playbackControlObject.start();
+    } else if(control === 'pause') {
+      this.playbackControlObject.pause();
+    } else if(control === 'updatespeed') {
+      this.playbackControlObject.updateSpeed(event?.value)
+      // this.playbackControlObject.speed = event.value;
+      // this.trackPlayer.setSpeed(event.value);
+    } else if(control === 'updateprogress') {
+      // this.playbackControlObject.progress = event.value / 100
+      // this.trackPlayer.setProgress(event.value / 100);
+      this.playbackControlObject.updateProgress(event?.value / 100)
+    } else if(control === 'close') {
+      this.playbackControlObject.remove()
+    } else if(control === 'reset') {
+      this.playbackControlObject.reset();
+    }
+  }
+
+
+  public initializetrackListeners() {
+    this.trackPlayer.on("start", () => {
+      this.playbackControlObject.status = 'Started'
     });
-
-    return closest;
-  }
-
-  private createPopupContent(point: any): string {
-    return `
-      <div class="custom-popup">
-        <h4>Vehicle Details</h4>
-        <p><b>Speed:</b> ${point?.speed} km/h</p>
-        <p><b>Time:</b> ${new Date(point.fixtime).toLocaleString()}</p>
-      </div>
-    `;
-  }
-
-  clearReplayObjects() {
-    if (this.trackLine) {
-      this.map.removeLayer(this.trackLine);
-    }
-    if (this.startMarker) {
-      this.map.removeLayer(this.startMarker);
-    }
-    if (this.endMarker) {
-      this.map.removeLayer(this.endMarker);
-    }
+    this.trackPlayer.on("pause", () => {
+      this.playbackControlObject.status = 'Paused'
+    });
+    this.trackPlayer.on("finished", () => {
+      this.playbackControlObject.status = 'Finished'
+      
+    });
+    this.trackPlayer.on("progress", (progress:any, { lng, lat }:any,index:any) => {
+      this.playbackControlObject.status = 'Moving';
+      this.playbackControlObject.progress = progress * 100;      
+    });
   }
 }
