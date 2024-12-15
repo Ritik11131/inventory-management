@@ -11,7 +11,7 @@ import { SliderModule } from 'primeng/slider';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { VehicleFiltersComponent } from './vehicle-filters/vehicle-filters.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
-import * as L from 'leaflet';
+import  L from 'leaflet';
 import { VehicleStatsComponent } from './vehicle-stats/vehicle-stats.component';
 import { latLng, Map, tileLayer } from "leaflet";
 import 'leaflet.markercluster';
