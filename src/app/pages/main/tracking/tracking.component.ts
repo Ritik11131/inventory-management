@@ -1,28 +1,25 @@
 import { lastPosStatusColors, vehicleFilterCountObject } from './../../../shared/constants/dashboard';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { VehicleFiltersComponent } from './vehicle-filters/vehicle-filters.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
+import * as L from 'leaflet';
 import { VehicleStatsComponent } from './vehicle-stats/vehicle-stats.component';
 import { latLng, Map, tileLayer } from "leaflet";
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
-import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import  "leaflet-trackplayer";
+import 'leaflet-trackplayer';
 import { DashboardService } from '../../../core/services/dashboard.service';
-import { CommonModule } from '@angular/common';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { GenericDatepickerComponent } from "../../../shared/components/generic-datepicker/generic-datepicker.component";
 import { TrackingService } from '../../../core/services/tracking.service';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastService } from '../../../core/services/toast.service';
-import { FormsModule } from '@angular/forms';
-
-
-
 
 @Component({
   selector: 'app-tracking',
