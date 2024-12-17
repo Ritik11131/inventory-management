@@ -276,12 +276,11 @@ export class TrackingComponent implements OnInit {
       const response = await this.trackingService.getLastPositionRelay({ sno: this.selectedVehicle?.device?.sno, FromTime: start, ToTime: end });
       this.isCollapsed = true;
       if(response?.data.length) {
-        const trackPath = response?.data?.map((obj:any)=>{
-          return { lat:obj.latitude, lng:obj.longitude }
-        })
+        const uniqueTrackPath = this.convertedValidJson(response?.data);
+        console.log(uniqueTrackPath,'unique');
         
-        this.map.fitBounds(trackPath);
-        this.initilizeTrackPlayer(trackPath);
+        this.map.fitBounds(uniqueTrackPath);
+        this.initilizeTrackPlayer(uniqueTrackPath);
         this.showPlaybackControls = true;
       } else {
         this.toastService.showInfo('Info','No Data Found');
@@ -292,6 +291,22 @@ export class TrackingComponent implements OnInit {
     } finally {
       this.creatingPlaybackPath = false;
     }
+  }
+
+  convertedValidJson(data:any) : any[] {
+    const trackPath = data?.map((obj:any)=>{
+      return { lat:obj.latitude, lng:obj.longitude }
+    })    
+    console.log(trackPath,'trackPath');
+    
+    
+    // Find the first unique point
+    const firstUniqueIndex = trackPath.findIndex((point:any, index:any) =>
+        point.lat !== trackPath[0].lat || point.lng !== trackPath[0].lng
+    );
+
+    // Slice the array from the first unique point (including the first unique)
+    return firstUniqueIndex > 0 ? trackPath.slice(firstUniqueIndex - 1) : trackPath;
   }
 
   public initilizeTrackPlayer(trackPathData: any[]) {
