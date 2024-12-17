@@ -27,10 +27,11 @@
 
 
 .info-window-contents{
-    height: 160px;
-    overflow: hidden; /* Hide the scrollbar */
-    -ms-overflow-style: none; /* Hide scrollbar in IE */
-    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    min-width: 25vw;
+    height: 12.5vh;
+    // overflow: hidden; /* Hide the scrollbar */
+    // -ms-overflow-style: none; /* Hide scrollbar in IE */
+    // scrollbar-width: none; /* Hide scrollbar in Firefox */
 }
 
 .info-window-contents::-webkit-scrollbar {

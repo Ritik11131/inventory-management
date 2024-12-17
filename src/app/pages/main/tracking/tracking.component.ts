@@ -20,6 +20,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { GenericDatepickerComponent } from "../../../shared/components/generic-datepicker/generic-datepicker.component";
 import { TrackingService } from '../../../core/services/tracking.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { AddressService } from '../../../core/services/address.service';
 
 @Component({
   selector: 'app-tracking',
@@ -76,7 +77,7 @@ export class TrackingComponent implements OnInit {
   };
 
 
-  constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService) { }
+  constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService,private addressService:AddressService) { }
 
   ngOnInit() {
     this.fetchLastPositionStats().then();
@@ -146,6 +147,10 @@ export class TrackingComponent implements OnInit {
         { direction: 'top' }
       );
 
+      marker.on('click', ()=>{
+        console.log(vehicle);
+      })
+
       this.markerClusterGroup.addLayer(marker);
       this.map.addLayer(this.markerClusterGroup);
       this.map.setView([vehicle.latitude, vehicle.longitude], 15); // Zoom level 15 for focus
@@ -171,6 +176,9 @@ export class TrackingComponent implements OnInit {
             });
 
             marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
+            marker.on('click', ()=>{
+              console.log(vehicle);
+            })
             markers.push(marker);
             this.markerClusterGroup.addLayer(marker);
 
@@ -217,29 +225,101 @@ export class TrackingComponent implements OnInit {
     });    
   }
 
-  async handleFilterClick(event: any): Promise<any> {
+
+
+  async handleFilterClick(event: any): Promise<void> {
+    this.resetPlaybackState();
+  
+    if (this.isSingleVehicleEvent(event)) {
+      console.log(event,'event');
+      
+      await this.handleSingleVehicleEvent(event);
+    } else {
+      this.handleMultipleVehicles(event);
+    }
+  }
+  
+  resetPlaybackState(): void {
     this.selectedVehicle = null;
     this.isCollapsed = false;
     this.showPlaybackControls = false;
-    if(this.trackPlayer) {
+  
+    if (this.trackPlayer) {
       this.trackPlayer.remove();
     }
-
-    if (event?.status && event?.latitude && event?.longitude) {
-      // If the event contains a single vehicle's details
-      this.plotVehicles(event);
-      try {
-        const response = await this.trackingService.getInfoWindowDetails(event?.deviceSno);
-        this.selectedVehicle = { vehicleNo: event?.vehicleNo, status: event?.status, ...response?.data };
-      } catch (error) {
-        this.selectedVehicle = {};
-      }
-    } else {
-      // If the event is for filtering multiple vehicles
-      const filterStatus = event?.key === 'ALL' ? null : event?.key;
-      this.plotVehicles(this.lastPositionData, filterStatus);
+  }
+  
+  isSingleVehicleEvent(event: any): boolean {
+    return event?.status && event?.latitude && event?.longitude;
+  }
+  
+  async handleSingleVehicleEvent(event: any): Promise<void> {
+    this.plotVehicles(event);
+    try {
+      const response = await this.trackingService.getInfoWindowDetails(event?.deviceSno);
+      const address = await this.fetchSelectedVehicleAddress(response?.data);
+      this.selectedVehicle = {
+        vehicleNo: event?.vehicleNo,
+        status: event?.status,
+        address: address?.address || 'Unknown',
+        ...response?.data,
+      };
+    } catch (error) {
+      this.toastService.showError('Error', 'Failed to fetch vehicle details!');
+      this.selectedVehicle = {};
     }
   }
+  
+  handleMultipleVehicles(event: any): void {
+    const filterStatus = event?.key === 'ALL' ? null : event?.key;
+    this.plotVehicles(this.lastPositionData, filterStatus);
+  }
+  
+  async fetchSelectedVehicleAddress(data: any): Promise<any> {
+    try {
+      const { latitude, longitude } = data?.location || {};
+      const response = await this.addressService.fetchAddress(latitude, longitude);
+      return response?.data;
+    } catch (error) {
+      this.toastService.showError('Error', 'Failed to fetch Address!');
+      return null;
+    }
+  }
+
+  // async handleFilterClick(event: any): Promise<any> {
+  //   this.selectedVehicle = null;
+  //   this.isCollapsed = false;
+  //   this.showPlaybackControls = false;
+  //   if(this.trackPlayer) {
+  //     this.trackPlayer.remove();
+  //   }
+
+  //   if (event?.status && event?.latitude && event?.longitude) {
+  //     // If the event contains a single vehicle's details
+  //     this.plotVehicles(event);
+  //     try {
+  //       const response = await this.trackingService.getInfoWindowDetails(event?.deviceSno);
+  //       const address = await this.fetchSelectedVehicleAddress(response?.data);
+  //       this.selectedVehicle = { vehicleNo: event?.vehicleNo, status: event?.status, address:address?.address, ...response?.data };
+        
+  //     } catch (error) {
+  //       this.selectedVehicle = {};
+  //     }
+  //   } else {
+  //     // If the event is for filtering multiple vehicles
+  //     const filterStatus = event?.key === 'ALL' ? null : event?.key;
+  //     this.plotVehicles(this.lastPositionData, filterStatus);
+  //   }
+  // }
+
+  // async fetchSelectedVehicleAddress(object:any) : Promise<any> {
+  //   try {
+  //     const response = (await this.addressService.fetchAddress(object?.location?.latitude,object?.location?.longitude))?.data;
+  //     return response;
+  //   } catch (error) {
+  //     this.toastService.showError('Error','Failed to fetch Address!')
+  //   }
+  // }
 
   handleSearch(event: any) {
     const searchTerm = event?.target?.value?.trim()?.toLowerCase();    
@@ -278,7 +358,7 @@ export class TrackingComponent implements OnInit {
       if(response?.data.length) {
         const uniqueTrackPath = this.convertedValidJson(response?.data);
         console.log(uniqueTrackPath,'unique');
-        
+
         this.map.fitBounds(uniqueTrackPath);
         this.initilizeTrackPlayer(uniqueTrackPath);
         this.showPlaybackControls = true;

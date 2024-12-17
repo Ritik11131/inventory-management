@@ -891,7 +891,7 @@ export class DeviceListComponent {
 
       try {
         const response = await this.fitmentService.validateSimValidity(this.device.deviceSno, selectedValue ? 'old' : 'new')
-        this.disableStepperNextBtn = response.data.validity;
+        this.disableStepperNextBtn = !response.data.validity;
       } catch (error:any) {
        this.toastService.showError('Error',error.error.data);
        this.disableStepperNextBtn = true;
