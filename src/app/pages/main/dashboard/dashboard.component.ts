@@ -26,12 +26,33 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { GenericDialogComponent } from "../../../shared/components/generic-dialog/generic-dialog.component";
 import { alertInfotableColumns, inventoryInfoTableColumns, lastUpdateInfoColumns, overspeedInfotableColumns, renewalInfoTableColumns, sosInfotableColumns, vehicleTypeInstallationInfotableColumns } from '../../../shared/constants/columns';
 
+import {
+  CompactType,
+  DisplayGrid,
+  Draggable,
+  GridsterComponent,
+  GridsterConfig,
+  GridsterItem,
+  GridsterItemComponent,
+  GridType,
+  PushDirections,
+  Resizable
+} from 'angular-gridster2';
+
+interface Safe extends GridsterConfig {
+  draggable: Draggable;
+  resizable: Resizable;
+  pushDirections: PushDirections;
+}
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [DividerModule, ChartModule, LeafletModule, ProgressBarModule, PanelModule, FormsModule, OverlayPanelModule, LottieComponent,
-    CommonModule, ScrollPanelModule, NgApexchartsModule, KnobModule, LeafletMarkerClusterModule, GenericOverlayComponent, GenericDialogComponent],
+    CommonModule, ScrollPanelModule, NgApexchartsModule, KnobModule, LeafletMarkerClusterModule, GenericOverlayComponent, GenericDialogComponent,GridsterComponent,
+    GridsterItemComponent],
+    
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -41,6 +62,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   options: AnimationOptions = {
     path: '/assets/lottie/over-speed.json',
   };
+
+  gridsteroptions!: Safe
+;
+  dashboard!: Array<GridsterItem>
   
   map!: Map;
   style = 'normal.day';
@@ -103,9 +128,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   onMapReady(map: Map) {
     this.map = map;
-    this.markerClusterGroup = L.markerClusterGroup();
-    this.map.on('baselayerchange', this.handleBaseLayerChange.bind(this));
-    this.addLayerControl();   
+    setTimeout(() => {
+      this.map.invalidateSize();
+      this.markerClusterGroup = L.markerClusterGroup();
+      this.map.on('baselayerchange', this.handleBaseLayerChange.bind(this));
+      this.addLayerControl();   
+    }, 100);
   }
 
   private handleBaseLayerChange(e: any) {
@@ -120,9 +148,178 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  removeItem($event: MouseEvent | TouchEvent, item:any): void {
+    $event.preventDefault();
+    $event.stopPropagation();
+    this.dashboard.splice(this.dashboard.indexOf(item), 1);
+  }
+
+
   ngOnInit(): void {
     this.initializeDashboard();
     this.startPolling();
+
+
+
+    // this.gridsteroptions = {
+    //   gridType: GridType.Fit, // Automatically adjusts grid size to fit the container
+    //   compactType: CompactType.None, // No compacting; items remain where placed
+    //   margin: 7, // Margin between grid items
+    //   outerMargin: true,
+    //   outerMarginTop: null,
+    //   outerMarginRight: null,
+    //   outerMarginBottom: null,
+    //   outerMarginLeft: null,
+    //   useTransformPositioning: true,
+    //   mobileBreakpoint: 640, // Define mobile behavior breakpoint
+    //   useBodyForBreakpoint: false,
+    //   minCols: 4, // Minimum number of columns
+    //   maxCols: 4, // Maximum number of columns
+    //   minRows: 6, // Minimum number of rows
+    //   maxRows: 6, // Maximum number of rows
+    //   maxItemCols: 4, // Maximum columns an item can span
+    //   minItemCols: 1, // Minimum columns an item can span
+    //   maxItemRows: 6, // Maximum rows an item can span
+    //   minItemRows: 1, // Minimum rows an item can span
+    //   maxItemArea: 24, // Maximum area (cols * rows)
+    //   minItemArea: 1, // Minimum area (cols * rows)
+    //   defaultItemCols: 1, // Default item column span
+    //   defaultItemRows: 1, // Default item row span
+    //   fixedColWidth: 105, // Width of each column (fixed size)
+    //   fixedRowHeight: 55, // Height of each row (fixed size)
+    //   keepFixedHeightInMobile: true, // Maintain fixed height on mobile
+    //   keepFixedWidthInMobile: true, // Maintain fixed width on mobile
+    //   scrollSensitivity: 10,
+    //   scrollSpeed: 20,
+    //   enableEmptyCellClick: false,
+    //   enableEmptyCellContextMenu: false,
+    //   enableEmptyCellDrop: false,
+    //   enableEmptyCellDrag: false,
+    //   enableOccupiedCellDrop: false,
+    //   emptyCellDragMaxCols: 4,
+    //   emptyCellDragMaxRows: 6,
+    //   ignoreMarginInRow: true,
+    //   draggable: {
+    //     enabled: true, // Enable drag functionality
+    //   },
+    //   resizable: {
+    //     enabled: true, // Enable resize functionality
+    //   },
+    //   swap: false,
+    //   pushItems: true,
+    //   disablePushOnDrag: false,
+    //   disablePushOnResize: false,
+    //   pushDirections: { north: true, east: true, south: true, west: true },
+    //   pushResizeItems: false,
+    //   displayGrid: DisplayGrid.OnDragAndResize, // Show grid only during drag/resize
+    //   disableWindowResize: false,
+    //   disableWarnings: false,
+    //   scrollToNewItems: false,
+    // };
+
+
+    this.gridsteroptions = {
+      pushDirections: { north: true, east: true, south: true, west: true },
+      gridType: GridType.Fit, // Adjusts grid to fit the container
+      compactType: CompactType.None, // No compacting of items
+      margin: 10, // Space between grid items
+      outerMargin: true, // Include margin outside the grid
+      useTransformPositioning: true, // Enable transform-based positioning
+      mobileBreakpoint: 640, // Grid adjusts below this width
+      minCols: 1, // Fixed minimum columns for 12x12 grid
+      maxCols: 100, // Fixed maximum columns
+      minRows: 1, // Fixed minimum rows
+      maxRows: 100, // Fixed maximum rows
+      defaultItemCols: 1, // Default column span for new items
+      defaultItemRows: 1, // Default row span for new items
+      maxItemCols: 100, // Maximum columns an item can span
+      maxItemRows: 100, // Maximum rows an item can span
+      minItemCols: 1, // Minimum columns an item can span
+      minItemRows: 1, // Minimum rows an item can span
+      fixedColWidth: 60, // Width of each grid column (adjust as needed)
+      fixedRowHeight: 60, // Height of each grid row (adjust as needed)
+      resizable: {
+        enabled: true, // Enable resizing
+        start: (item, gridsterItem, event) => {
+          console.log('Resize start:', item, gridsterItem, event);
+        },
+        stop: (item, gridsterItem, event) => {
+          console.log('Resize stop:', item, gridsterItem, event);
+        },
+      },
+      draggable: {
+        enabled: true, // Enable dragging
+        start: (item, gridsterItem, event) => {
+          console.log('Drag start:', item, gridsterItem, event);
+        },
+        stop: (item, gridsterItem, event) => {
+          console.log('Drag stop:', item, gridsterItem, event);
+        },
+      },
+      swap:false,
+      pushItems: true, // Enable pushing items
+      displayGrid: DisplayGrid.OnDragAndResize, // Show grid during drag and resize
+    };
+    this.dashboard = [
+      // Vehicle Status Cards
+      { cols: 3, rows: 2, y: 0, x: 0, lastPosition: true, label: 'Running Vehicles', count: 0, colorClass: 'green', bgColorClass: 'bg-green-100', textColorClass: 'text-green-500', key: 'RUNNING', lottiePath: '/assets/lottie/running-truck.json' },
+      { cols: 3, rows: 2, y: 0, x: 3, lastPosition: true, label: 'Idle Vehicles', count: 0, colorClass: 'yellow', bgColorClass: 'bg-yellow-100', textColorClass: 'text-yellow-400', key: 'DORMANT', lottiePath: '/assets/lottie/idle-truck.json' },
+      { cols: 3, rows: 2, y: 0, x: 6, lastPosition: true, label: 'Stop Vehicles', count: 0, colorClass: 'red', bgColorClass: 'bg-red-100', textColorClass: 'text-red-500', key: 'STOP', lottiePath: '/assets/lottie/stop-truck.json' },
+      { cols: 3, rows: 2, y: 0, x: 9, lastPosition: true, label: 'Offline Vehicles', count: 0, colorClass: 'surface', bgColorClass: 'bg-bluegray-100', textColorClass: 'text-bluegray-700', key: 'OFFLINE', lottiePath: '/assets/lottie/offline-truck.json' },
+    
+      // Total Complaints
+      { cols: 6, rows: 4, y: 4, x: 0, totalComplaints: true },
+    
+      // Alerts (SOS, Over Speed, General Alerts)
+      {
+        cols: 2, rows: 3, y: 4, x: 6, SOSALertOverSpeed: true, key: 'sos',
+        title: 'SOS',
+        image: 'assets/images/sos.png',
+        fields: [],
+        bgClass: 'bg-red-500',
+        value: 0,
+        lottiePath: '/assets/lottie/push-button.json'
+      },
+      {
+        cols: 2, rows: 3, y: 7, x: 6, SOSALertOverSpeed: true, key: 'overspeed',
+        title: 'Over Speed',
+        image: 'assets/images/overspeed.png',
+        fields: [],
+        bgClass: 'bg-orange-500',
+        value: 0,
+        lottiePath: '/assets/lottie/over-speed.json'
+      },
+      {
+        cols: 2, rows: 6, y: 4, x: 8, SOSALertOverSpeed: true, key: 'alert',
+        title: 'Alert',
+        image: 'assets/images/alert.png',
+        fields: [
+          { key: 'ignitionOn', label: 'Ignition On', colSpan: '4', textAlign: 'left' },
+          { key: 'ignitionOff', label: 'Ignition Off', colSpan: '4', textAlign: 'center' },
+          { key: 'tampering', label: 'Tampering', colSpan: '4', textAlign: 'right' },
+          { key: 'powerCut', label: 'Power Cut', colSpan: '4', textAlign: 'left' },
+          { key: 'powerRestored', label: 'Power Resume', colSpan: '4', textAlign: 'center' },
+          { key: 'lowBattery', label: 'Power Low Battery', colSpan: '4', textAlign: 'right' },
+          { key: 'hardAcceleration', label: 'Harsh Acceleration', colSpan: '4', textAlign: 'left' },
+          { key: 'hardBraking', label: 'Harsh Braking', colSpan: '4', textAlign: 'center' },
+          { key: 'hardCornering', label: 'Harsh Turning', colSpan: '4', textAlign: 'right' },
+          { key: 'geofenceEnter', label: 'Geofence In', colSpan: '4', textAlign: 'left' },
+          { key: 'geofenceExit', label: 'Geofence Out', colSpan: '4', textAlign: 'center' }
+        ],
+        response: {},
+        bgClass: 'bg-yellow-500',
+        value: 0,
+        lottiePath: '/assets/lottie/alert.json'
+      },
+    
+      // Vehicle Installation and Map
+      { cols: 5, rows: 7, y: 10, x: 0, vehicleInstallation: true },
+      { cols: 7, rows: 7, y: 10, x: 5, dashboardMap: true, dragEnabled: false },
+    ];
+    
+
+
+   
   }
 
   startPolling() {
