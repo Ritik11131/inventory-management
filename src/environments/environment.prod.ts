@@ -6,5 +6,8 @@ export const environment = {
     },
     trimble: {
       apiKey:'46245024F7261E4BA868B9738D584270'
+    },
+    tomtom: {
+      apiKey:'F7XcmYGlBuRehEW5CqVgA8aFooFZjwSR'
     }
   };

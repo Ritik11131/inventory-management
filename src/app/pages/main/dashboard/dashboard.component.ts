@@ -71,7 +71,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         maxZoom: 18,
         tileSize: 256,
         zoomOffset: 0
-      })
+      }),
+      tileLayer(`https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${environment.tomtom.apiKey}`, 
+        {attribution:'&copy; TOMTOM Maps', maxZoom: 18,}
+     )
     ],
     zoom: 5,
     center: latLng(27.54095593, 79.16035184)
@@ -275,6 +278,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         'Trimble': this.leafletOptions.layers[2],
         'HERE Map (Day)': this.leafletOptions.layers[0],
         'OpenStreet Map (Hot)': this.leafletOptions.layers[1],
+        'Tom Tom Map':this.leafletOptions.layers[3]
       },
     ).addTo(this.map);
 
