@@ -44,6 +44,11 @@
         (selectionChange)="onSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
         styleClass="p-datatable-sm p-datatable-gridlines">
 
+        <!-- <ng-template pTemplate="caption">
+            <span class="text-xl p-4">{{header}}</span>
+        </ng-template> -->
+        
+
         <!-- Dynamic Columns -->
         <ng-template pTemplate="header">
             <tr>

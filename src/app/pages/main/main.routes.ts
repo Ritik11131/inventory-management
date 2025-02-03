@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MainComponent } from './main.component';
 import { SettingsComponent } from './settings/settings.component';
 import { TrackingComponent } from './tracking/tracking.component';
+import { ReportsComponent } from './reports/reports.component';
 
 export const mainRoutes: Routes = [
   {
@@ -17,6 +18,10 @@ export const mainRoutes: Routes = [
       {
         path: 'tracking',
         component: TrackingComponent
+      },
+      {
+        path: 'reports',
+        loadChildren: () => import('./reports/reports.routes').then(m => m.reportsRoutes)
       },
       {
         path: 'management',

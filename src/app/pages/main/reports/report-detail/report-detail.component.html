@@ -1,0 +1,41 @@
+<div class="px-4 md:px-6 lg:px-8">
+    <p-toolbar styleClass="mb-4 gap-2 p-5">
+        <ng-template pTemplate="left">
+            @if(report.filters.rto) {
+                <p-floatLabel>
+                    <p-multiSelect  class="mr-4"
+                    styleClass="w-18rem" [options]="rtos" [(ngModel)]="selectedRto" optionLabel="rtoName"
+                    placeholder="Select Rto" [showClear]="true"  inputId="rto" />
+                    
+                    <label for="rto">Select Rto</label>
+                </p-floatLabel>
+            }
+
+            @if(report.filters.oem) {    
+                <p-floatLabel>
+                    <p-multiSelect  class="mr-4"
+                    styleClass="w-18rem" [options]="oems" [(ngModel)]="selectedOem" optionLabel="name"
+                    placeholder="Select OEM" [showClear]="true"  inputId="oem" />
+                    <label for="oem">Select Oem</label>
+                </p-floatLabel>
+            }
+
+            @if(report?.filters?.date?.enabled) {
+                <p-floatLabel>
+                    <p-calendar  [iconDisplay]="'input'"  [showIcon]="true"  styleClass="w-18rem" [(ngModel)]="selectedDate" inputId="date" />
+                    <label for="date">Select Date</label>
+                </p-floatLabel>
+            }
+           
+        </ng-template>
+
+        <ng-template pTemplate="right">
+                <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block"/>
+        </ng-template>
+    </p-toolbar>
+
+
+    
+</div>
+<app-generic-table [data]="[]" [columns]="[]" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="false"
+[exportFilename]="'Device'" [globalFilterFields]="['imei','iccid','sno']"/>

@@ -45,7 +45,16 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                 ]
             }
             ]
-        }
+        },
+        {
+            key: 'reports',
+            label: 'Reports',
+            icon: 'pi pi-book',
+            command: () => {
+                router.navigate(['/main/reports/all']);
+                breadcrumbService.generateBreadcrumbs('/main/reports/all');
+            },
+        },
     ];
 
     // User type specific menu items

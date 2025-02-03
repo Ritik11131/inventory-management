@@ -91,7 +91,7 @@ export class BreadcrumbService {
             { label: 'Upload Certificates' }
           ]
         }
-      }
+      },
     }
   };
 
@@ -100,14 +100,23 @@ export class BreadcrumbService {
 
   generateBreadcrumbs(url: string) : void {
     this.breadCrumbs = [];
-  
+    
     const urlParts = url.substring(1).split('/');
+    
+    if(url.includes('reports')){
+      this.breadCrumbs = [
+        { label:'Reports'},
+        { label: urlParts[urlParts.length - 1].toUpperCase().replace('_',' ') }
+      ]
+      return;
+    }
     
     // Handle root route (/main)
     if (urlParts.length === 2) {
       this.breadCrumbs.push({ label: capitalize(urlParts[1]) });
     } else if (urlParts.length > 2) {
       let breadcrumbPath : any = this.breadcrumbMap;
+      console.log(breadcrumbPath);
 
       for (const part of urlParts) {
         if(part !== 'assigned') {
