@@ -46,6 +46,11 @@ export class BreadcrumbService {
           { label: 'Inventory' },
           { label: 'Inventory List' }
         ],
+        'route':[
+          { label: 'Management' },
+          { label: 'Route' },
+          { label: 'Route List' }
+        ],
         'dynamic-user-list': [
           { label: 'Management' },
           { label: (authService : any) => authService.getUserType() === 'User' ? 'Permit Holder' : authService.getUserType() },

@@ -26,6 +26,10 @@ export const tableActionsConfigRoleWise : any = {
       RTOList: [
         { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
         { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
+      ],
+      RouteList: [
+        { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
+        { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
       ]
     },
     OEM: {

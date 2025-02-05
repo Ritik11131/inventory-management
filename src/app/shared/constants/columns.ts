@@ -63,6 +63,11 @@ export const rtoColumns = [
     { field: 'rtoName', header: 'RTO Name', minWidth: '5rem' }
 ];
 
+export const routeColumns = [
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
+    { field: 'name', header: 'Name', minWidth: '10rem' },
+];
+
 export const vehicleCategoryColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field:'name',header: 'Name', minWidth: '10rem' },

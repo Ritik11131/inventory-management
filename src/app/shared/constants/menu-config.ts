@@ -127,7 +127,7 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
             },
             {
                 label: 'States',
-                icon: 'pi pi-map-marker',
+                icon: 'pi pi-building-columns',
                 items: [
                     {
                         label: 'States List',
@@ -149,6 +149,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                         command: () => {
                             router.navigate(['/main/management/rto-list']);
                             breadcrumbService.generateBreadcrumbs('/main/management/rto-list');
+                        }
+                    }
+                ]
+            },
+            {
+                label: 'Route',
+                icon: 'pi pi-map-marker',
+                items: [
+                    {
+                        label: 'Route List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/route']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/route');
                         }
                     }
                 ]
