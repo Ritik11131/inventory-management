@@ -1,7 +1,10 @@
-<app-generic-table [data]="[]" [columns]="columns" [rows]="10" [header]="'Route'" [isDataLoading]="isLoading"
+<app-generic-table [data]="routes" [columns]="columns" [rows]="10" [header]="'Route'" [isDataLoading]="isLoading"
    [exportFilename]="'routes'" [globalFilterFields]="['name']" (edit)="onEditState($event)" [selectionMode]="'none'" (new)="openNew($event)" />
 
-   <app-generic-drawer [isOpen]="true" [contentTemplate]="createRouteContent" />
+   @if(routeDrawer) {
+       <app-generic-drawer [isOpen]="routeDrawer" [contentTemplate]="createRouteContent" />
+   }
+
    
    <ng-template #createRouteContent>
     <div class="grid h-screen">
@@ -24,6 +27,11 @@
             <div class="flex flex-column gap-3">
                 <label for="endPoint" class="font-medium">End Point</label>
                 <input id="endPoint" type="text" class="p-inputtext w-full" placeholder="Enter end point" />
+            </div>
+
+            <div class="flex flex-column gap-3">
+                <label for="endPoint" class="font-medium">Route Name</label>
+                <input id="endPoint" type="text" class="p-inputtext w-full" placeholder="Enter Route Name" />
             </div>
 
             <div class="mt-4">

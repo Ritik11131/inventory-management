@@ -1,12 +1,15 @@
 import { latLng } from 'leaflet';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GenericTableComponent } from '../../../../shared/components/generic-table/generic-table.component';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
+import * as turf from '@turf/turf';
 import { routeColumns } from '../../../../shared/constants/columns';
 import { GenericDrawerComponent } from "../../../../shared/components/generic-drawer/generic-drawer.component";
 import { ButtonModule } from 'primeng/button';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { RouteService } from '../../../../core/services/route.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-route',
@@ -15,14 +18,16 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
   templateUrl: './route.component.html',
   styleUrl: './route.component.scss'
 })
-export class RouteComponent {
+export class RouteComponent implements OnInit {
 
   columns = routeColumns;
   fields: any[] = []
   route!: any;
+  routes: any[] = [];
   isLoading: boolean = false;
   routeDrawer: boolean = false;
   isEditing: boolean = false;
+  private routeGeofenceLayer: L.Layer | null = null; 
 
   private map!: L.Map;
   private routingControl!: any;
@@ -33,12 +38,12 @@ export class RouteComponent {
     center: L.latLng(28.6139, 77.2090) // Default center (Delhi)
   };
 
+  constructor(private routeService : RouteService, private toastService : ToastService) {}
+
 
 
   private initRoutingControl(): void {
     // Custom marker creation function
-
-
     this.routingControl = (L as any).Routing.control({
       waypoints: [
         L.latLng(51.5, -0.09), // Start point
@@ -48,8 +53,6 @@ export class RouteComponent {
       createMarker: (waypointIndex: any, waypoint: any, numberOfWaypoints: any) => {
         // Create custom markers only for the first and last waypoint
         console.log(waypointIndex, waypoint, numberOfWaypoints);
-
-
         return L.marker(waypoint.latLng, {
           icon: L.icon({
             iconSize: [25, 41],
@@ -68,19 +71,29 @@ export class RouteComponent {
     // Save route to local storage when the route is changed
     this.routingControl.on('routesfound', (e: any) => {
       console.log(e);
-      const routes = e.routes;
-      localStorage.setItem('savedRoute', JSON.stringify(routes));
+      // const routes = e.routes;
+      // localStorage.setItem('savedRoute', JSON.stringify(routes));
+
+
+      const route = e.routes[0]; // Get first route
+      const coordinates = route.coordinates.map((c: any) => [c.lng, c.lat]); // Extract lat-lng
+  
+      // Store route in local storage
+      localStorage.setItem('savedRoute', JSON.stringify(route));
+  
+      // Draw geofence around the route
+      this.createRouteGeofence(coordinates);
+
+
     });
   }
 
   public loadSavedRoute(): void {
     const savedRoute = localStorage.getItem('savedRoute');
-    console.log(savedRoute);
-
 
     if (savedRoute) {
-      const savedCoordinates = JSON.parse(savedRoute)[0].coordinates.map((coord: any) => L.latLng(coord.lat, coord.lng));
-      const savedWaypoints = JSON.parse(savedRoute)[0].waypoints.map((coord: any) => coord.latLng);
+      const savedCoordinates = JSON.parse(savedRoute).coordinates.map((coord: any) => L.latLng(coord.lat, coord.lng));
+      const savedWaypoints = JSON.parse(savedRoute).waypoints.map((coord: any) => coord.latLng);
 
       if (savedCoordinates.length > 0) {
         // Remove existing routing control if present
@@ -128,7 +141,8 @@ export class RouteComponent {
         this.routingControl.on('routesfound', (event: any) => {
           // event.routes contains the route information
           console.log('New route found:', event.routes);
-
+          const routes = event.routes;
+          localStorage.setItem('savedRoute', JSON.stringify(routes));
         });
       }
 
@@ -136,6 +150,10 @@ export class RouteComponent {
     }
 
 
+  }
+
+  ngOnInit(): void {
+      this.fetchRoutes()
   }
 
 
@@ -164,8 +182,48 @@ export class RouteComponent {
 
   resetRoute() {
     return {
-      name: '',
-      geojson: null
+      name: 'test',
+      geometry: null
     };
   }
+
+  async fetchRoutes(): Promise<any> {
+    this.isLoading = true;
+    try {
+      const response = await this.routeService.getList();
+      this.routes = response.data;
+      // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+    } catch (error : any) {
+      this.routes = [];
+      this.toastService.showError('Error', error?.error?.data);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+
+  private createRouteGeofence(routeCoordinates: [number, number][]): void {  
+    // Remove existing geofence if it exists
+    if (this.routeGeofenceLayer) {
+      this.map.removeLayer(this.routeGeofenceLayer);
+    }
+  
+    // Create new geofence
+    const line = turf.lineString(routeCoordinates);
+    const buffered = turf.buffer(line, 50, { units: 'meters' });
+  
+    this.routeGeofenceLayer = L.geoJSON(buffered, {
+      style: {
+        color: '#4A90E2', // Nice blue shade
+        fillColor: 'rgba(74, 144, 226, 0.4)', // Softer blue fill
+        fillOpacity: 0.6, // Slightly transparent
+        weight: 3, // Slightly thicker border
+        dashArray: '5, 5' // Dashed border for a stylish effect
+      }
+    }).addTo(this.map);
+  }
+
+
+
+
 }
