@@ -1,42 +1,50 @@
 <app-generic-table [data]="routes" [columns]="columns" [rows]="10" [header]="'Route'" [isDataLoading]="isLoading"
-   [exportFilename]="'routes'" [globalFilterFields]="['name']" (edit)="onEditState($event)" [selectionMode]="'none'" (new)="openNew($event)" />
+    [exportFilename]="'routes'" [globalFilterFields]="['name']" (edit)="onEditState($event)" [selectionMode]="'none'"
+    (new)="openNew($event)" />
 
-   @if(routeDrawer) {
-       <app-generic-drawer [isOpen]="routeDrawer" [contentTemplate]="createRouteContent" />
-   }
+@if(routeDrawer) {
+<app-generic-drawer [isOpen]="routeDrawer" [contentTemplate]="createRouteContent" (onDrawerHide)="hideDrawer($event)" />
+}
 
-   
-   <ng-template #createRouteContent>
-    <div class="grid h-screen">
+
+<ng-template #createRouteContent>
+    <div class="grid h-full">
         <!-- Left Side - Leaflet Map -->
         <div class="col-12 lg:col-8 xl:col-9 h-full">
             <div class="h-full w-full">
-                <div leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)" class="h-full w-full border-round shadow-2"></div>
+                <div leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)"
+                    class="h-full w-full border-round shadow-2"></div>
             </div>
         </div>
 
         <!-- Right Side - Inputs & Buttons (Stacked on Small Screens) -->
         <div class="col-12 lg:col-4 xl:col-3 bg-white p-4 flex flex-column gap-4">
-            <h3 class="text-xl font-semibold text-muted-color-emphasis">Create a Route</h3>
+            <h3 class="text-xl font-semibold text-muted-color-emphasis">{{isEditing ? 'Update' : 'Create' }} a Route</h3>
 
             <div class="flex flex-column gap-3">
-                <label for="startPoint" class="font-medium">Start Point</label>
-                <input id="startPoint" type="text" class="p-inputtext w-full" placeholder="Enter start point" />
+                <label for="routeName" class="font-medium">Route Name</label>
+                <input id="routeName" type="text" class="p-inputtext w-full" placeholder="Enter Route Name"
+                    [(ngModel)]="routeName" />
+            </div>
+            <div class="flex flex-column gap-3">
+                <label for="startPoint" class="font-medium">Start Point (lat,lng)</label>
+                <input id="startPoint" type="text" class="p-inputtext w-full" placeholder="Enter start point"
+                    [(ngModel)]="startPoint" />
             </div>
 
             <div class="flex flex-column gap-3">
-                <label for="endPoint" class="font-medium">End Point</label>
-                <input id="endPoint" type="text" class="p-inputtext w-full" placeholder="Enter end point" />
+                <label for="endPoint" class="font-medium">End Point (lat,lng)</label>
+                <input id="endPoint" type="text" class="p-inputtext w-full" placeholder="Enter end point"
+                    [(ngModel)]="endPoint" />
+                <p-button severity="contrast" styleClass="w-full" icon="pi pi-map" label="Initialize Routing" (click)="plotEndPoint()"></p-button>
             </div>
 
-            <div class="flex flex-column gap-3">
-                <label for="endPoint" class="font-medium">Route Name</label>
-                <input id="endPoint" type="text" class="p-inputtext w-full" placeholder="Enter Route Name" />
-            </div>
 
-            <div class="mt-4">
-                <p-button icon="pi pi pi-times" [severity]="'success'" label="Save" class="mr-4" (onClick)="loadSavedRoute()" />
-                <p-button icon="pi pi pi-times" [severity]="'secondary'" label="Reset" />
+            <div class="mt-4 flex justify-content-end">
+                <!-- <p-button icon="pi pi-check" [severity]="'success'" label="Save" class="mr-4" (onClick)="loadSavedRoute()" /> -->
+                <p-button icon="pi pi-check" [severity]="'primary'" [label]="isEditing ? 'Update' : 'Create'" class="mr-4"
+                    (onClick)="createRoute()" />
+                <!-- <p-button icon="pi pi-times" [severity]="'secondary'" label="Reset" (click)="resetInputs()" /> -->
             </div>
         </div>
     </div>

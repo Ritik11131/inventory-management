@@ -17,4 +17,33 @@ export class RouteService {
         throw error;
       }
     }
+
+    async createRoute(route : any) : Promise<any> {
+      try {
+        const response = await this.http.post('Geofence', {...route});
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    async getRouteById(route : any) : Promise<any> {
+      try {
+        const response = await this.http.get('Geofence', {}, route.id);
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    async deleteRoute(route : any) : Promise<any> {
+      try {
+        const response = await this.http.get('Geofence', {}, route.id);
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    }
+
+
 }
