@@ -51,123 +51,123 @@ console.log(JSON.parse("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":
 
 
 
-  private initRoutingControl(): void {
-    // Custom marker creation function
-    this.routingControl = (L as any).Routing.control({
-      waypoints: [
-        L.latLng(51.5, -0.09), // Start point
-        L.latLng(51.51, -0.1)  // End point
-      ],
-      routeWhileDragging: true,
-      createMarker: (waypointIndex: any, waypoint: any, numberOfWaypoints: any) => {
-        // Create custom markers only for the first and last waypoint
-        console.log(waypointIndex, waypoint, numberOfWaypoints);
-        return L.marker(waypoint.latLng, {
-          icon: L.icon({
-            iconSize: [25, 41],
-            iconAnchor: [13, 41],
-            iconUrl: 'assets/images/marker-icon.png',
-            shadowUrl: 'assets/images/marker-shadow.png',
-          }),
-          draggable: true
+  // private initRoutingControl(): void {
+  //   // Custom marker creation function
+  //   this.routingControl = (L as any).Routing.control({
+  //     waypoints: [
+  //       L.latLng(51.5, -0.09), // Start point
+  //       L.latLng(51.51, -0.1)  // End point
+  //     ],
+  //     routeWhileDragging: true,
+  //     createMarker: (waypointIndex: any, waypoint: any, numberOfWaypoints: any) => {
+  //       // Create custom markers only for the first and last waypoint
+  //       console.log(waypointIndex, waypoint, numberOfWaypoints);
+  //       return L.marker(waypoint.latLng, {
+  //         icon: L.icon({
+  //           iconSize: [25, 41],
+  //           iconAnchor: [13, 41],
+  //           iconUrl: 'assets/images/marker-icon.png',
+  //           shadowUrl: 'assets/images/marker-shadow.png',
+  //         }),
+  //         draggable: true
 
-        });
-
-
-      },
-    }).addTo(this.map);
-
-    // Save route to local storage when the route is changed
-    this.routingControl.on('routesfound', (e: any) => {
-      console.log(e);
-      // const routes = e.routes;
-      // localStorage.setItem('savedRoute', JSON.stringify(routes));
+  //       });
 
 
-      const route = e.routes[0]; // Get first route
-      const coordinates = route.coordinates.map((c: any) => [c.lng, c.lat]); // Extract lat-lng
+  //     },
+  //   }).addTo(this.map);
+
+  //   // Save route to local storage when the route is changed
+  //   this.routingControl.on('routesfound', (e: any) => {
+  //     console.log(e);
+  //     // const routes = e.routes;
+  //     // localStorage.setItem('savedRoute', JSON.stringify(routes));
+
+
+  //     const route = e.routes[0]; // Get first route
+  //     const coordinates = route.coordinates.map((c: any) => [c.lng, c.lat]); // Extract lat-lng
   
-      // Store route in local storage
-      localStorage.setItem('savedRoute', JSON.stringify(route));
+  //     // Store route in local storage
+  //     localStorage.setItem('savedRoute', JSON.stringify(route));
   
-      // Draw geofence around the route
-      // this.createRouteGeofence(coordinates);
+  //     // Draw geofence around the route
+  //     // this.createRouteGeofence(coordinates);
 
 
-    });
-  }
+  //   });
+  // }
 
-  public loadSavedRoute(): void {
-    const savedRoute = localStorage.getItem('savedRoute');
+  // public loadSavedRoute(): void {
+  //   const savedRoute = localStorage.getItem('savedRoute');
 
-    if (savedRoute) {
-      const savedCoordinates = JSON.parse(savedRoute).coordinates.map((coord: any) => L.latLng(coord.lat, coord.lng));
-      const savedWaypoints = JSON.parse(savedRoute).waypoints.map((coord: any) => coord.latLng);
+  //   if (savedRoute) {
+  //     const savedCoordinates = JSON.parse(savedRoute).coordinates.map((coord: any) => L.latLng(coord.lat, coord.lng));
+  //     const savedWaypoints = JSON.parse(savedRoute).waypoints.map((coord: any) => coord.latLng);
 
-      if (savedCoordinates.length > 0) {
-        // Remove existing routing control if present
-        if (this.routingControl) {
-          this.map.removeControl(this.routingControl);
-        }
+  //     if (savedCoordinates.length > 0) {
+  //       // Remove existing routing control if present
+  //       if (this.routingControl) {
+  //         this.map.removeControl(this.routingControl);
+  //       }
 
-        console.log('yeahh');
-
-
-        // Custom routing control using your own waypoints
-        this.routingControl = (L as any).Routing.control({
-          waypoints: savedWaypoints, // This will be your custom waypoints
-          createMarker: (waypointIndex: any, waypoint: any, numberOfWaypoints: any) => {
-            console.log(waypointIndex, waypoint, numberOfWaypoints);
-
-            // Create the marker for each waypoint
-            const marker = L.marker(waypoint.latLng, {
-              icon: L.icon({
-                iconSize: [25, 41],
-                iconAnchor: [13, 41],
-                iconUrl: 'assets/images/marker-icon.png',
-                shadowUrl: 'assets/images/marker-shadow.png',
-              }),
-              draggable: true, // Make the marker draggable
-            });
-
-            // Hide markers for intermediate waypoints (not the first and last)
-            if (waypointIndex !== 0 && waypointIndex !== numberOfWaypoints - 1) {
-              marker.options.icon = L.divIcon({
-                className: 'hide-marker', // Apply a custom class for hiding
-                iconSize: [0, 0], // Set icon size to zero for hiding
-              });
-            }
-
-            return marker; // Return the marker
-          },
-        }).addTo(this.map);
+  //       console.log('yeahh');
 
 
+  //       // Custom routing control using your own waypoints
+  //       this.routingControl = (L as any).Routing.control({
+  //         waypoints: savedWaypoints, // This will be your custom waypoints
+  //         createMarker: (waypointIndex: any, waypoint: any, numberOfWaypoints: any) => {
+  //           console.log(waypointIndex, waypoint, numberOfWaypoints);
+
+  //           // Create the marker for each waypoint
+  //           const marker = L.marker(waypoint.latLng, {
+  //             icon: L.icon({
+  //               iconSize: [25, 41],
+  //               iconAnchor: [13, 41],
+  //               iconUrl: 'assets/images/marker-icon.png',
+  //               shadowUrl: 'assets/images/marker-shadow.png',
+  //             }),
+  //             draggable: true, // Make the marker draggable
+  //           });
+
+  //           // Hide markers for intermediate waypoints (not the first and last)
+  //           if (waypointIndex !== 0 && waypointIndex !== numberOfWaypoints - 1) {
+  //             marker.options.icon = L.divIcon({
+  //               className: 'hide-marker', // Apply a custom class for hiding
+  //               iconSize: [0, 0], // Set icon size to zero for hiding
+  //             });
+  //           }
+
+  //           return marker; // Return the marker
+  //         },
+  //       }).addTo(this.map);
 
 
 
-        // Listen to the 'routesfound' event to detect when the route is newly created
-        this.routingControl.on('routesfound', (event: any) => {
-          // event.routes contains the route information
-          // console.log('New route found:', event.routes);
-          // const routes = event.routes;
-          // localStorage.setItem('savedRoute', JSON.stringify(routes));
-          const route = event.routes[0]; // Get first route
-          const coordinates = route.coordinates.map((c: any) => [c.lng, c.lat]); // Extract lat-lng
+
+
+  //       // Listen to the 'routesfound' event to detect when the route is newly created
+  //       this.routingControl.on('routesfound', (event: any) => {
+  //         // event.routes contains the route information
+  //         // console.log('New route found:', event.routes);
+  //         // const routes = event.routes;
+  //         // localStorage.setItem('savedRoute', JSON.stringify(routes));
+  //         const route = event.routes[0]; // Get first route
+  //         const coordinates = route.coordinates.map((c: any) => [c.lng, c.lat]); // Extract lat-lng
       
-          // Store route in local storage
-          localStorage.setItem('savedRoute', JSON.stringify(route));
+  //         // Store route in local storage
+  //         localStorage.setItem('savedRoute', JSON.stringify(route));
       
-          // Draw geofence around the route
-          // this.createRouteGeofence(coordinates);
-        });
-      }
+  //         // Draw geofence around the route
+  //         // this.createRouteGeofence(coordinates);
+  //       });
+  //     }
 
 
-    }
+  //   }
 
 
-  }
+  // }
 
   ngOnInit(): void {
       this.fetchRoutes()
@@ -184,21 +184,22 @@ console.log(JSON.parse("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":
   }
 
 
-  async onEditState(route: any): Promise<void> {
+  async onEditState(selectedRoute: any): Promise<void> {
     this.isEditing = true;
     this.routeDrawer = true;
 
     try {
-      const response = await this.routeService.getRouteById(route);
+      const response = await this.routeService.getRouteById(selectedRoute);
       console.log('Editing route:', response.data);
       const {id , userId, geometry, name} = response?.data
-      this.route = this.reverseGeoJSONToRoute(JSON.parse(geometry));
+      this.routeName = name
+      const modifiedroute = this.reverseGeoJSONToRoute(JSON.parse(geometry));
       console.log(this.route);
       
 
-      if (this.route) {
-        const savedCoordinates = this.route.coordinates.map((coord: any) => L.latLng(coord.lat, coord.lng));
-        const savedWaypoints = this.route.waypoints.map((coord: any) => coord.latLng);
+      if (modifiedroute) {
+        const savedCoordinates = modifiedroute.coordinates.map((coord: any) => L.latLng(coord.lat, coord.lng));
+        const savedWaypoints = modifiedroute.waypoints.map((coord: any) => coord.latLng);
         console.log(savedWaypoints);
         
   
@@ -243,21 +244,31 @@ console.log(JSON.parse("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":
   
   
   
-  
-          // Listen to the 'routesfound' event to detect when the route is newly created
-          this.routingControl.on('routesfound', (event: any) => {
-            // event.routes contains the route information
-            // console.log('New route found:', event.routes);
-            // const routes = event.routes;
+
+          // Save route to local storage when the route is changed
+          this.routingControl.on('routesfound', (e: any) => {
+            console.log(e);
+            // const routes = e.routes;
             // localStorage.setItem('savedRoute', JSON.stringify(routes));
-            const route = event.routes[0]; // Get first route
+
+            this.startPoint = e.waypoints[0].latLng.lat + ',' + e.waypoints[0].latLng.lng
+            this.endPoint = e.waypoints[1].latLng.lat + ',' + e.waypoints[1].latLng.lng
+            const route = e.routes[0]; // Get first route
             const coordinates = route.coordinates.map((c: any) => [c.lng, c.lat]); // Extract lat-lng
-        
+
             // Store route in local storage
             localStorage.setItem('savedRoute', JSON.stringify(route));
-        
+
+            const geoJSON = this.convertToGeoJSON(route);
+            this.route = { id: id, geometry: JSON.stringify(geoJSON) }
+            console.log(this.route);
+            
+
+
             // Draw geofence around the route
             // this.createRouteGeofence(coordinates);
+
+
           });
         }
   
@@ -272,6 +283,19 @@ console.log(JSON.parse("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":
     }
 
 
+  }
+
+
+  async onDeleteState(event:any): Promise<any> {
+    console.log(event);
+    
+    try {
+      await this.routeService.deleteRoute(event.item);
+      this.toastService.showSuccess('Success', 'Route Created Successfully!');
+      await this.fetchRoutes();
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to create Route!`);
+    }
   }
 
   openNew(event: any) {
@@ -420,10 +444,10 @@ console.log(JSON.parse("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":
     
   }
 
-  async createRoute(): Promise<any> {
-    console.log({name: this.routeName,...this.route});
+  async createUpdateRoute(): Promise<any> {
+    console.log(this.route,'apiiiiiiiiiiiiiii')
     try {
-      const response = await this.routeService.createRoute({name: this.routeName,...this.route});
+      const response = this.isEditing ? await this.routeService.updateRoute({name: this.routeName,...this.route}) :  await this.routeService.createRoute({name: this.routeName,...this.route});
       console.log(response);
       this.routeDrawer = false;
       await this.fetchRoutes()

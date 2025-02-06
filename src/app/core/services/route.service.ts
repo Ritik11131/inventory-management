@@ -27,6 +27,15 @@ export class RouteService {
       }
     }
 
+    async updateRoute(route : any) : Promise<any> {
+      try {
+        const response = await this.http.put('Geofence', route.id, {...route});
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    }
+
     async getRouteById(route : any) : Promise<any> {
       try {
         const response = await this.http.get('Geofence', {}, route.id);
@@ -38,7 +47,7 @@ export class RouteService {
 
     async deleteRoute(route : any) : Promise<any> {
       try {
-        const response = await this.http.get('Geofence', {}, route.id);
+        const response = await this.http.delete('Geofence', route.id);
         return response;
       } catch (error) {
         throw error;

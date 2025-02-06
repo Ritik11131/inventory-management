@@ -1,5 +1,5 @@
-<app-generic-table [data]="routes" [columns]="columns" [rows]="10" [header]="'Route'" [isDataLoading]="isLoading"
-    [exportFilename]="'routes'" [globalFilterFields]="['name']" (edit)="onEditState($event)" [selectionMode]="'none'"
+<app-generic-table [data]="routes" [columns]="columns" [rows]="10" [header]="'Route'" [isDataLoading]="isLoading" [actions]="['edit','delete']"
+    [exportFilename]="'routes'" [globalFilterFields]="['name']" (edit)="onEditState($event)" [selectionMode]="'none'" (delete)="onDeleteState($event)"
     (new)="openNew($event)" />
 
 @if(routeDrawer) {
@@ -43,7 +43,7 @@
             <div class="mt-4 flex justify-content-end">
                 <!-- <p-button icon="pi pi-check" [severity]="'success'" label="Save" class="mr-4" (onClick)="loadSavedRoute()" /> -->
                 <p-button icon="pi pi-check" [severity]="'primary'" [label]="isEditing ? 'Update' : 'Create'" class="mr-4"
-                    (onClick)="createRoute()" />
+                    (onClick)="createUpdateRoute()" />
                 <!-- <p-button icon="pi pi-times" [severity]="'secondary'" label="Reset" (click)="resetInputs()" /> -->
             </div>
         </div>
