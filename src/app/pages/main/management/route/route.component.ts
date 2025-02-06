@@ -1,13 +1,13 @@
 import { latLng } from 'leaflet';
 import { Component, OnInit } from '@angular/core';
 import { GenericTableComponent } from '../../../../shared/components/generic-table/generic-table.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 import * as turf from '@turf/turf';
 import { routeColumns } from '../../../../shared/constants/columns';
 import { GenericDrawerComponent } from "../../../../shared/components/generic-drawer/generic-drawer.component";
 import { ButtonModule } from 'primeng/button';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { RouteService } from '../../../../core/services/route.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { FormsModule } from '@angular/forms';
