@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
   }
 
   async verifyCode(): Promise<any> {
-      if (true) {
+      if (this.userInput === this.captchaCode) {
         await this.signIn();
       } else {
         this.captchaError = true;
