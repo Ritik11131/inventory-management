@@ -1,0 +1,8 @@
+<app-generic-table [data]="eSims" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="[]"
+[exportFilename]="'E Sims'" [globalFilterFields]="['id']"
+     (new)="openNew($event)" />
+
+
+<app-generic-dialog [visible]="eSimDialog" [header]="'Device'" [width]="'600px'" [modal]="true" [isEditing]="isEditing"
+    [styleClass]="'p-fluid'" [fields]="fields" [data]="eSim" (onDialogDropdownChange)="handledDropdownChange($event)" (onHide)="onHideDialog($event)"
+    (onSave)="onSave($event)" />

@@ -43,6 +43,9 @@ export const tableActionsConfigRoleWise : any = {
             { label: 'Sample Bulk Upload', icon: 'pi pi-file-o', action: 'onExportSample' },
             { label: 'Transfer Inventory', icon: 'pi pi-external-link', action: 'onTransferInventory' },
             { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' },
+        ],
+        ESIMList: [
+          { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
         ]
       },
     Distributor: {

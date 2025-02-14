@@ -192,20 +192,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                     // }
                 ]
             },
-            // {
-            //     label: 'Vehicle',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Vehicle Category List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/vehicle-category-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/vehicle-category-list');
-            //             }
-            //         }
-            //     ]
-            // },
+            {
+                label: 'E-Sim',
+                icon: 'pi pi-car',
+                items: [
+                    {
+                        label: 'E-SIM List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/esim-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/esim-list');
+                        }
+                    }
+                ]
+            },
         ],
         Distributor: [
             {

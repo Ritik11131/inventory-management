@@ -48,6 +48,11 @@ export const simProviders = [
     { field: 'providerName', header: 'Provider Name' },
 ];
 
+export const eSimColumns = [
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
+    { field: 'iccid', header: 'ICCID' },
+];
+
 
 export const stateColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },

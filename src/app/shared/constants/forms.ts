@@ -269,7 +269,26 @@ export const bulkUploadDeviceFormFields : FormFields[] = [
         type: 'file',
         hide: (hideFields: string[]) => hideFields.includes('file'),
     }
-]
+];
+
+
+export const eSimFormFields : FormFields[] = [
+    {
+        name: 'serviceproviderid',
+        label: 'Select Provider to download Sample CSV File',
+        placeholder: 'Select a provider',
+        type: 'dropdown',
+        options: [],
+        dropdownKeys:{},
+        hide: (hideFields: string[]) => hideFields.includes('serviceproviderid'),
+    },
+    {
+        name: 'file',
+        label: 'Upload File',
+        type: 'file',
+        hide: (hideFields: string[]) => hideFields.includes('file'),
+    }
+];
 
 export const fitmentFormFields : any[] = [
     {

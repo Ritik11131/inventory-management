@@ -26,6 +26,11 @@ export class BreadcrumbService {
           { label: 'Vehicle Category' },
           { label: 'Vehicle Category List' }
         ],
+        'esim-list':[
+          { label: 'Management' },
+          { label: 'ESIM' },
+          { label: 'ESIM List' }
+        ],
         'states-list':[
           { label: 'Management' },
           { label: 'Sates' },

@@ -10,6 +10,7 @@ import { DeviceModelComponent } from './device-model/device-model.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { VehicleCategoryComponent } from './vehicle-category/vehicle-category.component';
 import { RouteComponent } from './route/route.component';
+import { EsimComponent } from './esim/esim.component';
 
 export const managementRoutes: Routes = [
    {
@@ -55,6 +56,10 @@ export const managementRoutes: Routes = [
       {
          path:'route',
          component:RouteComponent
+      },
+      {
+         path:'esim-list',
+         component:EsimComponent
       }
     ]
    },
