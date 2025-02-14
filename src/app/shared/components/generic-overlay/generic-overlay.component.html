@@ -1,0 +1,29 @@
+<div class="flex flex-column w-30rem">
+    @if (data) {
+    <span class="font-medium text-900 block mb-2">{{ title }}</span>
+    <div class="formgrid grid">
+        @for (field of fields; track $index) {
+        <div [class]="'field col-12 sm:col-' + field?.colSpan + ' ' + 'text-' + field?.textAlign">
+            <p class="mb-1 font-bold">
+                {{
+                  field.isDate 
+                    ? (field.subfield 
+                        ? (data[field.key]?.[field.subfield] | date) 
+                        : (data[field.key] | date))
+                    : (field.subfield 
+                        ? (data[field.key]?.[field.subfield] || '-') 
+                        : (data[field.key] || '-'))
+                }}
+              </p>
+            <p class="mt-0 text-sm text-color-secondary">{{ field.label }}</p>
+        </div>
+        }
+    </div>
+    <!-- Loop through actions to display buttons -->
+    <div class="mt-2">
+        @for (action of actions; track $index) {
+            <p-button  [label]="action?.label" [raised]="true" severity="contrast" (onClick)="handleSelectedAction(action.key)" />
+        }
+    </div>
+    }
+</div>

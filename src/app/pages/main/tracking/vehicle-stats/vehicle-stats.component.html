@@ -1,0 +1,11 @@
+<p-toolbar>
+    <div class="p-toolbar-group-start">
+        <h2>Total Vehicles (<span>{{total}}</span>)</h2>
+    </div>
+    <div class="p-toolbar-group-end">
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText placeholder="Search" (input)="onSearch($event)" />
+        </span>
+    </div>
+</p-toolbar>

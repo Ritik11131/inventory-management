@@ -1,0 +1,8 @@
+<app-generic-table [data]="rtos" [columns]="columns" [rows]="10" [header]="'RTO'" [isDataLoading]="isLoading" [toolbarRightActions]="toolbarRightActions"
+   [exportFilename]="'rtos'" [globalFilterFields]="['rtocode','rtoname','state']" (edit)="onEditState($event)" (delete)="onDeleteProduct($event)" [selectionMode]="'none'"
+    (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" (dropdown)="onToolBarDropDownChange($event)" />
+
+
+<app-generic-dialog [visible]="rtoDialog" [header]="'RTO'" [width]="'800px'" [modal]="true" [isEditing]="isEditing"
+    [styleClass]="'p-fluid'" [fields]="fields" [data]="rto" (onHide)="onHideDialog($event)"
+    (onSave)="onSaveRTO($event)" (onInputTextChange)="onInputTextChange($event)" (onDialogDropdownChange)="onDialogDropDownChange($event)" />

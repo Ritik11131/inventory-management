@@ -1,0 +1,8 @@
+<app-generic-table [data]="providers" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="['edit','delete']"
+   [exportFilename]="'Sim Providers'" [globalFilterFields]="['providerName','id']" (edit)="onEditProvider($event)" (delete)="onDeleteProvider($event)" [selectionMode]="'none'"
+    (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" />
+
+
+<app-generic-dialog [visible]="providerDialog" [header]="'Sim Providers'" [width]="'400px'" [modal]="true" [isEditing]="isEditing"
+    [styleClass]="''" [fields]="fields" [data]="provider" (onHide)="onHideDialog($event)"
+    (onSave)="onSaveProvider($event)" (onInputTextChange)="onInputTextChange($event)" />

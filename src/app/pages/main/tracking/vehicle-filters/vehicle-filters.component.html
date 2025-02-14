@@ -1,0 +1,33 @@
+<p-toolbar>
+    <div class="p-toolbar-group-start"> </div>
+    <div class="p-toolbar-group-center">
+        <div class="flex justify-content-center">
+            <div class="flex justify-content-evenly">
+                @for (item of vehicleFilterCount; track $index) {
+                <div class="align-content-center md:col-6 lg:col-2 min-w-max">
+                    <div class="flex flex-column align-items-center justify-content-center p-2 cursor-pointer border-1 surface-border border-round transition-all duration-300 transform"
+                        (click)="onVehicleFilter(item)" [ngClass]="{
+                            'bg-blue-100 text-blue-500 hover:bg-blue-200 hover:shadow-2': item.key === 'ALL',
+                            'bg-green-100 text-green-500 hover:bg-green-200 hover:shadow-2': item.key === 'RUNNING',
+                            'bg-red-100 text-red-500 hover:bg-red-200 hover:shadow-2': item.key === 'STOP',
+                            'bg-orange-100 text-orange-500 hover:bg-orange-200 hover:shadow-2': item.key === 'DORMANT',
+                            'bg-gray-200 text-grey-700 hover:bg-gray-300 hover:shadow-2': item.key === 'OFFLINE'
+                          }"
+                          style="transition: transform 0.3s ease-in-out;">
+                        <div class="text-md font-bold mb-2">
+                            {{ item.label }}
+                        </div>
+    
+                        <div class="flex align-items-center gap-2">
+                            <i class="{{ item.icon }} text-md text-{{ item.severity }}"></i>
+                            <span class="text-md font-bold">{{ item.key }}</span>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="p-toolbar-group-end"></div>
+</p-toolbar>
+

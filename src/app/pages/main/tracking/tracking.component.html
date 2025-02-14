@@ -1,0 +1,198 @@
+<div class=" bg-gray-200 px-4 py-5 md:px-6 lg:px-8">
+    <div class="grid">
+        <div class="col-4">
+            <div class="flex-column h-full">
+                <app-vehicle-stats [total]="totalvehicleCount" (emitSearchedTerm)="handleSearch($event)"></app-vehicle-stats>
+                <app-vehicle-filters [vehicleFilterCount]="vehicleFilterCount"
+                    (emitSelectedFilter)="handleFilterClick($event)"></app-vehicle-filters>
+                <app-vehicle-list [list]="filteredVehiclesList"
+                    (emitSelectedVehicle)="handleFilterClick($event)"></app-vehicle-list>
+            </div>
+        </div>
+        <div class="col-8">
+            <div style="height: 80vh;" leaflet (leafletMapReady)="onMapReady($event)" [leafletOptions]="leafletOptions">
+
+                @if(selectedVehicle) {
+                <div (mouseenter)="disableMapInteractions()" (mouseleave)="enableMapInteractions()"
+                    class="info-window p-3 surface-card border-round shadow-8"
+                    [@collapse]="isCollapsed ? 'collapsed' : 'expanded'">
+                    <div class="flex justify-content-between align-items-center">
+                        <div class="flex flex-column">
+                            <span [ngClass]="{
+                                'text-green-500': selectedVehicle?.status === 'RUNNING',
+                                'text-red-500': selectedVehicle?.status === 'STOP',
+                                'text-orange-500': selectedVehicle?.status === 'DORMANT',
+                                'text-gray-500': selectedVehicle?.status === 'OFFLINE',
+                                'flex align-items-center justify-content-center border-round': true
+                              }" class="text-2xl font-bold">{{selectedVehicle?.vehicleNo}}</span>
+                              <div class="mb-2 flex flex-column">
+                                  <span class="text-sm">{{selectedVehicle.location?.lastUpdate | date:'medium'}}</span> 
+                                  <span class="mr-2 font-bold">Last Update</span>
+                              </div>
+                              <div class="flex flex-column">
+                                <span class="text-sm">{{selectedVehicle.address || '-'}}</span> 
+                                <span class="mr-2 font-bold">Address</span>
+                            </div>
+                        </div>
+                        <div class="align-items-center">
+                            <i (click)="handlePlayback()" class="pi pi-play text-blue-500 cursor-pointer text-xl mb-1 mr-2"></i>
+                            <i (click)="toggleCollapse()"
+                                class="pi pi-angle-down text-blue-500 cursor-pointer text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="info-window-contents overflow-auto">
+
+                        <!-- Device Information Title -->
+                        <h3 class="text-lg font-bold mb-3 text-700">Device Information</h3>
+
+                        <!-- Device Information Grid -->
+                        <div class="grid grid-nogutter">
+                            <!-- First Row of 3 Items -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Serial No:</p>
+                                <p>{{ selectedVehicle?.device?.sno || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Device SNo:</p>
+                                <p>{{ selectedVehicle?.device?.deviceSno || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">IMEI:</p>
+                                <p>{{ selectedVehicle?.device?.imei || 'N/A' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Location Information Title -->
+                        <h3 class="text-lg font-bold mb-3 mt-5">Location Information</h3>
+
+                        <!-- Location Information Grid -->
+                        <div class="grid grid-nogutter">
+                            <!-- First Row of Location Info -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Latitude:</p>
+                                <p>{{ selectedVehicle?.location?.latitude || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Longitude:</p>
+                                <p>{{ selectedVehicle?.location?.longitude || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Speed:</p>
+                                <p>{{ selectedVehicle?.location?.speed || 'N/A' }} km/h</p>
+                            </div>
+
+                            <!-- Second Row of Location Info -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Heading:</p>
+                                <p>{{ selectedVehicle?.location?.heading || 'N/A' }}°</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Last Update:</p>
+                                <p>{{ selectedVehicle?.location?.lastUpdate || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">GPS Fix:</p>
+                                <p>{{ selectedVehicle?.location?.gpsFix ? 'FIX' : 'UNFIX'}}</p>
+                            </div>
+                        </div>
+
+                        <!-- Location Attributes Title -->
+                        <h3 class="text-lg font-bold mb-3 mt-5">Location Attributes</h3>
+
+                        <!-- Location Attributes Grid -->
+                        <div class="grid grid-nogutter">
+                            <!-- <div class="col-12 md:col-4">
+                                <p class="font-bold">ADC1:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.adc1 || 'N/A' }} V</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">ADC2:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.adc2 || 'N/A' }} V</p>
+                            </div> -->
+
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Charge:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.charge || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Internal Battery:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.battery || 'N/A' }} V</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Ignition:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.ign || 'N/A' }}</p>
+                            </div>
+
+                            <!-- <div class="col-12 md:col-4">
+                                <p class="font-bold">HDOP:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.hdop || 'N/A' }}</p>
+                            </div> -->
+                            <!-- <div class="col-12 md:col-4">
+                                <p class="font-bold">RSSI:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.rssi || 'N/A' }}</p>
+                            </div> -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Satellites:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.sat || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Operator:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.operator || 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Ext Batt Voltage:</p>
+                                <p>{{ selectedVehicle?.location?.attributes?.maininput || 'N/A' }}</p>
+                            </div>
+                            <!-- <div class="col-12 md:col-4">
+                                <p class="font-bold">GPS Fix:</p>
+                                <p>{{ selectedVehicle?.location?.gpsFix ? 'FIX' : 'UNFIX' }}</p>
+                            </div> -->
+                        </div>
+
+                    </div>
+                </div>
+
+                }
+                @if(isCollapsed) {
+                <div class="info-window">
+                    <p-button [rounded]="true"
+                        [severity]="(selectedVehicle?.status === 'RUNNING') ? 'success' : (selectedVehicle?.status === 'STOP') ? 'danger' : (selectedVehicle?.status === 'DORMANT') ? 'warning' : 'secondary'"
+                        (onClick)="toggleCollapse()" icon="pi pi-info-circle" [label]="selectedVehicle?.vehicleNo" />
+                </div>
+                }
+                @if(creatingPlaybackPath) {
+                    <div class="playback-loader p-2 surface-card border-round shadow-8">
+                        <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem"  />
+                    </div>
+                }
+
+                @if(showPlaybackControls) {
+                    <div (mouseenter)="disableMapInteractions()" (mouseleave)="enableMapInteractions()" class="playback-control p-4 surface-card border-round shadow-8">
+                        <span class="font-bold text-2xl">{{ playbackControlObject?.status }}</span>
+                        <div class="flex flex-column">
+                            <p class="font-bold text-lg">Controls</p>
+                            <div class="flex justify-content-between align-items-center">
+                                <p-button icon="pi pi-play-circle" [rounded]="true" severity="success" (click)="handlePlaybackControls('play')"></p-button>
+                                <p-button icon="pi pi-pause-circle" [rounded]="true" severity="secondary" (click)="handlePlaybackControls('pause')"></p-button>
+                                <p-button icon="pi pi-refresh" [rounded]="true" severity="danger" (click)="handlePlaybackControls('reset')"></p-button>
+                                <p-button icon="pi pi-times-circle" [rounded]="true" severity="danger" (click)="handlePlaybackControls('close')"></p-button>
+                            </div>
+                        </div>
+                        <div class="flex flex-column">
+                            <p class="font-bold text-lg">Adjust Replay Speed</p>
+                            <p-slider styleClass="w-full" [ngModel]="playbackControlObject.speed" [min]="500" [max]="10000" [step]="50" (onChange)="handlePlaybackControls('updatespeed' ,$event)"></p-slider>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg">Progress: {{ playbackControlObject?.progress?.toFixed(2) }} %</p>
+                            <p-slider styleClass="w-full" [ngModel]="playbackControlObject.progress" [min]="0" [max]="100" [step]="0.1" (onChange)="handlePlaybackControls('updateprogress' ,$event)"></p-slider>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <app-generic-datepicker [header]="'Select Date'" [modal]="true" [visible]="makeDatepickerVisible" (selectedDateRange)="onDateSelected($event)" (onHide)="onHideDatepicker($event)" />

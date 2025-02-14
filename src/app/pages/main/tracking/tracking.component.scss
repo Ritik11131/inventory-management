@@ -1,0 +1,39 @@
+.info-window {
+    position: absolute;
+    z-index: 999;
+    bottom: 20px;
+    right:20px;
+    font-family: 'Urbanist', sans-serif;
+    transition: height 0.3s ease, opacity 0.3s ease;
+}
+
+.playback-loader {
+    position: absolute;
+    z-index: 999;
+    top: 20px;
+    right:20px;
+    font-family: 'Urbanist', sans-serif;
+}
+
+.playback-control {
+    position: absolute;
+    z-index: 999;
+    top: 20px;
+    right:20px;
+    font-family: 'Urbanist', sans-serif;
+    width: 20vw;
+    height: auto;
+}
+
+
+.info-window-contents{
+    min-width: 25vw;
+    height: 12.5vh;
+    // overflow: hidden; /* Hide the scrollbar */
+    // -ms-overflow-style: none; /* Hide scrollbar in IE */
+    // scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.info-window-contents::-webkit-scrollbar {
+    display: none; /* Hide the scrollbar in WebKit-based browsers (Chrome, Safari) */
+}

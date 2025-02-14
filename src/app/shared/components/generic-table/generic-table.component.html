@@ -1,0 +1,242 @@
+<div class="px-4 md:px-6 lg:px-8">
+    <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
+        <div class="p-toolbar-group-start">
+            <!-- @for (action of availableActions; track $index) {
+                <p-button [pTooltip]="action.label" tooltipPosition="bottom" [text]="true" [outlined]="true" 
+                          [icon]="action.icon" class="mr-2"
+                          (onClick)="invokeAction(action.action)" />
+            } -->
+
+            <p-menu appendTo="body" [model]="menuItems" [popup]="true" #menu></p-menu>
+            <p-button  [text]="true" [outlined]="true"  label="Manage" icon="pi pi-cog" (click)="menu.toggle($event)"></p-button>
+            <!-- <p-button [pTooltip]="'Create New'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-plus" class="mr-2" (onClick)="onNewUser()" />
+            <p-button [pTooltip]="'Link RTO'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-link" class="mr-2" (onClick)="onLinkRTO()" />
+            <p-button [pTooltip]="'Transfer Inventory'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-external-link" class="mr-2" (onClick)="onTransferInventory()" />
+            <p-button [pTooltip]="'Bulk Upload'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-cloud-upload" (onClick)="onUpload()" />
+            <p-button [pTooltip]="'Export Sample Bulk Upload .txt File'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-file-o" (onClick)="onExportSample()" />
+            <p-button [pTooltip]="'Export To CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" /> -->
+        </div>
+        <div class="p-toolbar-group-end">
+            @if(toolbarRightActions.length) {
+                @for (action of toolbarRightActions; track $index) {
+                    @if(action.type === 'button') {
+                        <p-button label="Save" icon="pi pi-check" />
+                    }
+        
+                    @if(action.type === 'dropdown') {
+                        <p-dropdown styleClass="mr-2" appendTo="body" [showClear]="true" [options]="action.options" (onChange)="onDropdownChange($event)"
+                            [optionLabel]="action.dropdownKeys.nameKey" [placeholder]="action.placeholder" />
+                    }
+                }
+            }
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input [disabled]="!data.length" pInputText placeholder="Search" (input)="onSearch($event)" />
+            </span>
+        </div>
+    </p-toolbar>
+
+
+
+    <p-table #dt [value]="data" [rows]="rows" [columns]="columns" [paginator]="true" [globalFilterFields]="globalFilterFields"
+        [(selection)]="selection" [rowHover]="true" [scrollable]="true" [exportFilename]="exportFilename"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+        (selectionChange)="onSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
+        styleClass="p-datatable-sm p-datatable-gridlines">
+
+        <!-- <ng-template pTemplate="caption">
+            <span class="text-xl p-4">{{header}}</span>
+        </ng-template> -->
+        
+
+        <!-- Dynamic Columns -->
+        <ng-template pTemplate="header">
+            <tr>
+                @if (selectionMode !== 'none') {
+                    <th pFrozenColumn style="width: 4rem">
+                        @if(selectionMode === 'multiple') {
+                            <p-tableHeaderCheckbox/>
+                        }
+                    </th>
+                }
+                @for (col of columns; track $index) {
+                <th pFrozenColumn [frozen]="col.frozen || false" alignFrozen="right" pSortableColumn="{{ col.field }}" [style.minWidth]="col.minWidth || '15rem'">
+                    {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                </th>
+                }
+                @if(actions.length && userRole !== 'Dealer') {
+                    <th [style.minWidth]="'8rem'" pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">Actions</th>
+                }
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+            <tr>
+                @if(selectionMode !== 'none') {   
+                    <td pFrozenColumn>
+                        @if(selectionMode === 'multiple') {
+                            <p-tableCheckbox [value]="item"/>
+                        } @else if(selectionMode === 'single') {
+                            <p-tableRadioButton [value]="item" />
+                        }
+                    </td>
+                }
+                @for (col of columns; track $index) {
+                    @if(col.field === 'active' || col.field === 'activationStatusText' || col.field === 'inStock') {
+                        <td pFrozenColumn alignFrozen="right" [frozen]="col?.frozen">
+                            <p-tag [severity]="col.field === 'activationStatusText' ? (item[col.field] === 'Active' ? 'success' : 'danger') : item[col.field] ? 'success' : 'danger'" 
+                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"
+                                   /> 
+                        </td>
+                    }  @else {
+                        @if(col.field === 'index') {
+                            <td>{{ rowIndex + 1 }}</td>
+                        } @else if (col.nested) {
+                            <td>
+                                @if (col.subfield) {
+                                    @if (col.nextsubfield) {
+                                        {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield]?.[col.nextsubfield] | date) || '-') : (item[col.field]?.[col.subfield]?.[col.nextsubfield] || '-') }}
+                                    } @else {
+                                        @if(col.hyperlink) {
+                                                <span   (click)="col?.hyperlink ? showOverlay(col,item, $event, op) : null" 
+                                                        class="underline font-bold cursor-pointer"  
+                                                        [ngClass]="{'text-green-500' : col.subfield === 'vehicleNo' ? (item[col.field]?.[col.subfield] && item['activationStatus']) : (col.field === 'user' && col.subfield === 'name') ?  (item[col.field]?.[col.subfield] && item.status === 'Activated') : null, 
+                                                                    'text-red-500' : col.subfield === 'vehicleNo' && item[col.field]?.[col.subfield] && !item['activationStatus'],
+                                                                    'text-orange-500' : (col.field === 'user' && col.subfield === 'name') ? (item[col.field]?.[col.subfield] && item.status === 'Kyc Pending') : null
+                                                                    }">
+                                                {{ (col.field === 'user' && col.subfield === 'name') ? (item[col.field].userType === 'User') ?  (item[col.field]?.[col.subfield] || '-') : '-'  : ((item.activationStatus && item.inStock) ? 'Click To Create Fitment' : item[col.field]?.[col.subfield] || '-') }}
+                                                </span>
+                                        } @else {
+                                            <span [ngClass]="{
+                                                'text-green-500' : col.field === 'lastPosition' && item[col.field]?.[col.subfield] === 'Online',
+                                                'text-red-500' : col.field === 'lastPosition' && item[col.field]?.[col.subfield] === 'Offline',
+                                                'text-color-secondary': col.field === 'lastPosition' && item[col.field]?.[col.subfield] === 'Never Connected'
+                                                }">
+                                                {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield] | date) || '-') : (item[col.field]?.[col.subfield] || '-') }}
+                                            </span>
+                                        }
+                                        <p-overlayPanel #op appendTo="body">
+                                            @if(selectedOverlayObject) {
+                                                <app-generic-overlay
+                                                *ngIf="selectedOverlayObject"
+                                                [title]="selectedColumn === 'vehicleNo' ? 'Vehicle Details' : 'User Details'"
+                                                [data]="selectedOverlayObject"
+                                                [actions]="selectedColumn === 'vehicleNo' ? [] : item.status === 'Kyc Pending' ? [{label:'Send Otp',key:'send_otp'}] : []"
+                                                [fields]="selectedColumn === 'vehicleNo' ? vehicleOverlayFields : userOverlayFields"
+                                                (emitSeelctedAction)="handleSelectedOverlayAction($event,item,selectedOverlayObject)"
+                                                ></app-generic-overlay>
+                                            }
+
+                                            @if (!selectedOverlayObject) {
+                                                @if (selectedColumn === 'vehicleNo' && item.activationStatus && item.inStock) {
+                                                  <p-button
+                                                    (onClick)="onFitment($event, item)"
+                                                    label="Create Fitment"
+                                                    icon="pi pi-id-card">
+                                                  </p-button>
+                                                } @else {
+                                                  <!-- Show No Details Found Overlay -->
+                                                  <div class="flex flex-column text-center p-3">
+                                                    <i class="pi pi-info-circle text-orange-500 text-2xl mb-2"></i>
+                                                    <span class="font-medium text-lg">No details found</span>
+                                                    <small class="text-color-secondary">We could not retrieve any details.</small>
+                                                  </div>
+                                                }
+                                              }
+                                          </p-overlayPanel>
+                                    }
+                                } @else {
+                                    {{ '-' }}
+                                }
+                            </td>
+                        } @else {
+                            <td>
+                                @if(col.hyperlink) {
+                                    <span (click)="col?.hyperlink ? showOverlay(col,item, $event, op) : null" class="underline font-bold text-green-500 cursor-pointer" [ngClass]="{'text-green-500' : item['activationStatus'], 'text-red-500' : !item['activationStatus']}">{{item[col.field]}}</span>
+                                } @else if(col.field === 'downloadCertificate') {
+                                    @if(item['user']?.id && item['user']?.userType === 'User') {
+                                        <i class="pi pi-download cursor-pointer text-primary-500" (click)="downloadCertifcate(item)"></i>
+                                    } @else {
+                                        {{'-'}}
+                                    }
+                                }
+                                 @else {
+                                    {{ item[col.field] || '-' }}
+                                }
+                                <p-overlayPanel #op appendTo="body"> 
+                                    @if((selectedColumn === 'iccid' && selectedOverlayObject.simDetails)) {
+                                        <app-generic-overlay *ngIf="selectedOverlayObject"
+                                        [title]="selectedColumn === 'iccid' ? 'Sim Details' : ''" [data]="selectedOverlayObject?.simDetails"
+                                        [fields]="selectedColumn === 'iccid' ? simOverlayFields : []">
+                                    </app-generic-overlay>
+                                    }    @else if( selectedColumn === 'iccid' && !selectedOverlayObject.simDetails ) {
+                                        <p-button (onClick)="onActivate($event, item)" label="Activate Sim" icon="pi pi-eject" />
+                                    }
+
+                                </p-overlayPanel>
+                              </td>
+                        }
+                    }
+                }
+                @if(actions.length && userRole !== 'Dealer') {
+                    <td pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">
+                        <i class="pi pi-ellipsis-h text-md text-primary cursor-pointer" (click)="loadActionMenuItems(item); actionMenu.toggle($event)"></i>
+                        <p-menu appendTo="body" #actionMenu [model]="actionMenuItems" popup="true"></p-menu>
+                    </td>
+                    <!-- <td pFrozenColumn alignFrozen="right" [frozen]="actions.length > 0">
+                        @for(action of actions; track $index) {
+                    @if(action === 'edit') {
+                    <i [pTooltip]="'Edit'" tooltipPosition="bottom" (click)="onEdit(item)"
+                        class="pi pi-pencil ml-2 text-sm text-primary cursor-pointer"></i>
+                    }
+                
+                    @if(action === 'delete') {
+                    <i [pTooltip]="'Delete'" tooltipPosition="bottom" (click)="onDelete($event,item)"
+                        class="pi pi-trash ml-4 text-sm text-red-500 cursor-pointer"></i>
+                    }
+
+                    @if(action === 'activate') {
+                        @if(item.activationStatusText !== 'Active') {
+                            <i [pTooltip]="'Activate'" tooltipPosition="bottom" (click)="onActivate($event,item)"
+                                class="pi pi-eject ml-4 text-sm text-primary-500 cursor-pointer"></i>
+                        }
+                    }
+
+                    @if(action === 'fitment') {
+                        @if(item.activationStatus && item.inStock) {
+                            <i [pTooltip]="'Fitment'" tooltipPosition="bottom" (click)="onFitment($event,item)"
+                                class="pi pi-id-card ml-4 text-sm text-primary-500 cursor-pointer"></i>
+                        }
+                    }
+                    }
+                </td> -->
+                }
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="sm:text-center text-left">
+                    @if(isDataLoading) {
+                        <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem" />
+                    } @else {
+                        No Data Found.
+                    }
+                </td>
+            </tr>
+        </ng-template>
+
+        <!-- Summary -->
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{ data ? data.length : 0 }} items.
+            </div>
+        </ng-template>
+    </p-table>
+
+
+    <p-confirmDialog [style]="{ width: '300px' }" />
+
+
+
+</div>

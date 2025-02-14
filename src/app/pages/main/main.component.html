@@ -1,1 +1,62 @@
+<div class="card">
+    <p-menubar styleClass="font-bold text-lg" [model]="menuItems">
+        <ng-template pTemplate="start">
+            <div class="flex justify-content-center align-items-center font-bold text-3xl">
+                <p-avatar image="assets/images/logo.png" styleClass="mr-2" size="xlarge" />
+                <span>VAHAN SAATHI</span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="item" let-item let-root="root">
+            <a pRipple class="flex align-items-center p-menuitem-link">
+                <span class="text-primary text-xl" [class]="item.icon"></span>
+                <span class="ml-2 text-color-secondary">{{ item.label }}</span>
+                @if(item.items) {
+                <i [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+                }
+            </a>
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center gap-2">
+                <p-menu #menu [model]="profileItems" styleClass="w-full md:w-15rem" [popup]="true">
+                    <ng-template pTemplate="start">
+                        <button pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
+                            <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                                class="mr-2" shape="circle" />
+                            <span class="inline-flex flex-column">
+                                <span class="font-bold">{{ userName }}</span>
+                                <span class="text-sm">{{ userRole }}</span>
+                            </span>
+                        </button>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-item>
+                        <a pRipple class="flex align-items-center p-menuitem-link">
+                            <span [class]="item.icon"></span>
+                            <span class="ml-2">{{ item.label }}</span>
+                        </a>
+                    </ng-template>
+                </p-menu>
+                <i pBadge style="font-size: 1.3rem" class="mr-3 pi pi-bell p-shake text-orange-500"
+                    severity="danger"></i>
+                <p-button class="mr-3" [text]="true" (onClick)="menu.toggle($event)" icon="pi pi-user" [rounded]="true"
+                    severity="primary" />
+            </div>
+        </ng-template>
+    </p-menubar>
+
+
+
+    <div class="px-4 py-2 md:px-6 lg:px-8">
+        <p-breadcrumb styleClass="border-none" class="max-w-full" [model]="breadCrumbs" [home]="home" />
+    </div>
+
+
+
+    <ng-template pTemplate="footer">
+        <div class="gap-3 mt-1">
+                        <p-avatar image="assets/images/logo.png" styleClass="mr-2" size="xlarge" />
+
+        </div>
+    </ng-template>
+</div>
+
 <router-outlet></router-outlet>

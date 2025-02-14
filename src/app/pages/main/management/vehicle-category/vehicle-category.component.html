@@ -1,0 +1,8 @@
+<app-generic-table [data]="categories" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="['edit']"
+   [exportFilename]="'Vehicle Category'" [globalFilterFields]="['name']" (edit)="onEditCategory($event)" [selectionMode]="'none'"
+    (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" />
+
+
+<app-generic-dialog [visible]="categoryDialog" [header]="'Sim Providers'" [width]="'400px'" [modal]="true" [isEditing]="isEditing"
+    [styleClass]="''" [fields]="fields" [data]="category" (onHide)="onHideDialog($event)"
+    (onSave)="onSaveCategory($event)" (onInputTextChange)="onInputTextChange($event)" />
