@@ -1,5 +1,5 @@
 <app-generic-table [data]="eSims" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="[]"
-[exportFilename]="'E Sims'" [globalFilterFields]="['id']"
+[exportFilename]="'E Sims'" [globalFilterFields]="['iccid']" [selectionMode]="'none'"
      (new)="openNew($event)" />
 
 
