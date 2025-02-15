@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/vahan/browser",
+    "public": "dist/grl/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
