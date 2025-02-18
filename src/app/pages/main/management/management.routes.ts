@@ -11,6 +11,7 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { VehicleCategoryComponent } from './vehicle-category/vehicle-category.component';
 import { RouteComponent } from './route/route.component';
 import { EsimComponent } from './esim/esim.component';
+import { EsimActivationListComponent } from './esim-activation/esim-activation-list/esim-activation-list.component';
 
 export const managementRoutes: Routes = [
    {
@@ -60,6 +61,10 @@ export const managementRoutes: Routes = [
       {
          path:'esim-list',
          component:EsimComponent
+      },
+      {
+         path:'esim-activation-list',
+         component:EsimActivationListComponent
       }
     ]
    },

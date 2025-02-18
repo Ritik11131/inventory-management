@@ -8,24 +8,6 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
 
     // Common menu items for all user types
     let commonItems: MenuItem[] = [
-        // {
-        //     key: 'dashboard',
-        //     label: 'Dashboard',
-        //     icon: 'pi pi-objects-column',
-        //     command: () => {
-        //         router.navigate(['/main/dashboard']);
-        //         breadcrumbService.generateBreadcrumbs('/main/dashboard');
-        //     },
-        // },
-        // {
-        //     key: 'tracking',
-        //     label: 'Tracking',
-        //     icon: 'pi pi-map',
-        //     command: () => {
-        //         router.navigate(['/main/tracking']);
-        //         breadcrumbService.generateBreadcrumbs('/main/tracking');
-        //     },
-        // },
         {
             key: 'management',
             label: 'Management',
@@ -181,15 +163,6 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                             breadcrumbService.generateBreadcrumbs('/main/management/device-list');
                         }
                     },
-                    // {
-                    //     label: `Assigned To ${authService.getUserType()}`,
-                    //     icon: 'pi pi-users',
-                    //     command: () => {
-                    //         router.navigate([`/main/management/assigned/${authService.getUserType()}`]);
-                    //         breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
-                    //     }
-
-                    // }
                 ]
             },
             {
@@ -220,31 +193,8 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                             breadcrumbService.generateBreadcrumbs('/main/management/device-list');
                         }
                     },
-                    // {
-                    //     label: `Assigned To ${authService.getUserType()}`,
-                    //     icon: 'pi pi-users',
-                    //     command: () => {
-                    //         router.navigate([`/main/management/assigned/${authService.getUserType()}`]);
-                    //         breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
-                    //     }
-
-                    // }
                 ]
             },
-            // {
-            //     label: 'Vehicle',
-            //     icon: 'pi pi-car',
-            //     items: [
-            //         {
-            //             label: 'Vehicle Category List',
-            //             icon: 'pi pi-list',
-            //             command: () => {
-            //                 router.navigate(['/main/management/vehicle-category-list']);
-            //                 breadcrumbService.generateBreadcrumbs('/main/management/vehicle-category-list');
-            //             }
-            //         }
-            //     ]
-            // },
         ],
         Dealer: [
             {
@@ -259,6 +209,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                             breadcrumbService.generateBreadcrumbs('/main/management/device-list');
                         }
                     },
+                ]
+            },
+            {
+                label: 'E-Sim Activation',
+                icon: 'pi pi-car',
+                items: [
+                    {
+                        label: 'E-Sim Activation List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/esim-activation-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/esim-activation-list');
+                        }
+                    }
                 ]
             },
         ]

@@ -31,6 +31,11 @@ export class BreadcrumbService {
           { label: 'ESIM' },
           { label: 'ESIM List' }
         ],
+        'esim-activation-list':[
+          { label: 'Management' },
+          { label: 'ESIM Activation' },
+          { label: 'ESIM Activation List' }
+        ],
         'states-list':[
           { label: 'Management' },
           { label: 'Sates' },

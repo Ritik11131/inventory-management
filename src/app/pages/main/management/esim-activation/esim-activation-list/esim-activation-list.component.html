@@ -1,0 +1,114 @@
+<div class="px-4 md:px-6 lg:px-8">
+    <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
+        <p-button [text]="true" [outlined]="true" label="Activate"
+            (onClick)="handleActivateClick()"></p-button>
+    </p-toolbar>
+
+
+    <p-table #dt [value]="eSimtableData" [rows]="10" [columns]="columns" [paginator]="true"
+        [globalFilterFields]="['imei','iccid','sno']" [(selection)]="currentSelectedRow" [rowHover]="true"
+        [scrollable]="true" [exportFilename]="'esims'"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+        (selectionChange)="onCurrentRowSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
+        styleClass="p-datatable-sm p-datatable-gridlines">
+
+
+        <ng-template pTemplate="header">
+            <tr>
+                @for (col of columns; track $index) {
+                <th pFrozenColumn [frozen]="col.frozen || false" alignFrozen="right" pSortableColumn="{{ col.field }}"
+                    [style.minWidth]="col.minWidth || '15rem'">
+                    {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                </th>
+                }
+                <th>Action</th>
+            </tr>
+        </ng-template>
+
+
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+            <tr>
+                @for (col of columns; track $index) {
+                @if(col.field === 'index') {
+                <td>{{ rowIndex + 1 }}</td>
+                } @else {
+                <td> {{ item[col.field] || '-' }} </td>
+                }
+                }
+                <td>
+                    <p-button severity="success" [pTooltip]="'Approve'" tooltipPosition="bottom" [text]="true"
+                        [outlined]="true" icon="pi pi-check-circle" />
+                    <p-button severity="danger" [pTooltip]="'Reject'" tooltipPosition="bottom" [text]="true"
+                        [outlined]="true" icon="pi pi-times-circle" />
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="sm:text-center text-left">
+                    @if(isLoading) {
+                    <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem" />
+                    } @else {
+                    No Data Found.
+                    }
+                </td>
+            </tr>
+        </ng-template>
+
+        <!-- Summary -->
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{ eSimtableData ? eSimtableData.length : 0 }} items.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+
+<p-dialog [closable]="false" [(visible)]="isDialogVisible" [style]="{ width: '600px' }" header="Activation"
+    [modal]="true" [breakpoints]="{ '2500px': '50vw','1600px': '60vw','1199px': '75vw', '575px': '90vw' }">
+
+    <ng-template pTemplate="content">
+        @if (dialogContentType === 'activateFields') {
+            <div class="formgrid grid mt-3">
+                <!-- Sim Provider -->
+                <div class="field col-12 sm:col-12 md:col-4">
+                    <div class="flex align-items-center mb-2">
+                        <label for="simProvider" class="mr-2">Sim Provider</label>
+                    </div>
+                    <p-dropdown id="simProvider" appendTo="body" [options]="simProvidersOptions" 
+                        styleClass="w-full" [(ngModel)]="selectedSimProvider"
+                        optionLabel="providerName" placeholder="Select Sim Provider" (onChange)="handleSimProviderChange($event)" />
+                </div>
+    
+                <!-- Type -->
+                <div class="field col-12 sm:col-12 md:col-4">
+                    <div class="flex align-items-center mb-2">
+                        <label for="simType" class="mr-2">Type</label>
+                    </div>
+                    <p-dropdown id="simType" [disabled]="!selectedSimProvider" [loading]="fetchingActivateTypeOptions" appendTo="body" 
+                        [options]="activateTypeOptions" styleClass="w-full" [(ngModel)]="selectedType"
+                        optionLabel="name" placeholder="Select Type" />
+                </div>
+    
+                <!-- Available Plans -->
+                <div class="field col-12 sm:col-12 md:col-4">
+                    <div class="flex align-items-center mb-2">
+                        <label for="availablePlan" class="mr-2">Available Plans</label>
+                    </div>
+                    <p-dropdown id="availablePlan" [disabled]="!selectedType" appendTo="body" 
+                        [options]="availablePlanOptions" styleClass="w-full" [(ngModel)]="selectedPlan"
+                        optionLabel="planName" placeholder="Select Available Plan" />
+                </div>
+            </div>
+        }
+    </ng-template>
+    
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" icon="pi pi-times" [text]="true"
+            (onClick)="isDialogVisible = false; dialogContentType = 'activateFields'" />
+        <p-button [disabled]="false" label="Save" icon="pi pi-check" [text]="true" (onClick)="save()" />
+    </ng-template>
+</p-dialog>

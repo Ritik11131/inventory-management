@@ -27,4 +27,26 @@ export class EsimService {
       throw error;
     }
   }
+
+  async getActivationList(): Promise<any> {
+    try {
+      const response = await this.http.get('mis/activation/GetActivationRequestList', { });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async getActivationTypes(id:number): Promise<any> {
+    try {
+      const response = await this.http.get('mis/activation/types', {}, id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+
 }
