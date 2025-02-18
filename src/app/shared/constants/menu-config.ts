@@ -30,20 +30,35 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
             key: 'management',
             label: 'Management',
             icon: 'pi pi-server',
-            items: [{
-                label: userRole === 'Dealer' ? 'Permit Holder' : authService.getUserType(),
-                icon: 'pi pi-users',
-                items: [
-                    {
-                        label: userRole === 'Dealer' ? 'Permit Holder List' : `${authService.getUserType()} List`,
-                        icon: 'pi pi-list',
-                        command: () => {
-                            router.navigate([`/main/management/dynamic-user-list`]);
-                            breadcrumbService.generateBreadcrumbs('/main/management/dynamic-user-list');
-                        }
-                    },
-                ]
-            }
+            items: [
+                {
+                    label: userRole === 'Dealer' ? 'Permit Holder' : authService.getUserType(),
+                    icon: 'pi pi-users',
+                    items: [
+                        {
+                            label: userRole === 'Dealer' ? 'Permit Holder List' : `${authService.getUserType()} List`,
+                            icon: 'pi pi-list',
+                            command: () => {
+                                router.navigate([`/main/management/dynamic-user-list`]);
+                                breadcrumbService.generateBreadcrumbs('/main/management/dynamic-user-list');
+                            }
+                        },
+                    ]
+                },
+                {
+                    label: 'ESim',
+                    icon: 'pi pi-truck',
+                    items: [
+                        {
+                            label: 'ESim List',
+                            icon: 'pi pi-list',
+                            command: () => {
+                                router.navigate(['/main/management/esim-list']);
+                                breadcrumbService.generateBreadcrumbs('/main/management/esim-list');
+                            }
+                        },
+                    ]
+                },
             ]
         },
         {

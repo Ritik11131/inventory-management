@@ -36,6 +36,10 @@ export const InventoryColumns = [
     { field: 'iccid', header: 'ICCID No' },
 ];
 
+export const ESimColumns = [
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
+]
+
 export const deviceModelColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field: 'oemName', header: 'User Name' },

@@ -1,0 +1,58 @@
+<div class="px-4 md:px-6 lg:px-8">
+    <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
+        <p-button [text]="true" [outlined]="true" label="Activate"></p-button>
+    </p-toolbar>
+
+
+    <p-table #dt [value]="eSimtableData" [rows]="10" [columns]="columns" [paginator]="true"
+        [globalFilterFields]="['imei','iccid','sno']" [(selection)]="currentSelectedRow" [rowHover]="true" [scrollable]="true"
+        [exportFilename]="'esims'"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+        (selectionChange)="onCurrentRowSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
+        styleClass="p-datatable-sm p-datatable-gridlines">
+
+
+        <ng-template pTemplate="header">
+            <tr>
+                @for (col of columns; track $index) {
+                <th pFrozenColumn [frozen]="col.frozen || false" alignFrozen="right" pSortableColumn="{{ col.field }}" [style.minWidth]="col.minWidth || '15rem'">
+                    {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                </th>
+                }
+            </tr>
+        </ng-template>
+
+
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+            <tr>
+                @for (col of columns; track $index) {
+                @if(col.field === 'index') {
+                <td>{{ rowIndex + 1 }}</td>
+                } @else {
+                <td> {{ item[col.field] || '-' }} </td>
+                }
+                }
+        
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="sm:text-center text-left">
+                    @if(isLoading) {
+                        <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem" />
+                    } @else {
+                        No Data Found.
+                    }
+                </td>
+            </tr>
+        </ng-template>
+
+        <!-- Summary -->
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{ eSimtableData ? eSimtableData.length : 0 }} items.
+            </div>
+        </ng-template>
+    </p-table>
+</div>

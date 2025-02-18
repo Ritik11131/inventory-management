@@ -51,6 +51,11 @@ export class BreadcrumbService {
           { label: 'Route' },
           { label: 'Route List' }
         ],
+        'esim-list':[
+          { label: 'Management' },
+          { label: 'ESim' },
+          { label: 'ESim List' }
+        ],
         'dynamic-user-list': [
           { label: 'Management' },
           { label: (authService : any) => authService.getUserType() === 'User' ? 'Permit Holder' : authService.getUserType() },
