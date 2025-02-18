@@ -8,24 +8,24 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
 
     // Common menu items for all user types
     let commonItems: MenuItem[] = [
-        {
-            key: 'dashboard',
-            label: 'Dashboard',
-            icon: 'pi pi-objects-column',
-            command: () => {
-                router.navigate(['/main/dashboard']);
-                breadcrumbService.generateBreadcrumbs('/main/dashboard');
-            },
-        },
-        {
-            key: 'tracking',
-            label: 'Tracking',
-            icon: 'pi pi-map',
-            command: () => {
-                router.navigate(['/main/tracking']);
-                breadcrumbService.generateBreadcrumbs('/main/tracking');
-            },
-        },
+        // {
+        //     key: 'dashboard',
+        //     label: 'Dashboard',
+        //     icon: 'pi pi-objects-column',
+        //     command: () => {
+        //         router.navigate(['/main/dashboard']);
+        //         breadcrumbService.generateBreadcrumbs('/main/dashboard');
+        //     },
+        // },
+        // {
+        //     key: 'tracking',
+        //     label: 'Tracking',
+        //     icon: 'pi pi-map',
+        //     command: () => {
+        //         router.navigate(['/main/tracking']);
+        //         breadcrumbService.generateBreadcrumbs('/main/tracking');
+        //     },
+        // },
         {
             key: 'management',
             label: 'Management',
