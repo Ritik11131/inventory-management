@@ -80,7 +80,8 @@ export class LoginComponent implements OnInit {
     try {
       await this.authService.login({ Username: this.email, Password: this.password });
       // this.toastService.showSuccess('Success', 'Successfully logged in!');
-      this.router.navigate([`/main/${this.authService.getUserRole() === 'Dealer' || this.authService.getUserRole() === 'Distributor' ? '/management' : '/dashboard'}`])
+      // this.router.navigate([`/main/${this.authService.getUserRole() === 'Dealer' || this.authService.getUserRole() === 'Distributor' ? '/management' : '/dashboard'}`])
+      this.router.navigate(['/main/management/device-list'])
     } catch (error : any) {
       console.error(error);
       this.generateCatcha();
