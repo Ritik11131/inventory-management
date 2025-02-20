@@ -37,7 +37,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   home: MenuItem | undefined = {
     icon: 'pi pi-home', command: () => {
-      this.router.navigate(['/management/device-list']);
+      this.router.navigate(['/main/management/device-list']);
       this.breadCrumbs = [
         { label: 'Management' },
         { label: 'Device' },
