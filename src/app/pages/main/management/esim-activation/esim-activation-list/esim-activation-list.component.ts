@@ -256,6 +256,7 @@ export class EsimActivationListComponent {
     this.dialogContentType = 'seeHeirarchy';
     this.isDialogVisible = true;
     this.dialogHeader = 'Activation Heirarchy';
+    this.timelineData = [];
     try {
       const response = await this.esimService.getActivationRquestDetailsById(row.request.requestId);
       console.log(response);
