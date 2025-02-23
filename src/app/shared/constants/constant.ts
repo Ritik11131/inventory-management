@@ -24,3 +24,13 @@ export const vehicleOverlayFields = [
     { key: 'secondaryOpt', label: 'Secondary Operator', colSpan: '4', textAlign: 'center' },
     { key: 'secondaryValidTill', label: 'Secondary Valid Till', colSpan: '4', textAlign: 'right', isDate: true },
   ];
+
+  export const srOverlayFields = [
+    { key: 'srid', label: 'SR ID', colSpan: '4', textAlign: 'left' },
+    { key: 'actionRequested', label: 'Action Requested', colSpan: '4', textAlign: 'center' },
+    { key: 'cardCount', label: 'Card Count', colSpan: '4', textAlign: 'right' },
+    { key: 'closureDate', label: 'Closure Date', colSpan: '4', textAlign: 'left', isDate: true },
+    { key: 'failReason', label: 'Fail Reason', colSpan: '4', textAlign: 'center' },
+    { key: 'requestedDate', label: 'Requested Date', colSpan: '4', textAlign: 'right', isDate: true },
+    { key: 'srStatus', label: 'SR Status', colSpan: '4', textAlign: 'left' },
+];

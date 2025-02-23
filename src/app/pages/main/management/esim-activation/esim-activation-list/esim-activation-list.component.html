@@ -30,6 +30,7 @@
                 @if(userRole !== 'Dealer') {
                     <th>Approve/ Reject</th>
                 }
+                <th>Check Status From Provider</th>
             </tr>
         </ng-template>
 
@@ -50,10 +51,10 @@
                 }
                 @if(item.request.status == 'Approved' ||  item.request.status == 'Reject') {
                     <td style="cursor: pointer;">
-                        <p-tag [pTooltip]="'See hierarchy'" tooltipPosition="bottom" severity="secondary" value="Click to see" (click)="showHeirarchyPopup(item)" />
+                        <p-tag [pTooltip]="'See hierarchy'" tooltipPosition="bottom" severity="secondary" value="Click here to see" (click)="showHeirarchyPopup(item)" />
                     </td>
                 } @else {
-                    <td style="cursor: pointer;">
+                    <td>
                        {{'-'}} 
                     </td>
                 }
@@ -131,6 +132,41 @@
                         }
                     </td>
                 }
+                <td style="cursor: pointer;">
+                    <p-tag [icon]="fetchingOverlayDataMap[item.request.requestId] ? 'pi pi-spin pi-spinner' : ''" 
+                    [value]="fetchingOverlayDataMap[item.request.requestId] ? '' : 'Click here to check status'" 
+                    severity="secondary" 
+                    (click)="showProviderStatusOverlay($event, 'check_status_from_provider', item)"  />
+
+                    <p-overlayPanel #providerStatusOp>
+                            <div class="grid p-3 w-25rem">
+                                @if(overlayContent === 'check_status_from_provider') {
+                                   
+                                    <div class="col-6 font-bold">SR ID</div>
+                                    <div class="col-6">{{ srOverlayData?.srid || '-' }}</div>
+                        
+                                    <div class="col-6 font-bold">Action Requested</div>
+                                    <div class="col-6">{{ srOverlayData?.actionRequested || '-' }}</div>
+                        
+                                    <div class="col-6 font-bold">Card Count</div>
+                                    <div class="col-6">{{ srOverlayData?.cardCount || '-' }}</div>
+                        
+                                    <div class="col-6 font-bold">Closure Date</div>
+                                    <div class="col-6">{{ srOverlayData?.closureDate ?? '-' }}</div>
+                        
+                                    <div class="col-6 font-bold">Fail Reason</div>
+                                    <div class="col-6">{{ srOverlayData?.failReason && srOverlayData.failReason !== 'null' ? srOverlayData.failReason : '-' }}</div>
+                        
+                                    <div class="col-6 font-bold">Requested Date</div>
+                                    <div class="col-6">{{ srOverlayData?.requestedDate || '-' }}</div>
+                        
+                                    <div class="col-6 font-bold">SR Status</div>
+                                    <div class="col-6">{{ srOverlayData?.srStatus || '-' }}</div>
+                                }
+                            </div>
+                    </p-overlayPanel>
+                    
+                </td>
                 
             </tr>
         </ng-template>

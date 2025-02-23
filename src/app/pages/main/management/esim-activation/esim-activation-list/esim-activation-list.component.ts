@@ -19,18 +19,21 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
+import { GenericOverlayComponent } from '../../../../../shared/components/generic-overlay/generic-overlay.component';
+import { srOverlayFields } from '../../../../../shared/constants/constant';
 
 @Component({
   selector: 'app-esim-activation-list',
   standalone: true,
   imports: [CommonModule, FormsModule, ToolbarModule, ButtonModule, TableModule, ProgressSpinnerModule, TooltipModule, DialogModule,
-     DropdownModule, OverlayPanelModule, InputGroupModule, InputTextModule, TagModule, TimelineModule],
+     DropdownModule, OverlayPanelModule, InputGroupModule, InputTextModule, TagModule, TimelineModule, GenericOverlayComponent],
   templateUrl: './esim-activation-list.component.html',
   styleUrl: './esim-activation-list.component.scss'
 })
 export class EsimActivationListComponent {
 
   @ViewChild('op') op!: OverlayPanel;
+  @ViewChild('providerStatusOp') providerStatusOp!: OverlayPanel;
   @ViewChild('dt') dt!: Table;
   @ViewChild('dt1') dt1!: Table;
   overlayContent: string = '';
@@ -39,6 +42,7 @@ export class EsimActivationListComponent {
 
   columns: any[] = ESimColumns;
   deviceColumns: any[] = eSimDeviceColumns;
+  srOverlayFields:any[] = srOverlayFields;
   currentSelectedRow!: any;
   eSimtableData: any[] = [];
   devices: any[] = [];
@@ -47,6 +51,7 @@ export class EsimActivationListComponent {
   isDialogVisible: boolean = false;
   fetchingActivateTypeOptions: boolean = false;
   fetchingActivatePlansOptions: boolean = false;
+  fetchingOverlayDataMap: { [key: string]: boolean } = {}; // Track loading per row
   dialogContentType: string = 'activateFields';
   selectedSimProvider!: any;
   selectedType!: any;
@@ -57,6 +62,7 @@ export class EsimActivationListComponent {
   userRole: string = '';
   comment: string = '';
   timelineData:any[] = [];
+  srOverlayData:any = {};
 
 
 
@@ -221,6 +227,21 @@ export class EsimActivationListComponent {
   showOverlay(event: Event, type: string) {
     this.overlayContent = type;
     this.op.toggle(event);
+  }
+
+  async showProviderStatusOverlay(event: Event, type: any, row:any): Promise<void> {
+    this.fetchingOverlayDataMap[row.request.requestId] = true;
+    try {
+      const response = await this.esimService.getRequestStatusByIdFromProvider(row.request.requestId);
+      this.srOverlayData = response.data;
+      this.fetchingOverlayDataMap[row.request.requestId]= false;
+      this.overlayContent = type;
+      this.providerStatusOp.toggle(event);
+    } catch (error:any) {
+      this.srOverlayData = {};
+      this.fetchingOverlayDataMap[row.request.requestId] = false;
+      this.toastService.showError('Error', error?.error?.data);
+    }
   }
 
   async submitComment(action: string, row: any): Promise<void> {

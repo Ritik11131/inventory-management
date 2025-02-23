@@ -95,6 +95,15 @@ export class EsimService {
     }
   }
 
+  async getRequestStatusByIdFromProvider(id: number): Promise<any> {
+    try {
+      const response = await this.http.get('mis/activation/GetRequestStatusByIdFromProvider', {}, id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 
 
