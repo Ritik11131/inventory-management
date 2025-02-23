@@ -30,7 +30,7 @@ export class EsimService {
 
   async getActivationList(): Promise<any> {
     try {
-      const response = await this.http.get('mis/activation/GetActivationRequestList', { });
+      const response = await this.http.get('mis/activation/GetRequestList', { });
       return response;
     } catch (error) {
       throw error;
@@ -40,7 +40,36 @@ export class EsimService {
 
   async getActivationTypes(id:number): Promise<any> {
     try {
-      const response = await this.http.get('mis/activation/types', {}, id);
+      const response = await this.http.get('mis/activation/GetType', {}, id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async getActivationAvailablePlans(id: number): Promise<any> {
+    try {
+      const response = await this.http.get('mis/activation/GetPlansByType', {}, id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createActivationRequest(data: any): Promise<any> {
+    try {
+      const response = await this.http.post('mis/activation/CreateRequest', data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async addCommentOnActivationRequest(data: any): Promise<any> {
+    try {
+      const response = await this.http.post('mis/activation/AddCommentOnRequest', data);
       return response;
     } catch (error) {
       throw error;

@@ -1,7 +1,8 @@
 <div class="px-4 md:px-6 lg:px-8">
     <p-toolbar styleClass="bg-primary-reverse border-bottom-none border-noround">
-        <p-button [text]="true" [outlined]="true" label="Activate"
-            (onClick)="handleActivateClick()"></p-button>
+        @if(userRole !== 'OEM') {
+            <p-button [text]="true" [outlined]="true" label="Activate" (onClick)="handleActivateClick()"></p-button>
+        }
     </p-toolbar>
 
 
@@ -21,7 +22,9 @@
                     {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
                 </th>
                 }
-                <th>Action</th>
+                @if(userRole !== 'Dealer') {
+                    <th>Action</th>
+                }
             </tr>
         </ng-template>
 
@@ -32,15 +35,65 @@
                 @if(col.field === 'index') {
                 <td>{{ rowIndex + 1 }}</td>
                 } @else {
-                <td> {{ item[col.field] || '-' }} </td>
+                    @if(col.type === 'date') {
+                        <td>{{ (col.subfield ? (item[col.field]?.[col.subfield] | date) : (item[col.field]) | date) || '-' }}</td>
+
+                    } @else {
+                        <td>{{ (col.subfield ? item[col.field]?.[col.subfield] : item[col.field]) || '-' }}</td>
+                    }
                 }
                 }
-                <td>
-                    <p-button severity="success" [pTooltip]="'Approve'" tooltipPosition="bottom" [text]="true"
-                        [outlined]="true" icon="pi pi-check-circle" />
-                    <p-button severity="danger" [pTooltip]="'Reject'" tooltipPosition="bottom" [text]="true"
-                        [outlined]="true" icon="pi pi-times-circle" />
-                </td>
+                @if(userRole !== 'Dealer') {
+                    <td>
+                        @if(item.request.status !== 'Approved' && item.request.status !== 'Reject') {
+                            <div class="flex gap-3 align-items-center">
+                                <!-- Approve Icon -->
+                                <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-green-100 cursor-pointer"
+                                     [pTooltip]="'Approve'" tooltipPosition="bottom">
+                                    <i class="pi pi-check-circle text-green-500 text-xl" 
+                                        (click)="showOverlay($event, 'approve')">
+                                    </i>
+                                </div>
+                
+                                <!-- Reject Icon -->
+                                <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-red-100 cursor-pointer"
+                                     [pTooltip]="'Reject'" tooltipPosition="bottom">
+                                    <i class="pi pi-times-circle text-red-500 text-xl" 
+                                        (click)="showOverlay($event, 'reject')">
+                                    </i>
+                                </div>
+                            </div>
+                            
+                        <p-overlayPanel #op>
+                            <div class="flex flex-column gap-3 w-25rem">
+                                @if(overlayContent === 'approve') {
+                                <span class="font-medium text-900 block mb-2">Add Comment for Approval</span>
+                                <div class="flex justify-content-between">
+                                    <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
+                                    <p-button icon="pi pi-check-circle" label="Approve" severity="success" text outlined (click)="submitComment('approve', item)" />
+                                </div>
+                               
+                                }
+                        
+                                @if(overlayContent === 'reject') {
+                                    <span class="font-medium text-900 block mb-2">Add Comment for Rejection</span>
+                                    <div class="flex justify-content-between">
+                                        <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
+                                        <p-button icon="pi pi-times-circle" label="Reject" severity="danger" text outlined (click)="submitComment('reject', item)" />
+                                    </div>
+                                }
+                            </div>
+                        </p-overlayPanel>
+
+                        } @else {
+                            <!-- Show meaningful message if already approved or rejected -->
+                            <span class="font-medium text-green-600" *ngIf="item.request.status === 'Approved'"><p-tag icon="pi pi-check-circle" value="Approved" severity="success" /></span>
+                            <span class="font-medium text-red-600" *ngIf="item.request.status === 'Reject'"><p-tag icon="pi pi-times-circle" value="Rejected" severity="danger" /></span>
+                        }
+
+                    </td>
+                    
+                }
             </tr>
         </ng-template>
 
@@ -66,49 +119,111 @@
 </div>
 
 
-<p-dialog [closable]="false" [(visible)]="isDialogVisible" [style]="{ width: '600px' }" header="Activation"
+<p-dialog [closable]="false" [(visible)]="isDialogVisible" [style]="{ width: '600px' }" header="Create Activation Request"
     [modal]="true" [breakpoints]="{ '2500px': '50vw','1600px': '60vw','1199px': '75vw', '575px': '90vw' }">
 
     <ng-template pTemplate="content">
         @if (dialogContentType === 'activateFields') {
-            <div class="formgrid grid mt-3">
-                <!-- Sim Provider -->
-                <div class="field col-12 sm:col-12 md:col-4">
-                    <div class="flex align-items-center mb-2">
-                        <label for="simProvider" class="mr-2">Sim Provider</label>
-                    </div>
-                    <p-dropdown id="simProvider" appendTo="body" [options]="simProvidersOptions" 
-                        styleClass="w-full" [(ngModel)]="selectedSimProvider"
-                        optionLabel="providerName" placeholder="Select Sim Provider" (onChange)="handleSimProviderChange($event)" />
+        <div class="formgrid grid mt-3">
+            <!-- Sim Provider -->
+            <div class="field col-12 sm:col-12 md:col-4">
+                <div class="flex align-items-center mb-2">
+                    <label for="simProvider" class="mr-2">Sim Provider</label>
                 </div>
-    
-                <!-- Type -->
-                <div class="field col-12 sm:col-12 md:col-4">
-                    <div class="flex align-items-center mb-2">
-                        <label for="simType" class="mr-2">Type</label>
-                    </div>
-                    <p-dropdown id="simType" [disabled]="!selectedSimProvider" [loading]="fetchingActivateTypeOptions" appendTo="body" 
-                        [options]="activateTypeOptions" styleClass="w-full" [(ngModel)]="selectedType"
-                        optionLabel="name" placeholder="Select Type" />
-                </div>
-    
-                <!-- Available Plans -->
-                <div class="field col-12 sm:col-12 md:col-4">
-                    <div class="flex align-items-center mb-2">
-                        <label for="availablePlan" class="mr-2">Available Plans</label>
-                    </div>
-                    <p-dropdown id="availablePlan" [disabled]="!selectedType" appendTo="body" 
-                        [options]="availablePlanOptions" styleClass="w-full" [(ngModel)]="selectedPlan"
-                        optionLabel="planName" placeholder="Select Available Plan" />
-                </div>
+                <p-dropdown id="simProvider" appendTo="body" [options]="simProvidersOptions" styleClass="w-full"
+                    [(ngModel)]="selectedSimProvider" optionLabel="providerName" placeholder="Select Sim Provider"
+                    (onChange)="handleSimProviderChange($event)" />
             </div>
+
+            <!-- Type -->
+            <div class="field col-12 sm:col-12 md:col-4">
+                <div class="flex align-items-center mb-2">
+                    <label for="simType" class="mr-2">Type</label>
+                </div>
+                <p-dropdown id="simType" [disabled]="!selectedSimProvider" [loading]="fetchingActivateTypeOptions"
+                    appendTo="body" [options]="activateTypeOptions" styleClass="w-full" [(ngModel)]="selectedType"
+                    (onChange)="handleActivationTypeChange($event)" optionLabel="name" placeholder="Select Type" />
+            </div>
+
+            <!-- Available Plans -->
+            <div class="field col-12 sm:col-12 md:col-4">
+                <div class="flex align-items-center mb-2">
+                    <label for="availablePlan" class="mr-2">Available Plans</label>
+                </div>
+                <p-dropdown id="availablePlan" [disabled]="!selectedType" appendTo="body"
+                    [loading]="fetchingActivatePlansOptions" [options]="availablePlanOptions" styleClass="w-full"
+                    [(ngModel)]="selectedPlan" optionLabel="name" placeholder="Select Available Plan" />
+            </div>
+
+            @if(selectedPlan) {
+
+            <!-- PrimeNG Table Row -->
+            <div class="field col-12 mt-3">
+
+                <p-table #dt1 [value]="devices" [rows]="10" [columns]="deviceColumns" [paginator]="true"
+                    [globalFilterFields]="['imei','iccid','sno']" [(selection)]="currentSelectedRow" [rowHover]="true"
+                    [scrollable]="true" [exportFilename]="'esims'"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [showCurrentPageReport]="true" (selectionChange)="onCurrentRowSelectionChange($event)"
+                    styleClass="p-datatable-sm p-datatable-gridlines">
+
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th></th>
+                            @for (col of deviceColumns; track $index) {
+                            <th pFrozenColumn [frozen]="col.frozen || false" alignFrozen="right"
+                                pSortableColumn="{{ col.field }}" [style.minWidth]="col.minWidth || '15rem'">
+                                {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                            </th>
+                            }
+                        </tr>
+                    </ng-template>
+
+
+                    <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+                        <tr>
+                            <td><p-tableCheckbox [value]="item"/></td>
+                            @for (col of deviceColumns; track $index) {
+                            @if(col.field === 'index') {
+                            <td>{{ rowIndex + 1 }}</td>
+                            } @else {
+                            <td> {{ item[col.field] || '-' }} </td>
+                            }
+                            }
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7" class="sm:text-center text-left">
+                                @if(isDevicesLoading) {
+                                <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem" />
+                                } @else {
+                                No Data Found.
+                                }
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <!-- Summary -->
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            In total there are {{ eSimtableData ? eSimtableData.length : 0 }} items.
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+
+        }
+
+        </div>
         }
     </ng-template>
-    
+
 
     <ng-template pTemplate="footer">
-        <p-button label="Cancel" icon="pi pi-times" [text]="true"
-            (onClick)="isDialogVisible = false; dialogContentType = 'activateFields'" />
+        <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
         <p-button [disabled]="false" label="Save" icon="pi pi-check" [text]="true" (onClick)="save()" />
     </ng-template>
 </p-dialog>

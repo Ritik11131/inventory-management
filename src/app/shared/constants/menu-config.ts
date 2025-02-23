@@ -179,6 +179,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                     }
                 ]
             },
+            {
+                label: 'E-Sim Activation',
+                icon: 'pi pi-car',
+                items: [
+                    {
+                        label: 'E-Sim Activation List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/esim-activation-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/esim-activation-list');
+                        }
+                    }
+                ]
+            },
         ],
         Distributor: [
             {
@@ -193,6 +207,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                             breadcrumbService.generateBreadcrumbs('/main/management/device-list');
                         }
                     },
+                ]
+            },
+            {
+                label: 'E-Sim Activation',
+                icon: 'pi pi-car',
+                items: [
+                    {
+                        label: 'E-Sim Activation List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/esim-activation-list']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/esim-activation-list');
+                        }
+                    }
                 ]
             },
         ],

@@ -18,17 +18,17 @@ export const deviceColumns = [
     { field: 'user', header: 'Permit Holder',nested:true, subfield:'name', hyperlink: true },
     { field:'downloadCertificate',header:'Download Certificate'},
     { field: 'lastPosition', header: 'Online Status',nested:true, subfield:'status' },
-    // { field: 'simDetails', header: 'Sim Provider',nested:true, subfield:'provider', nextsubfield:'providerName' },
-    // { field: 'simDetails', header: 'Primary Sim Operator', nested:true, subfield:'primaryOpt' },
-    // { field: 'simDetails', header: 'Primary Mobile No',nested:true, subfield:'primarySimNo' },
-    // { field: 'simDetails', header: 'Primary Sim Validity',nested:true, subfield:'primaryValidTill', type:'date' },
-    // { field: 'simDetails', header: 'Secondary Sim Operator',nested:true, subfield:'secondaryOpt' },
-    // { field: 'simDetails', header: 'Secondary Mobile No',nested:true, subfield:'secondarySimNo' },
-    // { field: 'simDetails', header: 'Secondary Sim Validity',nested:true, subfield:'secondaryValidTill', type:'date' },
-    // { field: 'simDetails', header: 'Activation Date',nested:true, subfield:'activationOn', type:'date' },
     { field: 'inStock', header: 'Stock Status', minWidth: '12rem' },
     { field: 'activationStatusText', header: 'Activation Status', frozen:true, minWidth: '12rem' },
 ];
+
+export const eSimDeviceColumns = [
+    { field: 'index', header: 'S.NO', minWidth: '7rem' },
+    { field: 'sno', header: 'Device No' },
+    { field: 'imei', header: 'IMEI' },
+    { field: 'iccid', header: 'ICCID No'},
+    // { field: 'vehicle', header: 'Vehicle No', nested:true, subfield:'vehicleNo'},
+]
 
 export const InventoryColumns = [
     { field: 'sno', header: 'Device No' },
@@ -38,7 +38,17 @@ export const InventoryColumns = [
 
 export const ESimColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
-]
+    // { field: 'user', subfield: 'orgname', header: 'Organization Name', minWidth: '12rem' },
+    // { field: 'user', subfield: 'contactpersonname', header: 'Contact Person', minWidth: '12rem' },
+    { field: 'serviceProvider', subfield: 'providername', header: 'Service Provider', minWidth: '12rem' },
+    { field: 'type', subfield: 'name', header: 'Type', minWidth: '10rem' },
+    { field: 'plan', subfield: 'name', header: 'Plan', minWidth: '10rem' },
+    // { field: 'request', subfield: 'requestId', header: 'Request ID', minWidth: '10rem' },
+    { field: 'request', subfield: 'requestedon', header: 'Requested On', minWidth: '15rem', type:'date' },
+    { field: 'request', subfield: 'lastupdatetime', header: 'Last Updated', minWidth: '15rem', type:'date' },
+    { field: 'request', subfield: 'status', header: 'Status', minWidth: '10rem' }
+];
+
 
 export const deviceModelColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
