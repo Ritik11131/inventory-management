@@ -3,16 +3,20 @@
         @if(userRole !== 'OEM') {
             <p-button [text]="true" [outlined]="true" label="Activate" (onClick)="handleActivateClick()"></p-button>
         }
+
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input [disabled]="!eSimtableData.length" pInputText placeholder="Search" />
+        </span>
     </p-toolbar>
 
 
     <p-table #dt [value]="eSimtableData" [rows]="10" [columns]="columns" [paginator]="true"
-        [globalFilterFields]="['imei','iccid','sno']" [(selection)]="currentSelectedRow" [rowHover]="true"
+        [globalFilterFields]="['serviceProvider.providername']" [(selection)]="currentSelectedRow" [rowHover]="true"
         [scrollable]="true" [exportFilename]="'esims'"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
         (selectionChange)="onCurrentRowSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
         styleClass="p-datatable-sm p-datatable-gridlines">
-
 
         <ng-template pTemplate="header">
             <tr>
@@ -23,7 +27,7 @@
                 </th>
                 }
                 @if(userRole !== 'Dealer') {
-                    <th>Action</th>
+                    <th>Approve/ Reject</th>
                 }
             </tr>
         </ng-template>
@@ -46,54 +50,78 @@
                 @if(userRole !== 'Dealer') {
                     <td>
                         @if(item.request.status !== 'Approved' && item.request.status !== 'Reject') {
-                            <div class="flex gap-3 align-items-center">
-                                <!-- Approve Icon -->
-                                <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-green-100 cursor-pointer"
-                                     [pTooltip]="'Approve'" tooltipPosition="bottom">
-                                    <i class="pi pi-check-circle text-green-500 text-xl" 
-                                        (click)="showOverlay($event, 'approve')">
-                                    </i>
-                                </div>
-                
-                                <!-- Reject Icon -->
-                                <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-red-100 cursor-pointer"
-                                     [pTooltip]="'Reject'" tooltipPosition="bottom">
-                                    <i class="pi pi-times-circle text-red-500 text-xl" 
-                                        (click)="showOverlay($event, 'reject')">
-                                    </i>
-                                </div>
-                            </div>
-                            
-                        <p-overlayPanel #op>
-                            <div class="flex flex-column gap-3 w-25rem">
-                                @if(overlayContent === 'approve') {
-                                <span class="font-medium text-900 block mb-2">Add Comment for Approval</span>
-                                <div class="flex justify-content-between">
-                                    <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
-                                    <p-button icon="pi pi-check-circle" label="Approve" severity="success" text outlined (click)="submitComment('approve', item)" />
-                                </div>
-                               
-                                }
-                        
-                                @if(overlayContent === 'reject') {
-                                    <span class="font-medium text-900 block mb-2">Add Comment for Rejection</span>
-                                    <div class="flex justify-content-between">
-                                        <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
-                                        <p-button icon="pi pi-times-circle" label="Reject" severity="danger" text outlined (click)="submitComment('reject', item)" />
+                            <!-- When userRole is OEM and status is "In Process", show "Send to Operator" button instead of approve/reject -->
+                            @if(userRole === 'OEM' && item.request.status === 'InProcess') {
+                                <p-button label="Send to Operator" severity="info" outlined 
+                                          (click)="showOverlay($event, 'send_request_to_operator')" />
+                            } @else {
+                                <div class="flex gap-3 align-items-center">
+                                    <!-- Approve Icon -->
+                                    <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-green-100 cursor-pointer"
+                                         [pTooltip]="'Approve'" tooltipPosition="bottom">
+                                        <i class="pi pi-check-circle text-green-500 text-xl" 
+                                            (click)="showOverlay($event, 'approve')">
+                                        </i>
                                     </div>
-                                }
-                            </div>
-                        </p-overlayPanel>
-
-                        } @else {
-                            <!-- Show meaningful message if already approved or rejected -->
-                            <span class="font-medium text-green-600" *ngIf="item.request.status === 'Approved'"><p-tag icon="pi pi-check-circle" value="Approved" severity="success" /></span>
-                            <span class="font-medium text-red-600" *ngIf="item.request.status === 'Reject'"><p-tag icon="pi pi-times-circle" value="Rejected" severity="danger" /></span>
-                        }
-
-                    </td>
                     
+                                    <!-- Reject Icon -->
+                                    <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-red-100 cursor-pointer"
+                                         [pTooltip]="'Reject'" tooltipPosition="bottom">
+                                        <i class="pi pi-times-circle text-red-500 text-xl" 
+                                            (click)="showOverlay($event, 'reject')">
+                                        </i>
+                                    </div>
+                                </div>
+                    
+                                <!-- Overlay Panel -->
+                                <p-overlayPanel #op>
+                                    <div class="flex flex-column gap-3 w-25rem">
+                                        @if(overlayContent === 'approve') {
+                                            <span class="font-medium text-900 block mb-2">Add Comment for Approval</span>
+                                            <div class="flex justify-content-between">
+                                                <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
+                                                <p-button icon="pi pi-check-circle" label="Approve" severity="success" text outlined 
+                                                          (click)="submitComment('approve', item)" />
+                                            </div>
+                                        }
+                                
+                                        @if(overlayContent === 'reject') {
+                                            <span class="font-medium text-900 block mb-2">Add Comment for Rejection</span>
+                                            <div class="flex justify-content-between">
+                                                <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
+                                                <p-button icon="pi pi-times-circle" label="Reject" severity="danger" text outlined 
+                                                          (click)="submitComment('reject', item)" />
+                                            </div>
+                                        }
+
+                                        @if(overlayContent === 'send_request_to_operator') {
+                                            <span class="font-medium text-900 block mb-2">Send Request to Operator</span>
+                                            <div class="flex justify-content-between">
+                                                <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
+                                                <p-button icon="pi pi-check-circle" label="Send" severity="info" text outlined 
+                                                          (click)="submitComment('send_request_to_operator', item)" />
+                                            </div>
+                                        }
+                                    </div>
+                                </p-overlayPanel>
+                            }
+                        } @else {
+                        <!-- Show meaningful status with PrimeNG chip -->
+                        @if(item.request.status === 'Approved') {
+                        <p-tag icon="pi pi-check-circle" value="Approved" severity="success" />
+                       
+                        
+                        }
+                        
+                        @if(item.request.status === 'Reject') {
+                        <p-tag icon="pi pi-times-circle" value="Rejected" severity="danger" />
+                        
+                        }
+                        
+                        }
+                    </td>
                 }
+                
             </tr>
         </ng-template>
 
@@ -161,11 +189,18 @@
             <div class="field col-12 mt-3">
 
                 <p-table #dt1 [value]="devices" [rows]="10" [columns]="deviceColumns" [paginator]="true"
-                    [globalFilterFields]="['imei','iccid','sno']" [(selection)]="currentSelectedRow" [rowHover]="true"
+                    [globalFilterFields]="['imei','iccid']" [(selection)]="currentSelectedRow" [rowHover]="true"
                     [scrollable]="true" [exportFilename]="'esims'"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                     [showCurrentPageReport]="true" (selectionChange)="onCurrentRowSelectionChange($event)"
                     styleClass="p-datatable-sm p-datatable-gridlines">
+
+                    <ng-template pTemplate="caption">
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input [disabled]="!eSimtableData.length" pInputText placeholder="Search" (input)="onDeviceListSearch($event)" />
+                        </span>
+                    </ng-template>
 
 
                     <ng-template pTemplate="header">
@@ -209,7 +244,7 @@
                     <!-- Summary -->
                     <ng-template pTemplate="summary">
                         <div class="flex align-items-center justify-content-between">
-                            In total there are {{ eSimtableData ? eSimtableData.length : 0 }} items.
+                            In total there are {{ devices ? devices.length : 0 }} items.
                         </div>
                     </ng-template>
                 </p-table>

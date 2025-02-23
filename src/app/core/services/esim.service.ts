@@ -77,5 +77,17 @@ export class EsimService {
   }
 
 
+  async processRequestToOperator(data: any): Promise<any> {
+    try {
+      const response = await this.http.post('mis/activation/ProcessRequestToOperator', data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+
+
 
 }

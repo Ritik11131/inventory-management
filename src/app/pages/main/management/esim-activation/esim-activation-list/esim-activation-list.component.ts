@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ESimColumns, eSimDeviceColumns } from '../../../../../shared/constants/columns';
 import { EsimService } from '../../../../../core/services/esim.service';
@@ -30,6 +30,8 @@ import { TagModule } from 'primeng/tag';
 export class EsimActivationListComponent {
 
   @ViewChild('op') op!: OverlayPanel;
+  @ViewChild('dt') dt!: Table;
+  @ViewChild('dt1') dt1!: Table;
   overlayContent: string = '';
 
 
@@ -217,7 +219,12 @@ export class EsimActivationListComponent {
 
   async submitComment(action: string, row: any): Promise<void> {
     try {
-      const response = await this.esimService.addCommentOnActivationRequest({
+      const response = action === 'send_request_to_operator' ? await this.esimService.processRequestToOperator({
+        requestId: row.request.requestId,
+        status: 'InProcess',
+        comment: this.comment,
+      }) : 
+        await this.esimService.addCommentOnActivationRequest({
         requestId: row.request.requestId,
         status: action === 'approve' ? 'Approved' : 'Reject',
         comment: this.comment,
@@ -230,6 +237,13 @@ export class EsimActivationListComponent {
     this.op.hide(); // Close the overlay after submission
     await this.fetchActivationList();
 
+  }
+
+  onDeviceListSearch(event: Event) {
+    const input = event.target as HTMLInputElement;    
+    if (input) {
+      this.dt1.filterGlobal(input.value, 'contains');
+    }
   }
 
 
