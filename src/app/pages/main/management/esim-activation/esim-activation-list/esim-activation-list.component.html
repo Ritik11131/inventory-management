@@ -21,11 +21,12 @@
         <ng-template pTemplate="header">
             <tr>
                 @for (col of columns; track $index) {
-                <th pFrozenColumn [frozen]="col.frozen || false" alignFrozen="right" pSortableColumn="{{ col.field }}"
+                <th
                     [style.minWidth]="col.minWidth || '15rem'">
-                    {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                    {{ col.header }}
                 </th>
                 }
+                <th>Activation History</th>
                 @if(userRole !== 'Dealer') {
                     <th>Approve/ Reject</th>
                 }
@@ -46,6 +47,15 @@
                         <td>{{ (col.subfield ? item[col.field]?.[col.subfield] : item[col.field]) || '-' }}</td>
                     }
                 }
+                }
+                @if(item.request.status == 'Approved' ||  item.request.status == 'Reject') {
+                    <td style="cursor: pointer;">
+                        <p-tag [pTooltip]="'See hierarchy'" tooltipPosition="bottom" severity="secondary" value="Click to see" (click)="showHeirarchyPopup(item)" />
+                    </td>
+                } @else {
+                    <td style="cursor: pointer;">
+                       {{'-'}} 
+                    </td>
                 }
                 @if(userRole !== 'Dealer') {
                     <td>
@@ -147,7 +157,7 @@
 </div>
 
 
-<p-dialog [closable]="false" [(visible)]="isDialogVisible" [style]="{ width: '600px' }" header="Create Activation Request"
+<p-dialog [closable]="false" [(visible)]="isDialogVisible" [style]="{ width: '600px'}" [header]="dialogHeader"
     [modal]="true" [breakpoints]="{ '2500px': '50vw','1600px': '60vw','1199px': '75vw', '575px': '90vw' }">
 
     <ng-template pTemplate="content">
@@ -254,6 +264,34 @@
 
         </div>
         }
+
+        @if (dialogContentType === 'seeHeirarchy') {
+            <div class="grid mt-3 gap-4">
+                @for (eventSet of timelineData; track $index) {
+                    <div class="col-12 md:col-6">
+                        <div class="p-4 bg-surface-100 transition-all duration-300">
+                            <h3 class="text-lg font-semibold border-bottom-1 pb-2">{{ eventSet?.header }}</h3>
+                            
+                            <div class="max-h-25rem min-w-20rem overflow-auto mt-3 p-2">
+                                <p-timeline [value]="eventSet.events" class="w-full">
+                                    <ng-template pTemplate="content" let-event>
+                                        <div class="p-2 bg-surface-50 border-round-md shadow-1">
+                                            <small class="p-text-secondary block mb-1">{{ (event.date | date:'short') || '-'}}</small>
+                                            <span class="text-xs text-primary font-medium">Commented by: {{ event.commentedBy || '-' }}</span>
+                                        </div>
+                                    </ng-template>
+            
+                                    <ng-template pTemplate="opposite" let-event>
+                                        <span class="font-medium text-primary">{{ event.comment || '-' }}</span>
+                                    </ng-template>
+                                </p-timeline>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        
     </ng-template>
 
 

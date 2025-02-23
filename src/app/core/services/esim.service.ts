@@ -86,6 +86,15 @@ export class EsimService {
     }
   }
 
+  async getActivationRquestDetailsById(id: number): Promise<any> {
+    try {
+      const response = await this.http.get('mis/activation/GetRequestById', {}, id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 
 

@@ -18,12 +18,13 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
+import { TimelineModule } from 'primeng/timeline';
 
 @Component({
   selector: 'app-esim-activation-list',
   standalone: true,
   imports: [CommonModule, FormsModule, ToolbarModule, ButtonModule, TableModule, ProgressSpinnerModule, TooltipModule, DialogModule,
-     DropdownModule, OverlayPanelModule, InputGroupModule, InputTextModule, TagModule],
+     DropdownModule, OverlayPanelModule, InputGroupModule, InputTextModule, TagModule, TimelineModule],
   templateUrl: './esim-activation-list.component.html',
   styleUrl: './esim-activation-list.component.scss'
 })
@@ -33,6 +34,7 @@ export class EsimActivationListComponent {
   @ViewChild('dt') dt!: Table;
   @ViewChild('dt1') dt1!: Table;
   overlayContent: string = '';
+  dialogHeader: string = '';
 
 
   columns: any[] = ESimColumns;
@@ -54,6 +56,8 @@ export class EsimActivationListComponent {
   availablePlanOptions: any[] = [];
   userRole: string = '';
   comment: string = '';
+  timelineData:any[] = [];
+
 
 
   constructor(private esimService: EsimService, private toastService: ToastService,
@@ -161,6 +165,7 @@ export class EsimActivationListComponent {
   handleActivateClick = async () => {
     this.isDialogVisible = true;
     this.dialogContentType = 'activateFields';
+    this.dialogHeader = 'Create Activation Request';
     await this.fetchSimProviders();
   }
 
@@ -208,6 +213,7 @@ export class EsimActivationListComponent {
     this.selectedPlan = null;
     this.devices = [];
     this.currentSelectedRow = [];
+    this.dialogHeader = '';
   }
 
 
@@ -243,6 +249,33 @@ export class EsimActivationListComponent {
     const input = event.target as HTMLInputElement;    
     if (input) {
       this.dt1.filterGlobal(input.value, 'contains');
+    }
+  }
+
+  async showHeirarchyPopup(row: any) {
+    this.dialogContentType = 'seeHeirarchy';
+    this.isDialogVisible = true;
+    this.dialogHeader = 'Activation Heirarchy';
+    try {
+      const response = await this.esimService.getActivationRquestDetailsById(row.request.requestId);
+      console.log(response);
+      let {comment, commenthistory} = response?.data;
+      commenthistory = JSON.parse(commenthistory);
+      this.timelineData = [
+        ...this.timelineData,
+        {
+            header: 'Comment History',
+            events: commenthistory
+                .map((item: any) => ({
+                    date: new Date(item.commentDate), // Convert to Date object
+                    comment: item.comment,
+                    commentedBy: item.commentBy
+                })).sort((a:any, b:any) => b.date.getTime() - a.date.getTime()) // Sort in DESC order
+        }
+    ];      
+      
+    } catch (error) {
+      this.toastService.showError('Error', 'Failed to fetch');
     }
   }
 
