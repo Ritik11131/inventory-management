@@ -26,6 +26,7 @@
                     {{ col.header }}
                 </th>
                 }
+                <th>Linked Devices</th>
                 <th>Activation History</th>
                 @if(userRole !== 'Dealer') {
                     <th>Approve/ Reject</th>
@@ -49,6 +50,9 @@
                     }
                 }
                 }
+                <td>
+                    <p-button text outlined label="View" severity="info" (click)="showLinkedDevicesPopup('linkedDevices',item)" />
+                </td>
                 @if(item.request.status == 'Approved' ||  item.request.status == 'Reject') {
                     <td style="cursor: pointer;">
                         <p-tag [pTooltip]="'See hierarchy'" tooltipPosition="bottom" severity="secondary" value="Click here to see" (click)="showHeirarchyPopup(item)" />
@@ -244,7 +248,7 @@
                     <ng-template pTemplate="caption">
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input [disabled]="!eSimtableData.length" pInputText placeholder="Search" (input)="onDeviceListSearch($event)" />
+                            <input [disabled]="!devices.length" pInputText placeholder="Search" (input)="onDeviceListSearch($event)" />
                         </span>
                     </ng-template>
 
@@ -327,12 +331,76 @@
                 }
             </div>
         }
+
+
+        @if(dialogContentType === 'linkedDevices') {
+            <p-table #dt2 [value]="selectedLinkedDevicesData" [rows]="10" [columns]="activationLinkedDeviceColumns" [paginator]="true"
+                    [globalFilterFields]="['imei','iccid']" [rowHover]="true"
+                    [scrollable]="true" [exportFilename]="'esims'"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [showCurrentPageReport]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines">
+
+                    <!-- <ng-template pTemplate="caption">
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input [disabled]="!selectedLinkedDevicesData.length" pInputText placeholder="Search" (input)="onDeviceListSearch($event)" />
+                        </span>
+                    </ng-template> -->
+
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            @for (col of activationLinkedDeviceColumns; track $index) {
+                            <th 
+                                [style.minWidth]="col.minWidth || '15rem'">
+                                {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                            </th>
+                            }
+                        </tr>
+                    </ng-template>
+
+
+                    <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+                        <tr>
+                            @for (col of activationLinkedDeviceColumns; track $index) {
+                            @if(col.field === 'index') {
+                            <td>{{ rowIndex + 1 }}</td>
+                            } @else {
+                            <td> {{ item[col.field] || '-' }} </td>
+                            }
+                            }
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7" class="sm:text-center text-left">
+                                @if(isDevicesLoading) {
+                                <p-progressSpinner ariaLabel="loading" styleClass="w-3rem h-3rem" />
+                                } @else {
+                                No Data Found.
+                                }
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <!-- Summary -->
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            In total there are {{ selectedLinkedDevicesData ? selectedLinkedDevicesData.length : 0 }} items.
+                        </div>
+                    </ng-template>
+                </p-table>
+        }
         
     </ng-template>
 
 
     <ng-template pTemplate="footer">
         <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
-        <p-button [disabled]="false" label="Save" icon="pi pi-check" [text]="true" (onClick)="save()" />
+        @if(dialogContentType === 'activateFields') {
+            <p-button [disabled]="false" label="Save" icon="pi pi-check" [text]="true" (onClick)="save()" />
+        }
     </ng-template>
 </p-dialog>

@@ -5,7 +5,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { Table, TableModule } from 'primeng/table';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { ESimColumns, eSimDeviceColumns } from '../../../../../shared/constants/columns';
+import { ESimActivationLinkedDeviceColumns, ESimColumns, eSimDeviceColumns } from '../../../../../shared/constants/columns';
 import { EsimService } from '../../../../../core/services/esim.service';
 import { ToastService } from '../../../../../core/services/toast.service';
 import { TooltipModule } from 'primeng/tooltip';
@@ -42,6 +42,7 @@ export class EsimActivationListComponent {
 
   columns: any[] = ESimColumns;
   deviceColumns: any[] = eSimDeviceColumns;
+  activationLinkedDeviceColumns = ESimActivationLinkedDeviceColumns
   srOverlayFields:any[] = srOverlayFields;
   currentSelectedRow!: any;
   eSimtableData: any[] = [];
@@ -63,6 +64,7 @@ export class EsimActivationListComponent {
   comment: string = '';
   timelineData:any[] = [];
   srOverlayData:any = {};
+  selectedLinkedDevicesData:any = [];
 
 
 
@@ -296,6 +298,22 @@ export class EsimActivationListComponent {
         }
     ];      
       
+    } catch (error) {
+      this.toastService.showError('Error', 'Failed to fetch');
+    }
+  }
+
+  async showLinkedDevicesPopup(type:any, row: any) {
+    this.dialogContentType = type;
+    this.isDialogVisible = true;
+    this.dialogHeader = 'Linked Devices';
+
+
+    try {
+      const response = await this.esimService.getActivationRquestDetailsById(row.request.requestId);
+      let { requestjson } = response?.data;
+      requestjson = JSON.parse(requestjson);
+      this.selectedLinkedDevicesData = requestjson;
     } catch (error) {
       this.toastService.showError('Error', 'Failed to fetch');
     }
