@@ -2,8 +2,10 @@
     <p-menubar styleClass="font-bold text-lg" [model]="menuItems">
         <ng-template pTemplate="start">
             <div class="flex justify-content-center align-items-center font-bold text-3xl">
-                <p-avatar image="assets/images/logo.png" styleClass="mr-2" size="xlarge" />
-                <span>GRL</span>
+                <img src="assets/images/grl_logo.png" alt="logo" height="50" width="80"     />
+
+                <!-- <p-avatar image="assets/images/grl_logo.png" styleClass="mr-2" size="xlarge" /> -->
+                <!-- <span>GRL</span> -->
             </div>
         </ng-template>
         <ng-template pTemplate="item" let-item let-root="root">
@@ -53,7 +55,7 @@
 
     <ng-template pTemplate="footer">
         <div class="gap-3 mt-1">
-                        <p-avatar image="assets/images/logo.png" styleClass="mr-2" size="xlarge" />
+                        <p-avatar image="assets/images/grl_logo.png" styleClass="mr-2" size="xlarge" />
 
         </div>
     </ng-template>
