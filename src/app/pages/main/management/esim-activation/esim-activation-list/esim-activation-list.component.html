@@ -336,17 +336,19 @@
         @if(dialogContentType === 'linkedDevices') {
             <p-table #dt2 [value]="selectedLinkedDevicesData" [rows]="10" [columns]="activationLinkedDeviceColumns" [paginator]="true"
                     [globalFilterFields]="['imei','iccid']" [rowHover]="true"
-                    [scrollable]="true" [exportFilename]="'esims'"
+                    [scrollable]="true" [exportFilename]="'linked_devices_esims'"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                     [showCurrentPageReport]="true"
                     styleClass="p-datatable-sm p-datatable-gridlines">
 
-                    <!-- <ng-template pTemplate="caption">
-                        <span class="p-input-icon-left">
+                    <ng-template pTemplate="caption">
+                        <!-- <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input [disabled]="!selectedLinkedDevicesData.length" pInputText placeholder="Search" (input)="onDeviceListSearch($event)" />
-                        </span>
-                    </ng-template> -->
+                        </span> -->
+
+                        <p-button label="Export CSV"  (onClick)="dt2.exportCSV()"  />
+                    </ng-template>
 
 
                     <ng-template pTemplate="header">
