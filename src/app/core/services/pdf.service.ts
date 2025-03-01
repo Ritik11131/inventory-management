@@ -55,15 +55,15 @@ export class PdfService {
               alignment: 'center', // Center the image
             },
             {
-              text: '##27, I.D.C, Ind. Area, OP Jindal Marg, Hisar-12005 (Hry)', // Replace with actual address
+              text: '#27, I.D.C, Ind. Area, OP Jindal Marg, Hisar-12005 (Hry)', // Replace with actual address
               style: 'smallText',
               alignment: 'center',
               margin: [0, 5, 0, 0], // Margin for spacing
             },
             {
               text: [
-                { text: '☏: +9187509-87700, ', style: 'smallText' }, // Phone number with icon
-                { text: '💬: +9182952-00038', style: 'smallText' } // WhatsApp number with icon
+                { text: '+918750987700, ', style: 'smallText' }, // Phone number with icon
+                { text: '+918295200038', style: 'smallText' } // WhatsApp number with icon
               ],
               alignment: 'center',
               margin: [0, 5, 0, 0], // Margin for spacing
@@ -289,6 +289,9 @@ export class PdfService {
               },
               margin: [0, 10, 10, 10], // Margin for spacing
             },
+
+            // Add a page break before RFC details
+            { text: '', pageBreak: 'before' }, // This will create a new page
   
             // RFC Details
             {
@@ -296,20 +299,23 @@ export class PdfService {
                 {
                   width: '100%',
                   table: {
-                    widths: ['25%', '25%', '25%', '25%'],
+                    widths: ['16.6666666667%','16.6666666667%','16.6666666667%','16.6666666667%','16.6666666667%','16.6666666667%'], // Three equal columns
                     body: [
                       [
-                        { text: 'Name M/s ', style: 'tableText' }, { text: data.rfc.name, style: 'tableValue' },
-                        { text: 'Organization', style: 'tableText' }, { text: data.rfc.orgName, style: 'tableValue' },
+                        { text: 'Dealer Name:', style: 'tableText' }, 
+                        { text: data.rfc.name, style: 'tableValue' },
+                        { text: 'Dealer Mob No:', style: 'tableText' }, 
+                        { text: data.rfc.mobileNo, style: 'tableValue' },
+                        { text: 'Dealer Address:', style: 'tableText' }, 
+                        { text: data.rfc.address, style: 'tableValue' },
                       ],
                       [
-                        { text: 'Mobile No.', style: 'tableText' }, { text: data.rfc.mobileNo, style: 'tableValue' },
-                        { text: 'Email', style: 'tableText' }, { text: data.rfc.email, style: 'tableValue' },
-                      ],
-                      [
-                        { text: 'Address', style: 'tableText' },
-                        { text: data.rfc.address, style: 'tableValue', colSpan: 3 },
-                        {}, {},
+                        { text: 'Installed by:', style: 'tableText' }, 
+                        { text: data.rfc.deviceInstalledBy, style: 'tableValue' }, // Value for Device Installed by
+                        { text: 'Dealer Sign:', style: 'tableText' }, 
+                        { text: '____________', style: 'tableValue', alignment: 'center' }, // Placeholder for Dealer Sign
+                        { text: 'RTA/MVI/STA:', style: 'tableText' }, 
+                        { text: '____________', style: 'tableValue', alignment: 'center' }, // Placeholder for RTO Sign
                       ],
                     ],
                   },
