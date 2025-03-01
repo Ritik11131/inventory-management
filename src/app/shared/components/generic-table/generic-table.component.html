@@ -85,7 +85,7 @@
                     @if(col.field === 'active' || col.field === 'activationStatusText' || col.field === 'inStock') {
                         <td pFrozenColumn alignFrozen="right" [frozen]="col?.frozen">
                             <p-tag [severity]="col.field === 'activationStatusText' ? (item[col.field] === 'Active' ? 'success' : 'danger') : item[col.field] ? 'success' : 'danger'" 
-                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : 'OUTOFSTOCK')"
+                                   [value]="(col.field === 'active') ? (item[col.field] ? 'ACTIVE' : 'INACTIVE') : (col.field === 'activationStatusText') ? (item[col.field]) : (item[col.field] ? 'INSTOCK' : item['user']?.userType !== 'User' ? item['user']?.name : '-')"
                                    /> 
                         </td>
                     }  @else {

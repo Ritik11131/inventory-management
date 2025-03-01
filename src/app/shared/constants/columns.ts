@@ -16,7 +16,7 @@ export const deviceColumns = [
     { field: 'iccid', header: 'ICCID No', hyperlink: true},
     { field: 'vehicle', header: 'Vehicle No', nested:true, subfield:'vehicleNo', hyperlink: true},
     { field: 'user', header: 'Permit Holder',nested:true, subfield:'name', hyperlink: true },
-    { field:'downloadCertificate',header:'Download Certificate'},
+    { field: 'downloadCertificate',header:'Download Certificate'},
     { field: 'lastPosition', header: 'Online Status',nested:true, subfield:'status' },
     { field: 'inStock', header: 'Stock Status', minWidth: '12rem' },
     { field: 'activationStatusText', header: 'Activation Status', frozen:true, minWidth: '12rem' },
