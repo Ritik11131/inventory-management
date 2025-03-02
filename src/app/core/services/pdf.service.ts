@@ -70,7 +70,6 @@ export class PdfService {
             },
             {
               text: [
-                { text: 'Email: ', style: 'smallText' },
                 { text: 'customercare@grlengineers.net', link: 'mailto:customercare@grlengineers.net', style: 'smallText' },
                 { text: ', ', style: 'smallText' },
                 { text: 'grlengineers.net', link: 'http://grlengineers.net', style: 'smallText' }
