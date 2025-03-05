@@ -21,7 +21,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { GenericTableComponent } from '../../../../../shared/components/generic-table/generic-table.component';
 import { GenericDialogComponent } from '../../../../../shared/components/generic-dialog/generic-dialog.component';
 import { ToastService } from '../../../../../core/services/toast.service';
-import { deviceColumns } from '../../../../../shared/constants/columns';
+import { deviceColumns, transferDeviceColumns } from '../../../../../shared/constants/columns';
 import { DeviceService } from '../../../../../core/services/device.service';
 import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields, fitmentFormFields, userSmsOtpFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
@@ -51,7 +51,10 @@ export class DeviceListComponent {
 
   fields: FormFields[] | any[] = [];
   devices: any[] = [];
+  inStockDevices: any[] = [];
+  inStockDevicesSelectedToTransfer: any[] = [];
   columns = deviceColumns;
+  transferDeviceColumns = transferDeviceColumns;
   isEditing: boolean = false;
   isLoading: boolean = false;
   deviceDialog: boolean = false;
@@ -318,6 +321,7 @@ export class DeviceListComponent {
   async fetchDevices(): Promise<any> {
     this.isLoading = true;
     this.devices = [];
+    this.inStockDevices = [];
     try {
       const { data } = await this.deviceService.getList(500, 1);
       this.devices = data?.items || []; // Use optional chaining for safety
@@ -337,6 +341,9 @@ export class DeviceListComponent {
       responses.forEach(response => {
         this.devices = this.devices.concat(response.data?.items || []);
       });
+  
+      // Create a new array for in-stock devices without modifying this.devices
+      this.inStockDevices = this.devices.filter((device: any) => device?.inStock);
   
       // Optional: Show success message
       // this.toastService.showSuccess('Success', `${this.authService.getUser Type()} List fetched successfully!`);
@@ -529,15 +536,24 @@ export class DeviceListComponent {
 
 
   async transferInventory({ user, no_of_device } : { user : { sno:number, name:string }, no_of_device : string }) : Promise<any> {
-    const filteredDeviceIds = this.devices?.filter((device: any) => device?.inStock)?.slice(0, +no_of_device)?.map((device: any) => device?.id);
+    const filteredDeviceIds = this.inStockDevicesSelectedToTransfer?.filter((device: any) => device?.inStock)?.map((device: any) => device?.id);
     
-    if (filteredDeviceIds.length < +no_of_device) {
+    if (!user) {
       return this.toastService.showWarn(
         'Warning',
-        `You only have ${filteredDeviceIds.length} devices in stock, which is less than the requested ${no_of_device}. Please adjust your input value.`,
+        'You must be logged in to transfer devices.',
         10000
       );
     }
+    
+    if (!this.inStockDevicesSelectedToTransfer.length) {
+      return this.toastService.showWarn(
+        'Warning',
+        'No devices selected for transfer. Please select at least one device.',
+        10000
+      );
+    }
+
     const payload = { 
       userId: user?.sno,
       DeviceId: filteredDeviceIds
@@ -716,6 +732,10 @@ export class DeviceListComponent {
 
   onSelectionChange(event: any) {
     console.log(event);
+  }
+
+  onDialogTableSelectionChange(event: any) {
+    this.inStockDevicesSelectedToTransfer = event;    
   }
 
 

@@ -73,6 +73,7 @@ export class GenericDialogComponent implements OnChanges {
   onDialogDropdownChange = output<any>();
   stepperDropDownChange = output<any>();
   stepperInputTextChange = output<any>();
+  selectionChange = output<any>();
   focusedField!: any;
   isPasswordToggled: boolean = true;
   isConfirmPasswordToggled: boolean = true;
@@ -157,6 +158,10 @@ export class GenericDialogComponent implements OnChanges {
   onSelect(event: any, field: any) {
     const fieldName = field.name;
     this.data[fieldName] = event.currentFiles[0];
+  }
+
+  onSelectionChange(event: any[]) {
+    this.selectionChange.emit(event);
   }
 
   onStepperDropDownChange(event: any) {

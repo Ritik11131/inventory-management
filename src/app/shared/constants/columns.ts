@@ -22,6 +22,14 @@ export const deviceColumns = [
     { field: 'activationStatusText', header: 'Activation Status', frozen:true, minWidth: '12rem' },
 ];
 
+
+export const transferDeviceColumns = [
+    { field: 'index', header: 'S.NO' },
+    { field: 'sno', header: 'Device No' },
+    { field: 'imei', header: 'IMEI' },
+    { field: 'iccid', header: 'ICCID No'},
+]
+
 export const eSimDeviceColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
     { field: 'sno', header: 'Device No' },

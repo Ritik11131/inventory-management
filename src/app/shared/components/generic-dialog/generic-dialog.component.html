@@ -7,163 +7,217 @@
             @for (field of fields; track $index) {
             @if(field.hasOwnProperty('hide')) {
             @if(!field?.hide(this.hideFields)) {
-            <div class="field col-12 sm:col-12 md:col-4">
-                <div class="flex align-items-center mb-2">
-                    <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
-                    @if(field.validation) {
-                    <i style="font-size: 7px;" class="pi pi-asterisk text-red-500 mr-2"></i>
-                    @if(!validationState[field.name] && data[field.name]?.length) {
-                    <i class="pi pi-exclamation-circle text-red-500"
-                        [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'"
-                        tooltipPosition="right"></i>
-                    } @else if (validationState[field.name] && data[field.name]?.length) {
-                    <i class="pi pi-check-circle text-green-500" [pTooltip]="'Looks Good'" tooltipPosition="right"></i>
-                    }
-                    }
-                </div>
-                @switch (field.type) {
-                @case ('text') {
-                <ng-container>
-                    <input class="w-full" (keyup)="onInputChange($event, field)" type="text" pInputText 
-                        id="{{ field.name }}" [(ngModel)]="data[field.name]" [required]="field.validation" />
-                </ng-container>
-                }
-                @case ('password') {
-                <ng-container>
-                    <p-iconField iconPosition="right">
-                        <input id="{{ field.name }}" class="w-full" [required]="field.validation"
-                            [type]="isPasswordToggled ? 'text' : 'password'" (keyup)="onInputChange($event, field)"
-                            [(ngModel)]="data[field.name]" pInputText (copy)="disableEvent($event)"
-                            (paste)="disableEvent($event)" (cut)="disableEvent($event)" autocomplete="off">
-                        <p-inputIcon (click)="togglePassword()"
-                            [styleClass]="isPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
-                    </p-iconField>
-                </ng-container>
-                }
-                @case ('confirm_password') {
-                <ng-container>
-                    <p-iconField iconPosition="right">
-                        <input id="{{ field.name }}" class="w-full" [required]="field.validation"
-                            [type]="isConfirmPasswordToggled ? 'text' : 'password'"
-                            (keyup)="onInputChange($event, field)" [(ngModel)]="data[field.name]" pInputText
-                            (copy)="disableEvent($event)" (paste)="disableEvent($event)" (cut)="disableEvent($event)"
-                            autocomplete="off">
-                        <p-inputIcon (click)="toggleConfirmPassword()"
-                            [styleClass]="isConfirmPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
-                    </p-iconField>
-                </ng-container>
-                }
-                @case ('textarea') {
-                <ng-container>
-                    <textarea id="{{ field.name }}" pInputTextarea [(ngModel)]="data[field.name]" required rows="1"
-                        cols="20">
-                                        </textarea>
-                </ng-container>
-                }
-                @case ('dropdown') {
-                <ng-container>
-                    @if(field.name === 'active') {
-                    <p-dropdown [filter]="true" appendTo="body" [(ngModel)]="selectedStatus" inputId="{{ field.name }}"
-                        [options]="field.options" (onChange)="onStatusChange($event, field.name)">
-                        <ng-template pTemplate="selectedItem" let-selectedItem>
-                            <p-tag [value]="selectedItem.label" [severity]="selectedItem.severity"></p-tag>
-                        </ng-template>
-                        <ng-template pTemplate="item" let-option>
-                            <p-tag [value]="option.label" [severity]="option.severity"></p-tag>
-                        </ng-template>
-                    </p-dropdown>
-                    } @else {
-                    <p-dropdown [placeholder]="field.placeholder" styleClass="w-full" appendTo="body" [showClear]="true"
-                        [filter]="true" [filterBy]="field.dropdownKeys.nameKey" inputId="{{ field.name }}"
-                        [(ngModel)]="data[field.name]" (onChange)="onDropdownChange($event, field)"
-                        [optionLabel]="field.dropdownKeys.nameKey" [options]="field.options">
-                    </p-dropdown>
-                    }
-                </ng-container>
-                }
-                @case('multiselect') {
-                <ng-container>
-                    <p-multiSelect [filter]="true" appendTo="body" inputId="{{ field.name }}" [options]="field.options"
-                        [(ngModel)]="data[field.name]" [optionLabel]="field.dropdownKeys.nameKey" />
-                </ng-container>
-                }
-                @case('pickList') {
-                <ng-container>
-                    <p-pickList [source]="source" [target]="target" [sourceHeader]="sourceHeader"
-                        [targetHeader]="targetHeader" [dragdrop]="true" [responsive]="true" [showSourceControls]="false"
-                        [showTargetControls]="false" [sourceStyle]="{ height: sourceHeight,width:sourceWidth }"
-                        [targetStyle]="{ height: targetHeight,width:targetWidth }" [breakpoint]="breakpoint">
-                        <ng-template let-item pTemplate="item">
-                            <div class="flex flex-wrap p-2 align-items-center gap-3">
-                                <div class="flex-1 flex flex-column gap-2">
-                                    <span class="font-bold">
-                                        {{ item?.rtoName }}
-                                    </span>
-                                </div>
-                                <span class="font-bold text-blue-500">
-                                    <i class="pi pi-link text-sm"></i>
-                                </span>
+                @if(field.type === 'table') {
+                    <ng-container>
+                        <p-table #dt
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+                        [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" [scrollable]="true" 
+                        [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" [columns]="tableColumns" (selectionChange)="onSelectionChange($event)"
+                        [value]="tableData" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm p-datatable-gridlines">
+        
+                        <!-- Table Caption -->
+                        <ng-template pTemplate="caption">
+                            <div class="table-caption">
+                                <button pButton type="button" icon="pi pi-download" label="Export to CSV" class="p-button-sm"
+                                    (click)="export()">
+                                </button>
                             </div>
                         </ng-template>
-                    </p-pickList>
-                </ng-container>
-                }
-                @case ('file') {
-                <ng-container>
-                    <p-fileUpload name="file" (onSelect)="onSelect($event, field)" [multiple]="false" [auto]="true"
-                        accept=".txt, .csv" maxFileSize="1000000">
-                        <ng-template pTemplate="empty">
-                            <div class="flex align-items-center justify-content-center flex-column">
-                                <i
-                                    class="pi pi-cloud-upload border-2 border-circle p-3 text-4xl text-400 border-400"></i>
-                                <p class="mt-4 mb-0">Drag and drop files here to upload.</p>
-                            </div>
-                        </ng-template>
-                    </p-fileUpload>
-                </ng-container>
-                }
-                @case ('radiobutton') {
-                <ng-container>
-                    <div class="formgrid grid">
-                        @for (option of field.options; track $index) {
-                        <div class="field-radiobutton col-12 sm:col-6">
-                            <p-radioButton id="{{ option.value }}" name="{{ field.name }}" value="{{ option.value }}"
-                                [(ngModel)]="data[field.name]" />
-                            <label for="{{ option.value }}">{{ option.label }}</label>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 4rem">
+                                            <p-tableHeaderCheckbox/>
+                                    </th>
+                                    <th *ngFor="let col of columns">
+                                        {{ col.header }}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                                <tr>
+                                    <td>
+                                            <p-tableCheckbox [value]="rowData"/>
+                                    </td>
+                                    <td *ngFor="let col of columns">
+                                        {{ 
+                                            col.field === 'index' ? (rowIndex + 1) :  col.nested ? col?.type && col?.type === 'date' ? 
+                                                ((rowData[col.field]?.[col.subfield] | date:'medium') || '-') : 
+                                                (rowData[col.field]?.[col.subfield] || '-')
+                                            :
+                                            col?.type && col?.type === 'date' ? (rowData[col.field] | date:'medium') : (rowData[col.field] || '-')
+                                         }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+        
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="7" class="sm:text-center text-left">
+                                          No Data Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </ng-container>
+                } @else {
+                    <div class="field col-12 sm:col-12 md:col-4">
+                        <div class="flex align-items-center mb-2">
+                            <label for="{{ field.name }}" class="mr-2">{{ field.label }}</label>
+                            @if(field.validation) {
+                            <i style="font-size: 7px;" class="pi pi-asterisk text-red-500 mr-2"></i>
+                            @if(!validationState[field.name] && data[field.name]?.length) {
+                            <i class="pi pi-exclamation-circle text-red-500"
+                                [pTooltip]="!field.dependent?.length ? ('Duplicate' + ' ' + field.label) : 'Mismatched Fields'"
+                                tooltipPosition="right"></i>
+                            } @else if (validationState[field.name] && data[field.name]?.length) {
+                            <i class="pi pi-check-circle text-green-500" [pTooltip]="'Looks Good'" tooltipPosition="right"></i>
+                            }
+                            }
                         </div>
+                        @switch (field.type) {
+                        @case ('text') {
+                        <ng-container>
+                            <input class="w-full" (keyup)="onInputChange($event, field)" type="text" pInputText 
+                                id="{{ field.name }}" [(ngModel)]="data[field.name]" [required]="field.validation" />
+                        </ng-container>
+                        }
+                        @case ('password') {
+                        <ng-container>
+                            <p-iconField iconPosition="right">
+                                <input id="{{ field.name }}" class="w-full" [required]="field.validation"
+                                    [type]="isPasswordToggled ? 'text' : 'password'" (keyup)="onInputChange($event, field)"
+                                    [(ngModel)]="data[field.name]" pInputText (copy)="disableEvent($event)"
+                                    (paste)="disableEvent($event)" (cut)="disableEvent($event)" autocomplete="off">
+                                <p-inputIcon (click)="togglePassword()"
+                                    [styleClass]="isPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
+                            </p-iconField>
+                        </ng-container>
+                        }
+                        @case ('confirm_password') {
+                        <ng-container>
+                            <p-iconField iconPosition="right">
+                                <input id="{{ field.name }}" class="w-full" [required]="field.validation"
+                                    [type]="isConfirmPasswordToggled ? 'text' : 'password'"
+                                    (keyup)="onInputChange($event, field)" [(ngModel)]="data[field.name]" pInputText
+                                    (copy)="disableEvent($event)" (paste)="disableEvent($event)" (cut)="disableEvent($event)"
+                                    autocomplete="off">
+                                <p-inputIcon (click)="toggleConfirmPassword()"
+                                    [styleClass]="isConfirmPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
+                            </p-iconField>
+                        </ng-container>
+                        }
+                        @case ('textarea') {
+                        <ng-container>
+                            <textarea id="{{ field.name }}" pInputTextarea [(ngModel)]="data[field.name]" required rows="1"
+                                cols="20">
+                                                </textarea>
+                        </ng-container>
+                        }
+                        @case ('dropdown') {
+                        <ng-container>
+                            @if(field.name === 'active') {
+                            <p-dropdown [filter]="true" appendTo="body" [(ngModel)]="selectedStatus" inputId="{{ field.name }}"
+                                [options]="field.options" (onChange)="onStatusChange($event, field.name)">
+                                <ng-template pTemplate="selectedItem" let-selectedItem>
+                                    <p-tag [value]="selectedItem.label" [severity]="selectedItem.severity"></p-tag>
+                                </ng-template>
+                                <ng-template pTemplate="item" let-option>
+                                    <p-tag [value]="option.label" [severity]="option.severity"></p-tag>
+                                </ng-template>
+                            </p-dropdown>
+                            } @else {
+                            <p-dropdown [placeholder]="field.placeholder" styleClass="w-full" appendTo="body" [showClear]="true"
+                                [filter]="true" [filterBy]="field.dropdownKeys.nameKey" inputId="{{ field.name }}"
+                                [(ngModel)]="data[field.name]" (onChange)="onDropdownChange($event, field)"
+                                [optionLabel]="field.dropdownKeys.nameKey" [options]="field.options">
+                            </p-dropdown>
+                            }
+                        </ng-container>
+                        }
+                        @case('multiselect') {
+                        <ng-container>
+                            <p-multiSelect [filter]="true" appendTo="body" inputId="{{ field.name }}" [options]="field.options"
+                                [(ngModel)]="data[field.name]" [optionLabel]="field.dropdownKeys.nameKey" />
+                        </ng-container>
+                        }
+                        @case('pickList') {
+                        <ng-container>
+                            <p-pickList [source]="source" [target]="target" [sourceHeader]="sourceHeader"
+                                [targetHeader]="targetHeader" [dragdrop]="true" [responsive]="true" [showSourceControls]="false"
+                                [showTargetControls]="false" [sourceStyle]="{ height: sourceHeight,width:sourceWidth }"
+                                [targetStyle]="{ height: targetHeight,width:targetWidth }" [breakpoint]="breakpoint">
+                                <ng-template let-item pTemplate="item">
+                                    <div class="flex flex-wrap p-2 align-items-center gap-3">
+                                        <div class="flex-1 flex flex-column gap-2">
+                                            <span class="font-bold">
+                                                {{ item?.rtoName }}
+                                            </span>
+                                        </div>
+                                        <span class="font-bold text-blue-500">
+                                            <i class="pi pi-link text-sm"></i>
+                                        </span>
+                                    </div>
+                                </ng-template>
+                            </p-pickList>
+                        </ng-container>
+                        }
+                        @case ('file') {
+                        <ng-container>
+                            <p-fileUpload name="file" (onSelect)="onSelect($event, field)" [multiple]="false" [auto]="true"
+                                accept=".txt, .csv" maxFileSize="1000000">
+                                <ng-template pTemplate="empty">
+                                    <div class="flex align-items-center justify-content-center flex-column">
+                                        <i
+                                            class="pi pi-cloud-upload border-2 border-circle p-3 text-4xl text-400 border-400"></i>
+                                        <p class="mt-4 mb-0">Drag and drop files here to upload.</p>
+                                    </div>
+                                </ng-template>
+                            </p-fileUpload>
+                        </ng-container>
+                        }
+                        @case ('radiobutton') {
+                        <ng-container>
+                            <div class="formgrid grid">
+                                @for (option of field.options; track $index) {
+                                <div class="field-radiobutton col-12 sm:col-6">
+                                    <p-radioButton id="{{ option.value }}" name="{{ field.name }}" value="{{ option.value }}"
+                                        [(ngModel)]="data[field.name]" />
+                                    <label for="{{ option.value }}">{{ option.label }}</label>
+                                </div>
+                                }
+                            </div>
+                        </ng-container>
+                        }
+                        @case ('number') {
+                        <ng-container>
+                            <p-inputNumber id="{{ field.name }}" [(ngModel)]="data[field.name]" />
+                        </ng-container>
+                        }
+                        @case ('otp') {
+                        <ng-container>
+                            <div class="p-fluid">
+                                <p-inputOtp [(ngModel)]="data[field.name]" [length]="6" style="gap: 0" [integerOnly]="true">
+                                    <ng-template pTemplate="input" let-token let-events="events" let-index="index">
+                                        <input 
+                                        pInputText
+                                        type="text" 
+                                        [maxLength]="1" 
+                                        (input)="events.input($event)" 
+                                        (keydown)="events.keydown($event)"
+                                        (paste)="events.paste($event)"
+                                        [attr.value]="token" 
+                                        class="custom-otp-input" />
+                                        <div *ngIf="index === 3" class="px-3">
+                                            <i class="pi pi-minus"></i>
+                                        </div>
+                                    </ng-template>
+                                </p-inputOtp>
+                            </div>
+                        </ng-container>
+                        }
                         }
                     </div>
-                </ng-container>
                 }
-                @case ('number') {
-                <ng-container>
-                    <p-inputNumber id="{{ field.name }}" [(ngModel)]="data[field.name]" />
-                </ng-container>
-                }
-                @case ('otp') {
-                <ng-container>
-                    <div class="p-fluid">
-                        <p-inputOtp [(ngModel)]="data[field.name]" [length]="6" style="gap: 0" [integerOnly]="true">
-                            <ng-template pTemplate="input" let-token let-events="events" let-index="index">
-                                <input 
-                                pInputText
-                                type="text" 
-                                [maxLength]="1" 
-                                (input)="events.input($event)" 
-                                (keydown)="events.keydown($event)"
-                                (paste)="events.paste($event)"
-                                [attr.value]="token" 
-                                class="custom-otp-input" />
-                                <div *ngIf="index === 3" class="px-3">
-                                    <i class="pi pi-minus"></i>
-                                </div>
-                            </ng-template>
-                        </p-inputOtp>
-                    </div>
-                </ng-container>
-                }
-                }
-            </div>
             }
             }
             }
