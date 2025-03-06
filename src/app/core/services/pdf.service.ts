@@ -194,7 +194,7 @@ export class PdfService {
                       hLineColor: () => '#000000',
                       vLineColor: () => '#000000',
                     },
-                    margin: [10, 0, 0, 0],
+                    margin: [5, 0, 0, 0],
                   },
                 ],
                 margin: [0, 5, 0, 5],
@@ -281,7 +281,7 @@ export class PdfService {
                   body: [
                     [
                       {
-                        text: `This is to acknowledge confirm that we have got our vehicle bearing registration no ${data.vehicle.regNo} VTS Device manufactured by GRL ENGINEERS bearing Sr.No ${data.device.uid}. We have checked the performance of the vehicle after fitment of the said VTS device the unit is sealed and functioning as per norms laid out in AIS 140. We are satisfied with the performance of the unit in all respects. We undertake not to raise any dispute or any legal claims against GRL ENGINEERS in the event that the above mentioned seals are found broken/tampered.`,
+                        text: `It is acknowledged that the vehicle registration number ${data.vehicle.regNo} is fitted with a VTS device manufactured by GRL Engineers Pvt Ltd, identified by serial number ${data.device.uid}. The VTS device has been verified to operate as per AIS 140 norms. The manufacturing company GRL Engineers Pvt Ltd will not be responsible for any tampering with the device.`,
                         style: 'boxText', // Define this style in your styles section
                         margin: [10, 10, 10, 10], // Margin for spacing
                         alignment: 'justify', // Justify the text

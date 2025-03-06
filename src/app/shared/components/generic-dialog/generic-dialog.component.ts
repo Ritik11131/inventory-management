@@ -66,6 +66,7 @@ export class GenericDialogComponent implements OnChanges {
   @Input() tableData:any[] = []
   @Input() enableSaveBtn:boolean = true;
   @Input() disableStepperNextBtn:boolean = false;
+  @Input() selectedTableData:any[] = [];
 
   onHide = output<any>()
   onSave = output<any>()

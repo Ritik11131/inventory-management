@@ -11,15 +11,15 @@
                     <ng-container>
                         <p-table #dt
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-                        [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" [scrollable]="true" 
+                        [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" [scrollable]="true"  [selection]="selectedTableData"
                         [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" [columns]="tableColumns" (selectionChange)="onSelectionChange($event)"
                         [value]="tableData" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-sm p-datatable-gridlines">
         
                         <!-- Table Caption -->
                         <ng-template pTemplate="caption">
-                            <div class="table-caption">
-                                <button pButton type="button" icon="pi pi-download" label="Export to CSV" class="p-button-sm"
-                                    (click)="export()">
+                            <div class="table-caption" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>{{selectedTableData.length}} devices selected</span>
+                                <button pButton type="button" icon="pi pi-download" label="Export to CSV" class="p-button-sm" (click)="export()">
                                 </button>
                             </div>
                         </ng-template>
