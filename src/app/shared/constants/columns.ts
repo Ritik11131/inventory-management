@@ -47,7 +47,7 @@ export const InventoryColumns = [
 export const ESimColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
     // { field: 'user', subfield: 'orgname', header: 'Organization Name', minWidth: '12rem' },
-    // { field: 'user', subfield: 'contactpersonname', header: 'Contact Person', minWidth: '12rem' },
+    { field: 'user', subfield: 'orgname', header: 'Requested By', minWidth: '12rem' },
     { field: 'serviceProvider', subfield: 'providername', header: 'Service Provider', minWidth: '12rem' },
     { field: 'type', subfield: 'name', header: 'Type', minWidth: '10rem' },
     { field: 'plan', subfield: 'name', header: 'Plan', minWidth: '10rem' },

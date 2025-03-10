@@ -26,7 +26,7 @@
                     {{ col.header }}
                 </th>
                 }
-                <th>Linked Devices</th>
+                <th>Devices</th>
                 <th>Activation History</th>
                 @if(userRole !== 'Dealer') {
                     <th>Approve/ Reject</th>
@@ -51,9 +51,9 @@
                 }
                 }
                 <td>
-                    <p-button text outlined label="View" severity="info" (click)="showLinkedDevicesPopup('linkedDevices',item)" />
+                    <p-button text outlined [label]="item ? item['request']['deviceCount'] : '-'" severity="info" (click)="showLinkedDevicesPopup('linkedDevices',item)" />
                 </td>
-                @if(item.request.status == 'Approved' ||  item.request.status == 'Reject') {
+                @if(item.request.status == 'Approved' ||  item.request.status == 'Reject' || item.request.status == 'InProcess') {
                     <td style="cursor: pointer;">
                         <p-tag [pTooltip]="'See hierarchy'" tooltipPosition="bottom" severity="secondary" value="Click here to see" (click)="showHeirarchyPopup(item)" />
                     </td>
@@ -64,12 +64,9 @@
                 }
                 @if(userRole !== 'Dealer') {
                     <td>
-                        @if(item.request.status !== 'Approved' && item.request.status !== 'Reject') {
+                        @if(item.request.status === 'Pending' && userRole !== 'OEM') {
                             <!-- When userRole is OEM and status is "In Process", show "Send to Operator" button instead of approve/reject -->
-                            @if(userRole === 'OEM' && item.request.status === 'InProcess') {
-                                <p-button label="Send to Operator" severity="info" outlined 
-                                          (click)="showOverlay($event, 'send_request_to_operator')" />
-                            } @else {
+                           
                                 <div class="flex gap-3 align-items-center">
                                     <!-- Approve Icon -->
                                     <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-green-100 cursor-pointer"
@@ -119,11 +116,34 @@
                                         }
                                     </div>
                                 </p-overlayPanel>
-                            }
+                            
                         } @else {
                         <!-- Show meaningful status with PrimeNG chip -->
                         @if(item.request.status === 'Approved') {
-                        <p-tag icon="pi pi-check-circle" value="Approved" severity="success" />
+                            @if(userRole === 'OEM') {
+                                          <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-green-100 cursor-pointer"
+                                          [pTooltip]="'Send to Operator'" tooltipPosition="bottom">
+                                         <i class="pi pi-check-circle text-green-500 text-xl" 
+                                         (click)="showOverlay($event, 'send_request_to_operator')">
+                                         </i>
+                                     </div>
+
+                                          <p-overlayPanel #op>
+                                            <div class="flex flex-column gap-3 w-25rem">
+        
+                                                @if(overlayContent === 'send_request_to_operator') {
+                                                    <span class="font-medium text-900 block mb-2">Send Request to Operator</span>
+                                                    <div class="flex justify-content-between">
+                                                        <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
+                                                        <p-button icon="pi pi-check-circle" label="Send" severity="info" text outlined 
+                                                                  (click)="submitComment('send_request_to_operator', item)" />
+                                                    </div>
+                                                }
+                                            </div>
+                                        </p-overlayPanel>
+                            } @else {
+                                <p-tag icon="pi pi-check-circle" value="Approved" severity="success" />
+                            }
                        
                         
                         }

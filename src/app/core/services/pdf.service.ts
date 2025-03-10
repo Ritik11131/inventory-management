@@ -60,11 +60,33 @@ export class PdfService {
                         width: 100, // Adjust width as needed
                         alignment: 'center', // Center the image
                       },
+                      {
+                          text: '#27, I.D.C, Ind. Area, OP Jindal Marg, Hisar-12005 (Hry)', // Replace with actual address
+                          style: 'smallText',
+                          alignment: 'center',
+                          margin: [0, 5, 0, 0], // Margin for spacing
+                      },
+                      {
+                        text: [
+                          { text: '+918750987700, ', style: 'smallText' }, // Phone number with icon
+                          { text: '+918295200038', style: 'smallText' } // WhatsApp number with icon
+                        ],
+                        alignment: 'center',
+                        margin: [0, 5, 0, 0], // Margin for spacing
+                      },
+                      {
+                        text: [
+                          { text: 'customercare@grlengineers.net', link: 'mailto:customercare@grlengineers.net', style: 'smallText' },
+                          { text: 'https://www.grlengineers.net', link: 'https://grlengineers.net', style: 'smallText' }
+                        ],
+                        alignment: 'center',
+                        margin: [0, 5, 0, 10], // Margin for spacing
+                      },
                     ],
                   },
                   {
                     // This column will contain the QR code
-                    width: '34%', // Adjust width as needed
+                    width: '30%', // Adjust width as needed
                     alignment: 'right', // Align QR code to the right
                     qr: `${fitmentDetails.trim()}`, // QR code data with formatted fitment details
                     fit: 100, // Size of the QR code
@@ -72,41 +94,41 @@ export class PdfService {
                 ],
                 margin: [0, 0, 0, 10], // Adjust margins as needed
               },
-              {
-                text: '#27, I.D.C, Ind. Area, OP Jindal Marg, Hisar-12005 (Hry)', // Replace with actual address
-                style: 'smallText',
-                alignment: 'center',
-                margin: [0, 5, 0, 0], // Margin for spacing
-              },
-              {
-                text: [
-                  { text: '+918750987700, ', style: 'smallText' }, // Phone number with icon
-                  { text: '+918295200038', style: 'smallText' } // WhatsApp number with icon
-                ],
-                alignment: 'center',
-                margin: [0, 5, 0, 0], // Margin for spacing
-              },
-              {
-                text: [
-                  { text: 'customercare@grlengineers.net', link: 'mailto:customercare@grlengineers.net', style: 'smallText' },
-                  { text: ', ', style: 'smallText' },
-                  { text: 'grlengineers.net', link: 'http://grlengineers.net', style: 'smallText' }
-                ],
-                alignment: 'center',
-                margin: [0, 5, 0, 10], // Margin for spacing
-              },
-              {
-                text: 'FITMENT CERTIFICATE', // Medium text
-                style: 'mediumText', // Define this style in your styles section
-                alignment: 'center',
-                margin: [0, 10, 0, 0], // Margin for spacing
-              },
-              {
-                text: 'AIS 140 (IRNSS)', // Small text
-                style: 'smallText', // Use the existing smallText style
-                alignment: 'center',
-                margin: [0, 5, 0, 10], // Margin for spacing
-              },
+              // {
+              //   text: '#27, I.D.C, Ind. Area, OP Jindal Marg, Hisar-12005 (Hry)', // Replace with actual address
+              //   style: 'smallText',
+              //   alignment: 'center',
+              //   margin: [0, 5, 0, 0], // Margin for spacing
+              // },
+              // {
+              //   text: [
+              //     { text: '+918750987700, ', style: 'smallText' }, // Phone number with icon
+              //     { text: '+918295200038', style: 'smallText' } // WhatsApp number with icon
+              //   ],
+              //   alignment: 'center',
+              //   margin: [0, 5, 0, 0], // Margin for spacing
+              // },
+              // {
+              //   text: [
+              //     { text: 'customercare@grlengineers.net', link: 'mailto:customercare@grlengineers.net', style: 'smallText' },
+              //     { text: ', ', style: 'smallText' },
+              //     { text: 'grlengineers.net', link: 'http://grlengineers.net', style: 'smallText' }
+              //   ],
+              //   alignment: 'center',
+              //   margin: [0, 5, 0, 10], // Margin for spacing
+              // },
+              // {
+              //   text: 'FITMENT CERTIFICATE', // Medium text
+              //   style: 'mediumText', // Define this style in your styles section
+              //   alignment: 'center',
+              //   margin: [0, 10, 0, 0], // Margin for spacing
+              // },
+              // {
+              //   text: 'AIS 140 (IRNSS)', // Small text
+              //   style: 'smallText', // Use the existing smallText style
+              //   alignment: 'center',
+              //   margin: [0, 5, 0, 10], // Margin for spacing
+              // },
               {
                 columns: [
                   {
@@ -123,7 +145,25 @@ export class PdfService {
                     // This column will contain the small text
                     width: '33%', // Adjust width as needed
                     stack: [
-                      { text: 'This is Certified that VEHICLE TRACKING SYSTEM fitted as per details given below and its function checked and scaled in all manners.', style: 'smallText', margin: [0, 10, 0, 10] },
+                    ],
+                    alignment: 'center', // Center the text
+                  },
+                  {
+                    // This column will contain the small text
+                    width: '33%', // Adjust width as needed
+                    stack: [
+                      {
+                        text: 'FITMENT CERTIFICATE', // Medium text
+                        style: 'mediumText', // Define this style in your styles section
+                        alignment: 'center',
+                        margin: [0, 10, 0, 0], // Margin for spacing
+                      },
+                      {
+                        text: 'AIS 140 (IRNSS)', // Small text
+                        style: 'smallText', // Use the existing smallText style
+                        alignment: 'center',
+                        margin: [0, 5, 0, 10], // Margin for spacing
+                      },
                     ],
                     alignment: 'center', // Center the text
                   },
