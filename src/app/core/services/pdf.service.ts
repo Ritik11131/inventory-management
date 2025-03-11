@@ -227,7 +227,7 @@ export class PdfService {
                         [{ text: 'Valid Upto', style: 'tableText' }, { text: new Date(data.fitment.validUpto).toLocaleDateString(), style: 'tableValue' }],
                         [{ text: 'Owner Name', style: 'tableText' }, { text: data.fitment.permitHolderName, style: 'tableValue' }],
                         [{ text: 'Mobile No.', style: 'tableText' }, { text: data.fitment.permitHolderMobile, style: 'tableValue' }],
-                        [{ text: 'Address', style: 'tableText' }, { text: data.rfc.address, style: 'tableValue' }],
+                        // [{ text: 'Address', style: 'tableText' }, { text: data.rfc.address, style: 'tableValue' }],
                       ],
                     },
                     layout: {
