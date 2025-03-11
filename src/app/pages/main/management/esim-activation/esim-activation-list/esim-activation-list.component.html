@@ -51,7 +51,7 @@
                 }
                 }
                 <td>
-                    <p-button text outlined [label]="item ? item['request']['deviceCount'] : '-'" severity="info" (click)="showLinkedDevicesPopup('linkedDevices',item)" />
+                    <p-button text outlined [label]="item['request']['deviceCount'] ?? '-'" severity="info" (click)="showLinkedDevicesPopup('linkedDevices',item)" />
                 </td>
                 @if(item.request.status == 'Approved' ||  item.request.status == 'Reject' || item.request.status == 'InProcess') {
                     <td style="cursor: pointer;">
