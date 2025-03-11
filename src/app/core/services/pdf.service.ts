@@ -78,6 +78,7 @@ export class PdfService {
                       {
                         text: [
                           { text: 'customercare@grlengineers.net', link: 'mailto:customercare@grlengineers.net', style: 'smallText' },
+                          { text: '\n' }, // New line
                           { text: 'https://www.grlengineers.net', link: 'https://grlengineers.net', style: 'smallText' }
                         ],
                         alignment: 'center',

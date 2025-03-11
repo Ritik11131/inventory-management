@@ -106,14 +106,14 @@
                                             </div>
                                         }
 
-                                        @if(overlayContent === 'send_request_to_operator') {
+                                        <!-- @if(overlayContent === 'send_request_to_operator') {
                                             <span class="font-medium text-900 block mb-2">Send Request to Operator</span>
                                             <div class="flex justify-content-between">
                                                 <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
                                                 <p-button icon="pi pi-check-circle" label="Send" severity="info" text outlined 
                                                           (click)="submitComment('send_request_to_operator', item)" />
                                             </div>
-                                        }
+                                        } -->
                                     </div>
                                 </p-overlayPanel>
                             
@@ -121,12 +121,21 @@
                         <!-- Show meaningful status with PrimeNG chip -->
                         @if(item.request.status === 'Approved') {
                             @if(userRole === 'OEM') {
-                                          <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-green-100 cursor-pointer"
-                                          [pTooltip]="'Send to Operator'" tooltipPosition="bottom">
-                                         <i class="pi pi-check-circle text-green-500 text-xl" 
-                                         (click)="showOverlay($event, 'send_request_to_operator')">
-                                         </i>
-                                     </div>
+                                <div class="flex gap-3 align-items-center">
+                                    <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-green-100 cursor-pointer"
+                                        [pTooltip]="'Send to Operator'" tooltipPosition="bottom">
+                                        <i class="pi pi-check-circle text-green-500 text-xl" (click)="showOverlay($event, 'send_request_to_operator')">
+                                        </i>
+                                    </div>
+
+                                    <div class="flex align-items-center justify-content-center w-2rem h-2rem border-circle hover:bg-red-100 cursor-pointer"
+                                    [pTooltip]="'Reject'" tooltipPosition="bottom">
+                                   <i class="pi pi-times-circle text-red-500 text-xl" 
+                                       (click)="showOverlay($event, 'reject')">
+                                   </i>
+                               </div>
+
+                                </div>
 
                                           <p-overlayPanel #op>
                                             <div class="flex flex-column gap-3 w-25rem">
@@ -137,6 +146,15 @@
                                                         <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
                                                         <p-button icon="pi pi-check-circle" label="Send" severity="info" text outlined 
                                                                   (click)="submitComment('send_request_to_operator', item)" />
+                                                    </div>
+                                                }
+
+                                                @if(overlayContent === 'reject') {
+                                                    <span class="font-medium text-900 block mb-2">Add Comment for Rejection</span>
+                                                    <div class="flex justify-content-between">
+                                                        <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
+                                                        <p-button icon="pi pi-times-circle" label="Reject" severity="danger" text outlined 
+                                                                  (click)="submitComment('reject', item)" />
                                                     </div>
                                                 }
                                             </div>
