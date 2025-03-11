@@ -59,6 +59,7 @@ export class PdfService {
                         image: base64data2,
                         width: 100, // Adjust width as needed
                         alignment: 'center', // Center the image
+                        margin: [0, 0, 0, 10], // Add bottom margin of 10
                       },
                       {
                           text: '#27, I.D.C, Ind. Area, OP Jindal Marg, Hisar-12005 (Hry)', // Replace with actual address
