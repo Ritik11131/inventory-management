@@ -72,6 +72,10 @@ export const simProviders = [
 
 export const ESimActivationLinkedDeviceColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
+    { field: 'RequestedBy', header: 'Requested By', minWidth: '12rem' },
+    { field: 'ServiceProvider', header: 'Service Provider', minWidth: '12rem' },
+    { field: 'Type', header: 'Type', minWidth: '10rem' },
+    { field: 'Plan', header: 'Plan', minWidth: '10rem' },
     { field: 'Devicesno', header: 'Device No' },
     { field: 'Imei', header: 'IMEI' },
     { field: 'Iccid', header: 'ICCID No' },

@@ -312,7 +312,16 @@ export class EsimActivationListComponent {
     try {
       const response = await this.esimService.getActivationRquestDetailsById(row.request.requestId);
       let { requestjson } = response?.data;
-      requestjson = JSON.parse(requestjson);
+      if (requestjson) {
+        requestjson = JSON.parse(requestjson).map((item: any) => ({
+          ...item,
+          Type: row.type.name,
+          Plan: row.plan.name,
+          ServiceProvider: row.serviceProvider.providername,
+          RequestedBy: row.user.orgname,
+        }));
+      }
+      
       this.selectedLinkedDevicesData = requestjson;
     } catch (error) {
       this.toastService.showError('Error', 'Failed to fetch');
