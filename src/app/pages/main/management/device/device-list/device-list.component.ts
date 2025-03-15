@@ -563,6 +563,7 @@ export class DeviceListComponent {
        const response = await this.inventoryService.transferInventory(payload);
        this.toastService.showSuccess('Success', response.data);
        await this.fetchAndResetDevice();
+       this.inStockDevicesSelectedToTransfer = [];
      } catch (error : any) {
        this.toastService.showError('Error', error.error.data.message);
      }
@@ -670,6 +671,7 @@ export class DeviceListComponent {
     this.device = null;
     this.accesStepForm = false;
     this.customSaveLabel = '';
+    this.inStockDevicesSelectedToTransfer = []
     
   }
 
