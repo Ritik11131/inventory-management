@@ -21,6 +21,7 @@ import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
 import { GenericOverlayComponent } from '../../../../../shared/components/generic-overlay/generic-overlay.component';
 import { srOverlayFields } from '../../../../../shared/constants/constant';
+import { ExportService } from '../../../../../core/services/export.service';
 
 @Component({
   selector: 'app-esim-activation-list',
@@ -70,7 +71,7 @@ export class EsimActivationListComponent {
 
   constructor(private esimService: EsimService, private toastService: ToastService,
     private simProviderService: SimProvidersService, private deviceService: DeviceService,
-    private authService: AuthService
+    private authService: AuthService, private exportService:ExportService
   ) {
     this.userRole = this.authService.getUserRole();
   }
@@ -328,7 +329,9 @@ export class EsimActivationListComponent {
     }
   }
 
-
+  exportLinkedDevices() {
+    this.exportService.exportToExcel(this.selectedLinkedDevicesData, 'Linked Devices');
+  }
 
 
 }

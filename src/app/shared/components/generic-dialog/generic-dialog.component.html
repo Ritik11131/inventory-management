@@ -9,7 +9,7 @@
             @if(!field?.hide(this.hideFields)) {
                 @if(field.type === 'table') {
                     <div class="field col-12">
-                        <p-table #dt
+                        <p-table #dt1
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
                         [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" [scrollable]="true"  [selection]="selectedTableData"
                         [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" [columns]="tableColumns" (selectionChange)="onSelectionChange($event)"
@@ -19,6 +19,10 @@
                         <ng-template pTemplate="caption">
                             <div class="table-caption" style="display: flex; justify-content: space-between; align-items: center;">
                                 <span>{{selectedTableData.length}} devices selected</span>
+                                <span class="p-input-icon-left">
+                                    <i class="pi pi-search"></i>
+                                    <input pInputText placeholder="Search" (input)="onSearch($event)" />
+                                </span>
                                 <button pButton type="button" icon="pi pi-download" label="Export to CSV" class="p-button-sm" (click)="export()">
                                 </button>
                             </div>
@@ -233,7 +237,7 @@
         
         @if(isTable) {
             <ng-container>
-                <p-table #dt
+                <p-table #dt2
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
                 [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" 
                 [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true" [columns]="tableColumns" 

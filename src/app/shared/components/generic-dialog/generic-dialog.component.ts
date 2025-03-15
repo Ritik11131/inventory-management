@@ -1,11 +1,11 @@
 import { DragDropModule } from 'primeng/dragdrop';
 import { PickListModule } from 'primeng/picklist';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -37,6 +37,10 @@ import { ExportService } from '../../../core/services/export.service';
   styleUrl: './generic-dialog.component.scss'
 })
 export class GenericDialogComponent implements OnChanges {
+
+    @ViewChild('dt1') dt1: Table | any;
+    @ViewChild('dt2') dt2: Table | any;
+  
 
   @Input() hideFields: string[] = [];
   @Input() visible: boolean = false;
@@ -179,6 +183,13 @@ export class GenericDialogComponent implements OnChanges {
 
   export() {
     this.exportService.exportToExcel(this.tableData, 'data');
+  }
+
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;    
+    if (input) {
+      this.dt1.filterGlobal(input.value, 'contains');
+    }
   }
 
 

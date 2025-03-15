@@ -29,6 +29,8 @@ import { GenericOverlayComponent } from '../generic-overlay/generic-overlay.comp
 import { simOverlayFields, userOverlayFields, vehicleOverlayFields } from '../../constants/constant';
 import { FitmentService } from '../../../core/services/fitment.service';
 import { parseFitemtCertificateData } from '../../utils/common';
+import { deviceColumns } from '../../constants/columns';
+import { ExportService } from '../../../core/services/export.service';
 
 @Component({
   selector: 'app-generic-table',
@@ -83,7 +85,7 @@ export class GenericTableComponent implements OnInit {
 
 
   constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService,private fitmentService:FitmentService,
-              private deviceService:DeviceService,private toastService:ToastService,private pdfService:PdfService) {
+              private deviceService:DeviceService,private toastService:ToastService,private pdfService:PdfService, private exportService:ExportService ) {
     this.userRole = this.authService.getUserRole();
     this.currentSection = this.breadcrumbService.getBreadCrumbsJson()[this.breadcrumbService.getBreadCrumbsJson().length - 1]?.label?.replace(/\s+/g, '');;
     console.log(this.currentSection,'section');
@@ -202,8 +204,25 @@ export class GenericTableComponent implements OnInit {
   }
 
   onPrint() {
-    this.dt.exportCSV();
+    // // Check if the columns match the device columns
+    if (this.columns === deviceColumns) {
+      let exportData = this.data;
+      console.log(this.data);
+      
+      exportData = this.flattenData(this.data, deviceColumns);
+      console.log(exportData);
+      
+      this.exportService.exportToExcel(exportData, 'Devvices');
+    } else {
+      // Export the data
+      this.dt.exportCSV();
+    }
+
+    // // Export the data
+
+  
   }
+  
 
 
   onDropdownChange(event:any) {
@@ -291,6 +310,24 @@ export class GenericTableComponent implements OnInit {
     this.emitOverlayAction.emit({event,item,overlayObj})
 
   }
+
+
+  // Flattening function
+ flattenData(data: any[], columns: any[]): any[] {
+  return data.map(item => {
+      const flatItem: any = {};
+      columns.forEach(col => {
+          if (col.nested && col.subfield) {
+              // Handle nested fields
+              flatItem[col.header] = item[col.field] ? item[col.field]?.[col.subfield] : '';
+          } else {
+              // Handle regular fields
+              flatItem[col.header] = item[col.field] || '';
+          }
+      });
+      return flatItem;
+  });
+}
  
 
 
