@@ -152,6 +152,18 @@ export const deviceTransferInventoryFormFields : FormFields[] = [
         hide: (hideFields: string[]) => hideFields.includes('user'),
     },
     {
+        name: 'from_device',
+        label: 'From Device No',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('from_imei'),
+    },
+    {
+        name: 'to_device',
+        label: 'To Device No',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('to_imei'),
+    },
+    {
         name: 'no_of_device',
         label: 'Select Devices to Transfer',
         type: 'table',

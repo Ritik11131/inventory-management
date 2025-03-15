@@ -703,13 +703,32 @@ export class DeviceListComponent {
   }
 
 
-
   onInputTextChange({ field, value }: any) {
-    console.log(field);
+
     if(field.hasOwnProperty('validation')) {
       const fieldName = field.name;
       this.validationDebounceSubject.next({ fieldName, value });
     }
+
+
+    if (field.name === 'to_device' || field.name === 'from_device') {
+      // Find the index of `fromDevice` and `toDevice`
+      const fromIndex = this.inStockDevices.findIndex(device => device.sno === this.device.from_device);
+      const toIndex = this.inStockDevices.findIndex(device => device.sno === this.device.to_device);      
+  
+      // Ensure valid indexes
+      if (fromIndex !== -1 && toIndex !== -1) {
+          const start = Math.min(fromIndex, toIndex);
+          const end = Math.max(fromIndex, toIndex);
+  
+          // Slice without modifying the original array
+          this.inStockDevicesSelectedToTransfer = [...this.inStockDevices.slice(start, end + 1)];
+      } else {
+          this.inStockDevicesSelectedToTransfer = []; // Clear if indexes are invalid
+      }
+  
+  }
+  
   }
 
 

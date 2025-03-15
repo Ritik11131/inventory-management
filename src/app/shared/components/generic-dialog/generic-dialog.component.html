@@ -8,7 +8,7 @@
             @if(field.hasOwnProperty('hide')) {
             @if(!field?.hide(this.hideFields)) {
                 @if(field.type === 'table') {
-                    <ng-container>
+                    <div class="field col-12">
                         <p-table #dt
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
                         [showCurrentPageReport]="true" paginatorDropdownAppendTo="body" [rows]="10" [scrollable]="true"  [selection]="selectedTableData"
@@ -26,7 +26,7 @@
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th style="width: 4rem">
-                                            <p-tableHeaderCheckbox/>
+                                            <!-- <p-tableHeaderCheckbox/> -->
                                     </th>
                                     <th *ngFor="let col of columns">
                                         {{ col.header }}
@@ -58,7 +58,7 @@
                                 </tr>
                             </ng-template>
                         </p-table>
-                    </ng-container>
+                    </div>
                 } @else {
                     <div class="field col-12 sm:col-12 md:col-4">
                         <div class="flex align-items-center mb-2">
