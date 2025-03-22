@@ -574,7 +574,7 @@ export class DeviceListComponent {
       const response = await this.deviceService.activateDevice(sim,this.device);
       this.toastService.showSuccess('Success', response.data);
     } catch (error : any) {
-      this.toastService.showError('Error', error.error.data.message);
+      this.toastService.showError('Error', error.error.data);
     }
     
   }
