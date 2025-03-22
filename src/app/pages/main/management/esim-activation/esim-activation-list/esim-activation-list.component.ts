@@ -112,6 +112,26 @@ export class EsimActivationListComponent {
     }
   }
 
+
+  async fetchActivationTypeDevices(): Promise<any> {
+    this.isDevicesLoading = true;
+    this.devices = [];
+    try {
+      const response =  await (this.selectedType?.sno === 1 ?
+        this.esimService.getDeviceListForCommercialActivation() :
+        this.selectedType?.sno === 2 ?
+          this.esimService.getDeviceListForTopUpActivation() :
+          null)
+      this.devices = response.data;
+      // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+    } catch (error) {
+      this.devices = [];
+      this.toastService.showError('Error', `Failed to fetch Device List!`);
+    } finally {
+      this.isDevicesLoading = false;
+    }
+  }
+
   async fetchActivationList(): Promise<any> {
     this.isLoading = true;
     try {
@@ -185,7 +205,7 @@ export class EsimActivationListComponent {
 
   async handleActivationTypeChange(e: any): Promise<any> {
     await this.fetchActivationAvailablePlans(this.selectedType?.sno);
-    await this.fetchDevices();
+    await this.fetchActivationTypeDevices();
   }
 
   hideDialog() {

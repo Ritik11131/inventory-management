@@ -32,7 +32,7 @@ export const transferDeviceColumns = [
 
 export const eSimDeviceColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
-    { field: 'sno', header: 'Device No' },
+    { field: 'devicesno', header: 'Device No' },
     { field: 'imei', header: 'IMEI' },
     { field: 'iccid', header: 'ICCID No'},
     // { field: 'vehicle', header: 'Vehicle No', nested:true, subfield:'vehicleNo'},

@@ -104,6 +104,24 @@ export class EsimService {
     }
   }
 
+  async getDeviceListForTopUpActivation(): Promise<any> {
+    try {
+      const response = await this.http.get('mis/activation/GetDeviceListForTopUpActivation', {});
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getDeviceListForCommercialActivation(): Promise<any> {
+    try {
+      const response = await this.http.get('mis/activation/GetDeviceListForCommercialActivation', {});
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 
 
