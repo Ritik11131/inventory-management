@@ -277,7 +277,7 @@
             <div class="field col-12 mt-3">
 
                 <p-table #dt1 [value]="devices" [rows]="10" [columns]="deviceColumns" [paginator]="true"
-                    [globalFilterFields]="['imei','iccid']" [(selection)]="currentSelectedRow" [rowHover]="true"
+                    [globalFilterFields]="['imei','iccid','devicesno']" [(selection)]="currentSelectedRow" [rowHover]="true"
                     [scrollable]="true" [exportFilename]="'esims'"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                     [showCurrentPageReport]="true" (selectionChange)="onCurrentRowSelectionChange($event)"
