@@ -185,7 +185,7 @@ export class EsimActivationListComponent {
   async save(): Promise<void> {
 
     const payload = {
-      deviceIds: this.currentSelectedRow?.map((row: any) => row.id),
+      deviceIds: this.currentSelectedRow?.map((row: any) => row?.sno),
       serviceProviderId: this.selectedSimProvider?.id,
       typeSno: this.selectedType?.sno,
       planSo: this.selectedPlan?.sno
