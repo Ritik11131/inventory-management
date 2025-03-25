@@ -284,10 +284,13 @@
                     styleClass="p-datatable-sm p-datatable-gridlines">
 
                     <ng-template pTemplate="caption">
+                        <div class="table-caption" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>{{currentSelectedRow?.length || 0}} devices selected</span>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input [disabled]="!devices.length" pInputText placeholder="Search" (input)="onDeviceListSearch($event)" />
                         </span>
+                        </div>
                     </ng-template>
 
 

@@ -104,7 +104,7 @@ export class EsimActivationListComponent {
     this.isLoading = true;
     try {
       const response = await this.esimService.getActivationList();
-      this.eSimtableData = response.data;
+      this.eSimtableData = response.data.sort((a:any, b:any) => new Date(b.request.requestedon).getTime() - new Date(a.request.requestedon).getTime());;
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch State List!`);
