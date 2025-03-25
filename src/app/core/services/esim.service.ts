@@ -122,6 +122,15 @@ export class EsimService {
     }
   }
 
+  async getLastSyncTime(): Promise<any> {
+    try {
+      const response = await this.http.get('mis/Activation/GetLastSyncTime', {});
+      return response?.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 
 

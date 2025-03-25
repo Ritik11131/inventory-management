@@ -66,6 +66,7 @@ export class EsimActivationListComponent {
   timelineData:any[] = [];
   srOverlayData:any = {};
   selectedLinkedDevicesData:any = [];
+  lastSyncedData:string = ''
 
 
 
@@ -104,7 +105,12 @@ export class EsimActivationListComponent {
     this.isLoading = true;
     try {
       const response = await this.esimService.getActivationList();
-      this.eSimtableData = response.data.sort((a:any, b:any) => new Date(b.request.requestedon).getTime() - new Date(a.request.requestedon).getTime());;
+      this.eSimtableData = response.data.sort((a:any, b:any) => new Date(b.request.requestedon).getTime() - new Date(a.request.requestedon).getTime());
+      const lastSyncUTCTime = await this.esimService.getLastSyncTime();
+      this.lastSyncedData = new Date(lastSyncUTCTime.replace(" ", "T") + "Z")
+  .toLocaleString("en-US", { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone })
+  .replace(",", "");
+      
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch State List!`);

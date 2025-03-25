@@ -18,6 +18,14 @@
         (selectionChange)="onCurrentRowSelectionChange($event)" [rowsPerPageOptions]="[10, 25, 50]"
         styleClass="p-datatable-sm p-datatable-gridlines">
 
+        <ng-template pTemplate="caption">
+            <div class="flex justify-content-end gap-2">
+                <span>Last Synced -</span>
+                <span class="font-semibold">{{ lastSyncedData }}</span>
+            </div>
+        </ng-template>
+        
+
         <ng-template pTemplate="header">
             <tr>
                 @for (col of columns; track $index) {
@@ -31,7 +39,7 @@
                 @if(userRole !== 'Dealer') {
                     <th>Approve/ Reject</th>
                 }
-                <th>Check Status From Provider</th>
+                <!-- <th>Check Status From Provider</th> -->
             </tr>
         </ng-template>
 
@@ -53,7 +61,7 @@
                 <td>
                     <p-button text outlined [label]="item['request']['deviceCount'] ?? '-'" severity="info" (click)="showLinkedDevicesPopup('linkedDevices',item)" />
                 </td>
-                @if(item.request.status == 'Approved' ||  item.request.status == 'Reject' || item.request.status == 'InProcess') {
+                @if(item.request.status == 'Approved' ||  item.request.status == 'Reject' || item.request.status == 'InProcess' || item.request.status == 'SP Accepted') {
                     <td style="cursor: pointer;">
                         <p-tag [pTooltip]="'See hierarchy'" tooltipPosition="bottom" severity="secondary" value="Click here to see" (click)="showHeirarchyPopup(item)" />
                     </td>
@@ -174,7 +182,7 @@
                         }
                     </td>
                 }
-                <td style="cursor: pointer;">
+                <!-- <td style="cursor: pointer;">
                     <p-tag [icon]="fetchingOverlayDataMap[item.request.requestId] ? 'pi pi-spin pi-spinner' : ''" 
                     [value]="fetchingOverlayDataMap[item.request.requestId] ? '' : 'Click here to check status'" 
                     severity="secondary" 
@@ -208,7 +216,7 @@
                             </div>
                     </p-overlayPanel>
                     
-                </td>
+                </td> -->
                 
             </tr>
         </ng-template>
