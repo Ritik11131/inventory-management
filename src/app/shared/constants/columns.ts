@@ -51,7 +51,7 @@ export const ESimColumns = [
     { field: 'serviceProvider', subfield: 'providername', header: 'Service Provider', minWidth: '12rem' },
     { field: 'type', subfield: 'name', header: 'Type', minWidth: '10rem' },
     { field: 'plan', subfield: 'name', header: 'Plan', minWidth: '10rem' },
-    // { field: 'request', subfield: 'requestId', header: 'Request ID', minWidth: '10rem' },
+    { field: 'request', subfield: 'srId', header: 'Sr Id', minWidth: '10rem' },
     { field: 'request', subfield: 'requestedon', header: 'Requested On', minWidth: '15rem', type:'date' },
     // { field: 'request', subfield: 'lastupdatetime', header: 'Last Updated', minWidth: '15rem', type:'date' },
     { field: 'request', subfield: 'status', header: 'Status', minWidth: '10rem' }
