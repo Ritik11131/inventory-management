@@ -23,7 +23,7 @@ import { GenericDialogComponent } from '../../../../../shared/components/generic
 import { ToastService } from '../../../../../core/services/toast.service';
 import { deviceColumns, transferDeviceColumns } from '../../../../../shared/constants/columns';
 import { DeviceService } from '../../../../../core/services/device.service';
-import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields, fitmentFormFields, userSmsOtpFormFields } from '../../../../../shared/constants/forms';
+import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFormFields, deviceTransferInventoryFormFields, fitmentFormFields, sendCommandFormFields, userSmsOtpFormFields } from '../../../../../shared/constants/forms';
 import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
@@ -64,7 +64,7 @@ export class DeviceListComponent {
   submitted: boolean = false;
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
-  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | 'fitment' | 'userSendSmsOtp' | null = null;
+  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | 'fitment' | 'userSendSmsOtp' | 'sendCommand' | null = null;
   bulkUploadHeader:string = 'VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode';
   actions:any[] = [];
   stepFormFields: any[] = [];
@@ -458,6 +458,8 @@ export class DeviceListComponent {
         await this.transferInventory(data);
       } else if(this.currentAction === 'userSendSmsOtp') {
         await this.verifyOtpAndCompleteKYC(data);
+      } else if(this.currentAction === 'sendCommand') {
+        await this.postSendCommand({ deviceId: data.id, command: 'custom', data: data.command })
       } else {
         await this.createDeviceFitment(data);
         await this.fetchAndResetDevice();
@@ -473,6 +475,20 @@ export class DeviceListComponent {
       callback.emit();
     } catch (error:any) {
       this.toastService.showError('Error', error.error.data);
+    }
+  }
+
+  async postSendCommand(data : any): Promise<void> {
+    try {
+      console.log(data,'dddd');
+      const response = await this.deviceService.sendCommand(data);
+      this.toastService.showSuccess('KYC Completed', 'Command Sent Successfully');
+      this.deviceDialog = false;
+      this.device = this.resetDevice();
+      this.isEditing = false;
+      this.currentAction = null;
+    } catch (error) {
+      this.toastService.showError('Error', 'Failed to Send Command!');
     }
   }
 
@@ -770,6 +786,15 @@ export class DeviceListComponent {
     this.deviceDialog = event;
   }
 
+
+  async onSendCommand(event: any) : Promise<any> {
+    this.currentAction = 'sendCommand';
+    this.fields = sendCommandFormFields;
+    this.isEditing = !event;
+    this.isValidated = true;
+    this.device = event.item;
+    this.deviceDialog = event;
+  }
 
   async onActivate(event: any) : Promise<any> {
     console.log(event);   

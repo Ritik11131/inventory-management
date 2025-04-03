@@ -217,6 +217,15 @@ export const deviceActivationFormFields : FormFields[] = [
     }
 ];
 
+export const sendCommandFormFields : FormFields[] = [
+    {
+        name: 'command',
+        label: 'Command To Be Send',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('command'),
+    },
+]
+
 
 export const userSmsOtpFormFields: FormFields[] = [
     {

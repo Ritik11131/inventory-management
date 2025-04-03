@@ -76,6 +76,7 @@ export class GenericTableComponent implements OnInit {
   bulkUpload = output<any>();
   sampleBulkUpload = output<any>();
   activate = output<any>();
+  sendCommand = output<any>();
   fitment = output<any>();
   emitOverlayAction = output<any>();
   actionMenuItems!: any[];
@@ -145,6 +146,14 @@ export class GenericTableComponent implements OnInit {
                 icon: 'pi pi-id-card',
                 command: (event:any) => this.onFitment(event, selectedItem)
             });
+        }
+
+        if(selectedItem?.lastPosition?.status === 'Online') {
+          this.actionMenuItems.push({
+            label: 'Send Command',
+            icon: 'pi pi-send',
+            command: (event:any) => this.onSendCommand(event,selectedItem)
+        });
         }
     });
 
@@ -247,6 +256,10 @@ export class GenericTableComponent implements OnInit {
 
   onActivate(event : Event, item: any) {
     this.activate.emit({event , item})
+  }
+
+  onSendCommand(event : Event, item:any) {
+    this.sendCommand.emit({event , item})
   }
 
   onFitment(event : Event,item:any) {
