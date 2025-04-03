@@ -116,5 +116,14 @@ export class DeviceService {
     }
   }
 
+  async sendCommand(data: any) : Promise<any> {
+    try { 
+      const response = await this.http.post('SendCommand', data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 }
