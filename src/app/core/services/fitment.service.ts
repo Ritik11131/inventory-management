@@ -19,6 +19,15 @@ export class FitmentService {
     }
   }
 
+  async deleteFitment(id: any): Promise<any> {
+    try {
+      const response = await this.http.delete('Fitment/DeleteFitment', id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   async isVehicleNoValid(vehicleNo: string): Promise<any> {
     try {

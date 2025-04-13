@@ -719,8 +719,29 @@ export class DeviceListComponent {
   }
 
   onDeleteFitment(event: any) {
-    console.log(event);
-    
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Do you want to delete fitment?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass:"p-button-danger p-button-text",
+      rejectButtonStyleClass:"p-button-text p-button-text",
+      acceptIcon:"none",
+      rejectIcon:"none",
+      accept: async () => {
+        try {
+          const response = await this.fitmentService.deleteFitment(event?.item?.id);
+          console.log(response);
+          this.toastService.showSuccess('Success', 'Fitment Deleted Successfully!');
+          await this.fetchDevices()
+        } catch (error) {
+          this.toastService.showError('Error', `Failed to delete Fitment!`);
+        }
+      },
+      reject: () => {
+        this.toastService.showInfo('Rejected', 'You have rejected');
+      }
+  });
   }
 
 
