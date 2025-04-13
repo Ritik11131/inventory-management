@@ -1,20 +1,33 @@
 import { Injectable } from '@angular/core';
+import { activationReportColumns } from '../../shared/constants/columns';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ReportService {
     private reports = [
-        { id: "vehicle_status", name: "Vehicle Status", filters: { rto: true, oem: true } },
-        { id: "complaints", name: "Complaints", filters: { rto: true, oem: true, date: { enabled: true } } },
-        { id: "sos", name: "SOS", filters: { rto: true, oem: true, date: { enabled: true }, time: true } },
-        { id: "overspeed", name: "Overspeed", filters: { rto: true, oem: true, date: { enabled: true } } },
-        { id: "alert", name: "Alert", filters: { rto: true, oem: true, date: { enabled: true } } },
-        { id: "vehicle_category", name: "Vehicle Category", filters: { rto: true, oem: true } },
-        { id: "upcoming_renewal", name: "Upcoming Renewal", filters: { rto: true, oem: true, date: { enabled: true, type: "currentAndFuture" } } },
-        { id: "expired", name: "Expired", filters: { rto: true, oem: true, date: { enabled: true, type: "currentAndPast" } } },
-        { id: "inventory", name: "Inventory", filters: { oem: true } },
-        { id: "rfc", name: "RFC", filters: { rto: true, oem: true, date: { enabled: true } } }
+        { id: "vehicle_status", name: "Vehicle Status", filters: { subUser: true, user: true } },
+        { id: "complaints", name: "Complaints", filters: { subUser: true, user: true, date: { enabled: true } } },
+        { id: "sos", name: "SOS", filters: { subUser: true, user: true, date: { enabled: true }, time: true } },
+        { id: "overspeed", name: "Overspeed", filters: { subUser: true, user: true, date: { enabled: true } } },
+        { id: "alert", name: "Alert", filters: { subUser: true, user: true, date: { enabled: true } } },
+        { id: "vehicle_category", name: "Vehicle Category", filters: { subUser: true, user: true } },
+        { id: "upcoming_renewal", name: "Upcoming Renewal", filters: { subUser: true, user: true, date: { enabled: true, type: "currentAndFuture" } } },
+        { id: "expired", name: "Expired", filters: { subUser: true, user: true, date: { enabled: true, type: "currentAndPast" } } },
+        { id: "inventory", name: "Inventory", filters: { user: true } },
+        { id: "rfc", name: "RFC", filters: { subUser: true, user: true, date: { enabled: true } } },
+        {
+            id: "activation_report",
+            reportName: "Activation Report",
+            filters: {
+                user: true,
+                subUser: true,
+                date: { enabled: true }
+            },
+            tableColumns: activationReportColumns,
+            globalFilterFields:['user.orgname'],
+            api:'mis/activation/ActivationReport',
+        }
     ];
 
     getReports() {

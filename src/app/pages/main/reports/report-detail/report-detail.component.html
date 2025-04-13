@@ -1,28 +1,28 @@
 <div class="px-4 md:px-6 lg:px-8">
     <p-toolbar styleClass="mb-4 gap-2 p-5">
         <ng-template pTemplate="left">
-            @if(report.filters.rto) {
+            @if(report?.filters?.user) {    
                 <p-floatLabel>
-                    <p-multiSelect  class="mr-4"
-                    styleClass="w-18rem" [options]="rtos" [(ngModel)]="selectedRto" optionLabel="rtoName"
-                    placeholder="Select Rto" [showClear]="true"  inputId="rto" />
-                    
-                    <label for="rto">Select Rto</label>
+                    <p-dropdown class="mr-4"
+                    styleClass="w-18rem" [options]="users" [(ngModel)]="selectedUser" optionLabel="name"
+                    [placeholder]="'Select ' + userType" [showClear]="true"  inputId="user" (onChange)="handleUserChange($event)"  />
+                    <label for="user">Select {{userType}}</label>
                 </p-floatLabel>
             }
 
-            @if(report.filters.oem) {    
+            @if(report?.filters?.subUser && selectedUser) {
                 <p-floatLabel>
                     <p-multiSelect  class="mr-4"
-                    styleClass="w-18rem" [options]="oems" [(ngModel)]="selectedOem" optionLabel="name"
-                    placeholder="Select OEM" [showClear]="true"  inputId="oem" />
-                    <label for="oem">Select Oem</label>
+                    styleClass="w-18rem" [options]="subUsers" [(ngModel)]="selectedSubUser" optionLabel="name"
+                    placeholder="Select Subuser" [showClear]="true"  inputId="subuser" />
+                    
+                    <label for="subuser">Select a Subuser</label>
                 </p-floatLabel>
             }
 
             @if(report?.filters?.date?.enabled) {
                 <p-floatLabel>
-                    <p-calendar  [iconDisplay]="'input'"  [showIcon]="true"  styleClass="w-18rem" [(ngModel)]="selectedDate" inputId="date" />
+                    <p-calendar  [iconDisplay]="'input'"  [showIcon]="true"  styleClass="w-18rem" [(ngModel)]="selectedDate" inputId="date" selectionMode="range" [readonlyInput]="true" />
                     <label for="date">Select Date</label>
                 </p-floatLabel>
             }
@@ -30,12 +30,12 @@
         </ng-template>
 
         <ng-template pTemplate="right">
-                <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block"/>
+                <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="loadReport()"/>
         </ng-template>
     </p-toolbar>
 
 
     
 </div>
-<app-generic-table [data]="[]" [columns]="[]" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="false"
-[exportFilename]="'Device'" [globalFilterFields]="['imei','iccid','sno']"/>
+<app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="report?.reportName" [isDataLoading]="isTableDataLoading"
+[exportFilename]="report?.reportName" [globalFilterFields]="report?.globalFilterFields"/>

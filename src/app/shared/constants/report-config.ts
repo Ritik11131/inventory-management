@@ -4,16 +4,16 @@ export const reportsConfigRoleWise: any = {
             id: "vehicle_status",
             reportName: "Vehicle Status",
             filters: {
-                rto: true,
-                oem: true
+                subUser: true,
+                user: true
             }
         },
         {
             id: "complaints",
             reportName: "Complaints",
             filters: {
-                rto: true,
-                oem: true,
+                subUser: true,
+                user: true,
                 date: { enabled: true }
             }
         },
@@ -21,8 +21,8 @@ export const reportsConfigRoleWise: any = {
             id: "sos",
             reportName: "SOS",
             filters: {
-                rto: true,
-                oem: true,
+                subUser: true,
+                user: true,
                 date: { enabled: true },
                 time: true
             }
@@ -31,8 +31,8 @@ export const reportsConfigRoleWise: any = {
             id: "overspeed",
             reportName: "Overspeed",
             filters: {
-                rto: true,
-                oem: true,
+                subUser: true,
+                user: true,
                 date: { enabled: true }
             }
         },
@@ -40,8 +40,8 @@ export const reportsConfigRoleWise: any = {
             id: "alert",
             reportName: "Alert",
             filters: {
-                rto: true,
-                oem: true,
+                subUser: true,
+                user: true,
                 date: { enabled: true }
             }
         },
@@ -49,16 +49,16 @@ export const reportsConfigRoleWise: any = {
             id: "vehicle_category",
             reportName: "Vehicle Category",
             filters: {
-                rto: true,
-                oem: true
+                subUser: true,
+                user: true
             }
         },
         {
             id: "upcoming_renewal",
             reportName: "Upcoming Renewal",
             filters: {
-                rto: true,
-                oem: true,
+                subUser: true,
+                user: true,
                 date: {
                     enabled: true,
                     type: "currentAndFuture"
@@ -69,8 +69,8 @@ export const reportsConfigRoleWise: any = {
             id: "expired",
             reportName: "Expired",
             filters: {
-                rto: true,
-                oem: true,
+                subUser: true,
+                user: true,
                 date: {
                     enabled: true,
                     type: "currentAndPast"
@@ -81,15 +81,26 @@ export const reportsConfigRoleWise: any = {
             id: "inventory",
             reportName: "Inventory",
             filters: {
-                oem: true
+                user: true
             }
         },
         {
             id: "rfc",
             reportName: "RFC",
             filters: {
-                rto: true,
-                oem: true,
+                subUser: true,
+                user: true,
+                date: { enabled: true }
+            }
+        }
+    ],
+    OEM:[
+        {
+            id: "activation_report",
+            reportName: "Activation Report",
+            filters: {
+                user: true,
+                dealer: true,
                 date: { enabled: true }
             }
         }
