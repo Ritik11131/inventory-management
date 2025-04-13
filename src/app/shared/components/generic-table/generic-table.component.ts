@@ -69,6 +69,7 @@ export class GenericTableComponent implements OnInit {
   selectionChange = output<any>();
   edit = output<any>();
   delete = output<any>();
+  deleteFitment = output<any>();
   new = output<any>();
   dropdown = output<any>();
   linkRTO = output<any>();
@@ -146,6 +147,12 @@ export class GenericTableComponent implements OnInit {
                 icon: 'pi pi-id-card',
                 command: (event:any) => this.onFitment(event, selectedItem)
             });
+        } else if(actionType === 'delete_fitment' && selectedItem['user']?.id && selectedItem['user']?.userType === 'User' && this.userRole === 'OEM') {
+          this.actionMenuItems.push({
+            label: 'Delete Fitment',
+            icon: 'pi pi-trash',
+            command: (event:any) => this.onDeleteFitment(event, selectedItem)
+        });
         }
 
         if(selectedItem?.lastPosition?.status === 'Online') {
@@ -199,6 +206,10 @@ export class GenericTableComponent implements OnInit {
 
   onDelete(event : Event, item: any) {
     this.delete.emit({event,item});
+  }
+
+  onDeleteFitment(event : Event, item: any) {
+    this.deleteFitment.emit({event,item});
   }
 
   onNewUser() {

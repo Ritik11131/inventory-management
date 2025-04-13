@@ -50,6 +50,7 @@ export class EsimActivationListComponent {
   devices: any[] = [];
   isLoading: boolean = false;
   isDevicesLoading: boolean = false;
+  isCommentSubmitting: boolean = false;
   isDialogVisible: boolean = false;
   fetchingActivateTypeOptions: boolean = false;
   fetchingActivatePlansOptions: boolean = false;
@@ -242,6 +243,7 @@ export class EsimActivationListComponent {
   }
 
   async submitComment(action: string, row: any): Promise<void> {
+    this.isCommentSubmitting = true;
     try {
       const response = action === 'send_request_to_operator' ? await this.esimService.processRequestToOperator({
         requestId: row.request.requestId,
@@ -254,8 +256,11 @@ export class EsimActivationListComponent {
         comment: this.comment,
       });
       this.toastService.showSuccess('Success', 'Comment Submitted Successfully!');
+      this.isCommentSubmitting = false;
+
     } catch (error) {
       this.toastService.showError('Error', 'Failed to submit');
+      this.isCommentSubmitting = false;
     }
     this.comment = '';
     this.op.hide(); // Close the overlay after submission

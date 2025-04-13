@@ -106,7 +106,7 @@ export class DeviceListComponent {
   ngOnInit() {
     this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate','fitment'] : 
                     (this.authService.getUserRole() === 'Distributor' || this.authService.getUserRole() === 'Admin') ? [] :  
-                    ['edit']
+                    ['edit', 'delete_fitment']
     this.fetchDevices().then();
   }
 
@@ -716,6 +716,11 @@ export class DeviceListComponent {
         this.toastService.showInfo('Rejected', 'You have rejected');
       }
     });
+  }
+
+  onDeleteFitment(event: any) {
+    console.log(event);
+    
   }
 
 

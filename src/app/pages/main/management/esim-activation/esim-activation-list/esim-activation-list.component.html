@@ -152,7 +152,7 @@
                                                     <span class="font-medium text-900 block mb-2">Send Request to Operator</span>
                                                     <div class="flex justify-content-between">
                                                         <input class="w-full" type="text" pInputText [(ngModel)]="comment" />
-                                                        <p-button icon="pi pi-check-circle" label="Send" severity="info" text outlined 
+                                                        <p-button icon="pi pi-check-circle" label="Send" severity="info" text outlined [disabled]="isCommentSubmitting"
                                                                   (click)="submitComment('send_request_to_operator', item)" />
                                                     </div>
                                                 }
