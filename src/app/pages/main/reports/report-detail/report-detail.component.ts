@@ -92,7 +92,7 @@ export class ReportDetailComponent implements OnInit {
   }
   this.isTableDataLoading = true;
     try {
-      const response = await this.http.post('/mis/activation/ActivationReport',payload);
+      const response = await this.http.post('mis/activation/ActivationReport',payload);
       this.reportTableData = response?.data;
     } catch (error) {
       console.log(error);
