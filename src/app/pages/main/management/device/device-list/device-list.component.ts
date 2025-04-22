@@ -103,7 +103,7 @@ export class DeviceListComponent {
   ngOnInit() {
     this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate','fitment'] : 
                     (this.authService.getUserRole() === 'Distributor' || this.authService.getUserRole() === 'Admin') ? [] :  
-                    ['edit']
+                    ['edit','unlink_device']
     this.fetchDevices().then();
   }
 
@@ -943,6 +943,33 @@ export class DeviceListComponent {
     } catch (error:any) {
       this.toastService.showError('Error', error.error.data);
     }
+  }
+
+  async handleDeviceUnlink(event : any) : Promise<any> {
+    console.log(event,'event');
+    
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Do you want to unlink this Device?',
+      header: 'Unlink Confirmation',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: "p-button-danger p-button-text",
+      rejectButtonStyleClass: "p-button-text p-button-text",
+      acceptIcon: "none",
+      rejectIcon: "none",
+      accept: async () => {
+        try {
+          const response = await this.deviceService.unlinkDevice(event.item.id);
+          console.log(response);
+          this.toastService.showSuccess('Success', 'Device Unlinked Successfully!');
+        } catch (error) {
+          this.toastService.showError('Error', `Failed to unlink Device!`);
+        }
+      },
+      reject: () => {
+        this.toastService.showInfo('Rejected', 'You have rejected');
+      }
+    });
   }
 
 }

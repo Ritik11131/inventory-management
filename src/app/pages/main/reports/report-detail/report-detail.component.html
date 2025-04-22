@@ -1,15 +1,6 @@
 <div class="px-4 md:px-6 lg:px-8">
     <p-toolbar styleClass="mb-4 gap-2 p-5">
         <ng-template pTemplate="left">
-            @if(report.filters.rto) {
-                <p-floatLabel>
-                    <p-multiSelect  class="mr-4"
-                    styleClass="w-18rem" [options]="rtos" [(ngModel)]="selectedRto" optionLabel="rtoName"
-                    placeholder="Select Rto" [showClear]="true"  inputId="rto" />
-                    
-                    <label for="rto">Select Rto</label>
-                </p-floatLabel>
-            }
 
             @if(report.filters.oem) {    
                 <p-floatLabel>
@@ -17,6 +8,24 @@
                     styleClass="w-18rem" [options]="oems" [(ngModel)]="selectedOem" optionLabel="name"
                     placeholder="Select OEM" [showClear]="true"  inputId="oem" />
                     <label for="oem">Select Oem</label>
+                </p-floatLabel>
+            }
+
+            @if(report.filters.state) {
+                <p-floatLabel>
+                    <p-dropdown  class="mr-4"
+                    styleClass="w-18rem" [options]="states" [(ngModel)]="selectedState" optionLabel="stateName" (onChange)="onStateChange($event)"
+                    placeholder="Select State" [showClear]="true"  inputId="state" />
+                    <label for="state">Select State</label>
+                </p-floatLabel>
+            }
+
+            @if(report.filters.rto) {
+                <p-floatLabel>
+                    <p-multiSelect  class="mr-4"
+                    styleClass="w-18rem" [options]="rtos" [(ngModel)]="selectedRto" optionLabel="rtoName"
+                    placeholder="Select Rto" [showClear]="true"  inputId="rto" />
+                    <label for="rto">Select Rto</label>
                 </p-floatLabel>
             }
 
@@ -30,12 +39,12 @@
         </ng-template>
 
         <ng-template pTemplate="right">
-                <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block"/>
+                <p-button [disabled]="!this.selectedRto" [loading]="isReportLoading" icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="loadReportData()"/>
         </ng-template>
     </p-toolbar>
 
 
     
 </div>
-<app-generic-table [data]="[]" [columns]="[]" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="false"
-[exportFilename]="'Device'" [globalFilterFields]="['imei','iccid','sno']"/>
+<app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="''" [isDataLoading]="false"
+[exportFilename]="'Device'" [globalFilterFields]="report?.globalFilterFields || []" [actions]="[]"/>

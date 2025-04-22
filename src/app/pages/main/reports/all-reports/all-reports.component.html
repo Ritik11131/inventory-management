@@ -3,9 +3,9 @@
         @for (report of reports; track $index) {
             <div class="col flex justify-content-center">
                 <p-card [header]="report?.reportName" subheader="This Reports Shows Something !" [style]="{ width: '300px' }">
-                    <ng-template pTemplate="header">
+                    <!-- <ng-template pTemplate="header">
                         <img alt="Card" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
-                </ng-template>
+                </ng-template> -->
                 <ng-template pTemplate="footer">
                     <div class="flex gap-3 mt-1">
                         <p-button (onClick)="handleDynamicReport(report)" label="View" iconPos="right" icon="pi pi-arrow-right" class="w-full" styleClass="w-full" />

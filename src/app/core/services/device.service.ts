@@ -125,5 +125,14 @@ export class DeviceService {
     }
   }
 
+  async unlinkDevice(sno:string) : Promise<any> {
+    try { 
+      const response = await this.http.get('device/UnlinkDevice', {}, sno);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 }
