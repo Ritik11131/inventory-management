@@ -29,6 +29,7 @@ import { GenericOverlayComponent } from '../generic-overlay/generic-overlay.comp
 import { simOverlayFields, userOverlayFields, vehicleOverlayFields } from '../../constants/constant';
 import { FitmentService } from '../../../core/services/fitment.service';
 import { parseFitemtCertificateData } from '../../utils/common';
+import { ExportService } from '../../../core/services/export.service';
 
 @Component({
   selector: 'app-generic-table',
@@ -58,6 +59,8 @@ export class GenericTableComponent implements OnInit {
   @Input() globalFilterFields: string[] = []; // Fields for global filtering
   @Input() selection: any[] = []; // Selected rows
   @Input() header:string = ''
+  @Input() showOnlyExportCsv: boolean = false; // Show export CSV button
+  @Input() showOnlyExportCsvFileName: string = 'csv'; // Export CSV file name
   @Input() isDataLoading: boolean = false;
   @Input() exportFilename: string = 'csv';
   @Input() toolbarRightActions: any[] = [];
@@ -84,7 +87,7 @@ export class GenericTableComponent implements OnInit {
   selectedOverlayObject!:any
 
 
-  constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService,private fitmentService:FitmentService,
+  constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService,private fitmentService:FitmentService, private exportService:ExportService,
               private deviceService:DeviceService,private toastService:ToastService,private pdfService:PdfService) {
     this.userRole = this.authService.getUserRole();
     this.currentSection = this.breadcrumbService.getBreadCrumbsJson()[this.breadcrumbService.getBreadCrumbsJson().length - 1]?.label?.replace(/\s+/g, '');;
@@ -226,6 +229,10 @@ export class GenericTableComponent implements OnInit {
 
   onPrint() {
     this.dt.exportCSV();
+  }
+
+  exportToCSV() {
+    this.exportService.exportToCSV(this.data, this.showOnlyExportCsvFileName);
   }
 
 

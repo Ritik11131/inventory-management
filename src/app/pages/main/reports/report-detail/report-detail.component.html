@@ -39,12 +39,12 @@
         </ng-template>
 
         <ng-template pTemplate="right">
-                <p-button [disabled]="!this.selectedRto" [loading]="isReportLoading" icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="loadReportData()"/>
+                <p-button [disabled]="!this.selectedRto" icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="loadReportData()"/>
         </ng-template>
     </p-toolbar>
 
 
     
 </div>
-<app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="''" [isDataLoading]="false"
-[exportFilename]="'Device'" [globalFilterFields]="report?.globalFilterFields || []" [actions]="[]"/>
+<app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="''" [isDataLoading]="false" [showOnlyExportCsv]="true"
+[showOnlyExportCsvFileName]="report?.reportName" [globalFilterFields]="report?.globalFilterFields || []" [actions]="[]"/>
