@@ -102,8 +102,8 @@ export class DeviceListComponent {
 
   ngOnInit() {
     this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate','fitment'] : 
-                    (this.authService.getUserRole() === 'Distributor' || this.authService.getUserRole() === 'Admin') ? [] :  
-                    ['edit','unlink_device']
+                    (this.authService.getUserRole() === 'Distributor') ? [''] : this.authService.getUserRole() === 'Admin' ? ['unlink_device'] :  
+                    ['edit']
     this.fetchDevices().then();
   }
 
