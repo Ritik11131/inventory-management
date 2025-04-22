@@ -122,53 +122,65 @@ export class GenericTableComponent implements OnInit {
 
   loadActionMenuItems(selectedItem: any) {
     this.actionMenuItems = [];
-    this.actions.forEach((actionType:any) => {
-        if (actionType === 'edit') {
+    const addedLabels = new Set<string>();
+
+    this.actions.forEach((actionType: any) => {
+        if (actionType === 'edit' && !addedLabels.has('Edit')) {
             this.actionMenuItems.push({
                 label: 'Edit',
                 icon: 'pi pi-pencil',
                 command: () => this.onEdit(selectedItem)
             });
-        } else if (actionType === 'delete') {
+            addedLabels.add('Edit');
+        } else if (actionType === 'delete' && !addedLabels.has('Delete')) {
             this.actionMenuItems.push({
                 label: 'Delete',
                 icon: 'pi pi-trash',
-                command: (event:any) => this.onDelete(event, selectedItem)
+                command: (event: any) => this.onDelete(event, selectedItem)
             });
-        } else if (actionType === 'activate' && selectedItem.activationStatusText !== 'Active') {
+            addedLabels.add('Delete');
+        } else if (actionType === 'activate' && selectedItem.activationStatusText !== 'Active' && !addedLabels.has('Activate')) {
             this.actionMenuItems.push({
                 label: 'Activate',
                 icon: 'pi pi-eject',
-                command: (event:any) => this.onActivate(event, selectedItem)
+                command: (event: any) => this.onActivate(event, selectedItem)
             });
-        } else if (actionType === 'fitment' && selectedItem.activationStatus && selectedItem.inStock) {
+            addedLabels.add('Activate');
+        } else if (actionType === 'fitment' && selectedItem.activationStatus && selectedItem.inStock && !addedLabels.has('Fitment')) {
             this.actionMenuItems.push({
                 label: 'Fitment',
                 icon: 'pi pi-id-card',
-                command: (event:any) => this.onFitment(event, selectedItem)
+                command: (event: any) => this.onFitment(event, selectedItem)
             });
-        } else if(actionType === 'delete_fitment' && selectedItem['user']?.id && selectedItem['user']?.userType === 'User' && this.userRole === 'OEM') {
-          this.actionMenuItems.push({
-            label: 'Delete Fitment',
-            icon: 'pi pi-trash',
-            command: (event:any) => this.onDeleteFitment(event, selectedItem)
-        });
+            addedLabels.add('Fitment');
+        } else if (actionType === 'delete_fitment'
+            && selectedItem['user']?.id
+            && selectedItem['user']?.userType === 'User'
+            && this.userRole === 'OEM'
+            && !addedLabels.has('Delete Fitment')) {
+            this.actionMenuItems.push({
+                label: 'Delete Fitment',
+                icon: 'pi pi-trash',
+                command: (event: any) => this.onDeleteFitment(event, selectedItem)
+            });
+            addedLabels.add('Delete Fitment');
         }
 
-        if(selectedItem?.lastPosition?.status === 'Online') {
-          this.actionMenuItems.push({
-            label: 'Send Command',
-            icon: 'pi pi-send',
-            command: (event:any) => this.onSendCommand(event,selectedItem)
-        });
+        if (selectedItem?.lastPosition?.status === 'Online' && !addedLabels.has('Send Command')) {
+            this.actionMenuItems.push({
+                label: 'Send Command',
+                icon: 'pi pi-send',
+                command: (event: any) => this.onSendCommand(event, selectedItem)
+            });
+            addedLabels.add('Send Command');
         }
     });
 
-    if(this.actionMenuItems.length === 0) {
+    if (this.actionMenuItems.length === 0) {
         this.actionMenuItems.push({
             label: 'No actions available',
             icon: 'pi pi-info-circle',
-            command: () => {}
+            command: () => { }
         });
     }
 }
