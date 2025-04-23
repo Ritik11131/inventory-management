@@ -464,9 +464,8 @@ export class DeviceListComponent {
 
   async postSendCommand(data : any): Promise<void> {
     try {
-      console.log(data,'dddd');
       const response = await this.deviceService.sendCommand(data);
-      this.toastService.showSuccess('KYC Completed', 'Command Sent Successfully');
+      this.toastService.showSuccess('Success', 'Command Sent Successfully');
       this.deviceDialog = false;
       this.device = this.resetDevice();
       this.isEditing = false;
