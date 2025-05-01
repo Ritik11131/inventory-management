@@ -73,8 +73,8 @@ export const reportsConfigRoleWise: any = {
             tableActions:['send_message'],
             api:'report/Expired/Expired',
             tableColumns:[
-                { field: 'fitmentdate', header: 'Fitment Date', type: 'date' },
-                { field: 'fitmentvalid', header: 'Fitment Valid', type: 'date' },
+                { field: 'fitmentDate', header: 'Fitment Date', type: 'date' },
+                { field: 'fitmentValidTill', header: 'Fitment Valid', type: 'date' },
                 { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
                 { field: 'oem', subfield:'name', header: 'OEM Name', nested: true, },
                 { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
@@ -95,8 +95,8 @@ export const reportsConfigRoleWise: any = {
             tableActions:['send_message'],
             api: 'report/Expired/ExpireSoon',
             tableColumns:[
-                { field: 'fitmentdate', header: 'Fitment Date', type: 'date' },
-                { field: 'fitmentvalid', header: 'Fitment Valid', type: 'date' },
+                { field: 'fitmentDate', header: 'Fitment Date', type: 'date' },
+                { field: 'fitmentValidTill', header: 'Fitment Valid', type: 'date' },
                 { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
                 { field: 'oem', subfield:'name', header: 'OEM Name', nested: true, },
                 { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
