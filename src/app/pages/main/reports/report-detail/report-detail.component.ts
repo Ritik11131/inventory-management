@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -14,13 +14,16 @@ import { GenericTableComponent } from '../../../../shared/components/generic-tab
 import { StatesService } from '../../../../core/services/states.service';
 import { ReportService } from '../../../../core/services/report.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule, GenericTableComponent],
+  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule,InputNumberModule, GenericTableComponent],
   templateUrl: './report-detail.component.html',
-  styleUrl: './report-detail.component.scss'
+  styleUrl: './report-detail.component.scss',
+  providers:[ConfirmationService, DatePipe]
 })
 export class ReportDetailComponent implements OnInit {
   report: any;
@@ -31,10 +34,11 @@ export class ReportDetailComponent implements OnInit {
   oems!:any
   states: any[] = [];
   selectedState!: any;
+  selectedDays!: number;
   reportTableData:any[] = [];
   isReportLoading: boolean = false;
 
-  constructor(private route: ActivatedRoute, private rtoService:RtoService, private dynamicuserService:DynamicUserService,
+  constructor(private route: ActivatedRoute, private rtoService:RtoService, private dynamicuserService:DynamicUserService, private confirmationService: ConfirmationService,
      private stateService:StatesService, private reportService:ReportService, private toastService:ToastService) {}
 
   ngOnInit() {
@@ -104,7 +108,10 @@ export class ReportDetailComponent implements OnInit {
 
     if(this.report.filters.date?.enabled) {
       payload['reportDate'] = (() => { const d = new Date(this.selectedDate); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T00:00:00`; })();
+    }
 
+    if(this.report.filters.days) {
+      payload['days'] = this.selectedDays;
     }
 
     this.isReportLoading = true;
@@ -122,14 +129,41 @@ export class ReportDetailComponent implements OnInit {
         this.toastService.showSuccess('Data Loaded Successfully', 'success');
       }
     
-    } catch (error) {
+    } catch (error: any) {
       this.reportTableData = [];
       console.error('Error loading report data:', error);
-      this.toastService.showError('Failed to load report data', 'error');
+      this.toastService.showError(error.error.data, 'error');
     } finally {
       this.isReportLoading = false;
     }
     
+  }
+
+
+  async handleSendMessage(event: any) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Are you sure you want to send message?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonStyleClass: "p-button-danger p-button-text",
+      acceptButtonStyleClass: "p-button-text p-button-text",
+      acceptIcon: "none",
+      rejectIcon: "none",
+      accept: async () => {
+        try {
+          const response = await this.reportService.sendMessageFromReport('report/Expired/SendMessage', event?.item);
+          this.toastService.showSuccess('Message Sent Successfully', 'success');
+        } catch (error: any) {
+          console.error('Error sending message:', error);
+          this.toastService.showError(error.error.data, 'error');
+        }
+      },
+      reject: () => {
+        this.toastService.showInfo('Rejected', 'You have rejected');
+      }
+    });
+   
   }
 
 

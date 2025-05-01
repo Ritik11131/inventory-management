@@ -26,5 +26,14 @@ export class ReportService {
           } catch (error) {
             throw error;
           }
-    }   
+    }
+    
+    async sendMessageFromReport(api:string ,payloadObj: any): Promise<any> {
+        try {
+            const response = await this.http.post(api, {...payloadObj});
+            return response;
+          } catch (error) {
+            throw error;
+          }
+    }
 }

@@ -35,6 +35,15 @@
                     <label for="date">Select Date</label>
                 </p-floatLabel>
             }
+
+            @if(report.filters.days) {
+                <p-floatLabel>
+                    <p-inputNumber  class="mr-4"
+                    styleClass="w-18rem" [(ngModel)]="selectedDays" inputId="days" [min]="1" [max]="365" placeholder="Enter number of days (e.g., 7)"  inputId="days" />
+                    <label for="days">Vehicles Expiring Within</label>
+                </p-floatLabel>
+
+            }
            
         </ng-template>
 
@@ -47,4 +56,4 @@
     
 </div>
 <app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="''" [isDataLoading]="false" [showOnlyExportCsv]="true"
-[showOnlyExportCsvFileName]="report?.reportName" [globalFilterFields]="report?.globalFilterFields || []" [actions]="[]"/>
+[showOnlyExportCsvFileName]="report?.reportName" [globalFilterFields]="report?.globalFilterFields || []" [actions]="report.tableActions || []" (sendMessage)="handleSendMessage($event)"/>

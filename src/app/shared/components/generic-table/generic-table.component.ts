@@ -78,6 +78,7 @@ export class GenericTableComponent implements OnInit {
   sampleBulkUpload = output<any>();
   activate = output<any>();
   sendCommand = output<any>();
+  sendMessage = output<any>();
   fitment = output<any>();
   unlinkDevice = output<any>();
   emitOverlayAction = output<any>();
@@ -160,6 +161,12 @@ export class GenericTableComponent implements OnInit {
               icon: 'pi pi-link',
               command: (event:any) => this.onUnlinkDevice(event, selectedItem)
           });
+      } else if(actionType === 'send_message' && !addedLabels.has('Send message')) {
+        this.actionMenuItems.push({
+          label: 'Send message',
+          icon: 'pi pi-link',
+          command: (event:any) => this.onSendMessageFromReport(event, selectedItem)
+      });
       }
 
         if (selectedItem?.lastPosition?.status === 'Online' && !addedLabels.has('Send Command')) {
@@ -262,6 +269,10 @@ export class GenericTableComponent implements OnInit {
 
   onSendCommand(event : Event, item:any) {
     this.sendCommand.emit({event , item})
+  }
+
+  onSendMessageFromReport(event : Event, item:any) {
+    this.sendMessage.emit({event , item})
   }
 
   onFitment(event : Event,item:any) {

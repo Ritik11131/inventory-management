@@ -21,15 +21,6 @@ export const reportsConfigRoleWise: any = {
             ],
             globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
         },
-        // {
-        //     id: "complaints",
-        //     reportName: "Complaints",
-        //     filters: {
-        //         rto: true,
-        //         oem: true,
-        //         date: { enabled: true }
-        //     }
-        // },
         {
             id: "sos",
             reportName: "SOS",
@@ -70,62 +61,48 @@ export const reportsConfigRoleWise: any = {
             ],
             globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
         },
-        // {
-        //     id: "alert",
-        //     reportName: "Alert",
-        //     filters: {
-        //         rto: true,
-        //         oem: true,
-        //         date: { enabled: true }
-        //     }
-        // },
-        // {
-        //     id: "vehicle_category",
-        //     reportName: "Vehicle Category",
-        //     filters: {
-        //         rto: true,
-        //         oem: true
-        //     }
-        // },
-        // {
-        //     id: "upcoming_renewal",
-        //     reportName: "Upcoming Renewal",
-        //     filters: {
-        //         rto: true,
-        //         oem: true,
-        //         date: {
-        //             enabled: true,
-        //             type: "currentAndFuture"
-        //         }
-        //     }
-        // },
-        // {
-        //     id: "expired",
-        //     reportName: "Expired",
-        //     filters: {
-        //         rto: true,
-        //         oem: true,
-        //         date: {
-        //             enabled: true,
-        //             type: "currentAndPast"
-        //         }
-        //     }
-        // },
-        // {
-        //     id: "inventory",
-        //     reportName: "Inventory",
-        //     filters: {
-        //         oem: true
-        //     }
-        // },
-        // {
-        //     id: "rfc",
-        //     reportName: "RFC",
-        //     filters: {
-        //         rto: true,
-        //         oem: true,
-        //         date: { enabled: true }
-        //     }
-        // }
+        {
+            id: "expired_vehicle",
+            reportName: "Expire Vehicle",
+            filters: {
+                state:true,
+                rto: true,
+                oem: true,
+                date: { enabled: false }
+            },
+            tableActions:['send_message'],
+            api:'report/Expired/Expired',
+            tableColumns:[
+                { field: 'fitmentdate', header: 'Fitment Date', type: 'date' },
+                { field: 'fitmentvalid', header: 'Fitment Valid', type: 'date' },
+                { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
+                { field: 'oem', subfield:'name', header: 'OEM Name', nested: true, },
+                { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
+                { field: 'rto', subfield:'rtoName', header: 'RTO Name', nested: true, },
+            ],
+            globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
+        },
+        {
+            id: "expired_soom",
+            reportName: "Expire Soon",
+            filters: {
+                state:true,
+                rto: true,
+                oem: true,
+                days: true,
+                date: { enabled: false }
+            },
+            tableActions:['send_message'],
+            api: 'report/Expired/ExpireSoon',
+            tableColumns:[
+                { field: 'fitmentdate', header: 'Fitment Date', type: 'date' },
+                { field: 'fitmentvalid', header: 'Fitment Valid', type: 'date' },
+                { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
+                { field: 'oem', subfield:'name', header: 'OEM Name', nested: true, },
+                { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
+                { field: 'rto', subfield:'rtoName', header: 'RTO Name', nested: true, },
+            ],
+            globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
+        },
     ]
 };
