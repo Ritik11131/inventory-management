@@ -64,6 +64,10 @@ export class TrackingComponent implements OnInit {
   
 
   playbackControlObject: any = {};
+  vehicleHistoryInfo: any = {
+    speed: 0,
+    fixtime: '00:00:00',
+  }
 
   leafletOptions = {
     layers: [
@@ -357,7 +361,6 @@ export class TrackingComponent implements OnInit {
       this.isCollapsed = true;
       if(response?.data.length) {
         const uniqueTrackPath = this.convertedValidJson(response?.data);
-        console.log(uniqueTrackPath,'unique');
 
         this.map.fitBounds(uniqueTrackPath);
         this.initilizeTrackPlayer(uniqueTrackPath);
@@ -375,7 +378,7 @@ export class TrackingComponent implements OnInit {
 
   convertedValidJson(data:any) : any[] {
     const trackPath = data?.map((obj:any)=>{
-      return { lat:obj.latitude, lng:obj.longitude }
+      return { lat:obj.latitude, lng:obj.longitude, speed:obj?.speed, fixtime:obj?.fixtime  }
     })    
     console.log(trackPath,'trackPath');
     
@@ -413,7 +416,7 @@ export class TrackingComponent implements OnInit {
     // Add the TrackPlayer to the map
     this.trackPlayer.addTo(this.map);
 
-    this.initializetrackListeners();
+    this.initializetrackListeners(trackPathData);
     this.playbackControlObject = this.initializePlayBackControlObject();
   }
 
@@ -476,7 +479,7 @@ export class TrackingComponent implements OnInit {
   }
 
 
-  public initializetrackListeners() {
+  public initializetrackListeners(trackPathData: any[]) {
     this.trackPlayer.on("start", () => {
       this.playbackControlObject.status = 'Started'
     });
@@ -487,7 +490,11 @@ export class TrackingComponent implements OnInit {
       this.playbackControlObject.status = 'Finished'
       
     });
-    this.trackPlayer.on("progress", (progress:any, { lng, lat }:any,index:any) => {
+    this.trackPlayer.on("progress", (progress:any, { lng, lat }:any,index:any) => {      
+      this.vehicleHistoryInfo = {
+        speed: trackPathData[index]?.speed || 0,
+        fixtime: trackPathData[index]?.fixtime ? new Date(trackPathData[index].fixtime).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }) : 'N/A',
+      }
       this.playbackControlObject.status = 'Moving';
       this.playbackControlObject.progress = progress * 100;      
     });
