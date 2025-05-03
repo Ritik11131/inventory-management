@@ -30,13 +30,24 @@ export class ReportDetailComponent implements OnInit {
   selectedRto!:any;
   selectedOem!:any;
   selectedDate!:any;
-  rtos!:any
+  rtos:any = []
   oems!:any
   states: any[] = [];
   selectedState!: any;
   selectedDays!: number;
+  selectedDayRange!: any;
   reportTableData:any[] = [];
   isReportLoading: boolean = false;
+
+  daysRangeOptions: any[] = [
+    { label: '1 - 3 day', value: [1,3] },
+    { label: '3 - 7 day', value: [3,7] },
+    { label: '7 - 15 day', value: [7,15] },
+    { label: '15 - 30 day', value: [15,30] },
+    { label: '> 30 day', value: [30,0] },
+  ];
+
+  private previousStates: any[] = [];
 
   constructor(private route: ActivatedRoute, private rtoService:RtoService, private dynamicuserService:DynamicUserService, private confirmationService: ConfirmationService,
      private stateService:StatesService, private reportService:ReportService, private toastService:ToastService) {}
@@ -67,7 +78,7 @@ export class ReportDetailComponent implements OnInit {
   }
   
   async getRTOList(state: any): Promise<any> {
-    return await this.rtoService.getList(state);
+    return await this.rtoService.getList(state) || [];
   }
   
   async getOEMList(): Promise<any> {
@@ -80,23 +91,76 @@ export class ReportDetailComponent implements OnInit {
 
   async onStateChange(event: any): Promise<void> {
     try {
-      this.selectedState = event.value;
+      const currentStates = event.value;
+      const removedStates = this.previousStates.filter(
+        prev => !currentStates.some((cur: any) => cur?.id === prev?.id)
+      );
   
-      const [rtosResponse] = await Promise.all([
-        this.getRTOList({ id: this.selectedState?.id })
-      ]);
+      const addedStates = currentStates.filter(
+        (cur: any) => !this.previousStates.some((prev: any) => prev?.id === cur?.id)
+      );
   
-      this.rtos = rtosResponse?.data || [];
+      this.selectedState = currentStates;
+      this.previousStates = [...currentStates]; // Update previous selection
   
-      if (this.rtos.length === 0) {
-        this.toastService.showWarn('No RTOs Found for the selected state', 'warn');
+      // Remove RTOs corresponding to deselected states
+      removedStates.forEach((state: any) => {
+        this.rtos = this.rtos.filter((rto: any) => rto.stateId !== state?.id);
+        this.selectedRto = null
+      });
+  
+      // If all states removed
+      if (currentStates.length === 0) {
+        this.rtos = [];
+        this.selectedRto = null;
+        this.toastService.showWarn('No states selected', 'Warning');
+        return;
       }
   
-    } catch (error: any) {
-      this.rtos = [];
-      console.error('Error fetching RTO list:', error);
-      this.toastService.showError(error.error.data, 'Oops!');
+      // Fetch RTOs only for newly added states
+      const newRtos: any[] = [];
+      const errors: string[] = [];
+  
+      await Promise.all(
+        addedStates.map(async (state: any) => {
+          try {
+            const res = await this.getRTOList({ id: state?.id });
+            if (res?.data?.length) {
+              // Attach stateId to each RTO entry for tracking
+              const enrichedRtos = res.data.map((rto: any) => ({
+                ...rto,
+                stateId: state?.id
+              }));
+              newRtos.push(...enrichedRtos);
+            }
+          } catch (err) {
+            console.error(`Failed for state ${state?.name}`, err);
+            errors.push(`Failed for ${state?.name}`);
+          }
+        })
+      );
+  
+      this.rtos = [...this.rtos, ...newRtos];
+  
+      if (this.rtos.length === 0) {
+        this.selectedRto = null;
+        this.toastService.showWarn('No RTOs found for selected states.', 'Warning');
+      }
+  
+      if (errors.length > 0) {
+        this.toastService.showError(errors.join(', '), 'Partial Failure');
+      }
+  
+    } catch (error) {
+      console.error('Unexpected error in onStateChange', error);
+      this.toastService.showError('Something went wrong', 'Oops!');
     }
+  }
+  
+  
+
+  async onDaysRangeChange(event: any): Promise<void> {
+
   }
   
 
@@ -112,6 +176,10 @@ export class ReportDetailComponent implements OnInit {
 
     if(this.report.filters.days) {
       payload['days'] = this.selectedDays;
+    }
+
+    if(this.report.filters.daysRange) {
+      payload['range'] = this.selectedDayRange.value;
     }
 
     this.isReportLoading = true;

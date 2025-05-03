@@ -107,5 +107,27 @@ export const reportsConfigRoleWise: any = {
             ],
             globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
         },
+        {
+            id: "offline_vehicle",
+            reportName: "Offline Vehicle",
+            filters: {
+                state:true,
+                rto: true,
+                oem: true,
+                daysRange: true,
+                date: { enabled: false }
+            },
+            api:'report/VehicleStatus/OfflineList',
+            tableColumns:[
+                { field: 'fixTime', header: 'Fix Time', type: 'date' },
+                { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
+                { field: 'device', subfield:'vehicleName', header: 'Vehicle Name', nested: true, },
+                { field: 'oem', subfield:'name', header: 'OEM Name', nested: true, },
+                { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
+                { field: 'permitHolder', subfield:'permitHolderMobile', header: 'Permit Holder Mobile No', nested: true, },
+                { field: 'rto', subfield:'rtoName', header: 'RTO Name', nested: true, },
+            ],
+            globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
+        },
     ]
 };
