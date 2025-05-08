@@ -48,9 +48,11 @@ export class ReportDetailComponent implements OnInit {
     try {
       // Run both API calls in parallel
       const [userResponse] = await Promise.all([
-        this.getUserList()
+        this.getDistruibutorList()
       ]);
       this.users = userResponse?.data;
+      this.selectedUser = this.users[0]; // Set the first user as selected by default
+      this.loadSubUsers(this.selectedUser?.sno); // Load sub-users for the first user
   
     } catch (error) {
       console.error('Error loading data:', error);
@@ -58,45 +60,58 @@ export class ReportDetailComponent implements OnInit {
     }
   }
 
-  async loadSubUsers() {
+  async loadSubUsers(selectedDistributor:number) {
     try {
       // Run both API calls in parallel
       const [subUserResponse] = await Promise.all([
-        this.getUserList()
+        this.getDealerList(selectedDistributor)
       ]);
-      this.users = [];
+      this.subUsers = subUserResponse?.data;
+      // this.selectedSubUser = this.subUsers[0]; // Set the first sub-user as selected by default
   
     } catch (error) {
       console.error('Error loading data:', error);
       // Handle errors appropriately (e.g., show an alert or fallback data)
     }
   }
+
+  async getDistruibutorList(): Promise<any> {
+    return await this.dynamicuserService.getDistributorList();  
+  }
   
-  async getUserList(): Promise<any> {
-    return await this.dynamicuserService.getList();
+  async getDealerList(selectedDistributor:number): Promise<any> {
+    return await this.dynamicuserService.getDealerListByDistributor(selectedDistributor);
   }
 
   async handleUserChange(e: any) {
     console.log(e);
-    // await this.loadSubUsers();
+    this.selectedSubUser = null
+    await this.loadSubUsers(e?.value?.sno);
   }
 
   async loadReport(): Promise<void> {    
-    const formattedDates = this.selectedDate.map((date: any) => new Date(new Date(date).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19));
-
+    // const formattedDates = this.selectedDate.map((date: any) => new Date(new Date(date).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19));
+    const formattedDates = this.selectedDate.map((date: any, index: number) => {
+      const d = new Date(date);
+      if (index === 1) {
+        d.setHours(23, 59, 59, 999);
+      }
+      return new Date(d.getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+    });
+        
     const payload = {
       distributorId:this.selectedUser?.sno,
-      dealerId: null,
+      dealerId: this.selectedSubUser?.map((subUser: any) => subUser.sno),
       fromTime: formattedDates[0],
       toTime: formattedDates[1]
   }
   this.isTableDataLoading = true;
     try {
       const response = await this.http.post('mis/activation/ActivationReport',payload);
-      this.reportTableData = response?.data;
-    } catch (error) {
+      this.reportTableData = response?.data;      
+    } catch (error: any) {
       console.log(error);
-      this.toastService.showError('Error', `Failed to fetch Report !`);
+      this.toastService.showError('Error', error.error.data);
     } finally {
       this.isTableDataLoading = false;
     }

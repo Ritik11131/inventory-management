@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
       await this.authService.login({ Username: this.email, Password: this.password });
       // this.toastService.showSuccess('Success', 'Successfully logged in!');
       // this.router.navigate([`/main/${this.authService.getUserRole() === 'Dealer' || this.authService.getUserRole() === 'Distributor' ? '/management' : '/dashboard'}`])
-      this.router.navigate(['/main/management/device-list'])
+      this.router.navigate(['/main/management/dynamic-user-list'])
     } catch (error : any) {
       console.error(error);
       this.generateCatcha();

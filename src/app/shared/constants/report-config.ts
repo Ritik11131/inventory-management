@@ -104,5 +104,27 @@ export const reportsConfigRoleWise: any = {
                 date: { enabled: true }
             }
         }
+    ],
+    Distributor: [
+        {
+            id: "activation_report",
+            reportName: "Activation Report",
+            filters: {
+                user: true,
+                dealer: true,
+                date: { enabled: true }
+            }
+        }
+    ],
+    Dealer:[
+        {
+            id: "activation_report",
+            reportName: "Activation Report",
+            filters: {
+                user: true,
+                dealer: true,
+                date: { enabled: true }
+            }
+        }
     ]
 };

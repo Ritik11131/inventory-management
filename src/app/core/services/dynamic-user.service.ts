@@ -20,6 +20,26 @@ export class DynamicUserService {
     }
   }
 
+  async getDistributorList() : Promise<any> {
+    try {
+      const response = await this.http.get('User/GetDistributor');
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getDealerListByDistributor(sno:number) : Promise<any> {
+    try {
+      const response = await this.http.get('User/GetDealers',{},sno);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  
+
 
   async createUser(user:DynamicUser) : Promise<any> {
     try {

@@ -205,14 +205,12 @@ export const rfcInfoTableColumns = [
 
 export const activationReportColumns =  [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },
-    // { field: 'user', subfield: 'orgname', header: 'Organization Name', minWidth: '12rem' },
-    { field: 'user', subfield: 'orgname', header: 'Requested By', minWidth: '12rem' },
-    { field: 'serviceProvider', subfield: 'providername', header: 'Service Provider', minWidth: '12rem' },
-    { field: 'type', subfield: 'name', header: 'Type', minWidth: '10rem' },
-    { field: 'plan', subfield: 'name', header: 'Plan', minWidth: '10rem' },
-    { field: 'request', subfield: 'srId', header: 'Sr Id', minWidth: '10rem' },
-    { field: 'request', subfield: 'requestedon', header: 'Requested On', minWidth: '15rem', type:'date' },
-    // { field: 'request', subfield: 'lastupdatetime', header: 'Last Updated', minWidth: '15rem', type:'date' },
-    { field: 'request', subfield: 'status', header: 'Status', minWidth: '10rem' }
+    { field: 'user', subfield: 'orgname', header: 'Requested By', minWidth: '12rem', nested: true },
+    { field: 'serviceProvider', subfield: 'providername', header: 'Service Provider', minWidth: '12rem', nested: true },
+    { field: 'type', subfield: 'name', header: 'Type', minWidth: '10rem', nested: true },
+    { field: 'plan', subfield: 'name', header: 'Plan', minWidth: '10rem', nested: true },
+    { field: 'request', subfield: 'srId', header: 'Sr Id', minWidth: '10rem', nested: true },
+    { field: 'request', subfield: 'requestedon', header: 'Requested On', minWidth: '15rem', type:'date', nested: true },
+    { field: 'request', subfield: 'status', header: 'Status', minWidth: '10rem', nested: true }
 ];
   

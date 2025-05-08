@@ -3,20 +3,20 @@
         <ng-template pTemplate="left">
             @if(report?.filters?.user) {    
                 <p-floatLabel>
-                    <p-dropdown class="mr-4"
-                    styleClass="w-18rem" [options]="users" [(ngModel)]="selectedUser" optionLabel="name"
-                    [placeholder]="'Select ' + userType" [showClear]="true"  inputId="user" (onChange)="handleUserChange($event)"  />
-                    <label for="user">Select {{userType}}</label>
+                    <p-dropdown class="mr-4" [filter]="true" [showClear]="true"
+                    styleClass="w-18rem" [options]="users" [(ngModel)]="selectedUser" optionLabel="orgname"
+                    [placeholder]="'Select Distributor'" [showClear]="true"  inputId="user" (onChange)="handleUserChange($event)"  />
+                    <label for="user">Select Distributor</label>
                 </p-floatLabel>
             }
 
             @if(report?.filters?.subUser && selectedUser) {
                 <p-floatLabel>
                     <p-multiSelect  class="mr-4"
-                    styleClass="w-18rem" [options]="subUsers" [(ngModel)]="selectedSubUser" optionLabel="name"
-                    placeholder="Select Subuser" [showClear]="true"  inputId="subuser" />
+                    styleClass="w-18rem" [options]="subUsers" [(ngModel)]="selectedSubUser" optionLabel="orgname"
+                    placeholder="Select user" [showClear]="true"  inputId="subuser" />
                     
-                    <label for="subuser">Select a Subuser</label>
+                    <label for="subuser">Select a user</label>
                 </p-floatLabel>
             }
 
@@ -30,7 +30,7 @@
         </ng-template>
 
         <ng-template pTemplate="right">
-                <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="loadReport()"/>
+                <p-button [disabled]="!selectedSubUser" icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="loadReport()"/>
         </ng-template>
     </p-toolbar>
 
@@ -38,4 +38,4 @@
     
 </div>
 <app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="report?.reportName" [isDataLoading]="isTableDataLoading"
-[exportFilename]="report?.reportName" [globalFilterFields]="report?.globalFilterFields"/>
+[exportFilename]="report?.reportName" [globalFilterFields]="report?.globalFilterFields" [actions]="[]"/>
