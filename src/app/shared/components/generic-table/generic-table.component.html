@@ -15,7 +15,7 @@
             <p-button [pTooltip]="'Bulk Upload'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-cloud-upload" (onClick)="onUpload()" />
             <p-button [pTooltip]="'Export Sample Bulk Upload .txt File'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-file-o" (onClick)="onExportSample()" /> -->
             @if(showOnlyExportButton) {
-                <p-button [pTooltip]="'Export To CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" />
+                <p-button [pTooltip]="'Export To CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onCustomPrintEmit()" />
             }
         </div>
         <div class="p-toolbar-group-end">

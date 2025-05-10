@@ -11,4 +11,12 @@
     }"
 />
 
+<!-- Full Screen Loader -->
+@if(isLoading) {
+<div class="full-screen-loader">
+    <p-progressSpinner styleClass="custom-spinner"></p-progressSpinner>
+</div>
+}
+
+
 <router-outlet></router-outlet>

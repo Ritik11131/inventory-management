@@ -80,6 +80,7 @@ export class GenericTableComponent implements OnInit {
   activate = output<any>();
   sendCommand = output<any>();
   emitRowButtonClick = output<any>();
+  emitCustomPrintEmit = output<any>();
   fitment = output<any>();
   emitOverlayAction = output<any>();
   actionMenuItems!: any[];
@@ -255,6 +256,10 @@ export class GenericTableComponent implements OnInit {
     // // Export the data
 
   
+  }
+
+  onCustomPrintEmit(){
+    this.emitCustomPrintEmit.emit(true)
   }
   
 

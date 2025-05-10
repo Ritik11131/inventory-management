@@ -38,7 +38,7 @@
     
 </div>
 <app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="report?.reportName" [isDataLoading]="isTableDataLoading"
-[exportFilename]="report?.reportName" [globalFilterFields]="report?.globalFilterFields" [actions]="[]"  (emitRowButtonClick)="handleTableRowBtnClick($event)" [showOnlyExportButton]="true" />
+[exportFilename]="report?.reportName" [globalFilterFields]="report?.globalFilterFields" [actions]="[]"  (emitRowButtonClick)="handleTableRowBtnClick($event)" (emitCustomPrintEmit)="handleExportReportTableData($event)" [showOnlyExportButton]="true" />
 
 
 <p-dialog [closable]="false" [(visible)]="isDialogVisible" [style]="{ width: '600px'}" [header]="'Details'"

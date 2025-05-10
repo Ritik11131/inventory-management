@@ -19,6 +19,7 @@ import { EsimService } from '../../../../core/services/esim.service';
 import { TableModule } from 'primeng/table';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ExportService } from '../../../../core/services/export.service';
+import { LoaderService } from '../../../../core/services/loader.service';
 
 @Component({
   selector: 'app-report-detail',
@@ -43,7 +44,7 @@ export class ReportDetailComponent implements OnInit {
   selectedLinkedDevicesData:any = [];
 
 
-  constructor(private authService:AuthService, private route: ActivatedRoute, private http:HttpService, private dynamicuserService:DynamicUserService,  private toastService: ToastService, private esimService:EsimService, private exportService:ExportService) {}
+  constructor(private authService:AuthService, private route: ActivatedRoute, private http:HttpService, private dynamicuserService:DynamicUserService,  private toastService: ToastService, private esimService:EsimService, private exportService:ExportService, private loaderService:LoaderService) {}
 
   ngOnInit() {
     this.userType = this.authService.getUserType()
@@ -131,6 +132,49 @@ export class ReportDetailComponent implements OnInit {
    exportLinkedDevices() {
     this.exportService.exportToExcel(this.selectedLinkedDevicesData, 'Linked Devices');
   }
+
+
+async handleExportReportTableData(e: any) {
+
+  if (e) {
+    const toExportData: any[] = [];
+     this.loaderService.show();
+    try {
+      const promises = this.reportTableData.map(async (row: any) => {
+        try {
+          const response = await this.esimService.getActivationRquestDetailsById(row?.request.requestId);
+          let { requestjson } = response?.data;
+
+          if (requestjson) {
+            const parsedJson = JSON.parse(requestjson).map((item: any) => ({
+              ...item,
+              Type: row?.type.name,
+              Plan: row?.plan.name,
+              ServiceProvider: row?.serviceProvider.providername,
+              RequestedBy: row?.user.orgname,
+              Date:row.request.requestedon,
+              SrId:row.request.srId,
+
+            }));
+            toExportData.push(...parsedJson); // Spread to flatten arrays
+          }
+        } catch (error) {
+          this.toastService.showError('Error', 'Failed to fetch');
+        }
+      });
+
+      await Promise.all(promises); // Wait for all to finish
+      console.log(toExportData, 'EXPORT');
+      this.loaderService.hide();
+      // Now safe to export
+      this.exportService.exportToExcel(toExportData, 'Linked Devices');
+
+    } catch (err) {
+      this.toastService.showError('Error', 'Something went wrong during export');
+    }
+  }
+}
+
 
   async loadReport(): Promise<void> {    
     // const formattedDates = this.selectedDate.map((date: any) => new Date(new Date(date).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19));
