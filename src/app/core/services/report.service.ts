@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { activationReportColumns } from '../../shared/constants/columns';
+import { activationReportColumns, ESimActivationLinkedDeviceColumns } from '../../shared/constants/columns';
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +25,7 @@ export class ReportService {
                 date: { enabled: true }
             },
             tableColumns: activationReportColumns,
+            linkedDevicesColumns: ESimActivationLinkedDeviceColumns ,
             globalFilterFields:['user.orgname'],
             api:'mis/activation/ActivationReport',
         }

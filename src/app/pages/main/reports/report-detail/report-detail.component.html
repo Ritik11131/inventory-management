@@ -38,4 +38,68 @@
     
 </div>
 <app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="report?.reportName" [isDataLoading]="isTableDataLoading"
-[exportFilename]="report?.reportName" [globalFilterFields]="report?.globalFilterFields" [actions]="[]"/>
+[exportFilename]="report?.reportName" [globalFilterFields]="report?.globalFilterFields"  (emitRowButtonClick)="handleTableRowBtnClick($event)" [showOnlyExportButton]="true" />
+
+
+<p-dialog [closable]="false" [(visible)]="isDialogVisible" [style]="{ width: '600px'}" [header]="'Details'"
+    [modal]="true" [breakpoints]="{ '2500px': '50vw','1600px': '60vw','1199px': '75vw', '575px': '90vw' }">
+
+    <ng-template pTemplate="content">
+        @if(dialogContentType === 'showLinkedDevices') {
+            <p-table #dt2 [value]="selectedLinkedDevicesData" [rows]="10" [columns]="report?.linkedDevicesColumns" [paginator]="true"
+                    [globalFilterFields]="['imei','iccid']" [rowHover]="true"
+                    [scrollable]="true" [exportFilename]="'linked_devices_esims'"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [showCurrentPageReport]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines">
+
+                    <ng-template pTemplate="caption">
+                        <!-- <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input [disabled]="!selectedLinkedDevicesData.length" pInputText placeholder="Search" (input)="onDeviceListSearch($event)" />
+                        </span> -->
+
+                        <p-button label="Export CSV"  (onClick)="exportLinkedDevices()"  />
+                    </ng-template>
+
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            @for (col of report?.linkedDevicesColumns; track $index) {
+                            <th 
+                                [style.minWidth]="col.minWidth || '15rem'">
+                                {{ col.header }} <p-sortIcon field="{{ col.field }}"></p-sortIcon>
+                            </th>
+                            }
+                        </tr>
+                    </ng-template>
+
+
+                    <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+                        <tr>
+                            @for (col of report?.linkedDevicesColumns; track $index) {
+                            @if(col.field === 'index') {
+                            <td>{{ rowIndex + 1 }}</td>
+                            } @else {
+                            <td> {{ item[col.field] || '-' }} </td>
+                            }
+                            }
+                        </tr>
+                    </ng-template>
+
+                    <!-- Summary -->
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between">
+                            In total there are {{ selectedLinkedDevicesData ? selectedLinkedDevicesData.length : 0 }} items.
+                        </div>
+                    </ng-template>
+                </p-table>
+        }
+        
+    </ng-template>
+
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
+    </ng-template>
+</p-dialog>

@@ -14,11 +14,16 @@ import { GenericTableComponent } from '../../../../shared/components/generic-tab
 import { AuthService } from '../../../../core/services/auth.service';
 import { HttpService } from '../../../../core/services/http.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { DialogModule } from 'primeng/dialog';
+import { EsimService } from '../../../../core/services/esim.service';
+import { TableModule } from 'primeng/table';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ExportService } from '../../../../core/services/export.service';
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule, GenericTableComponent],
+  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule, GenericTableComponent, DialogModule, TableModule, ProgressSpinnerModule],
   templateUrl: './report-detail.component.html',
   styleUrl: './report-detail.component.scss'
 })
@@ -33,8 +38,12 @@ export class ReportDetailComponent implements OnInit {
   userType!:any
   reportTableData:any[] = [];
   isTableDataLoading: boolean = false;
+  isDialogVisible: boolean = false;
+  dialogContentType: string = '';
+  selectedLinkedDevicesData:any = [];
 
-  constructor(private authService:AuthService, private route: ActivatedRoute, private http:HttpService, private dynamicuserService:DynamicUserService,  private toastService: ToastService) {}
+
+  constructor(private authService:AuthService, private route: ActivatedRoute, private http:HttpService, private dynamicuserService:DynamicUserService,  private toastService: ToastService, private esimService:EsimService, private exportService:ExportService) {}
 
   ngOnInit() {
     this.userType = this.authService.getUserType()
@@ -87,6 +96,40 @@ export class ReportDetailComponent implements OnInit {
     console.log(e);
     this.selectedSubUser = null
     await this.loadSubUsers(e?.value?.sno);
+  }
+
+  async handleTableRowBtnClick(e: any): Promise<void> {
+    this.selectedLinkedDevicesData = [];
+    this.isDialogVisible = true;
+    this.dialogContentType = e?.key;
+    if(e?.key === 'showLinkedDevices') {
+       try {
+      const response = await this.esimService.getActivationRquestDetailsById(e?.item?.request.requestId);
+      let { requestjson } = response?.data;
+      if (requestjson) {
+        requestjson = JSON.parse(requestjson).map((item: any) => ({
+          ...item,
+          Type: e?.item?.type.name,
+          Plan: e?.item?.plan.name,
+          ServiceProvider: e?.item?.serviceProvider.providername,
+          RequestedBy: e?.item?.user.orgname,
+        }));
+      }
+      
+      this.selectedLinkedDevicesData = requestjson;
+    } catch (error) {
+      this.toastService.showError('Error', 'Failed to fetch');
+    }
+    }
+    
+  }
+
+  hideDialog() {
+     this.isDialogVisible = false;
+  }
+
+   exportLinkedDevices() {
+    this.exportService.exportToExcel(this.selectedLinkedDevicesData, 'Linked Devices');
   }
 
   async loadReport(): Promise<void> {    

@@ -211,6 +211,7 @@ export const activationReportColumns =  [
     { field: 'plan', subfield: 'name', header: 'Plan', minWidth: '10rem', nested: true },
     { field: 'request', subfield: 'srId', header: 'Sr Id', minWidth: '10rem', nested: true },
     { field: 'request', subfield: 'requestedon', header: 'Requested On', minWidth: '15rem', type:'date', nested: true },
-    { field: 'request', subfield: 'status', header: 'Status', minWidth: '10rem', nested: true }
+    { field: 'request', subfield: 'status', header: 'Status', minWidth: '10rem', nested: true },
+    { field: 'request', subfield: 'deviceCount', header: 'Devices', minWidth: '15rem', nested: true, button: { show: true, label: { api: { show:true, field:'request', subfield:'deviceCount'} }, key:'showLinkedDevices' }  },
 ];
   

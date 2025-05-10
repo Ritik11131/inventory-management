@@ -65,6 +65,7 @@ export class GenericTableComponent implements OnInit {
   @Input() toolbarRightActions: any[] = [];
   @Input() actions:any[] = ['edit']
   @Input() selectionMode: 'single' | 'multiple' | 'none' = 'multiple';
+  @Input() showOnlyExportButton: boolean = false;
 
   selectionChange = output<any>();
   edit = output<any>();
@@ -78,6 +79,7 @@ export class GenericTableComponent implements OnInit {
   sampleBulkUpload = output<any>();
   activate = output<any>();
   sendCommand = output<any>();
+  emitRowButtonClick = output<any>();
   fitment = output<any>();
   emitOverlayAction = output<any>();
   actionMenuItems!: any[];
@@ -247,7 +249,7 @@ export class GenericTableComponent implements OnInit {
       this.exportService.exportToExcel(exportData, 'Devvices');
     } else {
       // Export the data
-      this.dt.exportCSV();
+      this.exportService.exportToExcel(this.data, 'excelData');
     }
 
     // // Export the data
@@ -363,6 +365,11 @@ export class GenericTableComponent implements OnInit {
       });
       return flatItem;
   });
+}
+
+handleRowButtonClick(item: any, key:string) {
+  // Emit the row button click event with the item data
+  this.emitRowButtonClick.emit({item, key});
 }
  
 

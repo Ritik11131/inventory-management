@@ -13,8 +13,10 @@
             <p-button [pTooltip]="'Link RTO'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-link" class="mr-2" (onClick)="onLinkRTO()" />
             <p-button [pTooltip]="'Transfer Inventory'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-external-link" class="mr-2" (onClick)="onTransferInventory()" />
             <p-button [pTooltip]="'Bulk Upload'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-cloud-upload" (onClick)="onUpload()" />
-            <p-button [pTooltip]="'Export Sample Bulk Upload .txt File'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-file-o" (onClick)="onExportSample()" />
-            <p-button [pTooltip]="'Export To CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" /> -->
+            <p-button [pTooltip]="'Export Sample Bulk Upload .txt File'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-file-o" (onClick)="onExportSample()" /> -->
+            @if(showOnlyExportButton) {
+                <p-button [pTooltip]="'Export To CSV'" tooltipPosition="bottom" [text]="true" [outlined]="true" icon="pi pi-print" (onClick)="onPrint()" />
+            }
         </div>
         <div class="p-toolbar-group-end">
             @if(toolbarRightActions.length) {
@@ -106,6 +108,8 @@
                                                                     }">
                                                 {{ (col.field === 'user' && col.subfield === 'name') ? (item[col.field].userType === 'User') ?  (item[col.field]?.[col.subfield] || '-') : '-'  : ((item.activationStatus && item.inStock) ? 'Click To Create Fitment' : item[col.field]?.[col.subfield] || '-') }}
                                                 </span>
+                                        } @else if(col?.button?.show) {
+                                            <p-button text outlined [label]="col.button.label.api.show ? item[col.button.label.api.field][col.button.label.api.subfield] : 'Button'" severity="info" (click)="handleRowButtonClick(item, col.button.key)"  />
                                         } @else {
                                             <span [ngClass]="{
                                                 'text-green-500' : col.field === 'lastPosition' && item[col.field]?.[col.subfield] === 'Online',
