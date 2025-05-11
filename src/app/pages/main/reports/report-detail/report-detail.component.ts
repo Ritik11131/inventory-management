@@ -40,6 +40,10 @@ export class ReportDetailComponent implements OnInit {
   selectedSpecificVehicle: any;
   reportTableData:any[] = [];
   isReportLoading: boolean = false;
+  maxDate: any = null
+
+  today: Date = new Date();
+  yesterday: Date = new Date(new Date().setDate(new Date().getDate() - 1));
 
   daysRangeOptions: any[] = [
     { label: '1 - 3 day', value: [1,3] },
@@ -57,6 +61,13 @@ export class ReportDetailComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(({ report }) => {
       this.report = report;
+      const disableFuture = this.report?.filters?.date?.disableFutureDate;
+      const disableCurrent = this.report?.filters?.date?.disableCurrentDate;
+
+      this.maxDate = disableFuture
+        ? (disableCurrent ? this.yesterday : this.today)
+        : null;
+
       this.initReport();
     });
   }
@@ -174,7 +185,7 @@ export class ReportDetailComponent implements OnInit {
     }
 
     if(this.report.filters.date?.enabled) {
-      payload['reportDate'] = (() => { const d = new Date(this.selectedDate); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T00:00:00`; })();
+      payload['reportDate'] = (() => { const d = new Date(this.selectedDate); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T00:00:00.000+05:30`; })();
     }
 
     if(this.report.filters.days) {

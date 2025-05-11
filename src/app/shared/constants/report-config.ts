@@ -8,7 +8,7 @@ export const reportsConfigRoleWise: any = {
                 rto: true,
                 oem: true,
                 specificVehicle: true,
-                date: { enabled: false }
+                date: { enabled: false, disableFutureDate: true }
             },
             api:'report/VehicleStatus',
             tableColumns:[
@@ -30,10 +30,11 @@ export const reportsConfigRoleWise: any = {
                 rto: true,
                 oem: true,
                 specificVehicle: true,
-                date: { enabled: true },               
+                date: { enabled: true, disableFutureDate: true },               
             },
             api:'report/Alert/Sos',
             tableColumns:[
+                { field: 'sos', header: 'Count' },
                 { field: 'device', subfield:'vahanSno', header: 'Vehicle Sno', nested: true, },
                 { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
                 { field: 'device', subfield:'vehicleName', header: 'Vehicle Name', nested: true, },
@@ -51,10 +52,11 @@ export const reportsConfigRoleWise: any = {
                 rto: true,
                 oem: true,
                 specificVehicle: true,
-                date: { enabled: true }
+                date: { enabled: true, disableFutureDate: true, disableCurrentDate: true }
             },
             api:'report/Alert/Overspeed',
             tableColumns:[
+                { field: 'overspeed', header: 'Count' },
                 { field: 'device', subfield:'vahanSno', header: 'Vehicle Sno', nested: true, },
                 { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
                 { field: 'device', subfield:'vehicleName', header: 'Vehicle Name', nested: true, },
@@ -72,7 +74,7 @@ export const reportsConfigRoleWise: any = {
                 rto: true,
                 oem: true,
                 specificVehicle: true,
-                date: { enabled: false }
+                date: { enabled: false, disableFutureDate: true, disableCurrentDate: true }
             },
             tableActions:['send_message'],
             api:'report/Expired/Expired',
@@ -98,7 +100,7 @@ export const reportsConfigRoleWise: any = {
                 oem: true,
                 days: true,
                 specificVehicle: true,
-                date: { enabled: false }
+                date: { enabled: false, disableFutureDate: true }
             },
             tableActions:['send_message'],
             api: 'report/Expired/ExpireSoon',
@@ -121,7 +123,7 @@ export const reportsConfigRoleWise: any = {
                 oem: true,
                 daysRange: true,
                 specificVehicle: true,
-                date: { enabled: false }
+                date: { enabled: false, disableFutureDate: true }
             },
             api:'report/VehicleStatus/OfflineList',
             tableColumns:[
