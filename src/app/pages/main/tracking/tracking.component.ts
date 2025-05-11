@@ -334,9 +334,9 @@ export class TrackingComponent implements OnInit {
       return;
     }
   
-    // Apply filter based on the search term
+    // Apply filter based on the search term    
     this.filteredVehiclesList = this.vehicleList.filter((vehicle) => {
-      return vehicle.vehicleNo.toLowerCase().includes(searchTerm);
+      return vehicle.vahanSno.toLowerCase().includes(searchTerm) || vehicle.vehicleNo.toLowerCase().includes(searchTerm) || vehicle.imei.includes(searchTerm);
     });
   
   }

@@ -7,6 +7,7 @@ export const reportsConfigRoleWise: any = {
                 state:true,
                 rto: true,
                 oem: true,
+                specificVehicle: true,
                 date: { enabled: false }
             },
             api:'report/VehicleStatus',
@@ -28,6 +29,7 @@ export const reportsConfigRoleWise: any = {
                 state:true,
                 rto: true,
                 oem: true,
+                specificVehicle: true,
                 date: { enabled: true },               
             },
             api:'report/Alert/Sos',
@@ -48,6 +50,7 @@ export const reportsConfigRoleWise: any = {
                 state:true,
                 rto: true,
                 oem: true,
+                specificVehicle: true,
                 date: { enabled: true }
             },
             api:'report/Alert/Overspeed',
@@ -68,6 +71,7 @@ export const reportsConfigRoleWise: any = {
                 state:true,
                 rto: true,
                 oem: true,
+                specificVehicle: true,
                 date: { enabled: false }
             },
             tableActions:['send_message'],
@@ -93,6 +97,7 @@ export const reportsConfigRoleWise: any = {
                 rto: true,
                 oem: true,
                 days: true,
+                specificVehicle: true,
                 date: { enabled: false }
             },
             tableActions:['send_message'],
@@ -115,6 +120,7 @@ export const reportsConfigRoleWise: any = {
                 rto: true,
                 oem: true,
                 daysRange: true,
+                specificVehicle: true,
                 date: { enabled: false }
             },
             api:'report/VehicleStatus/OfflineList',

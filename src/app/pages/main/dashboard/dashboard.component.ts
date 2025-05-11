@@ -122,6 +122,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   currentInfoData : any[] = [];
   currentInfoTitle : string = '';
   currentInfoColumns:any[] = [];
+  isDashboardTableLoading: boolean = false;
 
   constructor(private dashboardService: DashboardService, private ticketService:TicketsService, private authService:AuthService) {}
     
@@ -572,6 +573,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const endpoint = keyToEndpointMap[(panel === 'inventory' || panel === 'renewal') ? panel : panel?.key];
       
       if(endpoint) { 
+        this.isDashboardTableLoading = true;
         try {
           // Flattened response
           const unflattenedData = (await this.fetchSelectedInfoData(endpoint))?.data;
@@ -582,10 +584,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
               return obj;
             });
           
-          
+  
         } catch (error) {
           console.error('Failed to fetch data:', error);
           this.currentInfoData = [];
+        } finally {
+          this.isDashboardTableLoading = false;
         }
       }
     } else {

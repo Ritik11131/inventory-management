@@ -23,13 +23,14 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { InputOtpModule } from 'primeng/inputotp';
 import { GenericStepperComponent } from '../generic-stepper/generic-stepper.component';
 import { ExportService } from '../../../core/services/export.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 
 @Component({
   selector: 'app-generic-dialog',
   standalone: true,
-  imports: [TableModule, DialogModule, RippleModule, ButtonModule, PickListModule, DragDropModule,
+  imports: [TableModule, DialogModule, RippleModule, ButtonModule, PickListModule, DragDropModule, ProgressSpinnerModule,
     InputTextModule, InputTextareaModule, CommonModule, FileUploadModule,
     DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule, GenericStepperComponent,InputOtpModule,
     InputTextModule, FormsModule, InputNumberModule, ConfirmDialogModule, TooltipModule, IconFieldModule, InputIconModule],
@@ -66,6 +67,9 @@ export class GenericDialogComponent implements OnChanges {
   @Input() tableData:any[] = []
   @Input() enableSaveBtn:boolean = true;
   @Input() disableStepperNextBtn:boolean = false;
+
+  @Input() isDataLoading: boolean = false;
+
 
   onHide = output<any>()
   onSave = output<any>()

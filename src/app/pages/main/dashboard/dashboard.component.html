@@ -352,5 +352,5 @@
     </div>
 </div>
 
-<app-generic-dialog [enableSaveBtn]="false" [header]="currentInfoTitle" [isTable]="true" [tableData]="currentInfoData"
+<app-generic-dialog [enableSaveBtn]="false" [header]="currentInfoTitle" [isTable]="true" [tableData]="currentInfoData" [isDataLoading]="isDashboardTableLoading"
     [tableColumns]="currentInfoColumns" [modal]="true" [visible]="infoDialog" (onHide)="onHideDialog($event)" />

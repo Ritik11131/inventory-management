@@ -16,11 +16,12 @@ import { ReportService } from '../../../../core/services/report.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmationService } from 'primeng/api';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule,InputNumberModule, GenericTableComponent],
+  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, InputTextModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule,InputNumberModule, GenericTableComponent],
   templateUrl: './report-detail.component.html',
   styleUrl: './report-detail.component.scss',
   providers:[ConfirmationService, DatePipe]
@@ -36,6 +37,7 @@ export class ReportDetailComponent implements OnInit {
   selectedState!: any;
   selectedDays!: number;
   selectedDayRange!: any;
+  selectedSpecificVehicle: any;
   reportTableData:any[] = [];
   isReportLoading: boolean = false;
 
@@ -168,6 +170,7 @@ export class ReportDetailComponent implements OnInit {
     let payload: any = {
       rtoId: this.selectedRto.map((item: any) => item.id),
       OemId: this.selectedOem.map((item: any) => item.sno),
+      filter : this.selectedSpecificVehicle
     }
 
     if(this.report.filters.date?.enabled) {

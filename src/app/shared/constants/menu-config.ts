@@ -46,15 +46,15 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
             }
             ]
         },
-        {
-            key: 'reports',
-            label: 'Reports',
-            icon: 'pi pi-book',
-            command: () => {
-                router.navigate(['/main/reports/all']);
-                breadcrumbService.generateBreadcrumbs('/main/reports/all');
-            },
-        },
+        // {
+        //     key: 'reports',
+        //     label: 'Reports',
+        //     icon: 'pi pi-book',
+        //     command: () => {
+        //         router.navigate(['/main/reports/all']);
+        //         breadcrumbService.generateBreadcrumbs('/main/reports/all');
+        //     },
+        // },
     ];
 
     // User type specific menu items
@@ -261,17 +261,34 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                     },
                 ]
             },
-        ]
+        ],
+        User: []
     };
+    if(userRole === 'User') {
+        commonItems = commonItems.filter((item: any) => item?.key !== 'management' && item?.key !== 'reports');
+        return commonItems;
+    }
 
     // Add user-specific menu items dynamically
     const managementMenu = commonItems.find((item: any) => item.key === 'management');
-    if (managementMenu && managementMenu.items) {
+    
+    if (managementMenu && managementMenu.items && userRole !== 'User') {        
         managementMenu.items.push(...userMenuItems[authService.getUserRole()]);
     }
 
     commonItems = (userRole === 'Dealer' || userRole === 'Distributor') ? commonItems?.filter((item: any) => item?.key !== 'dashboard' || item?.key !== 'tracking') : commonItems;
 
-    
+    if(userRole === 'Admin') {
+        commonItems.push({
+             
+            key: 'reports',
+            label: 'Reports',
+            icon: 'pi pi-book',
+            command: () => {
+                router.navigate(['/main/reports/all']);
+                breadcrumbService.generateBreadcrumbs('/main/reports/all');
+            },
+        })
+    }
     return commonItems;
 }

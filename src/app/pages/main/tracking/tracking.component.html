@@ -143,10 +143,10 @@
                                 <p class="font-bold">Ext Batt Voltage:</p>
                                 <p>{{ selectedVehicle?.location?.attributes?.maininput || 'N/A' }}</p>
                             </div>
-                            <!-- <div class="col-12 md:col-4">
-                                <p class="font-bold">GPS Fix:</p>
-                                <p>{{ selectedVehicle?.location?.gpsFix ? 'FIX' : 'UNFIX' }}</p>
-                            </div> -->
+                            <div class="col-12 md:col-4">
+                                <p class="font-bold">Odometer:</p>
+                                <p>{{ (selectedVehicle?.location?.attributes?.totalDistance / 1000).toFixed(3) || 'N/A' }}</p>
+                            </div>
                         </div>
 
                     </div>

@@ -31,9 +31,17 @@
 
             @if(report?.filters?.date?.enabled) {
                 <p-floatLabel>
-                    <p-calendar  [iconDisplay]="'input'"  [showIcon]="true"  styleClass="w-18rem" [(ngModel)]="selectedDate" inputId="date" />
+                    <p-calendar class="mr-4"  [iconDisplay]="'input'"  [showIcon]="true"  styleClass="w-18rem" [(ngModel)]="selectedDate" inputId="date" />
                     <label for="date">Select Date</label>
                 </p-floatLabel>
+            }
+
+             @if(report.filters.specificVehicle) {
+                <p-floatLabel>
+                    <input  styleClass="w-18rem" pInputText  [(ngModel)]="selectedSpecificVehicle" placeholder="Enter vehicle"  inputId="specificVehicle"/>
+                    <label for="days">Vehicle No/Imei</label>
+                </p-floatLabel>
+
             }
 
             @if(report.filters.days) {
