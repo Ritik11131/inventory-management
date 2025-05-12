@@ -13,6 +13,22 @@
             <div style="height: 80vh;" leaflet (leafletMapReady)="onMapReady($event)" [leafletOptions]="leafletOptions">
 
                 @if(selectedVehicle) {
+
+                     @if(isPolling) {
+                    <div class="polling-indicator p-3 surface-card border-round shadow-8 absolute top-0 right-0 m-3">
+                        <div class="flex align-items-center gap-2">
+                            <p-tag severity="success" value="Live Tracking"></p-tag>
+                            <i class="pi pi-spin pi-spinner text-green-500"></i>
+                        </div>
+                        <div class="flex align-items-center gap-2 mt-2">
+                            <span class="text-500">Vehicle: </span>
+                            <span class="font-bold">{{ pollingConfig?.vehicleNo }}</span>
+                        </div>
+                        <small class="block mt-2 text-500">Updating every 10 seconds</small>
+                    </div>
+                }
+
+
                 <div (mouseenter)="disableMapInteractions()" (mouseleave)="enableMapInteractions()"
                     class="info-window p-3 surface-card border-round shadow-8"
                     [@collapse]="isCollapsed ? 'collapsed' : 'expanded'">
@@ -24,7 +40,13 @@
                                 'text-orange-500': selectedVehicle?.status === 'DORMANT',
                                 'text-gray-500': selectedVehicle?.status === 'OFFLINE',
                                 'flex align-items-center justify-content-center border-round': true
-                              }" class="text-2xl font-bold">{{selectedVehicle?.vehicleNo}}</span>
+                              }" class="text-2xl font-bold">{{selectedVehicle?.vehicleNo}}
+                              @if(isPolling) {
+                                    <span class="ml-2 text-sm text-green-600 flex align-items-center">
+                                        <i class="pi pi-circle-fill mr-1 text-xs"></i>Live
+                                    </span>
+                                }  
+                            </span>
                               <div class="mb-2 flex flex-column">
                                   <span class="text-sm">{{selectedVehicle.location?.lastUpdate | date:'medium'}}</span> 
                                   <span class="mr-2 font-bold">Last Update</span>
@@ -153,6 +175,7 @@
                 </div>
 
                 }
+
                 @if(isCollapsed) {
                 <div class="info-window">
                     <p-button [rounded]="true"

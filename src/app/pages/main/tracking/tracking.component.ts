@@ -21,11 +21,13 @@ import { GenericDatepickerComponent } from "../../../shared/components/generic-d
 import { TrackingService } from '../../../core/services/tracking.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AddressService } from '../../../core/services/address.service';
+import { catchError, interval, of, Subscription } from 'rxjs';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, 
+  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, TagModule,
             ButtonModule, CommonModule, GenericDatepickerComponent,ProgressSpinnerModule,SliderModule,ProgressBarModule,FormsModule],
   templateUrl: './tracking.component.html',
   styleUrl: './tracking.component.scss',
@@ -61,6 +63,16 @@ export class TrackingComponent implements OnInit {
   creatingPlaybackPath:boolean = false;
   showPlaybackControls:boolean = false;
   trackPlayer!: any;
+
+    // Polling related properties
+  private pollingSubscription: Subscription | null = null;
+  pollingConfig: any | null = null;
+  isPolling: boolean = false;
+  pollingErrorCount: number = 0;
+  
+  // Polling configuration constants
+  private readonly DEFAULT_POLLING_INTERVAL = 10000; // 5 seconds
+  private readonly MAX_POLLING_ERROR_COUNT = 3;
   
 
   playbackControlObject: any = {};
@@ -231,17 +243,17 @@ export class TrackingComponent implements OnInit {
 
 
 
-  async handleFilterClick(event: any): Promise<void> {
-    this.resetPlaybackState();
+  // async handleFilterClick(event: any): Promise<void> {
+  //   this.resetPlaybackState();
   
-    if (this.isSingleVehicleEvent(event)) {
-      console.log(event,'event');
+  //   if (this.isSingleVehicleEvent(event)) {
+  //     console.log(event,'event');
       
-      await this.handleSingleVehicleEvent(event);
-    } else {
-      this.handleMultipleVehicles(event);
-    }
-  }
+  //     await this.handleSingleVehicleEvent(event);
+  //   } else {
+  //     this.handleMultipleVehicles(event);
+  //   }
+  // }
   
   resetPlaybackState(): void {
     this.selectedVehicle = null;
@@ -257,22 +269,22 @@ export class TrackingComponent implements OnInit {
     return event?.status && event?.latitude && event?.longitude;
   }
   
-  async handleSingleVehicleEvent(event: any): Promise<void> {
-    this.plotVehicles(event);
-    try {
-      const response = await this.trackingService.getInfoWindowDetails(event?.deviceSno);
-      const address = await this.fetchSelectedVehicleAddress(response?.data);
-      this.selectedVehicle = {
-        vehicleNo: event?.vehicleNo,
-        status: event?.status,
-        address: address?.address || 'Unknown',
-        ...response?.data,
-      };
-    } catch (error) {
-      this.toastService.showError('Error', 'Failed to fetch vehicle details!');
-      this.selectedVehicle = {};
-    }
-  }
+  // async handleSingleVehicleEvent(event: any): Promise<void> {
+  //   this.plotVehicles(event);
+  //   try {
+  //     const response = await this.trackingService.getInfoWindowDetails(event?.deviceSno);
+  //     const address = await this.fetchSelectedVehicleAddress(response?.data);
+  //     this.selectedVehicle = {
+  //       vehicleNo: event?.vehicleNo,
+  //       status: event?.status,
+  //       address: address?.address || 'Unknown',
+  //       ...response?.data,
+  //     };
+  //   } catch (error) {
+  //     this.toastService.showError('Error', 'Failed to fetch vehicle details!');
+  //     this.selectedVehicle = {};
+  //   }
+  // }
   
   handleMultipleVehicles(event: any): void {
     const filterStatus = event?.key === 'ALL' ? null : event?.key;
@@ -289,41 +301,6 @@ export class TrackingComponent implements OnInit {
       return null;
     }
   }
-
-  // async handleFilterClick(event: any): Promise<any> {
-  //   this.selectedVehicle = null;
-  //   this.isCollapsed = false;
-  //   this.showPlaybackControls = false;
-  //   if(this.trackPlayer) {
-  //     this.trackPlayer.remove();
-  //   }
-
-  //   if (event?.status && event?.latitude && event?.longitude) {
-  //     // If the event contains a single vehicle's details
-  //     this.plotVehicles(event);
-  //     try {
-  //       const response = await this.trackingService.getInfoWindowDetails(event?.deviceSno);
-  //       const address = await this.fetchSelectedVehicleAddress(response?.data);
-  //       this.selectedVehicle = { vehicleNo: event?.vehicleNo, status: event?.status, address:address?.address, ...response?.data };
-        
-  //     } catch (error) {
-  //       this.selectedVehicle = {};
-  //     }
-  //   } else {
-  //     // If the event is for filtering multiple vehicles
-  //     const filterStatus = event?.key === 'ALL' ? null : event?.key;
-  //     this.plotVehicles(this.lastPositionData, filterStatus);
-  //   }
-  // }
-
-  // async fetchSelectedVehicleAddress(object:any) : Promise<any> {
-  //   try {
-  //     const response = (await this.addressService.fetchAddress(object?.location?.latitude,object?.location?.longitude))?.data;
-  //     return response;
-  //   } catch (error) {
-  //     this.toastService.showError('Error','Failed to fetch Address!')
-  //   }
-  // }
 
   handleSearch(event: any) {
     const searchTerm = event?.target?.value?.trim()?.toLowerCase();    
@@ -380,8 +357,6 @@ export class TrackingComponent implements OnInit {
     const trackPath = data?.map((obj:any)=>{
       return { lat:obj.latitude, lng:obj.longitude, speed:obj?.speed, fixtime:obj?.fixtime  }
     })    
-    console.log(trackPath,'trackPath');
-    
     
     // Find the first unique point
     const firstUniqueIndex = trackPath.findIndex((point:any, index:any) =>
@@ -498,5 +473,184 @@ export class TrackingComponent implements OnInit {
       this.playbackControlObject.status = 'Moving';
       this.playbackControlObject.progress = progress * 100;      
     });
+  }
+
+   ngOnDestroy() {
+    this.stopPolling();
+  }
+
+  // Comprehensive polling method
+  startPolling(deviceSno: string, vehicleNo: string) {
+    // Stop any existing polling
+    this.stopPolling();
+
+    // Set up polling configuration
+    this.pollingConfig = {
+      deviceSno,
+      vehicleNo,
+      pollingInterval: this.DEFAULT_POLLING_INTERVAL,
+      maxErrorCount: this.MAX_POLLING_ERROR_COUNT
+    };
+
+    // Start new polling
+    this.isPolling = true;
+    this.pollingErrorCount = 0;
+
+    this.pollingSubscription = interval(this.pollingConfig.pollingInterval)
+      .pipe(
+        catchError(error => {
+          console.error('Polling error:', error);
+          return of(null);
+        })
+      )
+      .subscribe(async () => {
+        try {
+          // Fetch updated vehicle details
+          const response = await this.trackingService.getInfoWindowDetails(deviceSno);
+          
+          if (response?.data) {
+            // Update vehicle details and address
+            const address = await this.fetchSelectedVehicleAddress(response.data);
+            
+            // Update selected vehicle with new information
+            this.updateSelectedVehicle(response.data, address);
+            
+            // Update map marker
+            this.updateVehicleMarker(response.data);
+            
+            // Reset error count
+            this.pollingErrorCount = 0;
+          }
+        } catch (error) {
+          this.pollingErrorCount++;
+          
+          // Log the error
+          console.error(`Polling error (${this.pollingErrorCount}):`, error);
+          
+          // Stop polling if max error count is reached
+          if (this.pollingErrorCount >= this.pollingConfig.maxErrorCount) {
+            this.stopPolling();
+            this.toastService.showError(
+              'Polling Error', 
+              `Unable to fetch updates for vehicle ${this.pollingConfig?.vehicleNo}`
+            );
+          }
+        }
+      });
+  }
+
+  // Stop polling method with optional message
+  stopPolling(showMessage: boolean = true) {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = null;
+    }
+    
+    // Reset polling state
+    const vehicleNo = this.pollingConfig?.vehicleNo;
+    this.isPolling = false;
+    this.pollingConfig = null;
+    this.pollingErrorCount = 0;
+
+    // Show stop message if requested
+    if (showMessage && vehicleNo) {
+      this.toastService.showInfo(
+        'Tracking Stopped', 
+        `Live tracking for vehicle ${vehicleNo} has been stopped.`
+      );
+    }
+  }
+
+  // Toggle polling method
+  togglePolling() {
+    if (this.isPolling) {
+      this.stopPolling();
+    } else if (this.selectedVehicle?.device?.sno) {
+      this.startPolling(
+        this.selectedVehicle.device.sno, 
+        this.selectedVehicle.vehicleNo
+      );
+    }
+  }
+
+  // Update selected vehicle details
+  updateSelectedVehicle(vehicleData: any, address?: any) {
+    this.selectedVehicle = {
+      ...this.selectedVehicle,
+      ...vehicleData,
+      
+      address: address?.address || this.selectedVehicle?.address || 'Unknown',
+      location: {
+        ...vehicleData.location,
+        lastUpdate: new Date().toISOString()
+      }
+    };    
+  }
+
+  // Update vehicle marker on map
+  updateVehicleMarker(vehicleData: any) {    
+    // Remove existing markers from the map
+    this.map.removeLayer(this.markerClusterGroup);
+    this.markerClusterGroup.clearLayers();
+
+    // Create new marker
+    if (vehicleData?.location?.latitude && vehicleData?.location?.longitude) {
+      const marker: L.CircleMarker = L.circleMarker(
+        [vehicleData.location?.latitude, vehicleData.location?.longitude], 
+        {
+          color: lastPosStatusColors[this.selectedVehicle.status] || 'blue',
+          radius: 5,
+          fillOpacity: 0.7
+        }
+      );
+
+      marker.bindTooltip(
+        `Vehicle No: ${this.selectedVehicle.vehicleNo}<br>Status: ${this.selectedVehicle.status}`,
+        { direction: 'top' }
+      );
+
+      this.markerClusterGroup.addLayer(marker);
+      this.map.addLayer(this.markerClusterGroup);
+      
+      // Optional: Adjust map view
+      this.map.setView([vehicleData.location?.latitude, vehicleData.location?.longitude], this.map.getZoom());
+    }
+  }
+
+  // Existing method for handling filter click
+  async handleFilterClick(event: any): Promise<void> {
+    console.log(event,'event');
+    
+    // Stop any existing polling
+    this.stopPolling(false);
+
+    this.resetPlaybackState();
+  
+    if (this.isSingleVehicleEvent(event)) {
+      await this.handleSingleVehicleEvent(event);
+    } else {
+      this.handleMultipleVehicles(event);
+    }
+  }
+  
+  // Method to handle single vehicle selection
+  async handleSingleVehicleEvent(event: any): Promise<void> {
+    this.plotVehicles(event);
+    try {
+      const response = await this.trackingService.getInfoWindowDetails(event?.deviceSno);
+      const address = await this.fetchSelectedVehicleAddress(response?.data);
+      this.selectedVehicle = {
+        vehicleNo: event?.vehicleNo,
+        status: event?.status,
+        address: address?.address || 'Unknown',
+        ...response?.data,
+      };
+
+      // Start polling for this vehicle
+      this.startPolling(event?.deviceSno, event?.vehicleNo);
+    } catch (error) {
+      this.toastService.showError('Error', 'Failed to fetch vehicle details!');
+      this.selectedVehicle = {};
+    }
   }
 }
