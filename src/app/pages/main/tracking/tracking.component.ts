@@ -26,11 +26,12 @@ import { catchError, interval, of, Subscription } from 'rxjs';
 import { TagModule } from 'primeng/tag';
 import { RouteService } from '../../../core/services/route.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, TagModule,DropdownModule,
+  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, TagModule,DropdownModule,DragDropModule,
             ButtonModule, CommonModule, GenericDatepickerComponent,ProgressSpinnerModule,SliderModule,ProgressBarModule,FormsModule],
   templateUrl: './tracking.component.html',
   styleUrl: './tracking.component.scss',
