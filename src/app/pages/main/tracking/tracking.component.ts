@@ -99,6 +99,7 @@ export class TrackingComponent implements OnInit {
   selectedRoute:any;
   routeLayer: L.GeoJSON | null = null;
   isLoadingRoute = false;
+  geofenceLayer:any;
 
   constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService,private addressService:AddressService, private routeService:RouteService) { }
 
@@ -695,58 +696,142 @@ export class TrackingComponent implements OnInit {
     }
   }
 
-  async handleRouteSelection(e: any): Promise<void> {
+async handleRouteSelection(e: any): Promise<void> {
   if (!e?.value) return;
-
+  
   this.isLoadingRoute = true;
-
+  
   try {
     const response = await this.routeService.getRouteById(e.value);
     const { geometry, name } = response?.data;
-    const parsedGeometry = JSON.parse(geometry)
-
+    const parsedGeometry = JSON.parse(geometry);
+    
     if (!parsedGeometry) {
       console.warn('No geometry found for the selected route.');
       return;
     }
-
-    // Remove existing route layer if present
+    
+    // Remove existing route and geofence layers if present
     if (this.routeLayer) {
       this.map.removeLayer(this.routeLayer);
       this.routeLayer = null;
     }
-
-   const customIcon = L.icon({
-  iconUrl: 'assets/images/marker-icon-2x.png',  // replace with actual filename
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowUrl: 'assets/images/marker-shadow.png',  // optional
-  shadowSize: [41, 41]
-});
-
-this.routeLayer = L.geoJSON(parsedGeometry, {
-  style: {
-    color: '#007bff',
-    weight: 4,
-    opacity: 0.9
-  },
-  pointToLayer: (feature, latlng) => {
-    return L.marker(latlng, { icon: customIcon });
-  }
-}).addTo(this.map);
-
-
-    // Fit the map bounds to the new GeoJSON layer
-    const bounds = this.routeLayer.getBounds();
-    if (bounds.isValid()) {
-      this.map.fitBounds(bounds, { padding: [20, 20] });
+    
+    if (this.geofenceLayer) {
+      this.map.removeLayer(this.geofenceLayer);
+      this.geofenceLayer = null;
     }
-
+    
+    const customIcon = L.icon({
+      iconUrl: 'assets/images/marker-icon-2x.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowUrl: 'assets/images/marker-shadow.png',
+      shadowSize: [41, 41]
+    });
+    
+    // Add the original route
+    this.routeLayer = L.geoJSON(parsedGeometry, {
+      style: {
+        color: '#007bff',
+        weight: 4,
+        opacity: 0.9
+      },
+      pointToLayer: (feature, latlng) => {
+        return L.marker(latlng, { icon: customIcon });
+      }
+    }).addTo(this.map);
+    
+      // Create a polygon geofence with 50 meter buffer around the route
+    this.createRouteGeofencePolygon(parsedGeometry, 50);
+    
+    // Fit the map bounds to include both the route and its buffer
+    const combinedBounds = this.routeLayer.getBounds();
+    if (this.geofenceLayer) {
+      const geofenceBounds = this.geofenceLayer.getBounds();
+      if (geofenceBounds.isValid()) {
+        combinedBounds.extend(geofenceBounds);
+      }
+    }
+    
+    if (combinedBounds.isValid()) {
+      this.map.fitBounds(combinedBounds, { padding: [20, 20] });
+    }
   } catch (error) {
     console.error('Failed to load route:', error);
   } finally {
     this.isLoadingRoute = false;
+  }
+}
+
+/**
+ * Creates a polygon geofence with specified buffer distance around the route
+ * @param geometry The GeoJSON geometry of the route
+ * @param bufferDistance Buffer distance in meters
+ */
+private createRouteGeofencePolygon(geometry: any, bufferDistance: number): void {
+  try {
+    // Convert the route geometry to a proper GeoJSON feature if needed
+    let routeFeature;
+    
+    if (geometry.type === 'FeatureCollection') {
+      // If it's a FeatureCollection, we'll merge all features
+      routeFeature = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'GeometryCollection',
+          geometries: geometry.features.map((feature: any) => feature.geometry)
+        }
+      };
+    } else if (geometry.type === 'Feature') {
+      routeFeature = geometry;
+    } else {
+      // If it's just a geometry object, wrap it in a Feature
+      routeFeature = {
+        type: 'Feature',
+        properties: {},
+        geometry: geometry
+      };
+    }
+    
+    // Create a buffer around the route (buffer distance in kilometers)
+    const buffered: any = turf.buffer(routeFeature, bufferDistance / 1000, { units: 'kilometers' });
+    
+    if (!buffered) {
+      console.warn('Failed to create buffer around route');
+      return;
+    }
+    
+    // Sometimes the buffer results in a Feature, sometimes in a FeatureCollection
+    // We need to standardize to make sure we have a FeatureCollection
+    let geofencePolygon;
+    if (buffered.type === 'FeatureCollection') {
+      geofencePolygon = buffered;
+    } else {
+      geofencePolygon = {
+        type: 'FeatureCollection',
+        features: [buffered]
+      };
+    }
+    
+    // Create and add the geofence polygon layer to the map
+    this.geofenceLayer = L.geoJSON(geofencePolygon, {
+      style: {
+        color: '#ff7800',        // Orange border
+        weight: 2,               // Border width
+        opacity: 0.8,            // Border opacity
+        fillColor: '#ff7800',    // Fill color (same as border)
+        fillOpacity: 0.2         // Fill opacity (transparent)
+      }
+    }).addTo(this.map);
+    
+    // You can add popup information if needed
+    this.geofenceLayer.bindPopup('Route geofence - 50m buffer');
+    
+  } catch (error) {
+    console.error('Failed to create route geofence polygon:', error);
   }
 }
 }
