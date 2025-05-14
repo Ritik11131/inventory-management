@@ -12,6 +12,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { VehicleFiltersComponent } from './vehicle-filters/vehicle-filters.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 import * as L from 'leaflet';
+import * as turf from '@turf/turf';
 import { VehicleStatsComponent } from './vehicle-stats/vehicle-stats.component';
 import { latLng, Map, tileLayer } from "leaflet";
 import 'leaflet.markercluster';
@@ -23,11 +24,13 @@ import { ToastService } from '../../../core/services/toast.service';
 import { AddressService } from '../../../core/services/address.service';
 import { catchError, interval, of, Subscription } from 'rxjs';
 import { TagModule } from 'primeng/tag';
+import { RouteService } from '../../../core/services/route.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, TagModule,
+  imports: [VehicleFiltersComponent, VehicleListComponent, VehicleStatsComponent, LeafletModule, LeafletMarkerClusterModule, TagModule,DropdownModule,
             ButtonModule, CommonModule, GenericDatepickerComponent,ProgressSpinnerModule,SliderModule,ProgressBarModule,FormsModule],
   templateUrl: './tracking.component.html',
   styleUrl: './tracking.component.scss',
@@ -92,8 +95,12 @@ export class TrackingComponent implements OnInit {
     center: latLng(27.54095593, 79.16035184)
   };
 
+  routesOptions:any[] = []
+  selectedRoute:any;
+  routeLayer: L.GeoJSON | null = null;
+  isLoadingRoute = false;
 
-  constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService,private addressService:AddressService) { }
+  constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService,private addressService:AddressService, private routeService:RouteService) { }
 
   ngOnInit() {
     this.fetchLastPositionStats().then();
@@ -612,8 +619,28 @@ export class TrackingComponent implements OnInit {
       this.markerClusterGroup.addLayer(marker);
       this.map.addLayer(this.markerClusterGroup);
       
-      // Optional: Adjust map view
-      this.map.setView([vehicleData.location?.latitude, vehicleData.location?.longitude], this.map.getZoom());
+      if (!this.selectedRoute) {
+  const lat = vehicleData.location?.latitude;
+  const lng = vehicleData.location?.longitude;
+
+  if (lat != null && lng != null) {
+    this.map.setView([lat, lng], this.map.getZoom());
+  }
+} else if (this.routeLayer) {
+  const routeBounds = this.routeLayer.getBounds();
+  const lat = vehicleData.location?.latitude;
+  const lng = vehicleData.location?.longitude;
+
+  if (routeBounds.isValid() && lat != null && lng != null) {
+    const combinedBounds = routeBounds.extend([lat, lng]);
+    this.map.fitBounds(combinedBounds, { padding: [20, 20] });
+  } else {
+    // Fallback: fit only route if vehicle location is missing
+    this.map.fitBounds(routeBounds, { padding: [20, 20] });
+  }
+}
+
+
     }
   }
 
@@ -628,6 +655,7 @@ export class TrackingComponent implements OnInit {
   
     if (this.isSingleVehicleEvent(event)) {
       await this.handleSingleVehicleEvent(event);
+      await this.fetchRoutes()
     } else {
       this.handleMultipleVehicles(event);
     }
@@ -653,4 +681,72 @@ export class TrackingComponent implements OnInit {
       this.selectedVehicle = {};
     }
   }
+
+
+    async fetchRoutes(): Promise<any> {
+    try {
+      const response = await this.routeService.getList();
+      this.routesOptions = response.data;
+      // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
+    } catch (error : any) {
+      this.routesOptions = [];
+      this.toastService.showError('Error', error?.error?.data);
+    } finally {
+    }
+  }
+
+  async handleRouteSelection(e: any): Promise<void> {
+  if (!e?.value) return;
+
+  this.isLoadingRoute = true;
+
+  try {
+    const response = await this.routeService.getRouteById(e.value);
+    const { geometry, name } = response?.data;
+    const parsedGeometry = JSON.parse(geometry)
+
+    if (!parsedGeometry) {
+      console.warn('No geometry found for the selected route.');
+      return;
+    }
+
+    // Remove existing route layer if present
+    if (this.routeLayer) {
+      this.map.removeLayer(this.routeLayer);
+      this.routeLayer = null;
+    }
+
+   const customIcon = L.icon({
+  iconUrl: 'assets/images/marker-icon-2x.png',  // replace with actual filename
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowUrl: 'assets/images/marker-shadow.png',  // optional
+  shadowSize: [41, 41]
+});
+
+this.routeLayer = L.geoJSON(parsedGeometry, {
+  style: {
+    color: '#007bff',
+    weight: 4,
+    opacity: 0.9
+  },
+  pointToLayer: (feature, latlng) => {
+    return L.marker(latlng, { icon: customIcon });
+  }
+}).addTo(this.map);
+
+
+    // Fit the map bounds to the new GeoJSON layer
+    const bounds = this.routeLayer.getBounds();
+    if (bounds.isValid()) {
+      this.map.fitBounds(bounds, { padding: [20, 20] });
+    }
+
+  } catch (error) {
+    console.error('Failed to load route:', error);
+  } finally {
+    this.isLoadingRoute = false;
+  }
+}
 }

@@ -13,20 +13,31 @@
             <div style="height: 80vh;" leaflet (leafletMapReady)="onMapReady($event)" [leafletOptions]="leafletOptions">
 
                 @if(selectedVehicle) {
+                   @if(isPolling) {
+    <div class="flex gap-3 absolute top-0 right-0 m-3">
+        <!-- Dropdown Card First -->
+        <div class="polling-indicator p-3 surface-card border-round shadow-8">
+            <p-dropdown [(ngModel)]="selectedRoute" [options]="routesOptions" optionLabel="name" placeholder="Select a Route" (onChange)="handleRouteSelection($event)"></p-dropdown>
+            @if(isLoadingRoute) {
+                <p-progressSpinner styleClass="small-spinner"></p-progressSpinner>
+            }
+        </div>
 
-                     @if(isPolling) {
-                    <div class="polling-indicator p-3 surface-card border-round shadow-8 absolute top-0 right-0 m-3">
-                        <div class="flex align-items-center gap-2">
-                            <p-tag severity="success" value="Live Tracking"></p-tag>
-                            <i class="pi pi-spin pi-spinner text-green-500"></i>
-                        </div>
-                        <div class="flex align-items-center gap-2 mt-2">
-                            <span class="text-500">Vehicle: </span>
-                            <span class="font-bold">{{ pollingConfig?.vehicleNo }}</span>
-                        </div>
-                        <small class="block mt-2 text-500">Updating every 10 seconds</small>
-                    </div>
-                }
+        <!-- Live Tracking Card Second -->
+        <div class="polling-indicator p-3 surface-card border-round shadow-8">
+            <div class="flex align-items-center gap-2">
+                <p-tag severity="success" value="Live Tracking"></p-tag>
+                <i class="pi pi-spin pi-spinner text-green-500"></i>
+            </div>
+            <div class="flex align-items-center gap-2 mt-2">
+                <span class="text-500">Vehicle: </span>
+                <span class="font-bold">{{ pollingConfig?.vehicleNo }}</span>
+            </div>
+            <small class="block mt-2 text-500">Updating every 10 seconds</small>
+        </div>
+    </div>
+}
+
 
 
                 <div (mouseenter)="disableMapInteractions()" (mouseleave)="enableMapInteractions()"
