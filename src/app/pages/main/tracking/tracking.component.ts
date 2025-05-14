@@ -86,10 +86,9 @@ export class TrackingComponent implements OnInit {
 
   leafletOptions = {
     layers: [
-      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; Open Street Hot',
-        maxZoom: 18,
-      })
+       tileLayer(`https://maps.hereapi.com/v3/base/mc/{z}/{x}/{y}/png8?style=lite.day&apiKey=bhm0avrp9LuWfcoxd6E8Uzv1oZn3i2Mfcrsv77Bnw7Y`, {
+              attribution: '&copy; HERE 2019'
+            }),
     ],
     zoom: 5,
     center: latLng(27.54095593, 79.16035184)

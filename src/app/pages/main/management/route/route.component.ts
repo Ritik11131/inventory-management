@@ -33,7 +33,9 @@ export class RouteComponent implements OnInit {
   private routingControl!: any;
 
   options = {
-    layers: [L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' })],
+    layers: [L.tileLayer(`https://maps.hereapi.com/v3/base/mc/{z}/{x}/{y}/png8?style=lite.day&apiKey=bhm0avrp9LuWfcoxd6E8Uzv1oZn3i2Mfcrsv77Bnw7Y`, {
+                  attribution: '&copy; HERE 2019'
+                }),],
     zoom: 10,
     center: L.latLng(28.6139, 77.2090) // Default center (Delhi)
   };

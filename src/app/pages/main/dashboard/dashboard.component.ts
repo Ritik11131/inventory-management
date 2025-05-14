@@ -83,9 +83,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   leafletOptions = {
     layers: [
-      tileLayer(`https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${this.style}/{z}/{x}/{y}/512/png8?apiKey=${environment.here.apiKey}&ppi=320`, {
-        attribution: '&copy; HERE 2019'
-      }),
+      tileLayer(`https://maps.hereapi.com/v3/base/mc/{z}/{x}/{y}/png8?style=lite.day&apiKey=bhm0avrp9LuWfcoxd6E8Uzv1oZn3i2Mfcrsv77Bnw7Y`, {
+              attribution: '&copy; HERE 2019'
+            }),
       tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; Open Street Hot',
           maxZoom: 18,
