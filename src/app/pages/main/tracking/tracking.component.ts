@@ -99,6 +99,8 @@ export class TrackingComponent implements OnInit {
   routeLayer: L.GeoJSON | null = null;
   isLoadingRoute = false;
   geofenceLayer:any;
+  disturbedZoom:any = null;
+  disturbedBoundingBox: any=null
 
   constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService,private addressService:AddressService, private routeService:RouteService) { }
 
@@ -329,6 +331,7 @@ export class TrackingComponent implements OnInit {
 
 
   handlePlayback() {
+    this.stopPolling();
     this.makeDatepickerVisible = true;
   }
 
@@ -647,6 +650,17 @@ export class TrackingComponent implements OnInit {
   // Existing method for handling filter click
   async handleFilterClick(event: any): Promise<void> {
     console.log(event,'event');
+
+    this.map.on('zoomend', () => {
+    console.log('Zoom changed:', this.map.getZoom());
+    this.disturbedZoom = this.map.getZoom();
+  });
+
+  this.map.on('moveend', () => {
+    const bounds = this.map.getBounds();
+    console.log('New bounds:', bounds);
+    this.disturbedBoundingBox = this.map.getBounds();
+  });
     
     // Stop any existing polling
     this.stopPolling(false);
@@ -697,7 +711,26 @@ export class TrackingComponent implements OnInit {
 
 
   reCenterToVehicle() {
-    // this.map.setView([])
+    if (!this.selectedRoute) {
+          const lat = this.selectedVehicle.location?.latitude;
+          const lng = this.selectedVehicle.location?.longitude;
+
+          if (lat != null && lng != null) {
+            this.map.setView([lat, lng], this.map.getZoom());
+          }
+        } else if (this.routeLayer) {
+          const routeBounds = this.routeLayer.getBounds();
+          const lat = this.selectedVehicle.location?.latitude;
+          const lng = this.selectedVehicle.location?.longitude;
+
+          if (routeBounds.isValid() && lat != null && lng != null) {
+            const combinedBounds = routeBounds.extend([lat, lng]);
+            this.map.fitBounds(combinedBounds, { padding: [20, 20] });
+          } else {
+            // Fallback: fit only route if vehicle location is missing
+            this.map.fitBounds(routeBounds, { padding: [20, 20] });
+          }
+        }
   }
 
 async handleRouteSelection(e: any): Promise<void> {
