@@ -17,7 +17,7 @@
     <div class="flex gap-3 absolute top-0 right-0 m-3">
         <!-- Dropdown Card First -->
         <div class="polling-indicator p-3 surface-card border-round shadow-8">
-            <p-dropdown [(ngModel)]="selectedRoute" [options]="routesOptions" optionLabel="name" placeholder="Select a Route" (onChange)="handleRouteSelection($event)"></p-dropdown>
+            <p-dropdown [(ngModel)]="selectedRoute" [options]="routesOptions" optionLabel="name" placeholder="Select a Route" (onChange)="handleRouteSelection($event)" [filter]="true" [showClear]="true"></p-dropdown>
             @if(isLoadingRoute) {
                 <p-progressSpinner styleClass="small-spinner"></p-progressSpinner>
             }
@@ -33,7 +33,7 @@
                 <span class="text-500">Vehicle: </span>
                 <span class="font-bold">{{ pollingConfig?.vehicleNo }}</span>
             </div>
-            <small class="block mt-2 text-500">Updating every 10 seconds</small>
+            <small class="block mt-2 text-500">Updating every 5 seconds</small>
         </div>
     </div>
 }
@@ -69,8 +69,9 @@
                         </div>
                         <div class="align-items-center">
                             <i (click)="handlePlayback()" class="pi pi-play text-blue-500 cursor-pointer text-xl mb-1 mr-2"></i>
-                            <i (click)="toggleCollapse()"
-                                class="pi pi-angle-down text-blue-500 cursor-pointer text-xl"></i>
+                            <i (click)="toggleCollapse()" class="pi pi-angle-down text-blue-500 cursor-pointer text-xl"></i>
+                            <!-- <i (click)="reCenterToVehicle()" class="pi pi-pause text-blue-500 cursor-pointer text-xl mb-1 mr-2"></i> -->
+                            
                         </div>
                     </div>
                     <div class="info-window-contents overflow-auto">

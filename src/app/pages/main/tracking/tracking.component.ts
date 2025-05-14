@@ -74,7 +74,7 @@ export class TrackingComponent implements OnInit {
   pollingErrorCount: number = 0;
   
   // Polling configuration constants
-  private readonly DEFAULT_POLLING_INTERVAL = 10000; // 5 seconds
+  private readonly DEFAULT_POLLING_INTERVAL = 5000; // 5 seconds
   private readonly MAX_POLLING_ERROR_COUNT = 3;
   
 
@@ -695,8 +695,34 @@ export class TrackingComponent implements OnInit {
     }
   }
 
+
+  reCenterToVehicle() {
+    // this.map.setView([])
+  }
+
 async handleRouteSelection(e: any): Promise<void> {
-  if (!e?.value) return;
+  if (!e?.value) {
+     // Route cleared – remove layers and focus on vehicle
+    if (this.routeLayer) {
+      this.map.removeLayer(this.routeLayer);
+      this.routeLayer = null;
+    }
+
+    if (this.geofenceLayer) {
+      this.map.removeLayer(this.geofenceLayer);
+      this.geofenceLayer = null;
+    }
+
+    // Focus back to vehicle location
+    if (this.selectedVehicle?.location?.latitude && this.selectedVehicle?.location?.longitude) {
+      this.map.setView(
+        [this.selectedVehicle.location.latitude, this.selectedVehicle.location.longitude],
+        this.map.getZoom()
+      );
+    }
+
+    return;
+  };
   
   this.isLoadingRoute = true;
   
