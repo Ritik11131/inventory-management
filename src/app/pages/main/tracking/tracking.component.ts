@@ -27,6 +27,7 @@ import { TagModule } from 'primeng/tag';
 import { RouteService } from '../../../core/services/route.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-tracking',
@@ -102,8 +103,11 @@ export class TrackingComponent implements OnInit {
   geofenceLayer:any;
   disturbedZoom:any = null;
   disturbedBoundingBox: any=null
+  userRole: string = '';
 
-  constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService,private addressService:AddressService, private routeService:RouteService) { }
+  constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService,private addressService:AddressService, private routeService:RouteService, private authService:AuthService) {
+    this.userRole = this.authService.getUserRole();    
+   }
 
   ngOnInit() {
     this.fetchLastPositionStats().then();
@@ -670,7 +674,9 @@ export class TrackingComponent implements OnInit {
   
     if (this.isSingleVehicleEvent(event)) {
       await this.handleSingleVehicleEvent(event);
-      await this.fetchRoutes()
+      if(this.userRole !== 'User') {
+        await this.fetchRoutes()
+      }
     } else {
       this.handleMultipleVehicles(event);
     }

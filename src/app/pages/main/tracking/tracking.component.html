@@ -15,15 +15,17 @@
                 @if(selectedVehicle) {
                    @if(isPolling) {
     <div class="flex gap-3 absolute top-0 right-0 m-3">
-        <!-- Dropdown Card First -->
-        <div class="polling-indicator p-3 surface-card border-round shadow-8">
-            <p-dropdown [(ngModel)]="selectedRoute" [options]="routesOptions" optionLabel="name"
+        @if(this.userRole !== 'User') {
+            <!-- Dropdown Card First -->
+            <div class="polling-indicator p-3 surface-card border-round shadow-8">
+                <p-dropdown [(ngModel)]="selectedRoute" [options]="routesOptions" optionLabel="name"
                 placeholder="Select a Route" (onChange)="handleRouteSelection($event)" [filter]="true"
                 [showClear]="true"></p-dropdown>
-            @if(isLoadingRoute) {
-            <p-progressSpinner styleClass="small-spinner"></p-progressSpinner>
-            }
-        </div>
+                @if(isLoadingRoute) {
+                    <p-progressSpinner styleClass="small-spinner"></p-progressSpinner>
+                }
+            </div>
+        }
     
         <!-- Live Tracking Card Second -->
         <div class="polling-indicator p-3 surface-card border-round shadow-8">
