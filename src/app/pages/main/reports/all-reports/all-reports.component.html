@@ -1,20 +1,36 @@
 <div class="bg-gray-200 px-4 py-5 md:px-6 lg:px-8">
-    <div class="grid grid-nogutter sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        @for (report of reports; track $index) {
-            <div class="col flex justify-content-center">
-                <p-card [header]="report?.reportName" subheader="This Reports Shows Something !" [style]="{ width: '300px' }">
-                    <!-- <ng-template pTemplate="header">
-                        <img alt="Card" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
-                </ng-template> -->
-                <ng-template pTemplate="footer">
-                    <div class="flex gap-3 mt-1">
-                        <p-button (onClick)="handleDynamicReport(report)" label="View" iconPos="right" icon="pi pi-arrow-right" class="w-full" styleClass="w-full" />
-                    </div>
-                </ng-template>
-            </p-card>
-        </div>
+  <div class="grid gap-3">
+    @for (report of reports; track $index) {
+      <div class="p-col-12 sm:p-col-6 md:p-col-4 lg:p-col-3 flex justify-content-center">
+        <p-card
+          [header]="report?.reportName"
+          subheader="This Report Shows Something!"
+          [style]="{ width: '100%', maxWidth: '300px' }"
+        >
+          <ng-template pTemplate="header">
+            <img
+              alt="Card"
+              src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
+              class="w-full h-40 object-cover"
+            />
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <div class="flex gap-3 mt-3">
+              <p-button
+                (onClick)="handleDynamicReport(report)"
+                label="View"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                styleClass="w-full"
+              />
+            </div>
+          </ng-template>
+        </p-card>
+      </div>
     }
-    </div>
+  </div>
 </div>
+
 
 

@@ -102,73 +102,106 @@ export class ReportDetailComponent implements OnInit {
     return await this.stateService.getList();
   }
 
+  // async onStateChange(event: any): Promise<void> {
+  //   try {
+  //     const currentStates = event.value;
+  //     const removedStates = this.previousStates.filter(
+  //       prev => !currentStates.some((cur: any) => cur?.id === prev?.id)
+  //     );
+  
+  //     const addedStates = currentStates.filter(
+  //       (cur: any) => !this.previousStates.some((prev: any) => prev?.id === cur?.id)
+  //     );
+  
+  //     this.selectedState = currentStates;
+  //     this.previousStates = [...currentStates]; // Update previous selection
+  
+  //     // Remove RTOs corresponding to deselected states
+  //     removedStates.forEach((state: any) => {
+  //       this.rtos = this.rtos.filter((rto: any) => rto.stateId !== state?.id);
+  //       this.selectedRto = null
+  //     });
+  
+  //     // If all states removed
+  //     if (currentStates.length === 0) {
+  //       this.rtos = [];
+  //       this.selectedRto = null;
+  //       this.toastService.showWarn('No states selected', 'Warning');
+  //       return;
+  //     }
+  
+  //     // Fetch RTOs only for newly added states
+  //     const newRtos: any[] = [];
+  //     const errors: string[] = [];
+  
+  //     await Promise.all(
+  //       addedStates.map(async (state: any) => {
+  //         try {
+  //           const res = await this.getRTOList({ id: state?.id });
+  //           if (res?.data?.length) {
+  //             // Attach stateId to each RTO entry for tracking
+  //             const enrichedRtos = res.data.map((rto: any) => ({
+  //               ...rto,
+  //               stateId: state?.id
+  //             }));
+  //             newRtos.push(...enrichedRtos);
+  //           }
+  //         } catch (err) {
+  //           console.error(`Failed for state ${state?.name}`, err);
+  //           errors.push(`Failed for ${state?.name}`);
+  //         }
+  //       })
+  //     );
+  
+  //     this.rtos = [...this.rtos, ...newRtos];
+  
+  //     if (this.rtos.length === 0) {
+  //       this.selectedRto = null;
+  //       this.toastService.showWarn('No RTOs found for selected states.', 'Warning');
+  //     }
+  
+  //     if (errors.length > 0) {
+  //       this.toastService.showError(errors.join(', '), 'Partial Failure');
+  //     }
+  
+  //   } catch (error) {
+  //     console.error('Unexpected error in onStateChange', error);
+  //     this.toastService.showError('Something went wrong', 'Oops!');
+  //   }
+  // }
+
+
   async onStateChange(event: any): Promise<void> {
+  try {
+    const selectedState = event.value;
+    this.selectedState = selectedState;
+
+    // Clear previous RTOs
+    this.rtos = [];
+    this.selectedRto = null;
+
     try {
-      const currentStates = event.value;
-      const removedStates = this.previousStates.filter(
-        prev => !currentStates.some((cur: any) => cur?.id === prev?.id)
-      );
-  
-      const addedStates = currentStates.filter(
-        (cur: any) => !this.previousStates.some((prev: any) => prev?.id === cur?.id)
-      );
-  
-      this.selectedState = currentStates;
-      this.previousStates = [...currentStates]; // Update previous selection
-  
-      // Remove RTOs corresponding to deselected states
-      removedStates.forEach((state: any) => {
-        this.rtos = this.rtos.filter((rto: any) => rto.stateId !== state?.id);
-        this.selectedRto = null
-      });
-  
-      // If all states removed
-      if (currentStates.length === 0) {
-        this.rtos = [];
-        this.selectedRto = null;
-        this.toastService.showWarn('No states selected', 'Warning');
-        return;
+      const res = await this.getRTOList({ id: selectedState.id });
+      if (res?.data?.length) {
+        // Attach stateId to each RTO entry for tracking (if needed)
+        this.rtos = res.data.map((rto: any) => ({
+          ...rto,
+          stateId: selectedState.id
+        }));
+      } else {
+        this.toastService.showWarn('No RTOs found for selected state.', 'Warning');
       }
-  
-      // Fetch RTOs only for newly added states
-      const newRtos: any[] = [];
-      const errors: string[] = [];
-  
-      await Promise.all(
-        addedStates.map(async (state: any) => {
-          try {
-            const res = await this.getRTOList({ id: state?.id });
-            if (res?.data?.length) {
-              // Attach stateId to each RTO entry for tracking
-              const enrichedRtos = res.data.map((rto: any) => ({
-                ...rto,
-                stateId: state?.id
-              }));
-              newRtos.push(...enrichedRtos);
-            }
-          } catch (err) {
-            console.error(`Failed for state ${state?.name}`, err);
-            errors.push(`Failed for ${state?.name}`);
-          }
-        })
-      );
-  
-      this.rtos = [...this.rtos, ...newRtos];
-  
-      if (this.rtos.length === 0) {
-        this.selectedRto = null;
-        this.toastService.showWarn('No RTOs found for selected states.', 'Warning');
-      }
-  
-      if (errors.length > 0) {
-        this.toastService.showError(errors.join(', '), 'Partial Failure');
-      }
-  
-    } catch (error) {
-      console.error('Unexpected error in onStateChange', error);
-      this.toastService.showError('Something went wrong', 'Oops!');
+    } catch (err: any) {
+      console.error(`Failed to fetch RTOs for ${selectedState.name}`, err);
+      this.toastService.showError(err.error.data, 'Error');
     }
+
+  } catch (error) {
+    console.error('Unexpected error in onStateChange', error);
+    this.toastService.showError('Something went wrong', 'Oops!');
   }
+}
+
   
   
 
@@ -181,7 +214,7 @@ export class ReportDetailComponent implements OnInit {
     let payload: any = {
       rtoId: this.selectedRto.map((item: any) => item.id),
       OemId: this.selectedOem.map((item: any) => item.sno),
-      filter : this.selectedSpecificVehicle
+      filter : this.selectedSpecificVehicle || ""
     }
 
     if(this.report.filters.date?.enabled) {

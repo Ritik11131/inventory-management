@@ -13,7 +13,7 @@
 
             @if(report.filters.state) {
                 <p-floatLabel>
-                    <p-multiSelect  class="mr-4"
+                    <p-dropdown class="mr-4"
                     styleClass="w-18rem" [options]="states" [(ngModel)]="selectedState" optionLabel="stateName" (onChange)="onStateChange($event)" [virtualScroll]="true" [itemSize]="30"
                     placeholder="Select State" [showClear]="true"  inputId="state" />
                     <label for="state">Select State</label>
