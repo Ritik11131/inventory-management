@@ -165,7 +165,7 @@
                                     }
                                 }
                                  @else {
-                                    {{ item[col.field] || '-' }}
+                                    {{ col?.type === 'date' ? ((item[col.field] | date) || '-')  : item[col.field] || '-' }}
                                 }
                                 <p-overlayPanel #op appendTo="body"> 
                                     @if((selectedColumn === 'iccid' && selectedOverlayObject.simDetails)) {

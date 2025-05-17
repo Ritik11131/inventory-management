@@ -214,4 +214,25 @@ export const activationReportColumns =  [
     { field: 'request', subfield: 'status', header: 'Status', minWidth: '10rem', nested: true },
     { field: 'request', subfield: 'deviceCount', header: 'Devices', minWidth: '15rem', nested: true, button: { show: true, label: { api: { show:true, field:'request', subfield:'deviceCount'} }, key:'showLinkedDevices' }  },
 ];
+
+
+export const expiredReportColumns = [
+  { field: 'orgName', header: 'Organization Name' },
+  { field: 'contactPersonName', header: 'Contact Person Name' },
+  { field: 'mobileNo', header: 'Mobile Number' },
+  { field: 'userType', header: 'User Type' },
+  { field: 'deviceSno', header: 'Device S.No.' },
+  { field: 'deviceSerialNo', header: 'Device Serial Number' },
+  { field: 'imei', header: 'IMEI' },
+  { field: 'iccid', header: 'ICCID' },
+  { field: 'providerName', header: 'Provider Name' },
+  { field: 'primarySimNo', header: 'Primary SIM Number' },
+  { field: 'secondarySimNo', header: 'Secondary SIM Number' },
+  { field: 'primarySimOperator', header: 'Primary SIM Operator' },
+  { field: 'secondarySimOperator', header: 'Secondary SIM Operator' },
+  { field: 'activationOn', header: 'Activation Date', type:'date' },
+  { field: 'primaryValidTill', header: 'Primary SIM Valid Till', type:'date' },
+  { field: 'secondaryValidTill', header: 'Secondary SIM Valid Till', type:'date' }
+];
+
   

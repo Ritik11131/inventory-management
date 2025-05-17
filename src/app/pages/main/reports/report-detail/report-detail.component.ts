@@ -77,7 +77,6 @@ export class ReportDetailComponent implements OnInit {
         this.getDealerList(selectedDistributor)
       ]);
       this.subUsers = subUserResponse?.data;
-      // this.selectedSubUser = this.subUsers[0]; // Set the first sub-user as selected by default
   
     } catch (error) {
       console.error('Error loading data:', error);
@@ -176,32 +175,43 @@ async handleExportReportTableData(e: any) {
 }
 
 
-  async loadReport(): Promise<void> {    
-    // const formattedDates = this.selectedDate.map((date: any) => new Date(new Date(date).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19));
-    const formattedDates = this.selectedDate.map((date: any, index: number) => {
-      const d = new Date(date);
-      if (index === 1) {
-        d.setHours(23, 59, 59, 999);
-      }
-      return new Date(d.getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19);
-    });
-        
-    const payload = {
-      distributorId:this.selectedUser?.sno,
-      dealerId: this.selectedSubUser?.map((subUser: any) => subUser.sno),
-      fromTime: formattedDates[0],
-      toTime: formattedDates[1]
-  }
-  this.isTableDataLoading = true;
+  async loadReport(): Promise<void> {
+    let payload = null;
+    if (this.report.filters) {
+      // const formattedDates = this.selectedDate.map((date: any) => new Date(new Date(date).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19));
+      const formattedDates = this.selectedDate?.map((date: any, index: number) => {
+        const d = new Date(date);
+        if (index === 1) {
+          d.setHours(23, 59, 59, 999);
+        }
+        return new Date(d.getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+      });
+
+      payload = {
+        distributorId: this.selectedUser?.sno,
+        dealerId: this.selectedSubUser?.map((subUser: any) => subUser.sno),
+        fromTime: formattedDates[0],
+        toTime: formattedDates[1]
+      };
+    }
+
+
+    this.isTableDataLoading = true;
     try {
-      const response = await this.http.post(this.report.api,payload);
-      this.reportTableData = response?.data;      
+      let response = null;
+      if(this.report?.method === 'GET') {
+        response = await this.http.get(this.report.api);
+      } else {
+        response = await this.http.post(this.report.api,payload);
+
+      }
+      this.reportTableData = response?.data;
     } catch (error: any) {
       console.log(error);
       this.toastService.showError('Error', error.error.data);
     } finally {
       this.isTableDataLoading = false;
     }
-    
+
   }
 }  

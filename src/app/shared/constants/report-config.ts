@@ -1,4 +1,4 @@
-import { activationReportColumns, ESimActivationLinkedDeviceColumns } from '../../shared/constants/columns';
+import { activationReportColumns, ESimActivationLinkedDeviceColumns, expiredReportColumns } from '../../shared/constants/columns';
 
 export const reportsConfigRoleWise: any = {
     Admin: [
@@ -113,15 +113,10 @@ export const reportsConfigRoleWise: any = {
         {
             id: "expired",
             reportName: "Expired",
-            filters: {
-                user: true,
-                subUser: true,
-                date: { enabled: true }
-            },
-            tableColumns: activationReportColumns,
-            linkedDevicesColumns: ESimActivationLinkedDeviceColumns,
-            globalFilterFields: ['user.orgname'],
-            api: 'mis/Reporting/GetExpiredVehicle',
+            tableColumns: expiredReportColumns,
+            globalFilterFields: ['deviceSno'],
+            api: 'Reporting/GetExpiredVehicle',
+            method: 'GET'
         }
     ],
     Distributor: [
@@ -141,15 +136,10 @@ export const reportsConfigRoleWise: any = {
         {
             id: "expired",
             reportName: "Expired",
-            filters: {
-                user: true,
-                subUser: true,
-                date: { enabled: true }
-            },
-            tableColumns: activationReportColumns,
-            linkedDevicesColumns: ESimActivationLinkedDeviceColumns,
-            globalFilterFields: ['user.orgname'],
-            api: 'mis/Reporting/GetExpiredVehicle',
+            tableColumns: expiredReportColumns,
+            globalFilterFields: ['deviceSno'],
+            api: 'Reporting/GetExpiredVehicle',
+            method: 'GET'
         }
     ],
     Dealer: [
@@ -169,15 +159,10 @@ export const reportsConfigRoleWise: any = {
         {
             id: "expired",
             reportName: "Expired",
-            filters: {
-                user: true,
-                subUser: true,
-                date: { enabled: true }
-            },
-            tableColumns: activationReportColumns,
-            linkedDevicesColumns: ESimActivationLinkedDeviceColumns,
-            globalFilterFields: ['user.orgname'],
-            api: 'mis/Reporting/GetExpiredVehicle',
+            tableColumns: expiredReportColumns,
+            globalFilterFields: ['deviceSno'],
+            api: 'Reporting/GetExpiredVehicle',
+            method: 'GET'
         }
     ]
 };
