@@ -194,7 +194,7 @@ async handleExportReportTableData(e: any) {
   }
   this.isTableDataLoading = true;
     try {
-      const response = await this.http.post('mis/activation/ActivationReport',payload);
+      const response = await this.http.post(this.report.api,payload);
       this.reportTableData = response?.data;      
     } catch (error: any) {
       console.log(error);

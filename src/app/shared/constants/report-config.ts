@@ -1,3 +1,5 @@
+import { activationReportColumns, ESimActivationLinkedDeviceColumns } from '../../shared/constants/columns';
+
 export const reportsConfigRoleWise: any = {
     Admin: [
         {
@@ -94,37 +96,88 @@ export const reportsConfigRoleWise: any = {
             }
         }
     ],
-    OEM:[
-        {
+    OEM: [
+         {
             id: "activation_report",
             reportName: "Activation Report",
             filters: {
                 user: true,
-                dealer: true,
+                subUser: true,
                 date: { enabled: true }
-            }
+            },
+            tableColumns: activationReportColumns,
+            linkedDevicesColumns: ESimActivationLinkedDeviceColumns ,
+            globalFilterFields:['user.orgname'],
+            api:'mis/activation/ActivationReport',
+        },
+        {
+            id: "expired",
+            reportName: "Expired",
+            filters: {
+                user: true,
+                subUser: true,
+                date: { enabled: true }
+            },
+            tableColumns: activationReportColumns,
+            linkedDevicesColumns: ESimActivationLinkedDeviceColumns,
+            globalFilterFields: ['user.orgname'],
+            api: 'mis/Reporting/GetExpiredVehicle',
         }
     ],
     Distributor: [
-        {
+         {
             id: "activation_report",
             reportName: "Activation Report",
             filters: {
                 user: true,
-                dealer: true,
+                subUser: true,
                 date: { enabled: true }
-            }
+            },
+            tableColumns: activationReportColumns,
+            linkedDevicesColumns: ESimActivationLinkedDeviceColumns ,
+            globalFilterFields:['user.orgname'],
+            api:'mis/activation/ActivationReport',
+        },
+        {
+            id: "expired",
+            reportName: "Expired",
+            filters: {
+                user: true,
+                subUser: true,
+                date: { enabled: true }
+            },
+            tableColumns: activationReportColumns,
+            linkedDevicesColumns: ESimActivationLinkedDeviceColumns,
+            globalFilterFields: ['user.orgname'],
+            api: 'mis/Reporting/GetExpiredVehicle',
         }
     ],
-    Dealer:[
+    Dealer: [
         {
             id: "activation_report",
             reportName: "Activation Report",
             filters: {
                 user: true,
-                dealer: true,
+                subUser: true,
                 date: { enabled: true }
-            }
+            },
+            tableColumns: activationReportColumns,
+            linkedDevicesColumns: ESimActivationLinkedDeviceColumns ,
+            globalFilterFields:['user.orgname'],
+            api:'mis/activation/ActivationReport',
+        },
+        {
+            id: "expired",
+            reportName: "Expired",
+            filters: {
+                user: true,
+                subUser: true,
+                date: { enabled: true }
+            },
+            tableColumns: activationReportColumns,
+            linkedDevicesColumns: ESimActivationLinkedDeviceColumns,
+            globalFilterFields: ['user.orgname'],
+            api: 'mis/Reporting/GetExpiredVehicle',
         }
     ]
 };
