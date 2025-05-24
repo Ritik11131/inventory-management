@@ -228,6 +228,10 @@
                 </p-table>
             </ng-container>
         }
+
+        @if(template) {
+            <ng-container *ngTemplateOutlet="template"></ng-container>
+        }
     </ng-template>
 
     <ng-template pTemplate="footer">

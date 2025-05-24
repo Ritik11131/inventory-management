@@ -41,6 +41,7 @@ export const tableActionsConfigRoleWise : any = {
             { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
             { label: 'Bulk Upload', icon: 'pi pi-cloud-upload', action: 'onUpload' },
             { label: 'Sample Bulk Upload', icon: 'pi pi-file-o', action: 'onExportSample' },
+            { label: 'Set Alert', icon: 'pi pi-file-o', action: 'onSetAlert'},
             { label: 'Transfer Inventory', icon: 'pi pi-external-link', action: 'onTransferInventory' },
             { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' },
         ]

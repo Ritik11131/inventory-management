@@ -1,13 +1,18 @@
 <app-generic-table [data]="devices" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="actions"
-   [exportFilename]="'Device'" [globalFilterFields]="['imei','iccid','sno']" (edit)="onEditDevice($event)" (delete)="onDeleteDevice($event)" [selectionMode]="'none'"
+   [exportFilename]="'Device'" [globalFilterFields]="['imei','iccid','sno']" (edit)="onEditDevice($event)" (delete)="onDeleteDevice($event)" [selectionMode]="'multiple'"
    (sampleBulkUpload)="exportSampleBulkUpload($event)" (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" (bulkUpload)="bulkUploadDevice($event)"
    (transferInventory)="onTransferInventory($event)" (sendCommand)="onSendCommand($event)" (activate)="onActivate($event)" (fitment)="onFitment($event)"
-   (unlinkDevice)="handleDeviceUnlink($event)" (emitOverlayAction)="handleOverlayAction($event)" />
+   (unlinkDevice)="handleDeviceUnlink($event)" (emitOverlayAction)="handleOverlayAction($event)" (setAlert)="handleSetAlert($event)" />
 
 
 <app-generic-dialog [customSaveLabel]="customSaveLabel" [stepFormFields]="stepFormFields" [disableStepperNextBtn]="disableStepperNextBtn"
    [isStepForm]="accesStepForm" [isValidated]="isValidated" [validationState]="validationState" [visible]="deviceDialog"
     [header]="'Device'" [width]="'600px'" [modal]="true" [isEditing]="isEditing"
     [styleClass]="''" [fields]="fields" [data]="device" (onHide)="onHideDialog($event)"
-    (onSave)="onSaveDevice($event)" (onInputTextChange)="onInputTextChange($event)" 
+    (onSave)="onSaveDevice($event)" (onInputTextChange)="onInputTextChange($event)"  [template]="currentTemplate"
     (stepperDropDownChange)="stepperDropdwonChange($event)" (stepperInputTextChange)="stepperInputTextChange($event)" />
+
+<ng-template #setAlert>
+   <h1>Hii</h1>
+</ng-template>
+    

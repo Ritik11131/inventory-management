@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
@@ -49,6 +49,8 @@ import { FitmentService } from '../../../../../core/services/fitment.service';
 })
 export class DeviceListComponent {
 
+  @ViewChild('setAlert') setAlert!: TemplateRef<any>;;
+
   fields: FormFields[] | any[] = [];
   devices: any[] = [];
   columns = deviceColumns;
@@ -57,7 +59,7 @@ export class DeviceListComponent {
   deviceDialog: boolean = false;
   accesStepForm : boolean = false;
   device!: any;
-  selectedDevices!: any[] | null;
+  selectedDevices: any[] = [];
   submitted: boolean = false;
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
@@ -75,7 +77,8 @@ export class DeviceListComponent {
     'permitHolderName'
   ];
   requestIdOtp!: any;
-  disableStepperNextBtn!:boolean
+  disableStepperNextBtn!:boolean;
+  currentTemplate: TemplateRef<any> | null = null;
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
   private validationStepperDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
@@ -741,6 +744,7 @@ export class DeviceListComponent {
 
   onSelectionChange(event: any) {
     console.log(event);
+    this.selectedDevices = event || []
   }
 
 
@@ -969,6 +973,13 @@ export class DeviceListComponent {
         this.toastService.showInfo('Rejected', 'You have rejected');
       }
     });
+  }
+
+  async handleSetAlert(event: any) : Promise<any> {
+    console.log(event,'event');   
+    console.log(this.selectedDevices,'selectedDevices');
+    this.currentTemplate = this.setAlert;
+    this.deviceDialog = true;
   }
 
 }

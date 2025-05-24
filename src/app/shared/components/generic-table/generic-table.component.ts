@@ -64,7 +64,7 @@ export class GenericTableComponent implements OnInit {
   @Input() isDataLoading: boolean = false;
   @Input() exportFilename: string = 'csv';
   @Input() toolbarRightActions: any[] = [];
-  @Input() actions:any[] = ['edit']
+  @Input() actions:any[] = ['edit'];
   @Input() selectionMode: 'single' | 'multiple' | 'none' = 'multiple';
 
   selectionChange = output<any>();
@@ -80,8 +80,10 @@ export class GenericTableComponent implements OnInit {
   sendCommand = output<any>();
   sendMessage = output<any>();
   fitment = output<any>();
+  setAlert = output<any>();
   unlinkDevice = output<any>();
   emitOverlayAction = output<any>();
+
   actionMenuItems!: any[];
   availableActionsList!: any;
   selectedColumn!: any;
@@ -198,6 +200,7 @@ export class GenericTableComponent implements OnInit {
       'onUpload': () => this.onUpload(),
       'onExportSample': () => this.onExportSample(),
       'onTransferInventory': () => this.onTransferInventory(),
+      'onSetAlert': () => this.onSetAlert(),
     };
   
     const actionMethod = actionMap[action];
@@ -261,6 +264,10 @@ export class GenericTableComponent implements OnInit {
 
   onTransferInventory() {
     this.transferInventory.emit(true)
+  }
+
+  onSetAlert() {
+    this.setAlert.emit(true)
   }
 
   onActivate(event : Event, item: any) {

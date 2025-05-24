@@ -1,7 +1,7 @@
 import { DragDropModule } from 'primeng/dragdrop';
 import { PickListModule } from 'primeng/picklist';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, SimpleChanges, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
@@ -69,6 +69,7 @@ export class GenericDialogComponent implements OnChanges {
   @Input() disableStepperNextBtn:boolean = false;
 
   @Input() isDataLoading: boolean = false;
+  @Input() template: TemplateRef<any> | null = null;
 
 
   onHide = output<any>()
