@@ -117,6 +117,7 @@ export class TrackingComponent implements OnInit {
   onMapReady(map: Map) {
     this.map = map;
     this.markerClusterGroup = L.markerClusterGroup();
+    L.control.scale().addTo(this.map);
   }
 
   toggleCollapse() {

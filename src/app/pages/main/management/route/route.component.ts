@@ -181,6 +181,8 @@ console.log(JSON.parse("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":
     setTimeout(() => {
       this.map.invalidateSize();
     }, 100);
+    L.control.scale().addTo(this.map);
+    
     // this.initRoutingControl()
   }
 

@@ -480,6 +480,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
     ).addTo(this.map);
 
+    // Add scalebar control
+    L.control.scale().addTo(this.map);
+
     this.addMarkerFilterControl();
 
   }
