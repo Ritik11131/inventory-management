@@ -9,6 +9,7 @@ export const tableActionsConfigRoleWise : any = {
         { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
       ],
       DeviceList: [
+        { label: 'Set Alert', icon: 'pi pi-file-o', action: 'onSetAlert'},
         { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
       ],
       SimProviderList: [

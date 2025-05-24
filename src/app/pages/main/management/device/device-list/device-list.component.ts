@@ -78,10 +78,17 @@ export class DeviceListComponent {
     'permitHolderName'
   ];
   alertOptions = [
-    { label: 'Engine Alert', value: 'engine' },
-    { label: 'Speed Alert', value: 'speed' },
-    { label: 'Fuel Alert', value: 'fuel' },
-    { label: 'Maintenance Alert', value: 'maintenance' }
+    { value: 'ignitionOn', label: 'Ignition On' },
+    { value: 'ignitionOff', label: 'Ignition Off' },
+    { value: 'tampering', label: 'Tampering' },
+    { value: 'powerCut', label: 'Power Cut' },
+    { value: 'powerRestored', label: 'Power Resume' },
+    { value: 'lowBattery', label: 'Power Low Battery' },
+    { value: 'hardAcceleration', label: 'Harsh Acceleration' },
+    { value: 'hardBraking', label: 'Harsh Braking' },
+    { value: 'hardCornering', label: 'Harsh Turning' },
+    { value: 'geofenceEnter', label: 'Geofence In' },
+    { value: 'geofenceExit', label: 'Geofence Out' }
   ];
   selectedAlerts: string[] = [];
   sendMethod: string = 'email';

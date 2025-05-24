@@ -19,17 +19,19 @@
     <div class="mb-3">
       <div class="font-bold mb-2">Select Alerts</div>
       <div class="grid">
-        <div class="col-12 md:col-3" *ngFor="let alert of alertOptions">
-          <div class="flex align-items-center">
-            <p-checkbox
-              [value]="alert.value"
-              name="alerts"
-              inputId="{{ alert.value }}"
-              [(ngModel)]="selectedAlerts"
-            ></p-checkbox>
-            <label for="{{ alert.value }}" class="ml-2">{{ alert.label }}</label>
-          </div>
-        </div>
+         @for (alert of alertOptions; track $index) {
+            <div class="col-12 md:col-3">
+              <div class="flex align-items-center">
+                <p-checkbox
+                  [value]="alert.value"
+                  name="alerts"
+                  inputId="{{ alert.value }}"
+                  [(ngModel)]="selectedAlerts"
+                ></p-checkbox>
+                <label for="{{ alert.value }}" class="ml-2">{{ alert.label }}</label>
+              </div>
+            </div>
+         }
       </div>
     </div>
 

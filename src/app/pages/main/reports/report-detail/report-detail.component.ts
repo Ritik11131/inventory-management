@@ -212,13 +212,13 @@ export class ReportDetailComponent implements OnInit {
 
   async loadReportData(): Promise<void> {
     let payload: any = {
-      rtoId: this.selectedRto.map((item: any) => item.id),
-      OemId: this.selectedOem.map((item: any) => item.sno),
+      rtoId: this.selectedRto?.map((item: any) => item.id) || null,
+      OemId: this.selectedOem?.map((item: any) => item.sno) || null,
       filter : this.selectedSpecificVehicle || ""
     }
 
     if(this.report.filters.date?.enabled) {
-      payload['reportDate'] = (() => { const d = new Date(this.selectedDate); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T00:00:00.000+05:30`; })();
+      payload['reportDate'] = (() => { const d = new Date(this.selectedDate); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })();
     }
 
     if(this.report.filters.days) {
