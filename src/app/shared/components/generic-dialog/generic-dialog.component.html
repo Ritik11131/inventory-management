@@ -227,7 +227,7 @@
                     </ng-template>
                 </p-table>
             </ng-container>
-        }
+        } 
 
         @if(template) {
             <ng-container *ngTemplateOutlet="template"></ng-container>
@@ -237,7 +237,7 @@
     <ng-template pTemplate="footer">
         <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
         @if(enableSaveBtn) {
-            <p-button [disabled]="!isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
+            <p-button [disabled]="template ? false : !isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
             [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
         }
     </ng-template>

@@ -682,6 +682,7 @@ export class DeviceListComponent {
     this.device = null;
     this.accesStepForm = false;
     this.customSaveLabel = '';
+    this.currentTemplate = null;
     
   }
 
