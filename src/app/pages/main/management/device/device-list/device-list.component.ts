@@ -15,6 +15,7 @@ import { TagModule } from 'primeng/tag';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
+import { CheckboxModule } from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePipe } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -41,7 +42,7 @@ import { FitmentService } from '../../../../../core/services/fitment.service';
   selector: 'app-device-list',
   standalone: true,
   imports: [TableModule, DialogModule, RippleModule, ButtonModule, ToastModule, ToolbarModule, InputTextModule,
-    InputTextareaModule, CommonModule, FileUploadModule, DropdownModule, TagModule, RadioButtonModule,
+    InputTextareaModule, CommonModule, FileUploadModule, DropdownModule, TagModule, RadioButtonModule,CheckboxModule,
     RatingModule, InputTextModule, FormsModule, InputNumberModule, GenericDialogComponent, GenericTableComponent, ConfirmDialogModule],
   templateUrl: './device-list.component.html',
   styleUrl: './device-list.component.scss',
@@ -76,6 +77,16 @@ export class DeviceListComponent {
     'manufacturingYear',
     'permitHolderName'
   ];
+  alertOptions = [
+    { label: 'Engine Alert', value: 'engine' },
+    { label: 'Speed Alert', value: 'speed' },
+    { label: 'Fuel Alert', value: 'fuel' },
+    { label: 'Maintenance Alert', value: 'maintenance' }
+  ];
+  selectedAlerts: string[] = [];
+  sendMethod: string = 'email';
+  email: string = '';
+  phone: string = '';
   requestIdOtp!: any;
   disableStepperNextBtn!:boolean;
   currentTemplate: TemplateRef<any> | null = null;
