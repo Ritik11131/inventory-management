@@ -60,7 +60,7 @@ export class NotificationService {
   
   // Polling control
   private readonly _isPolling = signal(false);
-  private readonly _isIconClicked = signal(false);
+  private readonly _isPanelOpen = signal(false);
   private pollingSubscription: any;
   
   // Public readonly signals
@@ -70,6 +70,7 @@ export class NotificationService {
   readonly hasMore = computed(() => this._state().hasMore);
   readonly totalCount = computed(() => this._state().totalCount);
   readonly isPolling = computed(() => this._isPolling());
+  readonly isPanelOpen = computed(() => this._isPanelOpen());
 
 
   private readonly _lastFetchedTime = signal<string | null>(null);
@@ -110,21 +111,59 @@ export class NotificationService {
    * Poll notification count with optimized error handling
    */
   private async pollNotificationCount(): Promise<void> {
-    try {
-      const response = await this.fetchNotificationCount();
-      this.handleCountResponse(response);
-    } catch (error) {
-      this.handlePollingError(error);
+  try {
+    const response = await this.fetchNotificationCount();
+    const newCount = response.count;
+
+    if (newCount > 0) {
+      if (this._isPanelOpen()) {
+        const listResponse = await this.fetchNotificationList({
+          page: 1,
+          pageSize: newCount
+        });
+
+        const merged = this.mergeNotifications(this.notifications(), listResponse.notifications);
+        this.updateState({
+          notifications: merged,
+          totalCount: listResponse.totalCount,
+          hasMore: listResponse.hasMore
+        });
+
+        // Count remains 0 since user has already seen them
+        this.updateState({ count: 0 });
+
+      } else {
+        this.updateState({
+          count: this._state().count + newCount
+        });
+      }
     }
+  } catch (error) {
+    this.handlePollingError(error);
   }
+}
+
+private mergeNotifications(
+  current: NotificationItem[],
+  incoming: NotificationItem[]
+): NotificationItem[] {
+  const seen = new Set(current.map(n => n.id));
+  const unique = incoming.filter(n => !seen.has(n.id));
+  return [...unique, ...current];
+}
+
+closePanel(): void {
+  this._isPanelOpen.set(false);
+  this.resetNotificationState()
+}
+
   
   /**
    * Fetch notification count from API
    */
 private async fetchNotificationCount(): Promise<NotificationCountResponse> {
   const lastFetched = this._lastFetchedTime();
-  console.log(lastFetched, 'last fetched time');
-
+  
   // If lastFetched is null, use current IST time - 5 minutes
   const defaultTime = new Date(Date.now() + (5.5 * 60 * 60 * 1000) - (5 * 60 * 1000))
     .toISOString()
@@ -133,9 +172,6 @@ private async fetchNotificationCount(): Promise<NotificationCountResponse> {
   const lastTime = lastFetched ?? defaultTime;
 
   const response = await this.http.get('report/Event/DashboardAlert', { lastTime });
-
-  console.log(response);
-
   const hasData = Array.isArray(response?.data) && response.data.length > 0;
 
   // Only update lastFetchedTime if new data is present
@@ -161,11 +197,11 @@ private async fetchNotificationCount(): Promise<NotificationCountResponse> {
     const newCount = response.count;
     
     // If user hasn't clicked and we have new notifications, accumulate them
-    if (!this._isIconClicked() && newCount > 0) {
+    if (!this._isPanelOpen() && newCount > 0) {
       this.updateState({
         count: currentCount + newCount
       });
-    } else if (this._isIconClicked()) {
+    } else if (this._isPanelOpen()) {
       // Reset accumulation after user interaction
       this.updateState({
         count: newCount
@@ -177,36 +213,32 @@ private async fetchNotificationCount(): Promise<NotificationCountResponse> {
    * Handle icon click - fetch notifications
    */
   async onIconClick(): Promise<void> {
-    if (this.isLoading()) return;
-    
-    this._isIconClicked.set(true);
-    const currentCount = this.count();
-    console.log('Current Count:', currentCount);
-    
-    
-    if (currentCount === 0) return;
-    
-    try {
-      this.updateState({ isLoading: true });
-      
-      const response = await this.fetchNotificationList({
-        page: 1,
-        pageSize: currentCount
-      });
-      
-      this.updateState({
-        notifications: response.notifications,
-        totalCount: response.totalCount,
-        hasMore: response.hasMore,
-        count: 0 // Reset badge count after viewing
-      });
-      
-    } catch (error) {
-      this.handleApiError(error);
-    } finally {
-      this.updateState({ isLoading: false });
-    }
+  if (this.isLoading()) return;
+
+  this._isPanelOpen.set(true);  // was _isIconClicked
+  const currentCount = this.count();
+
+  try {
+    this.updateState({ isLoading: true });
+
+    const response = await this.fetchNotificationList({
+      page: 1,
+      pageSize: currentCount || 10
+    });
+    this.updateState({
+      notifications: response.notifications,
+      totalCount: response.totalCount,
+      hasMore: response.hasMore,
+      count: 0  // Clear badge count
+    });
+
+  } catch (error) {
+    this.handleApiError(error);
+  } finally {
+    this.updateState({ isLoading: false });
   }
+}
+
   
   /**
    * Load more notifications for infinite scroll
@@ -248,20 +280,31 @@ private async fetchNotificationCount(): Promise<NotificationCountResponse> {
     };
     
     const response = (await this.http.get('report/Event', queryParams))?.data;
-    console.log(response,'listtt');
     
     return {
-      notifications: response.data.map((item: any, index: any) => ({
-        id: index.toString(),
-        title: item.title,
-        message: JSON.parse(item.alert.attributes),
-        timestamp: new Date(item.alert.eventtime),
-        type: item.alert.type,
-        read: false
-      })),
-      totalCount: response.totalCount,
-      hasMore: response.hasMore
+      notifications: response.data.map((item: any, index: any) => {
+        const parsedAttributes = JSON.parse(item?.alert?.attributes || '{}');
+        const alertType = parsedAttributes[item?.alert?.type];
+        let message = null;
+        if (alertType === 'overspeed') {
+          message = `${parsedAttributes?.vNo} - ${(parsedAttributes?.spd * 1.852)?.toFixed(2) + ' km/h'} `;
+        } else if( alertType === 'sos') {
+          message = `${parsedAttributes?.vNo} - SOS Alert`;
+        }
+
+        return {
+          id: index.toString(),
+          title: parsedAttributes?.alarm || 'No Title', // get title from parsed attributes
+          message: message,     // or any other field you want
+          timestamp: new Date(item.alert.eventtime),
+          type: item.alert.type,
+          read: false
+        };
+      }),
+      totalCount: response.pagination?.totalCount,
+      hasMore: response.pagination?.hasNext
     };
+
   }
   
   /**
@@ -300,7 +343,7 @@ private async fetchNotificationCount(): Promise<NotificationCountResponse> {
    * Reset notification state
    */
   private resetNotificationState(): void {
-    this._isIconClicked.set(false);
+    this._isPanelOpen.set(false);
     this.updateState({
       count: 0,
       notifications: [],

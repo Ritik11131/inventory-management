@@ -53,6 +53,7 @@ import { NotificationService, NotificationItem  } from '../../../core/services/n
         #notificationPanel
         [style]="{ width: '400px', maxHeight: '500px' }"
         [showCloseIcon]="true"
+        (onHide)="notificationService.closePanel()"
         styleClass="notification-panel">
         
         <ng-template pTemplate="content">
@@ -101,6 +102,7 @@ import { NotificationService, NotificationItem  } from '../../../core/services/n
                 [itemSize]="80"
                 scrollHeight="350px"
                 styleClass="notification-scroller"
+                [lazy]="true"       
                 [loading]="notificationService.isLoading()"
                 (onLazyLoad)="onScrollEnd($event)">
                 
@@ -346,12 +348,12 @@ export class NotificationComponent {
   }
 
   async onNotificationClick(event: Event): Promise<void> {
-    console.log(this.notificationService.count(), 'notification count');
     
     if (this.notificationService.count() === 0) return;
     
     this.notificationPanel.toggle(event);
     await this.notificationService.onIconClick();
+    console.log(this.notificationService.notifications(), 'notification count');
   }
 
   async loadMoreNotifications(): Promise<void> {
@@ -360,10 +362,12 @@ export class NotificationComponent {
 
   async onScrollEnd(event: any): Promise<void> {
     console.log(event, 'scroll event');
+    console.log(this.notificationService.notifications().length);
+    console.log(this.notificationService.hasMore(),!this.notificationService.isLoading());
     
     // Check if user scrolled to bottom and load more if needed
-    if (event.last === this.notificationService.notifications().length - 1) {
-      if (this.notificationService.hasMore() && !this.notificationService.isLoading()) {
+    if (event.last === this.notificationService.notifications().length) {
+      if (!this.notificationService.isLoading()) {
         await this.loadMoreNotifications();
       }
     }
