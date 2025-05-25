@@ -9,7 +9,7 @@
    [isStepForm]="accesStepForm" [isValidated]="isValidated" [validationState]="validationState" [visible]="deviceDialog"
     [header]="'Device'" [width]="'600px'" [modal]="true" [isEditing]="isEditing"
     [styleClass]="''" [fields]="fields" [data]="device" (onHide)="onHideDialog($event)"
-    (onSave)="onSaveDevice($event)" (onInputTextChange)="onInputTextChange($event)"  [template]="currentTemplate"
+    (onSave)="onSaveDevice($event)" (onSaveTemplateOne)="handleTemplateSave($event)" (onInputTextChange)="onInputTextChange($event)"  [template]="currentTemplate"
     (stepperDropDownChange)="stepperDropdwonChange($event)" (stepperInputTextChange)="stepperInputTextChange($event)" />
 
 <ng-template #setAlert>

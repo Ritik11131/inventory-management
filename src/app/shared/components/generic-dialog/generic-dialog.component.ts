@@ -78,6 +78,7 @@ export class GenericDialogComponent implements OnChanges {
   onDialogDropdownChange = output<any>();
   stepperDropDownChange = output<any>();
   stepperInputTextChange = output<any>();
+  onSaveTemplateOne = output<any>();
   focusedField!: any;
   isPasswordToggled: boolean = true;
   isConfirmPasswordToggled: boolean = true;
@@ -122,6 +123,10 @@ export class GenericDialogComponent implements OnChanges {
 
   save() {    
     this.onSave.emit(this.data);
+  }
+
+  saveTemplateOne() {
+    this.onSaveTemplateOne.emit(true);
   }
 
 

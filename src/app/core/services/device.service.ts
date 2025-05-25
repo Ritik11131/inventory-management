@@ -134,5 +134,14 @@ export class DeviceService {
     }
   }
 
+  async setAlertConfig(data: any) : Promise<any> {
+    try { 
+      const response = await this.http.post('AlertConfig', data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 }

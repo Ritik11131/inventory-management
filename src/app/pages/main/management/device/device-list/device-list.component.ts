@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
@@ -48,7 +48,7 @@ import { FitmentService } from '../../../../../core/services/fitment.service';
   styleUrl: './device-list.component.scss',
   providers: [ConfirmationService,DatePipe]
 })
-export class DeviceListComponent {
+export class DeviceListComponent implements AfterViewInit {
 
   @ViewChild('setAlert') setAlert!: TemplateRef<any>;;
 
@@ -78,17 +78,13 @@ export class DeviceListComponent {
     'permitHolderName'
   ];
   alertOptions = [
-    { value: 'ignitionOn', label: 'Ignition On' },
-    { value: 'ignitionOff', label: 'Ignition Off' },
-    { value: 'tampering', label: 'Tampering' },
-    { value: 'powerCut', label: 'Power Cut' },
-    { value: 'powerRestored', label: 'Power Resume' },
-    { value: 'lowBattery', label: 'Power Low Battery' },
+    { value: 'geofenceEnter', label: 'Geofence In' },
+    { value: 'geofenceExit', label: 'Geofence Out' },
     { value: 'hardAcceleration', label: 'Harsh Acceleration' },
     { value: 'hardBraking', label: 'Harsh Braking' },
     { value: 'hardCornering', label: 'Harsh Turning' },
-    { value: 'geofenceEnter', label: 'Geofence In' },
-    { value: 'geofenceExit', label: 'Geofence Out' }
+    { value: 'powerCut', label: 'Power Cut' },
+    { value: 'overspeed', label: 'Overspeed' },
   ];
   selectedAlerts: string[] = [];
   sendMethod: string = 'email';
@@ -96,7 +92,19 @@ export class DeviceListComponent {
   phone: string = '';
   requestIdOtp!: any;
   disableStepperNextBtn!:boolean;
-  currentTemplate: TemplateRef<any> | null = null;
+  currentTemplateKey!: string;
+  currentTemplate!: any;
+
+  TEMPLATE_KEYS = {
+    ALERT: 'ALERT',
+    // NOTIFICATION: 'NOTIFICATION',
+    // Add more as needed
+  };
+
+  templateMap: { [key: string]: TemplateRef<any> } = {};
+  templateHandlers: { [key: string]: () => Promise<void> } = {}
+
+
   private validationDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
   private validationStepperDebounceSubject: Subject<{ fieldName: string; value: any }> = new Subject();
 
@@ -121,10 +129,23 @@ export class DeviceListComponent {
       });
      }
 
+  ngAfterViewInit(): void {
+    this.templateMap = {
+      [this.TEMPLATE_KEYS.ALERT]: this.setAlert,
+      // [this.TEMPLATE_KEYS.NOTIFICATION]: this.setNotification,
+      // Add more mappings here
+    };
+  }
+
   ngOnInit() {
-    this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate','fitment'] : 
-                    (this.authService.getUserRole() === 'Distributor') ? [''] : this.authService.getUserRole() === 'Admin' ? ['unlink_device'] :  
-                    ['edit']
+    this.templateHandlers = {
+      [this.TEMPLATE_KEYS.ALERT]: this.saveAlertTemplate.bind(this),
+      // [this.TEMPLATE_KEYS.NOTIFICATION]: this.saveNotificationTemplate.bind(this),
+    };
+
+    this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate', 'fitment'] :
+      (this.authService.getUserRole() === 'Distributor') ? [''] : this.authService.getUserRole() === 'Admin' ? ['unlink_device'] :
+        ['edit']
     this.fetchDevices().then();
   }
 
@@ -436,7 +457,7 @@ export class DeviceListComponent {
 
   async onSaveDevice(data: any): Promise<any> {
     try {
-      if (this.device.id && this.currentAction === 'edit') {
+      if (this.device?.id && this.currentAction === 'edit') {
         await this.updateDevice(data);
         await this.fetchAndResetDevice();
       } else if (this.currentAction === 'create') {
@@ -994,11 +1015,56 @@ export class DeviceListComponent {
     });
   }
 
-  async handleSetAlert(event: any) : Promise<any> {
-    console.log(event,'event');   
-    console.log(this.selectedDevices,'selectedDevices');
-    this.currentTemplate = this.setAlert;
+  async handleSetAlert(event: any): Promise<void> {
+    if (this.selectedDevices.length === 0) {
+      this.toastService.showWarn('Warning', 'Please select at least one device to set alerts.');
+      return;
+    }
+    this.currentTemplateKey = this.TEMPLATE_KEYS.ALERT;
+    this.currentTemplate = this.templateMap[this.currentTemplateKey];
     this.deviceDialog = true;
   }
+
+  async handleTemplateSave(e: any): Promise<void> {
+    const handler = this.templateHandlers[this.currentTemplateKey];
+
+    if (!handler) {
+      console.error(`No handler defined for template key: ${this.currentTemplateKey}`);
+      return;
+    }
+
+    try {
+      await handler();
+      console.log(`${this.currentTemplateKey} template saved successfully.`);
+    } catch (error) {
+      console.error(`Error saving ${this.currentTemplateKey} template`, error);
+    }
+  }
+
+
+  async saveAlertTemplate(): Promise<void> {
+    const payload = {
+      deviceId: this.selectedDevices?.map((device: any) => device.id) || [],
+      AlertConfiguration: {
+        alerts: this.selectedAlerts,
+        email: this.email?.split(','),
+        phone: this.phone?.split(','),
+      }
+    };
+
+    try {
+      const response = await this.deviceService.setAlertConfig(payload);
+      this.toastService.showSuccess('Success', response?.data);
+      this.deviceDialog = false;
+      this.device = this.resetDevice();
+      this.isEditing = false;
+      this.currentAction = null;
+    } catch (error: any) {
+      console.error('Error saving alert configuration:', error);
+      this.toastService.showError('Error', error.error.data);
+    }
+
+  }
+
 
 }

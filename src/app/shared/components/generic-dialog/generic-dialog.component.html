@@ -2,7 +2,9 @@
     header="{{ (isEditing ? 'Update ' : ' ') + header + ' Details' }}" [modal]="modal" styleClass="{{ styleClass }}"
     [breakpoints]="{ '2500px': '50vw','1600px': '60vw','1199px': '75vw', '575px': '90vw' }">
     <ng-template pTemplate="content">
-        @if(!isStepForm) {
+         @if(template) {
+            <ng-container *ngTemplateOutlet="template"></ng-container>
+        } @else if(!isStepForm) {
         <div class="formgrid grid mt-3">
             @for (field of fields; track $index) {
             @if(field.hasOwnProperty('hide')) {
@@ -228,17 +230,17 @@
                 </p-table>
             </ng-container>
         } 
-
-        @if(template) {
-            <ng-container *ngTemplateOutlet="template"></ng-container>
-        }
     </ng-template>
 
     <ng-template pTemplate="footer">
         <p-button label="Cancel" icon="pi pi-times" [text]="true" (onClick)="hideDialog()" />
         @if(enableSaveBtn) {
-            <p-button [disabled]="template ? false : !isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
-            [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
+            @if(template) {
+                 <p-button [label]="'Save'" [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="saveTemplateOne()" />
+            } @else {
+                <p-button [disabled]="!isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
+                [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
+            }
         }
     </ng-template>
 </p-dialog>
