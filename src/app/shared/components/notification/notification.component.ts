@@ -313,7 +313,6 @@ export class NotificationComponent {
     
     this.notificationPanel.toggle(event);
     await this.notificationService.onIconClick();
-    console.log(this.notificationService.notifications(), 'notification count');
   }
 
   async loadMoreNotifications(): Promise<void> {
@@ -321,9 +320,6 @@ export class NotificationComponent {
   }
 
   async onScrollEnd(event: any): Promise<void> {
-    console.log(event, 'scroll event');
-    console.log(this.notificationService.notifications().length);
-    console.log(this.notificationService.hasMore(), !this.notificationService.isLoading());
     
     // Check if user scrolled to bottom and load more if needed
     if (event.last === this.notificationService.notifications().length) {
@@ -353,8 +349,6 @@ export class NotificationComponent {
   }
 
   getAvatarStyle(type: string): any {
-    console.log(type);
-    
     const colorMap: Record<string, any> = {
       'success': { 'background-color': 'var(--green-100)', 'color': 'var(--green-600)' },
       'info': { 'background-color': 'var(--blue-100)', 'color': 'var(--blue-600)' },
