@@ -35,8 +35,8 @@
                         </a>
                     </ng-template>
                 </p-menu>
-                <i pBadge style="font-size: 1.3rem" class="mr-3 pi pi-bell p-shake text-orange-500"
-                    severity="danger"></i>
+                <app-notification />
+                <!-- <i pBadge style="font-size: 1.3rem" class="mr-3 pi pi-bell p-shake text-orange-500" severity="danger"></i> -->
                 <p-button class="mr-3" [text]="true" (onClick)="menu.toggle($event)" icon="pi pi-user" [rounded]="true"
                     severity="primary" />
             </div>

@@ -17,12 +17,13 @@ import { BreadcrumbService } from '../../core/services/breadcrumb.service';
 import { Subscription } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
 import { getMenuConfig } from '../../shared/constants/menu-config';
+import { NotificationComponent } from "../../shared/components/notification/notification.component";
 
 @Component({
   selector: 'app-main',
   standalone: true,
   imports: [CommonModule, RouterOutlet, MenubarModule, BadgeModule, AvatarModule, InputTextModule, RippleModule,
-    RouterLink, MenuModule, ButtonModule, BreadcrumbModule,DropdownModule],
+    RouterLink, MenuModule, ButtonModule, BreadcrumbModule, DropdownModule, NotificationComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
