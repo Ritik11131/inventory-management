@@ -1,5 +1,5 @@
 // notification.component.ts
-import { Component, inject, ViewChild, ElementRef, effect } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, effect, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -9,12 +9,90 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 import { RippleModule } from 'primeng/ripple';
 import { TagModule } from 'primeng/tag';
+import { AvatarModule } from 'primeng/avatar';
+import { DividerModule } from 'primeng/divider';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { NotificationService, NotificationItem  } from '../../../core/services/notification.service';
+import { NotificationService, NotificationItem } from '../../../core/services/notification.service';
+
+// Pipes
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'notificationSeverity',
+  standalone: true
+})
+export class NotificationSeverityPipe implements PipeTransform {
+  transform(type: string): 'success' | 'info' | 'warning' | 'danger' {
+    const severityMap: Record<string, 'success' | 'info' | 'warning' | 'danger'> = {
+      'success': 'success',
+      'info': 'info',
+      'warning': 'warning',
+      'error': 'danger'
+    };
+    return severityMap[type] || 'info';
+  }
+}
+
+@Pipe({
+  name: 'timeAgo',
+  standalone: true
+})
+export class TimeAgoPipe implements PipeTransform {
+  transform(timestamp: Date): string {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diff = now.getTime() - time.getTime();
+    
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days < 7) return `${days}d ago`;
+    
+    return time.toLocaleDateString();
+  }
+}
+
+@Pipe({
+  name: 'badgeClass',
+  standalone: true
+})
+export class BadgeClassPipe implements PipeTransform {
+  transform(count: number): string {
+    if (count === 0) return 'p-badge-secondary';
+    if (count > 10) return 'p-badge-danger';
+    return 'p-badge-info';
+  }
+}
+
+@Pipe({
+  name: 'tooltipText',
+  standalone: true
+})
+export class TooltipTextPipe implements PipeTransform {
+  transform(count: number): string {
+    if (count === 0) return 'No new notifications';
+    return `${count} new notification${count > 1 ? 's' : ''}`;
+  }
+}
+
+@Pipe({
+  name: 'notificationIcon',
+  standalone: true
+})
+export class NotificationIconPipe implements PipeTransform {
+  transform(type: string): string {
+    return 'pi pi-bell';
+  }
+}
 
 @Component({
   selector: 'app-notification',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     BadgeModule,
@@ -24,310 +102,193 @@ import { NotificationService, NotificationItem  } from '../../../core/services/n
     SkeletonModule,
     TooltipModule,
     RippleModule,
-    TagModule
+    TagModule,
+    AvatarModule,
+    DividerModule,
+    NotificationSeverityPipe,
+    TimeAgoPipe,
+    BadgeClassPipe,
+    TooltipTextPipe,
+    NotificationIconPipe
   ],
   template: `
-    <div class="notification-container">
-      <!-- Notification Bell Icon with Badge -->
+    <div class="inline-block relative">
+      <!-- Notification Bell Button -->
       <p-button
         [badge]="notificationService.getDisplayCount()"
-        [badgeClass]="getBadgeClass()"
+        [badgeClass]="notificationService.count() | badgeClass"
         [disabled]="notificationService.count() === 0"
         severity="secondary"
         [text]="true"
         [rounded]="true"
         size="large"
-        [pTooltip]="getTooltipText()"
+        [pTooltip]="notificationService.count() | tooltipText"
         tooltipPosition="bottom"
         (onClick)="onNotificationClick($event)"
-        class="notification-button"
-        [class.shake]="shouldShake()">
+        [class]="getButtonClasses()">
         
-        <i class="pi pi-bell" 
-           [class]="getIconClass()"
-           style="font-size: 1.3rem"></i>
+        <i class="pi pi-bell text-xl"></i>
       </p-button>
 
-      <!-- Notification Panel -->
+      <!-- Enhanced Notification Panel -->
       <p-overlayPanel 
         #notificationPanel
-        [style]="{ width: '400px', maxHeight: '500px' }"
+        [style]="{ width: '420px', maxHeight: '600px' }"
         [showCloseIcon]="true"
         (onHide)="notificationService.closePanel()"
-        styleClass="notification-panel">
+        styleClass="shadow-4 border-round-lg">
         
         <ng-template pTemplate="content">
-          <div class="notification-panel-content">
+          <div class="p-0">
             
-            <!-- Header -->
-            <div class="notification-header">
-              <h3 class="notification-title">
-                Notifications
-                <span class="notification-count" *ngIf="notificationService.totalCount() > 0">
-                  ({{ notificationService.totalCount() }})
-                </span>
-              </h3>
+            <!-- Modern Header with Gradient -->
+            <div class="flex justify-content-between align-items-center p-4 bg-primary-50 border-bottom-1 surface-border">
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-bell text-primary text-xl"></i>
+                <h3 class="m-0 text-xl font-semibold text-color">
+                  Notifications
+                  @if (notificationService.totalCount() > 0) {
+                    <span class="text-primary-500 font-medium ml-1">
+                      ({{ notificationService.totalCount() }})
+                    </span>
+                  }
+                </h3>
+              </div>
               
-              <p-button
-                *ngIf="notificationService.notifications().length > 0"
-                label="Clear All"
-                severity="danger"
-                [text]="true"
-                size="small"
-                [loading]="notificationService.isLoading()"
-                (onClick)="clearAllNotifications()"
-                class="clear-all-btn" />
+              @if (notificationService.notifications().length > 0) {
+                <p-button
+                  label="Clear All"
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [text]="true"
+                  size="small"
+                  [loading]="notificationService.isLoading()"
+                  (onClick)="clearAllNotifications()" />
+              }
             </div>
 
-            <!-- Loading State -->
-            <div *ngIf="notificationService.isLoading() && notificationService.notifications().length === 0" 
-                 class="loading-container">
-              <p-skeleton height="4rem" styleClass="mb-2" *ngFor="let item of [1,2,3]"></p-skeleton>
-            </div>
+            <!-- Loading State with Better Skeletons -->
+            @if (notificationService.isLoading() && notificationService.notifications().length === 0) {
+              <div class="p-4">
+                @for (item of [1,2,3]; track item) {
+                  <div class="flex align-items-start gap-3 mb-3">
+                    <p-skeleton shape="circle" size="3rem"></p-skeleton>
+                    <div class="flex-1">
+                      <p-skeleton width="70%" height="1rem" styleClass="mb-2"></p-skeleton>
+                      <p-skeleton width="100%" height="0.8rem" styleClass="mb-2"></p-skeleton>
+                      <p-skeleton width="40%" height="0.7rem"></p-skeleton>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
 
-            <!-- Empty State -->
-            <div *ngIf="!notificationService.isLoading() && notificationService.notifications().length === 0" 
-                 class="empty-state">
-              <i class="pi pi-bell-slash empty-icon"></i>
-              <p class="empty-message">No notifications available</p>
-            </div>
+            <!-- Enhanced Empty State -->
+            @if (!notificationService.isLoading() && notificationService.notifications().length === 0) {
+              <div class="text-center p-6">
+                <div class="bg-surface-100 border-circle w-6rem h-6rem flex align-items-center justify-content-center mx-auto mb-4">
+                  <i class="pi pi-bell-slash text-4xl text-surface-400"></i>
+                </div>
+                <h4 class="text-color-secondary font-medium mb-2">No notifications yet</h4>
+                <p class="text-color-secondary text-sm m-0 line-height-3">
+                  When you have notifications, they'll appear here
+                </p>
+              </div>
+            }
 
-            <!-- Notification List with Virtual Scrolling -->
-            <div *ngIf="notificationService.notifications().length > 0" 
-                 class="notification-list-container">
-              
-              <p-scroller
-                #scroller
-                [items]="notificationService.notifications()"
-                [itemSize]="80"
-                scrollHeight="350px"
-                styleClass="notification-scroller"
-                [lazy]="true"       
-                [loading]="notificationService.isLoading()"
-                (onLazyLoad)="onScrollEnd($event)">
-                
-                <ng-template pTemplate="item" let-notification let-index="index">
-                  <div class="notification-item"
-                       [class.unread]="!notification.read"
-                       (click)="markAsRead(notification)">
-                    
-                    <div class="notification-content">
-                      <div class="notification-header-item">
-                        <span class="notification-item-title">{{ notification.title }}</span>
-                        <p-tag 
-                          [value]="notification.type"
-                          [severity]="getNotificationSeverity(notification.type)"
-                          [rounded]="true"
-                          styleClass="notification-type-tag" />
-                      </div>
+            <!-- Enhanced Notification List -->
+            @if (notificationService.notifications().length > 0) {
+              <div class="notification-list-container">
+                <p-scroller
+                  #scroller
+                  [items]="notificationService.notifications()"
+                  [itemSize]="90"
+                  scrollHeight="400px"
+                  [lazy]="true"       
+                  [loading]="notificationService.isLoading()"
+                  (onLazyLoad)="onScrollEnd($event)">
+                  
+                  <ng-template pTemplate="item" let-notification let-index="index">
+                    <div 
+                      class="flex align-items-start gap-3 p-4 cursor-pointer transition-colors transition-duration-200 hover:bg-surface-50 border-bottom-1 surface-border"
+                      [class.bg-primary-50]="!notification.read"
+                      [class.border-left-3]="!notification.read"
+                      [class.border-primary]="!notification.read"
+                      (click)="markAsRead(notification)">
                       
-                      <p class="notification-message">{{ notification.message }}</p>
+                      <!-- Notification Icon with Type-based Avatar -->
+                      <p-avatar 
+                        [icon]="notification.title | notificationIcon" 
+                        [style]="getAvatarStyle(notification.title)"
+                        size="large"
+                        shape="circle">
+                      </p-avatar>
                       
-                      <div class="notification-footer">
-                        <small class="notification-time">
-                          {{ formatTime(notification.timestamp) }}
-                        </small>
-                        <div class="notification-status">
-                          <i *ngIf="!notification.read" 
-                             class="pi pi-circle-fill unread-indicator"
-                             title="Unread"></i>
+                      <!-- Notification Content -->
+                      <div class="flex-1 overflow-hidden">
+                        <div class="flex justify-content-between align-items-start mb-2">
+                          <h5 class="m-0 font-semibold text-color line-height-3 pr-2">
+                            {{ notification.title }}
+                          </h5>
+                          <p-tag 
+                            [value]="notification.type"
+                            [severity]="notification.type | notificationSeverity"
+                            [rounded]="true"
+                            styleClass="text-xs" />
+                        </div>
+                        
+                        <p class="text-color-secondary text-sm line-height-3 m-0 mb-2 overflow-hidden"
+                           style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                          {{ notification.message }}
+                        </p>
+                        
+                        <div class="flex justify-content-between align-items-center">
+                          <small class="text-color-secondary text-xs">
+                            {{ notification.timestamp | timeAgo }}
+                          </small>
+                          @if (!notification.read) {
+                            <div class="flex align-items-center gap-1">
+                              <i class="pi pi-circle-fill text-primary text-xs"></i>
+                              <span class="text-primary text-xs font-medium">New</span>
+                            </div>
+                          }
                         </div>
                       </div>
                     </div>
+                  </ng-template>
+
+                  <!-- Enhanced Loading More Template -->
+                  <ng-template pTemplate="loader">
+                    <div class="flex align-items-center gap-3 p-4">
+                      <p-skeleton shape="circle" size="3rem"></p-skeleton>
+                      <div class="flex-1">
+                        <p-skeleton width="70%" height="1rem" styleClass="mb-2"></p-skeleton>
+                        <p-skeleton width="100%" height="0.8rem"></p-skeleton>
+                      </div>
+                    </div>
+                  </ng-template>
+
+                </p-scroller>
+
+                <!-- Load More Button -->
+                <!-- @if (notificationService.hasMore() && !notificationService.isLoading()) {
+                  <div class="text-center p-3 border-top-1 surface-border">
+                    <p-button
+                      label="Load More Notifications"
+                      icon="pi pi-chevron-down"
+                      severity="secondary"
+                      [text]="true"
+                      size="small"
+                      (onClick)="loadMoreNotifications()" />
                   </div>
-                </ng-template>
-
-                <!-- Loading More Template -->
-                <ng-template pTemplate="loader">
-                  <div class="loading-more">
-                    <p-skeleton height="4rem" styleClass="mb-2"></p-skeleton>
-                  </div>
-                </ng-template>
-
-              </p-scroller>
-
-              <!-- Load More Button (fallback) -->
-              <div *ngIf="notificationService.hasMore() && !notificationService.isLoading()" 
-                   class="load-more-container">
-                <p-button
-                  label="Load More"
-                  severity="secondary"
-                  [text]="true"
-                  size="small"
-                  (onClick)="loadMoreNotifications()"
-                  class="load-more-btn" />
+                } -->
               </div>
-
-            </div>
+            }
           </div>
         </ng-template>
       </p-overlayPanel>
     </div>
-  `,
-  styles: [`
-    .notification-container {
-      position: relative;
-      display: inline-block;
-    }
-
-    .notification-button {
-      position: relative;
-    }
-
-    .notification-button.shake {
-      animation: shake 0.5s ease-in-out;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
-
-    .notification-panel-content {
-      padding: 0;
-    }
-
-    .notification-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem;
-      border-bottom: 1px solid var(--surface-border);
-      background: var(--surface-50);
-    }
-
-    .notification-title {
-      margin: 0;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-color);
-    }
-
-    .notification-count {
-      color: var(--primary-color);
-      font-weight: 500;
-    }
-
-    .loading-container, .empty-state {
-      padding: 2rem;
-      text-align: center;
-    }
-
-    .empty-icon {
-      font-size: 3rem;
-      color: var(--surface-400);
-      margin-bottom: 1rem;
-    }
-
-    .empty-message {
-      color: var(--text-color-secondary);
-      margin: 0;
-    }
-
-    .notification-list-container {
-      max-height: 350px;
-      overflow: hidden;
-    }
-
-    .notification-item {
-      padding: 1rem;
-      border-bottom: 1px solid var(--surface-border);
-      cursor: pointer;
-      transition: background-color 0.2s;
-      position: relative;
-    }
-
-    .notification-item:hover {
-      background: var(--surface-hover);
-    }
-
-    .notification-item.unread {
-      background: var(--primary-50);
-      border-left: 3px solid var(--primary-color);
-    }
-
-    .notification-content {
-      width: 100%;
-    }
-
-    .notification-header-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.5rem;
-    }
-
-    .notification-item-title {
-      font-weight: 600;
-      color: var(--text-color);
-      font-size: 0.9rem;
-      flex: 1;
-      margin-right: 0.5rem;
-    }
-
-    .notification-type-tag {
-      font-size: 0.7rem !important;
-      min-width: auto;
-    }
-
-    .notification-message {
-      color: var(--text-color-secondary);
-      font-size: 0.85rem;
-      line-height: 1.4;
-      margin: 0 0 0.5rem 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .notification-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .notification-time {
-      color: var(--text-color-secondary);
-      font-size: 0.75rem;
-    }
-
-    .unread-indicator {
-      color: var(--primary-color);
-      font-size: 0.5rem;
-    }
-
-    .loading-more, .load-more-container {
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .clear-all-btn {
-      font-size: 0.8rem;
-    }
-
-    .load-more-btn {
-      font-size: 0.85rem;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 480px) {
-      .notification-panel {
-        width: 90vw !important;
-        max-width: 350px !important;
-      }
-    }
-
-    /* PrimeNG Override */
-    :host ::ng-deep .p-overlaypanel-content {
-      padding: 0;
-    }
-
-    :host ::ng-deep .notification-scroller .p-scroller-content {
-      width: 100%;
-    }
-  `]
+  `
 })
 export class NotificationComponent {
   @ViewChild('notificationPanel') notificationPanel!: OverlayPanel;
@@ -341,14 +302,13 @@ export class NotificationComponent {
     effect(() => {
       const currentCount = this.notificationService.count();
       if (currentCount > this.lastCount && currentCount > 0) {
-        // Shake animation will be triggered by shouldShake()
+        // Animation handled by getButtonClasses()
       }
       this.lastCount = currentCount;
     });
   }
 
   async onNotificationClick(event: Event): Promise<void> {
-    
     if (this.notificationService.count() === 0) return;
     
     this.notificationPanel.toggle(event);
@@ -363,7 +323,7 @@ export class NotificationComponent {
   async onScrollEnd(event: any): Promise<void> {
     console.log(event, 'scroll event');
     console.log(this.notificationService.notifications().length);
-    console.log(this.notificationService.hasMore(),!this.notificationService.isLoading());
+    console.log(this.notificationService.hasMore(), !this.notificationService.isLoading());
     
     // Check if user scrolled to bottom and load more if needed
     if (event.last === this.notificationService.notifications().length) {
@@ -384,53 +344,23 @@ export class NotificationComponent {
     this.notificationPanel.hide();
   }
 
-  getBadgeClass(): string {
-    const count = this.notificationService.count();
-    if (count === 0) return 'p-badge-secondary';
-    if (count > 10) return 'p-badge-danger';
-    return 'p-badge-warning';
+  getButtonClasses(): string {
+    const baseClasses = 'notification-button';
+    const shouldShake = this.notificationService.count() > 0 && 
+                       this.notificationService.count() !== this.lastCount;
+    
+    return shouldShake ? `${baseClasses} animate-pulse` : baseClasses;
   }
 
-  getIconClass(): string {
-    const baseClass = 'text-orange-500';
-    return this.shouldShake() ? `${baseClass} p-shake` : baseClass;
-  }
-
-  shouldShake(): boolean {
-    return this.notificationService.count() > 0 && 
-           this.notificationService.count() !== this.lastCount;
-  }
-
-  getTooltipText(): string {
-    const count = this.notificationService.count();
-    if (count === 0) return 'No new notifications';
-    return `${count} new notification${count > 1 ? 's' : ''}`;
-  }
-
-  getNotificationSeverity(type: string): 'success' | 'info' | 'warning' | 'danger' {
-    const severityMap: Record<string, 'success' | 'info' | 'warning' | 'danger'> = {
-      'success': 'success',
-      'info': 'info',
-      'warning': 'warning',
-      'error': 'danger'
+  getAvatarStyle(type: string): any {
+    console.log(type);
+    
+    const colorMap: Record<string, any> = {
+      'success': { 'background-color': 'var(--green-100)', 'color': 'var(--green-600)' },
+      'info': { 'background-color': 'var(--blue-100)', 'color': 'var(--blue-600)' },
+      'overspeed': { 'background-color': 'var(--yellow-100)', 'color': 'var(--yellow-600)' },
+      'sos': { 'background-color': 'var(--red-100)', 'color': 'var(--red-600)' }
     };
-    return severityMap[type] || 'info';
-  }
-
-  formatTime(timestamp: Date): string {
-    const now = new Date();
-    const time = new Date(timestamp);
-    const diff = now.getTime() - time.getTime();
-    
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-    
-    if (minutes < 1) return 'Just now';
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
-    
-    return time.toLocaleDateString();
+    return colorMap[type] || { 'background-color': 'var(--surface-100)', 'color': 'var(--surface-600)' };
   }
 }
