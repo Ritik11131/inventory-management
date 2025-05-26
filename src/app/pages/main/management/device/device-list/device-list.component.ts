@@ -69,6 +69,7 @@ export class DeviceListComponent implements AfterViewInit {
   actions:any[] = [];
   stepFormFields: any[] = [];
   customSaveLabel = '';
+  enableTempateSave: boolean = true;
   stepperFieldsToDisable = [
     'vehicleMake',
     'vehicleModel',
@@ -144,8 +145,7 @@ export class DeviceListComponent implements AfterViewInit {
     };
 
     this.actions = this.authService.getUserRole() === 'Dealer' ? ['activate', 'fitment'] :
-      (this.authService.getUserRole() === 'Distributor') ? [''] : this.authService.getUserRole() === 'Admin' ? ['unlink_device'] :
-        ['edit']
+      (this.authService.getUserRole() === 'Distributor') ? [''] : this.authService.getUserRole() === 'Admin' ? ['unlink_device', 'view_alert_configuration'] : ['edit','view_alert_configuration']
     this.fetchDevices().then();
   }
 
@@ -721,6 +721,7 @@ export class DeviceListComponent implements AfterViewInit {
     this.device = null;
     this.accesStepForm = false;
     this.customSaveLabel = '';
+    this.enableTempateSave = true;
     this.currentTemplate = null;
     
   }
@@ -1064,6 +1065,22 @@ export class DeviceListComponent implements AfterViewInit {
       this.toastService.showError('Error', error.error.data);
     }
 
+  }
+
+  async handleViewAlertConfig(event: any): Promise<void> {
+    this.currentTemplateKey = this.TEMPLATE_KEYS.ALERT;
+    this.currentTemplate = this.templateMap[this.currentTemplateKey];
+
+    try {
+      const response = await this.deviceService.getAlertConfig(event.id);
+      this.selectedAlerts = response?.data?.alerts || [];
+      this.email = response?.data?.email?.join(',') || '';
+      this.phone = response?.data?.phone?.join(',') || '';
+    } catch (error: any) {
+      this.toastService.showError('Error', error.error.data);
+    }
+    this.enableTempateSave = false;
+    this.deviceDialog = true;
   }
 
 

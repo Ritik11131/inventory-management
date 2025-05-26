@@ -143,5 +143,14 @@ export class DeviceService {
     }
   }
 
+   async getAlertConfig(sno:any) : Promise<any> {
+    try { 
+      const response = await this.http.get('AlertConfig', {}, sno);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 }

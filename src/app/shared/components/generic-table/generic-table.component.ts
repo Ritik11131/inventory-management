@@ -83,6 +83,7 @@ export class GenericTableComponent implements OnInit {
   setAlert = output<any>();
   unlinkDevice = output<any>();
   emitOverlayAction = output<any>();
+  viewAlertConfig = output<any>();
 
   actionMenuItems!: any[];
   availableActionsList!: any;
@@ -169,7 +170,15 @@ export class GenericTableComponent implements OnInit {
           icon: 'pi pi-link',
           command: (event:any) => this.onSendMessageFromReport(event, selectedItem)
       });
-      }
+      } else if(actionType === 'view_alert_configuration') {
+            this.actionMenuItems.push({
+                label: 'View Alert Configuration',
+                icon: 'pi pi-bell',
+                command: (event: any) => this.onViewAlertConfiguration(selectedItem)
+            });
+            addedLabels.add('View Alert Configuration');
+        }
+      
 
         if (selectedItem?.lastPosition?.status === 'Online' && !addedLabels.has('Send Command')) {
             this.actionMenuItems.push({
@@ -268,6 +277,10 @@ export class GenericTableComponent implements OnInit {
 
   onSetAlert() {
     this.setAlert.emit(true)
+  }
+
+  onViewAlertConfiguration(selectedItem: any) {
+    this.viewAlertConfig.emit(selectedItem)
   }
 
   onActivate(event : Event, item: any) {
