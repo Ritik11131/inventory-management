@@ -1,76 +1,102 @@
-<div class="px-4 md:px-6 lg:px-8">
-    <p-toolbar styleClass="mb-4 gap-2 p-5">
-        <ng-template pTemplate="left">
+<p-toolbar styleClass="px-4 md:px-6 lg:px-8 mb-4 gap-2 p-5">
+    <ng-template pTemplate="left">
 
-            @if(report.filters.oem) {    
-                <p-floatLabel>
-                    <p-multiSelect  class="mr-4"
-                    styleClass="w-18rem" [options]="oems" [(ngModel)]="selectedOem" optionLabel="name"
-                    placeholder="Select OEM" [showClear]="true"  inputId="oem" />
-                    <label for="oem">Select Oem</label>
-                </p-floatLabel>
-            }
+        @if(report.filters.oem) {    
+            <p-floatLabel>
+                <p-multiSelect  class="mr-4"
+                styleClass="w-18rem" [options]="oems" [(ngModel)]="selectedOem" optionLabel="name"
+                placeholder="Select OEM" [showClear]="true"  inputId="oem" />
+                <label for="oem">Select Oem</label>
+            </p-floatLabel>
+        }
 
-            @if(report.filters.state) {
-                <p-floatLabel>
-                    <p-dropdown class="mr-4"
-                    styleClass="w-18rem" [options]="states" [(ngModel)]="selectedState" optionLabel="stateName" (onChange)="onStateChange($event)" [virtualScroll]="true" [itemSize]="30"
-                    placeholder="Select State" [showClear]="true"  inputId="state" />
-                    <label for="state">Select State</label>
-                </p-floatLabel>
-            }
+        @if(report.filters.state) {
+            <p-floatLabel>
+                <p-dropdown class="mr-4"
+                styleClass="w-18rem" [options]="states" [(ngModel)]="selectedState" optionLabel="stateName" (onChange)="onStateChange($event)" [virtualScroll]="true" [itemSize]="30"
+                placeholder="Select State" [showClear]="true"  inputId="state" />
+                <label for="state">Select State</label>
+            </p-floatLabel>
+        }
 
-            @if(report.filters.rto) {
-                <p-floatLabel>
-                    <p-multiSelect  class="mr-4"
-                    styleClass="w-18rem" [options]="rtos" [(ngModel)]="selectedRto" optionLabel="rtoName" [virtualScroll]="true" [itemSize]="30"
-                    placeholder="Select Rto" [showClear]="true"  inputId="rto" />
-                    <label for="rto">Select Rto</label>
-                </p-floatLabel>
-            }
+        @if(report.filters.rto) {
+            <p-floatLabel>
+                <p-multiSelect  class="mr-4"
+                styleClass="w-18rem" [options]="rtos" [(ngModel)]="selectedRto" optionLabel="rtoName" [virtualScroll]="true" [itemSize]="30"
+                placeholder="Select Rto" [showClear]="true"  inputId="rto" />
+                <label for="rto">Select Rto</label>
+            </p-floatLabel>
+        }
 
-            @if(report?.filters?.date?.enabled) {
-                <p-floatLabel>
-                    <p-calendar class="mr-4"  [iconDisplay]="'input'" [maxDate]="maxDate"  [showIcon]="true"  styleClass="w-18rem" [(ngModel)]="selectedDate" inputId="date" />
-                    <label for="date">Select Date</label>
-                </p-floatLabel>
-            }
+        @if(report?.filters?.date?.enabled) {
+            <p-floatLabel>
+                <p-calendar class="mr-4"  [iconDisplay]="'input'" [maxDate]="maxDate"  [showIcon]="true"  styleClass="w-18rem" [(ngModel)]="selectedDate" inputId="date" />
+                <label for="date">Select Date</label>
+            </p-floatLabel>
+        }
 
-             @if(report.filters.specificVehicle) {
-                <p-floatLabel>
-                    <input  styleClass="w-18rem" class="mr-4" pInputText  [(ngModel)]="selectedSpecificVehicle" placeholder="Enter vehicle"  inputId="specificVehicle"/>
-                    <label for="days">Vehicle No/Imei</label>
-                </p-floatLabel>
+         @if(report.filters.specificVehicle) {
+            <p-floatLabel>
+                <input  styleClass="w-18rem" class="mr-4" pInputText  [(ngModel)]="selectedSpecificVehicle" placeholder="Enter vehicle"  inputId="specificVehicle"/>
+                <label for="days">Vehicle No/Imei</label>
+            </p-floatLabel>
 
-            }
+        }
 
-            @if(report.filters.days) {
-                <p-floatLabel>
-                    <p-inputNumber  class="mr-4"
-                    styleClass="w-18rem" [(ngModel)]="selectedDays" inputId="days" [min]="1" [max]="365" placeholder="Enter number of days (e.g., 7)"  inputId="days" />
-                    <label for="days">Vehicles Expiring Within</label>
-                </p-floatLabel>
+        @if(report.filters.days) {
+            <p-floatLabel>
+                <p-inputNumber  class="mr-4"
+                styleClass="w-18rem" [(ngModel)]="selectedDays" inputId="days" [min]="1" [max]="365" placeholder="Enter number of days (e.g., 7)"  inputId="days" />
+                <label for="days">Vehicles Expiring Within</label>
+            </p-floatLabel>
 
-            }
+        }
 
-            @if(report?.filters?.daysRange) {
-                <p-floatLabel>
-                    <p-dropdown class="mr-4"
-                    styleClass="w-18rem" [options]="daysRangeOptions" [(ngModel)]="selectedDayRange" optionLabel="label"
-                    placeholder="Select Range" [showClear]="true"  inputId="daysRange" />
-                    <label for="state">Select Range</label>
-                </p-floatLabel>
-            }
-           
-        </ng-template>
+        @if(report?.filters?.daysRange) {
+            <p-floatLabel>
+                <p-dropdown class="mr-4"
+                styleClass="w-18rem" [options]="daysRangeOptions" [(ngModel)]="selectedDayRange" optionLabel="label"
+                placeholder="Select Range" [showClear]="true"  inputId="daysRange" />
+                <label for="state">Select Range</label>
+            </p-floatLabel>
+        }
+       
+    </ng-template>
 
-        <ng-template pTemplate="right">
-                <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="loadReportData()"/>
-        </ng-template>
-    </p-toolbar>
+    <ng-template pTemplate="right">
+            <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="loadReportData()"/>
+    </ng-template>
+</p-toolbar>
 
-
-    
+@if(isReportLoading) {
+<div class="flex justify-content-center w-full z-50">
+    <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="4"></p-progressSpinner>
 </div>
-<app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="''" [isDataLoading]="false" [showOnlyExportCsv]="true"
-[showOnlyExportCsvFileName]="report?.reportName" [globalFilterFields]="report?.globalFilterFields || []" [actions]="report.tableActions || []" (sendMessage)="handleSendMessage($event)"/>
+}
+@if(!isReportLoading) {
+@if(report?.chart?.pie && report?.chart?.bar && pieData && barData) {
+<div class="px-4 md:px-6 lg:px-8">
+    <!-- Chart Row: Pie 30% + Bar 70% -->
+    <div class="flex flex-row flex-wrap md:flex-nowrap gap-3 mb-4">
+        <!-- Pie Chart - 30% -->
+        <div class="w-full md:w-4">
+            <p-chart type="pie" [data]="pieData" [options]="pieOptions" [width]="'100%'" [height]="'300px'"></p-chart>
+        </div>
+
+        <!-- Bar Chart - 70% -->
+        <div class="w-full md:w-8">
+            <p-chart type="bar" [data]="barData" [options]="barOptions" [width]="'100%'" [height]="'300px'"></p-chart>
+        </div>
+    </div>
+</div>
+
+@if(reportTableData) {
+
+    <app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="''"
+    [isDataLoading]="false" [showOnlyExportCsv]="true" [showOnlyExportCsvFileName]="report?.reportName"
+    [globalFilterFields]="report?.globalFilterFields || []" [actions]="report.tableActions || []"
+    (sendMessage)="handleSendMessage($event)" />
+}
+}
+}
+    

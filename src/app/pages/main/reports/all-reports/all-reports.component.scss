@@ -1,0 +1,38 @@
+/* Additional custom styles for enhanced interactions */
+.group:hover .pi-arrow-right {
+  animation: bounce-right 0.6s ease-in-out infinite;
+}
+
+@keyframes bounce-right {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+/* Responsive text scaling */
+@media (max-width: 640px) {
+  .grid > div h3 {
+    font-size: 1rem;
+  }
+}
+
+/* Custom shadow for cards */
+.group:hover > div {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Smooth loading animation */
+.grid > div {
+  animation: fadeInUp 0.5s ease-out forwards;
+  animation-delay: calc(var(--index, 0) * 0.1s);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

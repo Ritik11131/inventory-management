@@ -7,6 +7,7 @@ import { RtoService } from '../../../../core/services/rto.service';
 import { CalendarModule } from 'primeng/calendar';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DropdownModule } from 'primeng/dropdown';
+import { ChartModule } from 'primeng/chart';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DynamicUserService } from '../../../../core/services/dynamic-user.service';
@@ -17,11 +18,13 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmationService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, InputTextModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule,InputNumberModule, GenericTableComponent],
+  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, InputTextModule,ChartModule,ProgressSpinnerModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule,InputNumberModule, GenericTableComponent],
   templateUrl: './report-detail.component.html',
   styleUrl: './report-detail.component.scss',
   providers:[ConfirmationService, DatePipe]
@@ -40,7 +43,8 @@ export class ReportDetailComponent implements OnInit {
   selectedSpecificVehicle: any;
   reportTableData:any[] = [];
   isReportLoading: boolean = false;
-  maxDate: any = null
+  maxDate: any = null;
+
 
   today: Date = new Date();
   yesterday: Date = new Date(new Date().setDate(new Date().getDate() - 1));
@@ -52,8 +56,10 @@ export class ReportDetailComponent implements OnInit {
     { label: '15 - 30 day', value: [15,30] },
     { label: '> 30 day', value: [30,0] },
   ];
-
-  private previousStates: any[] = [];
+   pieData: any;
+  barData: any;
+  pieOptions: any;
+  barOptions: any;
 
   constructor(private route: ActivatedRoute, private rtoService:RtoService, private dynamicuserService:DynamicUserService, private confirmationService: ConfirmationService,
      private stateService:StatesService, private reportService:ReportService, private toastService:ToastService) {}
@@ -69,6 +75,120 @@ export class ReportDetailComponent implements OnInit {
         : null;
 
       this.initReport();
+
+
+       const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+      this.pieOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 20,
+            usePointStyle: true,
+            pointStyle: 'circle',
+            font: {
+              size: 14,
+              family: 'Inter, sans-serif'
+            },
+            color: '#374151'
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleColor: '#ffffff',
+          bodyColor: '#ffffff',
+          borderColor: 'rgba(255, 255, 255, 0.2)',
+          borderWidth: 1,
+          cornerRadius: 8,
+          displayColors: true,
+          callbacks: {
+            label: function(context: any) {
+              const label = context.label || '';
+              const value = context.parsed;
+              const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${value} - (${percentage}%)`;
+            }
+          }
+        }
+      },
+      animation: {
+        animateRotate: true,
+        animateScale: true,
+        duration: 1500,
+        easing: 'easeOutQuart'
+      },
+      elements: {
+        arc: {
+          borderWidth: 3,
+          hoverBorderWidth: 5
+        }
+      }
+    };
+
+
+      this.barOptions = {
+        responseive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
+            plugins: {
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                },
+                legend: {
+                  position:'bottom',
+                   labels: {
+            padding: 20,
+            usePointStyle: true,
+            pointStyle: 'rect',
+            font: {
+              size: 14,
+              family: 'Inter, sans-serif'
+            },
+            color: '#374151'
+          }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    stacked: true,
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                }
+            },
+            animation: {
+        duration: 1500,
+        easing: 'easeOutQuart',
+        delay: (context: any) => {
+          return context.type === 'data' && context.mode === 'default' 
+            ? context.dataIndex * 100 
+            : 0;
+        }
+      },
+       
+        };
     });
   }
   
@@ -234,9 +354,13 @@ export class ReportDetailComponent implements OnInit {
     // Call your service to fetch the report data here
     try {
       const response = await this.reportService.getReportData(this.report.api, payload);
+
+      const {table, piechart, barchart} = response?.data || {};
     
       // Assign data first
-      this.reportTableData = response?.data || [];
+      this.reportTableData = table || [];
+      this.pieData = piechart || {};
+      this.barData = barchart || {};
     
       if (this.reportTableData.length === 0) {
         this.toastService.showWarn('No Data Found', 'warn');

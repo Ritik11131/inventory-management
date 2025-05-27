@@ -1,36 +1,72 @@
-<div class="bg-gray-200 px-4 py-5 md:px-6 lg:px-8">
-  <div class="grid gap-3">
-    @for (report of reports; track $index) {
-      <div class="p-col-12 sm:p-col-6 md:p-col-4 lg:p-col-3 flex justify-content-center">
-        <p-card
-          [header]="report?.reportName"
-          subheader="This Report Shows Something!"
-          [style]="{ width: '100%', maxWidth: '300px' }"
-        >
-          <ng-template pTemplate="header">
-            <img
-              alt="Card"
-              src="https://primefaces.org/cdn/primeng/images/card-ng.jpg"
-              class="w-full h-40 object-cover"
-            />
-          </ng-template>
+<div class="px-4 md:px-6 lg:px-8 bg-blue-50 min-h-screen">
+  <!-- Header Section -->
+  <div class="mb-6 pt-4">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Reports Dashboard</h2>
+    <p class="text-gray-600">Discover insights with our comprehensive report collection</p>
+  </div>
 
-          <ng-template pTemplate="footer">
-            <div class="flex gap-3 mt-3">
-              <p-button
-                (onClick)="handleDynamicReport(report)"
-                label="View"
-                icon="pi pi-arrow-right"
-                iconPos="right"
-                styleClass="w-full"
-              />
+  <!-- Reports Grid -->
+  <div class="grid">
+    @for (report of reports; track $index) {
+      <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2">
+        <div class="card-container cursor-pointer">
+          <!-- Custom Card -->
+          <div class="bg-white border-round-xl shadow-3 overflow-hidden border-1 border-gray-200 h-full">
+            <!-- Card Header with Icon -->
+            <div class="bg-blue-500 p-4 relative overflow-hidden">
+              <div class="header-decoration-1"></div>
+              <div class="header-decoration-2"></div>
+              <div class="relative z-2">
+                <div class="w-3rem h-3rem bg-white-alpha-20 border-round flex align-items-center justify-content-center mb-3">
+                  <i class="pi pi-file-pdf text-white text-xl"></i>
+                </div>
+                <h3 class="text-white font-semibold text-lg line-height-3 m-0">
+                  {{ report?.reportName }}
+                </h3>
+              </div>
             </div>
-          </ng-template>
-        </p-card>
+
+            <!-- Card Body -->
+            <div class="p-4">
+              <p class="text-gray-600 text-sm mb-3 line-height-3">
+                This Report Shows Something!
+              </p>
+              
+              <!-- Stats or Additional Info -->
+              <div class="flex justify-content-between align-items-center mb-4">
+                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 border-round">
+                  Report #{{ $index + 1 }}
+                </span>
+                <span class="text-xs text-green-600 font-medium">
+                  ● Available
+                </span>
+              </div>
+
+              <!-- Action Button -->
+              <button 
+                pButton
+                (click)="handleDynamicReport(report)"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium p-3 border-round flex align-items-center justify-content-center gap-2 border-none cursor-pointer transition-all transition-duration-300"
+                pRipple
+              >
+                
+                <i class="pi pi-arrow-right text-sm button-arrow"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     }
   </div>
+
+  <!-- Empty State (if no reports) -->
+  @if (!reports || reports.length === 0) {
+    <div class="text-center py-8">
+      <div class="w-6rem h-6rem bg-gray-100 border-circle flex align-items-center justify-content-center mx-auto mb-4">
+        <i class="pi pi-file text-4xl text-gray-400"></i>
+      </div>
+      <h3 class="text-xl font-semibold text-gray-700 mb-2">No Reports Available</h3>
+      <p class="text-gray-500">Reports will appear here when they become available.</p>
+    </div>
+  }
 </div>
-
-
-
