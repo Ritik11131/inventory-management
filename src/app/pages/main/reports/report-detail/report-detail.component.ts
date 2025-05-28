@@ -19,12 +19,13 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmationService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericDialogComponent } from '../../../../shared/components/generic-dialog/generic-dialog.component';
 
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, InputTextModule,ChartModule,ProgressSpinnerModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule,InputNumberModule, GenericTableComponent],
+  imports: [MultiSelectModule, CommonModule, FormsModule, CalendarModule, InputTextModule,ChartModule,ProgressSpinnerModule, ToolbarModule,DropdownModule,FloatLabelModule,FileUploadModule,InputNumberModule, GenericTableComponent, GenericDialogComponent],
   templateUrl: './report-detail.component.html',
   styleUrl: './report-detail.component.scss',
   providers:[ConfirmationService, DatePipe]
@@ -60,6 +61,10 @@ export class ReportDetailComponent implements OnInit {
   barData: any;
   pieOptions: any;
   barOptions: any;
+
+  viewTableDialog:boolean = false;
+  viewTableData: any[] = [];
+  viewTableHeader: string = '';
 
   constructor(private route: ActivatedRoute, private rtoService:RtoService, private dynamicuserService:DynamicUserService, private confirmationService: ConfirmationService,
      private stateService:StatesService, private reportService:ReportService, private toastService:ToastService) {}
@@ -203,6 +208,17 @@ export class ReportDetailComponent implements OnInit {
       // Update the local variables after both calls finish
       this.states = statesResponse?.data;
       this.oems = oemsResponse?.data;
+
+      if(this.report?.filters?.daysRange && this.report?.autoGenerate?.enabled) {
+       this.selectedDayRange = this.report?.autoGenerate?.defaultValue;
+       this.loadReportData();
+      } else if(this.report?.autoGenerate?.enabled && this.report.independent) {
+        this.loadReportData();
+      } else if(this.report?.filters?.date?.enabled && this.report?.autoGenerate?.enabled) {
+        this.selectedDate = this.report?.autoGenerate?.defaultValue
+        this.loadReportData();
+      }
+
   
     } catch (error) {
       console.error('Error loading data:', error);
@@ -330,7 +346,7 @@ export class ReportDetailComponent implements OnInit {
   }
   
 
-  async loadReportData(): Promise<void> {
+  async loadReportData(): Promise<void> {    
     let payload: any = {
       rtoId: this.selectedRto?.map((item: any) => item.id) || null,
       OemId: this.selectedOem?.map((item: any) => item.sno) || null,
@@ -358,7 +374,7 @@ export class ReportDetailComponent implements OnInit {
       const {table, piechart, barchart} = response?.data || {};
     
       // Assign data first
-      this.reportTableData = table || [];
+      this.reportTableData = !Array.isArray(table) ? [table] : table  || [];      
       this.pieData = piechart || {};
       this.barData = barchart || {};
     
@@ -403,6 +419,21 @@ export class ReportDetailComponent implements OnInit {
       }
     });
    
+  }
+
+  async handleViewPositions(event: any) {
+    if(event?.item) {
+      this.viewTableDialog = true;
+      this.viewTableHeader = event?.item?.vehicleNumber +  ' Positions';
+      this.viewTableData = event?.item[this.report?.dialogDataKey] || [];
+    }
+    
+  }
+
+  onHideDialog(e: any) {
+    this.viewTableDialog = false;
+    this.viewTableData = [];
+    this.viewTableHeader = '';
   }
 
 

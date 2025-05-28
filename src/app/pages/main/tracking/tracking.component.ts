@@ -655,16 +655,12 @@ export class TrackingComponent implements OnInit {
 
   // Existing method for handling filter click
   async handleFilterClick(event: any): Promise<void> {
-    console.log(event,'event');
-
     this.map.on('zoomend', () => {
-    console.log('Zoom changed:', this.map.getZoom());
     this.disturbedZoom = this.map.getZoom();
   });
 
   this.map.on('moveend', () => {
     const bounds = this.map.getBounds();
-    console.log('New bounds:', bounds);
     this.disturbedBoundingBox = this.map.getBounds();
   });
     

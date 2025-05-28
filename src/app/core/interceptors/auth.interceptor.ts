@@ -53,7 +53,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               tokenService.clearTokens();
               setTimeout(()=>{
                 routerService.navigateByUrl('/auth/login');
-                toastService.showWarn('Session Expired', 'Please login again!', 10000);
+                // toastService.showWarn('Session Expired', 'Please login again!', 10000);
               },500);
             }
             // Throw the refresh error

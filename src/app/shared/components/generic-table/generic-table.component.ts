@@ -84,7 +84,7 @@ export class GenericTableComponent implements OnInit {
   unlinkDevice = output<any>();
   emitOverlayAction = output<any>();
   viewAlertConfig = output<any>();
-
+  emitViewPositionsClick = output<any>();
   actionMenuItems!: any[];
   availableActionsList!: any;
   selectedColumn!: any;
@@ -177,6 +177,13 @@ export class GenericTableComponent implements OnInit {
                 command: (event: any) => this.onViewAlertConfiguration(selectedItem)
             });
             addedLabels.add('View Alert Configuration');
+        } else if(actionType === 'view_positions' && !addedLabels.has('View Positions')) {
+            this.actionMenuItems.push({
+                label: 'View Positions',
+                icon: 'pi pi-map-marker',
+                command: (event: any) => this.onViewPositions(event, selectedItem)
+            });
+            addedLabels.add('View Positions');
         }
       
 
@@ -281,6 +288,10 @@ export class GenericTableComponent implements OnInit {
 
   onViewAlertConfiguration(selectedItem: any) {
     this.viewAlertConfig.emit(selectedItem)
+  }
+
+  onViewPositions(event: Event, item: any) {
+    this.emitViewPositionsClick.emit({event, item});
   }
 
   onActivate(event : Event, item: any) {

@@ -89,14 +89,17 @@
         </div>
     </div>
 </div>
+}
 
-@if(reportTableData) {
-
+@if(reportTableData.length) {
     <app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="''"
     [isDataLoading]="false" [showOnlyExportCsv]="true" [showOnlyExportCsvFileName]="report?.reportName"
     [globalFilterFields]="report?.globalFilterFields || []" [actions]="report.tableActions || []"
-    (sendMessage)="handleSendMessage($event)" />
+    (sendMessage)="handleSendMessage($event)" (emitViewPositionsClick)="handleViewPositions($event)" />
 }
 }
-}
+
+<app-generic-dialog [enableSaveBtn]="false" [header]="viewTableHeader" [isTable]="true"
+ [tableData]="viewTableData" [tableColumns]="report.dialogTableColumns" [modal]="true" [visible]="viewTableDialog"
+  (onHide)="onHideDialog($event)" />
     

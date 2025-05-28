@@ -11,26 +11,26 @@ export class ToastService {
 
 
   showSuccess(summary: string, detail: string) {
-    this.messageService.add({ severity: 'success', summary, detail });
+    this.messageService.add({ severity: 'success', summary, detail, sticky:true });
   }
 
   showInfo(summary: string, detail: string) {
-    this.messageService.add({ severity: 'info', summary, detail });
+    this.messageService.add({ severity: 'info', summary, detail, sticky:true });
   }
 
   showWarn(summary: string, detail: string, life?: number) {
-    this.messageService.add({ severity: 'warn', summary, detail, life });
+    this.messageService.add({ severity: 'warn', summary, detail, life, sticky:true });
   }
 
   showError(summary: string, detail: string) {
-    this.messageService.add({ severity: 'error', summary, detail });
+    this.messageService.add({ severity: 'error', summary, detail, sticky:true });
   }
 
   showContrast(summary: string, detail: string) {
-    this.messageService.add({ severity: 'contrast', summary, detail });
+    this.messageService.add({ severity: 'contrast', summary, detail, sticky:true });
   }
 
   showSecondary(summary: string, detail: string) {
-    this.messageService.add({ severity: 'secondary', summary, detail });
+    this.messageService.add({ severity: 'secondary', summary, detail, sticky:true });
   }
 }
