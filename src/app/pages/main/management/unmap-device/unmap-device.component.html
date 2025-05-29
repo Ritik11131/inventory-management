@@ -1,0 +1,10 @@
+<p-toolbar styleClass="px-4 md:px-6 lg:px-8 mb-4 gap-2 p-5">
+     <ng-template pTemplate="left"></ng-template>
+    <ng-template pTemplate="right">
+        <p-floatLabel>
+            <input  styleClass="w-2rem" class="mr-4" pInputText  [(ngModel)]="deviceToBeSearched" placeholder="imei / Reg No"  inputId="specificVehicle"/>
+            <label for="days">Registration No/Imei</label>
+        </p-floatLabel>
+            <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="fetchDeviceInfo()"/>
+    </ng-template>
+</p-toolbar>

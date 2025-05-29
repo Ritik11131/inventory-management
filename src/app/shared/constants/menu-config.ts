@@ -94,7 +94,15 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                             breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
                         }
 
-                    }
+                    },
+                    {
+                        label: 'UnMap Device',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/unmap-device']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/unmap-device');
+                        }
+                    },
                 ]
             },
             {

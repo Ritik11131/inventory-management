@@ -61,6 +61,11 @@ export class BreadcrumbService {
           { label: 'Device' },
           { label: 'Device List' }
         ],
+        'unmap-device': [
+          { label: 'Management' },
+          { label: 'Device' },
+          { label: 'Unmap Device' }
+        ],
         'device-model-list': [
           { label: 'Management' },
           { label: 'Device Model' },
@@ -121,8 +126,6 @@ export class BreadcrumbService {
       this.breadCrumbs.push({ label: capitalize(urlParts[1]) });
     } else if (urlParts.length > 2) {
       let breadcrumbPath : any = this.breadcrumbMap;
-      console.log(breadcrumbPath);
-
       for (const part of urlParts) {
         if(part !== 'assigned') {
           breadcrumbPath = breadcrumbPath[part]
