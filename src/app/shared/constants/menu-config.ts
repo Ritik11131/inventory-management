@@ -96,8 +96,8 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
 
                     },
                     {
-                        label: 'UnMap Device',
-                        icon: 'pi pi-list',
+                        label: 'Unmap Device',
+                        icon: 'pi pi-sitemap',
                         command: () => {
                             router.navigate(['/main/management/unmap-device']);
                             breadcrumbService.generateBreadcrumbs('/main/management/unmap-device');
