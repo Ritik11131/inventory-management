@@ -68,6 +68,7 @@ export class TrackingComponent implements OnInit {
   creatingPlaybackPath:boolean = false;
   showPlaybackControls:boolean = false;
   trackPlayer!: any;
+  private alertMarkers: L.Marker[] = [];
 
     // Polling related properties
   private pollingSubscription: Subscription | null = null;
@@ -104,6 +105,23 @@ export class TrackingComponent implements OnInit {
   disturbedZoom:any = null;
   disturbedBoundingBox: any=null
   userRole: string = '';
+
+  // Alert configuration mapping
+  private alertConfig: any = {
+    3: { name: 'Battery Disconnect', color: '#FF6B6B', icon: '🔋' },
+    4: { name: 'Battery Low', color: '#FFE66D', icon: '🪫' },
+    6: { name: 'Battery Reconnect', color: '#4ECDC4', icon: '🔋' },
+    7: { name: 'Ignition On', color: '#95E1D3', icon: '🔥' },
+    8: { name: 'Ignition Off', color: '#A8E6CF', icon: '❄️' },
+    9: { name: 'Tampering', color: '#8B0000', icon: '🔧' },
+    10: { name: 'SOS', color: '#FF3838', icon: '🆘' },
+    12: { name: 'OTA', color: '#845EC2', icon: '📡' },
+    13: { name: 'HP', color: '#FF8066', icon: '⚠️' },
+    14: { name: 'HA', color: '#FF9F40', icon: '⚠️' },
+    15: { name: 'RT', color: '#36A2EB', icon: '📍' },
+    16: { name: 'Panic Tamper', color: '#E74C3C', icon: '🚨' },
+    19: { name: 'Overspeed', color: '#F39C12', icon: '⚡' }
+  };
 
   constructor(private dashboardService: DashboardService, private trackingService: TrackingService,private toastService:ToastService,private addressService:AddressService, private routeService:RouteService, private authService:AuthService) {
     this.userRole = this.authService.getUserRole();    
@@ -278,6 +296,8 @@ export class TrackingComponent implements OnInit {
     if (this.trackPlayer) {
       this.trackPlayer.remove();
     }
+
+    this.clearAlertMarkers();
   }
   
   isSingleVehicleEvent(event: any): boolean {
@@ -358,6 +378,9 @@ export class TrackingComponent implements OnInit {
         this.map.fitBounds(uniqueTrackPath);
         this.initilizeTrackPlayer(uniqueTrackPath);
         this.showPlaybackControls = true;
+
+         // Add alert markers after initializing the track player
+      this.plotAlertMarkers(response.data);
       } else {
         this.toastService.showInfo('Info','No Data Found');
       }
@@ -399,9 +422,16 @@ export class TrackingComponent implements OnInit {
         iconUrl: 'assets/images/car.png',
         iconSize: [27, 54],
         iconAnchor: [13.5, 27],
+        shadowUrl: 'data:image/svg+xml;base64,' + btoa(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="90" viewBox="0 0 32 60">
+          <ellipse cx="16" cy="50" rx="12" ry="8" fill="rgba(0,0,0,0.3)"/>
+        </svg>
+      `),
+        shadowSize: [32, 60],
+        shadowAnchor: [16, 30]
       }),
-      passedLineColor: '#00ff00',
-      notPassedLineColor: '#ff0000',
+      passedLineColor: '#00C851',        // Modern green
+      notPassedLineColor: '#2196F3',     // Professional blue
     });
 
     // Add the TrackPlayer to the map
@@ -493,6 +523,7 @@ export class TrackingComponent implements OnInit {
 
    ngOnDestroy() {
     this.stopPolling();
+     this.clearAlertMarkers();
   }
 
   // Comprehensive polling method
@@ -896,4 +927,135 @@ private createRouteGeofencePolygon(geometry: any, bufferDistance: number): void 
     console.error('Failed to create route geofence polygon:', error);
   }
 }
+
+
+private plotAlertMarkers(trackData: any[]): void {
+  // Clear existing alert markers
+  this.clearAlertMarkers();
+  
+  // Filter data for alert markers (exclude alert IDs 1, 2, and 5)
+  const alertData = trackData.filter(point => 
+    point.attributes?.alertId && 
+    point.attributes?.alertId !== 1 && 
+    point.attributes?.alertId !== 2 && 
+    point.attributes?.alertId !== 5 &&
+    this.alertConfig[point.attributes?.alertId] &&
+    point.latitude && 
+    point.longitude
+  );
+  
+  alertData.forEach(alertPoint => {
+    const alertInfo = this.alertConfig[alertPoint.attributes?.alertId];
+    if (!alertInfo) return;
+    
+    // Create custom marker icon
+    const customIcon = L.divIcon({
+      className: 'custom-alert-marker',
+      html: `
+        <div style="
+          background-color: ${alertInfo.color};
+          border: 2px solid white;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          cursor: pointer;
+        ">
+          ${alertInfo.icon}
+        </div>
+      `,
+      iconSize: [30, 30],
+      iconAnchor: [15, 15]
+    });
+    
+    // Create marker
+    const marker = L.marker([alertPoint.latitude, alertPoint.longitude], {
+      icon: customIcon
+    });
+    
+    // Format timestamp
+    const alertTime = this.formatAlertTime(alertPoint.timestamp || alertPoint.fixtime);
+    
+    // Create popup content
+    const popupContent = `
+      <div class="alert-popup" style="min-width: 200px; padding: 10px;">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 16px; margin-right: 8px;">${alertInfo.icon}</span>
+          <strong style="color: ${alertInfo.color};">${alertInfo.name}</strong>
+        </div>
+        <div style="margin-bottom: 6px;">
+          <strong>Time:</strong> ${alertTime}
+        </div>
+        <div style="font-size: 12px; color: #666;">
+          <strong>Location:</strong> ${alertPoint.latitude.toFixed(6)}, ${alertPoint.longitude.toFixed(6)}
+        </div>
+      </div>
+    `;
+    
+    // Bind popup
+    marker.bindPopup(popupContent, {
+      maxWidth: 250,
+      className: 'custom-alert-popup'
+    });
+    
+    // Add click event for additional functionality if needed
+    marker.on('click', () => {
+      this.onAlertMarkerClick(alertPoint, alertInfo);
+    });
+    
+    // Add marker to map and store reference
+    marker.addTo(this.map);
+    this.alertMarkers.push(marker);
+  });
+  
+  if (alertData.length > 0) {
+    console.log(`Added ${alertData.length} alert markers to the map`);
+  }
+}
+
+private clearAlertMarkers(): void {
+  this.alertMarkers.forEach(marker => {
+    this.map.removeLayer(marker);
+  });
+  this.alertMarkers = [];
+}
+
+private formatAlertTime(timestamp: string | Date): string {
+  try {
+    const date = new Date(timestamp);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+  } catch (error) {
+    return 'Invalid Time';
+  }
+}
+
+private onAlertMarkerClick(alertPoint: any, alertInfo: any): void {
+  // Optional: Add custom logic when alert marker is clicked
+  console.log('Alert marker clicked:', {
+    alertId: alertPoint.alertId,
+    alertName: alertInfo.name,
+    timestamp: alertPoint.timestamp || alertPoint.dateTime,
+    location: [alertPoint.latitude, alertPoint.longitude]
+  });
+  
+  // You can add additional functionality here, such as:
+  // - Showing detailed alert information in a sidebar
+  // - Highlighting the alert in a list
+  // - Playing a sound or animation
+  // - Opening a detailed modal
+}
+
+
 }
