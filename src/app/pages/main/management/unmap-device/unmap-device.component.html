@@ -1,10 +1,94 @@
+<!-- Toolbar with search -->
 <p-toolbar styleClass="px-4 md:px-6 lg:px-8 mb-4 gap-2 p-5">
-     <ng-template pTemplate="left"></ng-template>
-    <ng-template pTemplate="right">
-        <p-floatLabel>
-            <input  styleClass="w-2rem" class="mr-4" pInputText  [(ngModel)]="deviceToBeSearched" placeholder="imei / Reg No"  inputId="specificVehicle"/>
-            <label for="days">Registration No/Imei</label>
-        </p-floatLabel>
-            <p-button icon="pi pi-search" iconPos="right" class="mr-2 inline-block" (onClick)="fetchDeviceInfo()"/>
-    </ng-template>
+  <ng-template pTemplate="left"></ng-template>
+
+  <ng-template pTemplate="right">
+    <p-floatLabel>
+      <input
+        pInputText
+        [(ngModel)]="deviceToBeSearched"
+        placeholder="IMEI / Reg No"
+        inputId="specificVehicle"
+        class="w-15rem mr-3"
+      />
+      <label for="specificVehicle">Registration No / IMEI</label>
+    </p-floatLabel>
+
+    <p-button
+      icon="pi pi-search"
+      iconPos="right"
+      [loading]="loading"
+      class="mr-2 inline-block"
+      (onClick)="fetchDeviceInfo()"
+    />
+  </ng-template>
 </p-toolbar>
+
+<!-- Card Section -->
+<div *ngIf="deviceInfo" class="surface-ground p-4">
+   <div class="surface-0 border-round shadow-4 p-5 mx-auto" style="width: 100%; max-width: 50vw;">
+
+    <!-- Header -->
+    <div class="text-2xl font-bold text-primary mb-4 border-bottom-1 surface-border pb-3">
+      Fitment Details
+    </div>
+
+    <!-- Grid Content -->
+    <div class="grid text-sm text-800 line-height-3">
+
+      <!-- Vehicle Info -->
+      <div class="col-12 md:col-6 mb-3">
+        <div><span class="font-medium text-900">Vehicle No:</span> {{ deviceInfo?.vehicle?.vehicleNo }}</div>
+        <div><span class="font-medium text-900">Make:</span> {{ deviceInfo?.vehicle?.make }}</div>
+        <div><span class="font-medium text-900">Model:</span> {{ deviceInfo?.vehicle?.model }}</div>
+      </div>
+
+      <!-- Device Info -->
+      <div class="col-12 md:col-6 mb-3">
+        <div><span class="font-medium text-900">IMEI:</span> {{ deviceInfo?.device?.imei }}</div>
+        <div><span class="font-medium text-900">ICCID:</span> {{ deviceInfo?.device?.iccid }}</div>
+        <div><span class="font-medium text-900">Vahan S.No:</span> {{ deviceInfo?.device?.vahanSno }}</div>
+      </div>
+
+      <!-- Fitment Info -->
+      <div class="col-12 md:col-6 mb-3">
+        <div><span class="font-medium text-900">Fitment Date:</span> {{ deviceInfo?.fitment?.fitmentDate | date:'mediumDate' }}</div>
+        <div><span class="font-medium text-900">Valid Till:</span> {{ deviceInfo?.fitment?.fitmentValid | date:'mediumDate' }}</div>
+      </div>
+
+      <!-- OEM & RFC -->
+      <div class="col-12 md:col-6 mb-3">
+        <div><span class="font-medium text-900">OEM:</span> {{ deviceInfo?.oem?.name }}</div>
+        <div><span class="font-medium text-900">RFC:</span> {{ deviceInfo?.rfc?.name }}</div>
+      </div>
+
+      <!-- Permit Holder -->
+      <div class="col-12 md:col-6 mb-3">
+        <div><span class="font-medium text-900">Permit Holder:</span> {{ deviceInfo?.permitHolder?.permitHolderName }}</div>
+        <div><span class="font-medium text-900">Mobile:</span> {{ deviceInfo?.permitHolder?.permitHolderMobile }}</div>
+      </div>
+
+      <!-- RTO Info -->
+      <div class="col-12 md:col-6 mb-3">
+        <div><span class="font-medium text-900">RTO:</span> {{ deviceInfo?.rto?.rtoName }} ({{ deviceInfo?.rto?.rtoId }})</div>
+      </div>
+    </div>
+
+    <!-- Unlink Button -->
+    <div class="flex justify-content-end mt-4">
+      <p-button
+        label="Unlink Device"
+        icon="pi pi-unlink"
+       severity="danger"
+       [loading]="unlinking"
+        (onClick)="unLinkDevice()"
+      ></p-button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

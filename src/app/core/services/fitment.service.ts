@@ -39,6 +39,15 @@ export class FitmentService {
     }
   }
 
+  async getFitmentDetailsByImeiRegNO(value: string): Promise<any> {
+    try {
+      const response = await this.http.get('Device/GetByDeviceImeiOrVehicleNo', { }, value);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   async completeKYC(requestId: string) : Promise<any> {
     try {
