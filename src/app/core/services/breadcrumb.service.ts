@@ -100,7 +100,13 @@ export class BreadcrumbService {
             { label: 'Privacy' },
             { label: 'Upload Certificates' }
           ]
-        }
+        },
+        more:
+          [
+            { label: 'Settings' },
+            { label: 'More Settings' },
+          ]
+
       },
     }
   };

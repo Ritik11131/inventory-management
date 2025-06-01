@@ -1,0 +1,40 @@
+<p-panel [toggleable]="true" header="Firmware">
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-2 mr-3">
+            <i class="pi pi-receipt text-primary text-3xl"></i>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="content">
+        <div class="grid formgrid">
+            <div class="col-12 sm:col-4 py-2">
+              <label for="documentType" class="w-full sm:w-auto">OEM</label>
+              <p-dropdown styleClass="w-full mt-2" appendTo="body" name="oem" [options]="oemList" optionLabel="name"
+                                (onChange)="onOemChange($event)" [(ngModel)]="selectedOem" placeholder="Select a OEM">
+                                </p-dropdown>
+            </div>
+            <div class="col-12 sm:col-4 py-2">
+              <label for="file" class="w-full sm:w-auto">Upload your Document</label>
+              <p-fileUpload styleClass="w-full mt-2" name="file" (onSelect)="onSelect($event)" [multiple]="false" [auto]="true" accept=".txt"
+                                    maxFileSize="1000000">
+                                    <ng-template pTemplate="empty">
+                                        <div class="flex align-items-center justify-content-center flex-column">
+                                            <i class="pi pi-cloud-upload border-2 border-circle p-3 text-4xl text-400 border-400"></i>
+                                            <p class="mt-4 mb-0">Drag and drop files here to upload.</p>
+                                        </div>
+                                    </ng-template>
+                                </p-fileUpload>
+            </div>
+          </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <div class="flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="flex align-items-center gap-2">
+                <!-- <p-button icon="pi pi-user" rounded="true" text="true" />
+                <p-button icon="pi pi-bookmark" severity="secondary" rounded="true" text="true" /> -->
+            </div>
+            <p-button icon="pi pi-cloud-upload" [outlined]="true" [loading]="isLoading" (onClick)="uploadCertificate()" label="Upload" />
+
+        </div>
+    </ng-template>
+</p-panel>

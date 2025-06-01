@@ -5,12 +5,14 @@ import { reportsConfigRoleWise } from '../../../../shared/constants/report-confi
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+
 
 
 @Component({
   selector: 'app-all-reports',
   standalone: true,
-  imports: [ButtonModule,CardModule],
+  imports: [ButtonModule,CardModule,LottieComponent],
   templateUrl: './all-reports.component.html',
   styleUrl: './all-reports.component.scss'
 })

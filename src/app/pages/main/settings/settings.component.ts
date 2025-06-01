@@ -60,7 +60,22 @@ export class SettingsComponent implements OnInit {
             
         }
       ]
-  }
+    },
+     {
+        label: 'More Settings',
+        icon: 'pi pi-user',
+        items: [
+            {
+                label: 'Firmware',
+                icon: 'pi pi-user-edit',
+                command: () => {
+                    this.router.navigate(['/main/settings/more']);
+                    this.breadcrumbService.generateBreadcrumbs('/main/settings/more');
+                }
+                
+            }
+        ]
+    },
 ];
   userRole: string = '';
   userName: string = '';

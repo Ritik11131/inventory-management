@@ -151,6 +151,7 @@ export const reportsConfigRoleWise: any = {
                 date: { enabled: true, disableFutureDate: true, disableCurrentDate: true },               
             },
             api:'report/Alert/Sos',
+            lottie: { display: true, path: '/assets/lottie/alert.json' },
             tableColumns:[
                 { field: 'sos', header: 'Count' },
                 { field: 'device', subfield:'vahanSno', header: 'Vehicle Sno', nested: true, },
@@ -173,6 +174,7 @@ export const reportsConfigRoleWise: any = {
                 date: { enabled: true, disableFutureDate: true, disableCurrentDate: true }
             },
             api:'report/Alert/Overspeed',
+            lottie: { display: true, path: '/assets/lottie/alert.json' },
             tableColumns:[
                 { field: 'overspeed', header: 'Count' },
                 { field: 'device', subfield:'vahanSno', header: 'Vehicle Sno', nested: true, },
@@ -182,6 +184,106 @@ export const reportsConfigRoleWise: any = {
                 { field: 'rto', subfield:'rtoName', header: 'RTO Name', nested: true, },
                 { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
             ],
+            globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
+        },
+         {
+            id: "speed_violation",
+            reportName: "Speed Violation",
+            filters: {
+                state:true,
+                rto: true,
+                oem: true,
+                specificVehicle: true,
+                date: { enabled: true, disableFutureDate: true, disableCurrentDate: true }
+            },
+            api:'report/Alert/Overspeed',
+            tableColumns:[
+                { field: 'overspeed', header: 'Count' },
+                { field: 'device', subfield:'vahanSno', header: 'Vehicle Sno', nested: true, },
+                { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
+                { field: 'vehicle', subfield:'vehicleNo', header: 'Vehicle Name', nested: true, },
+                { field: 'oem', subfield:'name', header: 'OEM Name', nested: true, },
+                { field: 'rto', subfield:'rtoName', header: 'RTO Name', nested: true, },
+                { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
+            ],
+            globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
+        },
+         {
+            id: "distance",
+            reportName: "Distance",
+            filters: {
+                state:true,
+                rto: true,
+                oem: true,
+                specificVehicle: true,
+                date: { enabled: true, disableFutureDate: true, disableCurrentDate: true }
+            },
+            api:'report/Alert/Overspeed',
+            tableColumns:[
+                { field: 'overspeed', header: 'Count' },
+                { field: 'device', subfield:'vahanSno', header: 'Vehicle Sno', nested: true, },
+                { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
+                { field: 'vehicle', subfield:'vehicleNo', header: 'Vehicle Name', nested: true, },
+                { field: 'oem', subfield:'name', header: 'OEM Name', nested: true, },
+                { field: 'rto', subfield:'rtoName', header: 'RTO Name', nested: true, },
+                { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
+            ],
+            globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
+        },
+         {
+            id: "summary",
+            reportName: "Summary",
+            filters: {
+                state:true,
+                rto: true,
+                oem: true,
+                specificVehicle: true,
+                date: { enabled: true, disableFutureDate: true, disableCurrentDate: true }
+            },
+            api:'report/Alert/Overspeed',
+            tableColumns:[
+                { field: 'overspeed', header: 'Count' },
+                { field: 'device', subfield:'vahanSno', header: 'Vehicle Sno', nested: true, },
+                { field: 'device', subfield:'imei', header: 'IMEI', nested: true, },
+                { field: 'vehicle', subfield:'vehicleNo', header: 'Vehicle Name', nested: true, },
+                { field: 'oem', subfield:'name', header: 'OEM Name', nested: true, },
+                { field: 'rto', subfield:'rtoName', header: 'RTO Name', nested: true, },
+                { field: 'permitHolder', subfield:'permitHolderName', header: 'Permit Holder Name', nested: true, },
+            ],
+            globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
+        },
+
+         {
+            id: "alert",
+            reportName: "Alert",
+            filters: {
+                state:true,
+                rto: true,
+                oem: true,
+                specificVehicle: true,
+                date: { enabled: true, disableFutureDate: true },               
+            },
+            api:'report/Alert/CountAndType',
+             tableColumns: [
+                 { field: 'device', subfield: 'vahanSno', header: 'Vehicle Sno', nested: true, },
+                 { field: 'device', subfield: 'imei', header: 'IMEI', nested: true, },
+                 { field: 'vehicle', subfield: 'vehicleNo', header: 'Vehicle Name', nested: true, },
+                 { field: 'alert', subfield: 'accident', header: 'Accident', nested: true },
+                 { field: 'alert', subfield: 'door', header: 'Door', nested: true },
+                 { field: 'alert', subfield: 'aallDown', header: 'Aall Down', nested: true },
+                 { field: 'alert', subfield: 'geofenceEnter', header: 'Geofence Enter', nested: true },
+                 { field: 'alert', subfield: 'geofenceExit', header: 'Geofence Exit', nested: true },
+                 { field: 'alert', subfield: 'jamming', header: 'Jamming', nested: true },
+                 { field: 'alert', subfield: 'lowBattery', header: 'Low Battery', nested: true },
+                 { field: 'alert', subfield: 'overspeed', header: 'Overspeed', nested: true },
+                 { field: 'alert', subfield: 'powerCut', header: 'Power Cut', nested: true },
+                 { field: 'alert', subfield: 'sos', header: 'Sos', nested: true },
+                 { field: 'alert', subfield: 'tampering', header: 'Tampering', nested: true },
+                 { field: 'alert', subfield: 'vibration', header: 'Vibration', nested: true },
+                 { field: 'alert', subfield: 'hardAcceleration', header: 'Hard Acceleration', nested: true },
+                 { field: 'alert', subfield: 'hardBraking', header: 'Hard Braking', nested: true },
+                 { field: 'alert', subfield: 'hardCornering', header: 'Hard Cornering', nested: true }
+             ],
             globalFilterFields:['device.vahanSno', 'device.imei', 'device.vehicleName', 'oem.name', 'permitHolder.permitHolderName', 'rto.rtoName', 'status'],
         },
         {
@@ -211,7 +313,7 @@ export const reportsConfigRoleWise: any = {
         },
          {
             id: "device_installation",
-            reportName: "Device Installation",
+            reportName: "Vehicle Installation",
             filters: {
                 state:true,
                 rto: true,
