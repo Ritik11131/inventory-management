@@ -1,0 +1,41 @@
+<app-generic-table [data]="geofences" [columns]="columns" [rows]="10" [header]="'Geofence'" [isDataLoading]="isLoading" [actions]="['edit','delete']"
+    [exportFilename]="'geofence'" [globalFilterFields]="['name']" (edit)="onEditState($event)" [selectionMode]="'none'" (delete)="onDeleteState($event)"
+    (new)="openNew($event)" />
+
+
+    @if(geofenceDrawer) {
+<app-generic-drawer [isOpen]="geofenceDrawer" [contentTemplate]="createRouteContent" (onDrawerHide)="hideDrawer($event)" />
+}
+
+
+<ng-template #createRouteContent>
+    <div class="grid h-full">
+        <!-- Left Side - Leaflet Map -->
+        <div class="col-12 lg:col-8 xl:col-9 h-full">
+            <div class="h-full w-full">
+                <div leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)"
+                    class="h-full w-full border-round shadow-2"></div>
+            </div>
+        </div>
+
+        <!-- Right Side - Inputs & Buttons (Stacked on Small Screens) -->
+        <div class="col-12 lg:col-4 xl:col-3 bg-white p-4 flex flex-column gap-4">
+            <h3 class="text-xl font-semibold text-muted-color-emphasis">{{isEditing ? 'Update' : 'Create' }} a Geofence</h3>
+
+            <div class="flex flex-column gap-3">
+                <label for="geofenceName" class="font-medium">Geofence Name</label>
+                <input id="geofenceName" type="text" class="p-inputtext w-full" placeholder="Enter Geofence Name"
+                    [(ngModel)]="geofenceName" />
+            </div>
+            
+
+
+            <div class="mt-4 flex justify-content-end">
+                <!-- <p-button icon="pi pi-check" [severity]="'success'" label="Save" class="mr-4" (onClick)="loadSavedRoute()" /> -->
+                <p-button icon="pi pi-check" [severity]="'primary'" [label]="isEditing ? 'Update' : 'Create'" class="mr-4"
+                     />
+                <!-- <p-button icon="pi pi-times" [severity]="'secondary'" label="Reset" (click)="resetInputs()" /> -->
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -174,6 +174,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                         }
                     }
                 ]
+            },
+            {
+                label: 'Geofence',
+                icon: 'pi pi-map-marker',
+                items: [
+                    {
+                        label: 'Geofence List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/geofence']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/geofence');
+                        }
+                    }
+                ]
             }
         ],
         OEM: [

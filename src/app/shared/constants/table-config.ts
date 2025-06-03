@@ -31,6 +31,10 @@ export const tableActionsConfigRoleWise : any = {
       RouteList: [
         { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
         { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
+      ],
+      GeofenceList: [
+        { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
+        { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
       ]
     },
     OEM: {

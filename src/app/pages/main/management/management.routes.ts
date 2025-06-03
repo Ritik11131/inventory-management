@@ -11,6 +11,7 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { VehicleCategoryComponent } from './vehicle-category/vehicle-category.component';
 import { RouteComponent } from './route/route.component';
 import { UnmapDeviceComponent } from './unmap-device/unmap-device.component';
+import { GeofenceComponent } from './geofence/geofence.component';
 
 export const managementRoutes: Routes = [
    {
@@ -60,6 +61,10 @@ export const managementRoutes: Routes = [
       {
          path:'route',
          component:RouteComponent
+      },
+      {
+         path:'geofence',
+         component:GeofenceComponent
       }
     ]
    },

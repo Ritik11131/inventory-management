@@ -51,6 +51,11 @@ export class BreadcrumbService {
           { label: 'Route' },
           { label: 'Route List' }
         ],
+        'geofence':[
+          { label: 'Management' },
+          { label: 'Geofence' },
+          { label: 'Geofence List' }
+        ],
         'dynamic-user-list': [
           { label: 'Management' },
           { label: (authService : any) => authService.getUserType() === 'User' ? 'Permit Holder' : authService.getUserType() },
