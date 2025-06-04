@@ -279,8 +279,7 @@ export class DeviceListComponent {
       formFields[0].options = response.data.map((obj: any) => {
         const keys = Object.keys(obj);       
         const idKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload' || type === 'activate') ? 'id' : 'sno'));
-        const nameKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload') ? 'modelName' : (type === 'activate') ? 'providerName' : 'name'));
-  
+        const nameKey: any = keys.find(key => key.includes((type === 'create' || type === 'edit' || type === 'bulkUpload') ? 'modelName' : (type === 'activate') ? 'providerName' : (type ==='tranferInventory') ? 'orgName' : 'name'));  
         // Setting dropdownKeys based on found keys
         formFields[0].dropdownKeys = { idKey, nameKey };
 
@@ -296,7 +295,10 @@ export class DeviceListComponent {
               id: obj[idKey],
               providerName: obj[nameKey],
             }
-            : {
+            : (type === 'tranferInventory') ? {
+              sno: obj[idKey],
+              orgName: obj[nameKey],
+            } : {
               sno: obj[idKey],
               name: obj[nameKey],
             };
@@ -603,11 +605,11 @@ export class DeviceListComponent {
 
 
   async fetchAndResetDevice(): Promise<any> {
-    await this.fetchDevices();
     this.deviceDialog = false;
     this.device = this.resetDevice();
     this.isEditing = false;
     this.currentAction = null;
+    await this.fetchDevices();
   }
 
 
