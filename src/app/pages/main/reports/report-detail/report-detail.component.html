@@ -13,7 +13,7 @@
         @if(report.filters.state) {
             <p-floatLabel>
                 <p-dropdown class="mr-4"
-                styleClass="w-18rem" [options]="states" [(ngModel)]="selectedState" optionLabel="stateName" (onChange)="onStateChange($event)" [virtualScroll]="true" [itemSize]="30"
+                styleClass="w-18rem" [options]="states" [(ngModel)]="selectedState" optionLabel="stateName" (onChange)="onStateChange($event)" [virtualScroll]="true" [virtualScrollItemSize]="30"
                 placeholder="Select State" [showClear]="true"  inputId="state" />
                 <label for="state">Select State</label>
             </p-floatLabel>
@@ -22,7 +22,7 @@
         @if(report.filters.rto) {
             <p-floatLabel>
                 <p-multiSelect  class="mr-4"
-                styleClass="w-18rem" [options]="rtos" [(ngModel)]="selectedRto" optionLabel="rtoName" [virtualScroll]="true" [itemSize]="30"
+                styleClass="w-18rem" [options]="rtos" [(ngModel)]="selectedRto" optionLabel="rtoName" [virtualScroll]="true" [virtualScrollItemSize]="30"
                 placeholder="Select Rto" [showClear]="true"  inputId="rto" />
                 <label for="rto">Select Rto</label>
             </p-floatLabel>

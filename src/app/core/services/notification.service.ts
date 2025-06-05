@@ -49,6 +49,11 @@ export class NotificationService {
   // Configuration
   private readonly POLLING_INTERVAL = 10000; // 10 seconds
   
+  // Sound configuration
+  private audio: HTMLAudioElement | null = null;
+  private readonly _soundEnabled = signal(true);
+  private readonly NOTIFICATION_SOUND_PATH = 'assets/sounds/bell-notification.mp3'; // Update with your sound file path
+  
   // State management with signals
   private readonly _state = signal<NotificationState>({
     count: 0,
@@ -71,13 +76,86 @@ export class NotificationService {
   readonly totalCount = computed(() => this._state().totalCount);
   readonly isPolling = computed(() => this._isPolling());
   readonly isPanelOpen = computed(() => this._isPanelOpen());
-
+  readonly soundEnabled = computed(() => this._soundEnabled());
 
   private readonly _lastFetchedTime = signal<string | null>(null);
 
-  
   constructor() {
+    this.initializeAudio();
     this.startPolling();
+  }
+  
+  /**
+   * Initialize audio for notifications
+   */
+  private initializeAudio(): void {
+    try {
+      this.audio = new Audio();
+      this.audio.src = this.NOTIFICATION_SOUND_PATH;
+      this.audio.preload = 'auto';
+      this.audio.volume = 0.7; // Set volume (0.0 to 1.0)
+      
+      // Handle loading errors
+      this.audio.addEventListener('error', (e) => {
+        console.warn('Could not load notification sound:', e);
+        this.audio = null;
+      });
+    } catch (error) {
+      console.warn('Audio initialization failed:', error);
+      this.audio = null;
+    }
+  }
+  
+  /**
+   * Play notification sound
+   */
+  private playNotificationSound(): void {
+    if (!this._soundEnabled() || !this.audio) return;
+    
+    try {
+      // Reset audio to beginning and play
+      this.audio.currentTime = 0;
+      const playPromise = this.audio.play();
+      
+      // Handle play promise for modern browsers
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.warn('Could not play notification sound:', error);
+        });
+      }
+    } catch (error) {
+      console.warn('Error playing notification sound:', error);
+    }
+  }
+  
+  /**
+   * Toggle sound on/off
+   */
+  toggleSound(): void {
+    this._soundEnabled.update(current => !current);
+  }
+  
+  /**
+   * Enable sound
+   */
+  enableSound(): void {
+    this._soundEnabled.set(true);
+  }
+  
+  /**
+   * Disable sound
+   */
+  disableSound(): void {
+    this._soundEnabled.set(false);
+  }
+  
+  /**
+   * Set sound volume
+   */
+  setSoundVolume(volume: number): void {
+    if (this.audio && volume >= 0 && volume <= 1) {
+      this.audio.volume = volume;
+    }
   }
   
   /**
@@ -111,84 +189,83 @@ export class NotificationService {
    * Poll notification count with optimized error handling
    */
   private async pollNotificationCount(): Promise<void> {
-  try {
-    const response = await this.fetchNotificationCount();
-    const newCount = response.count;
+    try {
+      const response = await this.fetchNotificationCount();
+      const newCount = response.count;
 
-    if (newCount > 0) {
-      if (this._isPanelOpen()) {
-        const listResponse = await this.fetchNotificationList({
-          page: 1,
-          pageSize: newCount
-        });
+      if (newCount > 0) {
+        // Play sound for new notifications
+        this.playNotificationSound();
+        
+        if (this._isPanelOpen()) {
+          const listResponse = await this.fetchNotificationList({
+            page: 1,
+            pageSize: newCount
+          });
 
-        const merged = this.mergeNotifications(this.notifications(), listResponse.notifications);
-        this.updateState({
-          notifications: merged,
-          totalCount: listResponse.totalCount,
-          hasMore: listResponse.hasMore
-        });
+          const merged = this.mergeNotifications(this.notifications(), listResponse.notifications);
+          this.updateState({
+            notifications: merged,
+            totalCount: listResponse.totalCount,
+            hasMore: listResponse.hasMore
+          });
 
-        // Count remains 0 since user has already seen them
-        this.updateState({ count: 0 });
+          // Count remains 0 since user has already seen them
+          this.updateState({ count: 0 });
 
-      } else {
-        this.updateState({
-          count: this._state().count + newCount
-        });
+        } else {
+          this.updateState({
+            count: this._state().count + newCount
+          });
+        }
       }
+    } catch (error) {
+      this.handlePollingError(error);
     }
-  } catch (error) {
-    this.handlePollingError(error);
   }
-}
 
-private mergeNotifications(
-  current: NotificationItem[],
-  incoming: NotificationItem[]
-): NotificationItem[] {
-  const seen = new Set(current.map(n => n.id));
-  const unique = incoming.filter(n => !seen.has(n.id));
-  return [...unique, ...current];
-}
+  private mergeNotifications(
+    current: NotificationItem[],
+    incoming: NotificationItem[]
+  ): NotificationItem[] {
+    const seen = new Set(current.map(n => n.id));
+    const unique = incoming.filter(n => !seen.has(n.id));
+    return [...unique, ...current];
+  }
 
-closePanel(): void {
-  this._isPanelOpen.set(false);
-  this.resetNotificationState()
-}
+  closePanel(): void {
+    this._isPanelOpen.set(false);
+    this.resetNotificationState()
+  }
 
-  
   /**
    * Fetch notification count from API
    */
-private async fetchNotificationCount(): Promise<NotificationCountResponse> {
-  const lastFetched = this._lastFetchedTime();
-  
-  // If lastFetched is null, use current IST time - 5 minutes
-  const defaultTime = new Date(Date.now() + (5.5 * 60 * 60 * 1000) - (5 * 60 * 1000))
-    .toISOString()
-    .split('.')[0];
+  private async fetchNotificationCount(): Promise<NotificationCountResponse> {
+    const lastFetched = this._lastFetchedTime();
+    
+    // If lastFetched is null, use current IST time - 5 minutes
+    const defaultTime = new Date(Date.now() + (5.5 * 60 * 60 * 1000) - (5 * 60 * 1000))
+      .toISOString()
+      .split('.')[0];
 
-  const lastTime = lastFetched ?? defaultTime;
+    const lastTime = lastFetched ?? defaultTime;
 
-  const response = await this.http.get('report/Event/DashboardAlert', { lastTime });
-  const hasData = Array.isArray(response?.data) && response.data.length > 0;
+    const response = await this.http.get('report/Event/DashboardAlert', { lastTime });
+    const hasData = Array.isArray(response?.data) && response.data.length > 0;
 
-  // Only update lastFetchedTime if new data is present
-  if (hasData) {
-    const newEventTime = response.data[0]?.alert?.eventtime;
-    this._lastFetchedTime.set(new Date(newEventTime).toISOString().split('.')[0]);
+    // Only update lastFetchedTime if new data is present
+    if (hasData) {
+      const newEventTime = response.data[0]?.alert?.eventtime;
+      this._lastFetchedTime.set(new Date(newEventTime).toISOString().split('.')[0]);
+    }
+
+    return {
+      count: hasData ? response.data.length : 0,
+      timestamp: new Date(lastTime)  // Always return the time used to fetch
+    };
   }
 
-  return {
-    count: hasData ? response.data.length : 0,
-    timestamp: new Date(lastTime)  // Always return the time used to fetch
-  };
-}
-
-
-
-  
   /**
    * Handle count response and update state
    */
@@ -213,33 +290,32 @@ private async fetchNotificationCount(): Promise<NotificationCountResponse> {
    * Handle icon click - fetch notifications
    */
   async onIconClick(): Promise<void> {
-  if (this.isLoading()) return;
+    if (this.isLoading()) return;
 
-  this._isPanelOpen.set(true);  // was _isIconClicked
-  const currentCount = this.count();
+    this._isPanelOpen.set(true);  // was _isIconClicked
+    const currentCount = this.count();
 
-  try {
-    this.updateState({ isLoading: true });
+    try {
+      this.updateState({ isLoading: true });
 
-    const response = await this.fetchNotificationList({
-      page: 1,
-      pageSize: currentCount || 10
-    });
-    this.updateState({
-      notifications: response.notifications,
-      totalCount: response.totalCount,
-      hasMore: response.hasMore,
-      count: 0  // Clear badge count
-    });
+      const response = await this.fetchNotificationList({
+        page: 1,
+        pageSize: currentCount || 10
+      });
+      this.updateState({
+        notifications: response.notifications,
+        totalCount: response.totalCount,
+        hasMore: response.hasMore,
+        count: 0  // Clear badge count
+      });
 
-  } catch (error) {
-    this.handleApiError(error);
-  } finally {
-    this.updateState({ isLoading: false });
+    } catch (error) {
+      this.handleApiError(error);
+    } finally {
+      this.updateState({ isLoading: false });
+    }
   }
-}
 
-  
   /**
    * Load more notifications for infinite scroll
    */
@@ -304,7 +380,6 @@ private async fetchNotificationCount(): Promise<NotificationCountResponse> {
       totalCount: response.pagination?.totalCount,
       hasMore: response.pagination?.hasNext
     };
-
   }
   
   /**
@@ -412,5 +487,10 @@ private async fetchNotificationCount(): Promise<NotificationCountResponse> {
    */
   ngOnDestroy(): void {
     this.stopPolling();
+    // Clean up audio resources
+    if (this.audio) {
+      this.audio.pause();
+      this.audio = null;
+    }
   }
 }
