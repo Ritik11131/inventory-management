@@ -87,7 +87,7 @@
                             <td>
                                 @if (col.subfield) {
                                     @if (col.nextsubfield) {
-                                        {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield]?.[col.nextsubfield] | date) || '-') : (item[col.field]?.[col.subfield]?.[col.nextsubfield] || '-') }}
+                                        {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield]?.[col.nextsubfield] | date:'medium') || '-') : (item[col.field]?.[col.subfield]?.[col.nextsubfield] || '-') }}
                                     } @else {
                                         @if(col.hyperlink) {
                                                 <span   (click)="col?.hyperlink ? showOverlay(col,item, $event, op) : null" 
@@ -104,7 +104,7 @@
                                                 'text-red-500' : col.field === 'lastPosition' && item[col.field]?.[col.subfield] === 'Offline',
                                                 'text-color-secondary': col.field === 'lastPosition' && item[col.field]?.[col.subfield] === 'Never Connected'
                                                 }">
-                                                {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield] | date) || '-') : (item[col.field]?.[col.subfield] || '-') }}
+                                                {{ col?.type === 'date' ? ((item[col.field]?.[col.subfield] | date:'medium') || '-') : (item[col.field]?.[col.subfield] || '-') }}
                                             </span>
                                         }
                                         <p-overlayPanel #op appendTo="body">

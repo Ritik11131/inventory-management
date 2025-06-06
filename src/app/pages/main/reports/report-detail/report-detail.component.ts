@@ -387,7 +387,7 @@ export class ReportDetailComponent implements OnInit {
     } catch (error: any) {
       this.reportTableData = [];
       console.error('Error loading report data:', error);
-      this.toastService.showError(error.error.data, 'error');
+      this.toastService.showError(error.error.data || 'Something Went Wrong!', 'error');
     } finally {
       this.isReportLoading = false;
     }
