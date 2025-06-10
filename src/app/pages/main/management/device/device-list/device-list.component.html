@@ -1,4 +1,4 @@
-<app-generic-table [data]="devices" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="actions"
+<app-generic-table [data]="devices" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="actions" [loadingProgress]="loadingProgress" [totalPages]="totalPages" [newLoadingUI]="true"
    [exportFilename]="'Device'" [globalFilterFields]="['imei','iccid','sno']" (edit)="onEditDevice($event)" (delete)="onDeleteDevice($event)" [selectionMode]="'multiple'"
    (sampleBulkUpload)="exportSampleBulkUpload($event)" (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" (bulkUpload)="bulkUploadDevice($event)"
    (transferInventory)="onTransferInventory($event)" (sendCommand)="onSendCommand($event)" (activate)="onActivate($event)" (fitment)="onFitment($event)"

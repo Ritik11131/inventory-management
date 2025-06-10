@@ -67,6 +67,10 @@ export class GenericTableComponent implements OnInit {
   @Input() actions:any[] = ['edit'];
   @Input() selectionMode: 'single' | 'multiple' | 'none' = 'multiple';
 
+  @Input() totalPages: number = 0; // Total pages for pagination
+  @Input() loadingProgress: any = false; // Loading progress for the table
+  @Input() newLoadingUI: boolean = false; // New loading UI for the table
+
   selectionChange = output<any>();
   edit = output<any>();
   delete = output<any>();

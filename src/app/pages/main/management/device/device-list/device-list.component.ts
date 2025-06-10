@@ -96,6 +96,10 @@ export class DeviceListComponent implements AfterViewInit {
   currentTemplateKey!: string;
   currentTemplate!: any;
 
+  // Add these properties to your component
+loadingProgress: number = 0;
+totalPages: number = 0;
+
   TEMPLATE_KEYS = {
     ALERT: 'ALERT',
     // NOTIFICATION: 'NOTIFICATION',
@@ -357,37 +361,64 @@ export class DeviceListComponent implements AfterViewInit {
   }
 
 
-  async fetchDevices(): Promise<any> {
-    this.isLoading = true;
-    this.devices = [];
-    try {
-      const { data } = await this.deviceService.getList(500, 1);
-      this.devices = data?.items || []; // Use optional chaining for safety
-      console.log(data);
+
+
+async fetchDevices(): Promise<any> {
+  this.isLoading = true;
+  this.devices = [];
+  this.loadingProgress = 0; // Add this property to your component
+  this.totalPages = 0; // Add this property to your component
   
-      const { pageSize, totalPage } = data;
-  
-      // Create an array of promises for fetching all pages
-      const pageRequests = Array.from({ length: totalPage - 1 }, (_, i) =>
-        this.deviceService.getList(pageSize, i + 2) // Start from page 2
-      );
-  
-      // Wait for all requests to complete
-      const responses = await Promise.all(pageRequests);
-  
-      // Concatenate all items from the responses
-      responses.forEach(response => {
-        this.devices = this.devices.concat(response.data?.items || []);
-      });
-  
-      // Optional: Show success message
-      // this.toastService.showSuccess('Success', `${this.authService.getUser Type()} List fetched successfully!`);
-    } catch (error) {
-      this.toastService.showError('Error', `Failed to fetch Device List!`);
-    } finally {
-      this.isLoading = false;
+  try {
+    // Fetch first page to get total pages info
+    const { data } = await this.deviceService.getList(500, 1);
+    this.devices = data?.items || [];
+    
+    const { pageSize, totalPage } = data;
+    this.totalPages = totalPage;
+    this.loadingProgress = 1; // First page loaded
+      
+    if (totalPage <= 1) {
+      return; // Only one page, we're done
     }
+    
+    // Create array of page numbers to fetch (starting from page 2)
+    const remainingPages = Array.from({ length: totalPage - 1 }, (_, i) => i + 2);
+    
+    // Process pages in batches to avoid overwhelming the server
+    const batchSize = 3; // Adjust based on your server capacity
+    
+    for (let i = 0; i < remainingPages.length; i += batchSize) {
+      const batch = remainingPages.slice(i, i + batchSize);
+      
+      // Create promises for current batch
+      const batchRequests = batch.map(pageNum => 
+        this.deviceService.getList(pageSize, pageNum)
+      );
+      
+      // Wait for current batch to complete
+      const responses = await Promise.all(batchRequests);
+      
+      // Add items from current batch
+      responses.forEach(response => {
+        const newItems = response.data?.items || [];
+        this.devices = [...this.devices, ...newItems]; // Use spread operator for better performance
+      });
+      
+      // Update progress
+      this.loadingProgress += batch.length;      
+      
+      // Optional: Add small delay to prevent UI blocking
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    
+  } catch (error) {
+    this.toastService.showError('Error', 'Failed to fetch Device List!');
+  } finally {
+    this.isLoading = false;
+    this.loadingProgress = 0;
   }
+}
 
 
   resetDevice() {
@@ -488,7 +519,6 @@ export class DeviceListComponent implements AfterViewInit {
         fileReader.readAsText(data.file);
       } else if(this.currentAction === 'activate') {
         await this.activateDevice(data);
-        await this.fetchAndResetDevice();
       } else if(this.currentAction === 'tranferInventory') {
         await this.transferInventory(data);
       } else if(this.currentAction === 'userSendSmsOtp') {
@@ -623,8 +653,9 @@ export class DeviceListComponent implements AfterViewInit {
     try {
       const response = await this.deviceService.activateDevice(sim,this.device);
       this.toastService.showSuccess('Success', response.data);
+      await this.fetchAndResetDevice();
     } catch (error : any) {
-      this.toastService.showError('Error', error.error.data.message);
+      this.toastService.showError('Error', error.error.data);
     }
     
   }
