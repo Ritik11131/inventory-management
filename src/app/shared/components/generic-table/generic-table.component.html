@@ -156,7 +156,7 @@
                                     {{ col.type === 'date' ? ((item[col.field] | date:'medium' ) || '-')  : item[col.field] || '-' }}
                                 }
                                 <p-overlayPanel #op appendTo="body"> 
-                                    @if((selectedColumn === 'iccid' && selectedOverlayObject.simDetails)) {
+                                    @if((selectedColumn === 'iccid')) {
                                         <app-generic-overlay *ngIf="selectedOverlayObject"
                                         [title]="selectedColumn === 'iccid' ? 'Sim Details' : ''" [data]="selectedOverlayObject?.simDetails"
                                         [fields]="selectedColumn === 'iccid' ? simOverlayFields : []">
