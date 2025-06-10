@@ -22,7 +22,7 @@
     <!-- Loop through actions to display buttons -->
     <div class="mt-2">
         @for (action of actions; track $index) {
-            <p-button  [label]="action?.label" [raised]="true" severity="contrast" (onClick)="handleSelectedAction(action.key)" />
+            <p-button  [label]="action?.label" [raised]="true" (onClick)="handleSelectedAction(action.key)" />
         }
     </div>
     }

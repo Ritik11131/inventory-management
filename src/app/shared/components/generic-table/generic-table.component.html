@@ -156,12 +156,14 @@
                                     {{ col.type === 'date' ? ((item[col.field] | date:'medium' ) || '-')  : item[col.field] || '-' }}
                                 }
                                 <p-overlayPanel #op appendTo="body"> 
-                                    @if((selectedColumn === 'iccid')) {
+                                    @if((selectedColumn === 'iccid' && selectedOverlayObject.simDetails)) {
                                         <app-generic-overlay *ngIf="selectedOverlayObject"
-                                        [title]="selectedColumn === 'iccid' ? 'Sim Details' : ''" [data]="selectedOverlayObject?.simDetails"
+                                        [actions]="selectedColumn === 'iccid' ? [{label:'Recheck Activation',key:'recheckActivation'}] : []"
+                                        [title]="selectedColumn === 'iccid' ? 'Sim Details' : ''" [data]="selectedOverlayObject?.simDetails" 
+                                        (emitSeelctedAction)="onActivate($event, item)"
                                         [fields]="selectedColumn === 'iccid' ? simOverlayFields : []">
                                     </app-generic-overlay>
-                                    }    @else if( selectedColumn === 'iccid' && !selectedOverlayObject.simDetails ) {
+                                    }    @else if(selectedColumn === 'iccid') {
                                         <p-button (onClick)="onActivate($event, item)" label="Activate Sim" icon="pi pi-eject" />
                                     }
 
