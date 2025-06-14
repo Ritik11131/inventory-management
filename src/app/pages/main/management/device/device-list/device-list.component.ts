@@ -362,6 +362,7 @@ async fetchDevices(): Promise<any> {
       responses.forEach(response => {
         const newItems = response.data?.items || [];
         this.devices = [...this.devices, ...newItems]; // Use spread operator for better performance
+        this.inStockDevices = this.devices.filter((device: any) => device?.inStock);
       });
       
       // Update progress

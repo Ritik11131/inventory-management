@@ -1,10 +1,8 @@
-<!-- Progress Bar with Count -->
-<div *ngIf="newLoadingUI && isDataLoading" class="fixed top-0 left-0 w-full h-full flex align-items-center justify-content-center z-5 backdrop-blur-md bg-black-alpha-50">
+<!-- <div *ngIf="newLoadingUI && isDataLoading" class="fixed top-0 left-0 w-full h-full flex align-items-center justify-content-center z-5 backdrop-blur-md bg-black-alpha-50">
 
   <div class="text-center p-4 shadow-2 border-round surface-0 w-full max-w-30rem">
     <p class="text-xl font-medium mb-3">Loading devices... <span class="text-primary">({{ data.length }} loaded)</span></p>
 
-    <!-- Progress bar -->
     <p-progressBar 
       *ngIf="totalPages > 1" 
       [value]="((loadingProgress / totalPages) * 100)?.toFixed(2)"
@@ -13,14 +11,13 @@
 
     <p *ngIf="totalPages > 1" class="text-sm text-600">Page {{ loadingProgress }} of {{ totalPages }}</p>
 
-    <!-- Optional Spinner -->
     <div class="flex align-items-center justify-content-center gap-2 mt-3">
       <i class="pi pi-spin pi-spinner text-primary" style="font-size: 1.5rem"></i>
       <span class="text-sm text-500">Fetching data from server...</span>
     </div>
 
   </div>
-</div>
+</div> -->
 
 
 <div class="px-4 md:px-6 lg:px-8">
