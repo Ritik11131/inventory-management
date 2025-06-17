@@ -152,5 +152,23 @@ export class DeviceService {
     }
   }
 
+  async sendKycOtp(id:any) : Promise<any> {
+    try { 
+      const response = await this.http.post('User/SendKycOtp', {deviceId: id} );
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+   async validateKycOtp(id:any,otp: any) : Promise<any> {
+    try { 
+      const response = await this.http.post('User/ValidateKyc', {deviceId: id,otp} );
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 }

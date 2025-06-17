@@ -65,7 +65,7 @@ export class DeviceListComponent implements AfterViewInit {
   submitted: boolean = false;
   validationState: { [key: string]: boolean } = {};
   isValidated:boolean = false;
-  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | 'fitment' | 'userSendSmsOtp' | 'sendCommand' | null = null;
+  currentAction: 'create' | 'edit' | 'bulkUpload' | 'tranferInventory' | 'activate' | 'fitment' | 'userSendSmsOtp' | 'sendCommand' | 'sendKycOtp' | null = null;
   bulkUploadHeader:string = 'VendorCode|DeviceId|Imei|Iccid|MafYear|RfcCode';
   actions:any[] = [];
   stepFormFields: any[] = [];
@@ -446,6 +446,13 @@ async fetchDevices(): Promise<any> {
     }
   }
 
+  resetKYCOTP(selectedDevice : any) {
+    return {
+      deviceId:selectedDevice.id,
+      otp: null
+    };
+  }
+
 
   resetDeviceFitment(selectedDevice : any) {
     return {
@@ -528,12 +535,27 @@ async fetchDevices(): Promise<any> {
         await this.verifyOtpAndCompleteKYC(data);
       } else if(this.currentAction === 'sendCommand') {
         await this.postSendCommand({ deviceId: data.id, command: 'custom', data: data.command })
+      } else if(this.currentAction === 'sendKycOtp') {
+       await this.validateKYCOtp(data);
       } else {
         await this.createDeviceFitment(data);
         await this.fetchAndResetDevice();
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async validateKYCOtp(data: any): Promise<void> {    
+    try {
+      const response = await this.deviceService.validateKycOtp(data.deviceId, data?.otp);
+      this.toastService.showSuccess('OTP Verified', response.data);
+      this.deviceDialog = false;
+      this.device = this.resetDevice();
+      this.isEditing = false;
+      this.currentAction = null;
+    } catch (error: any) {
+      this.toastService.showError('Error', error.error.data);
     }
   }
 
@@ -1118,10 +1140,21 @@ async fetchDevices(): Promise<any> {
   }
 
   async handleKYCComplete(event: any): Promise<void> {
-    // this.currentTemplateKey = this.TEMPLATE_KEYS.KYC;
-    // this.currentTemplate = this.templateMap[this.currentTemplateKey];
-    //  this.enableTempateSave = false;
-    // this.deviceDialog = true;
+    try {
+      const response = await this.deviceService.sendKycOtp(event?.id);
+      this.toastService.showSuccess('Success', response.data.message || 'KYC OTP sent successfully!');
+      this.deviceDialog = true;
+      this.currentAction = 'sendKycOtp';
+      this.fields = userSmsOtpFormFields;
+      this.isEditing = false;
+      this.isValidated = true;
+      this.device = this.resetKYCOTP(event);
+      this.customSaveLabel = 'Verify OTP & Complete KYC'
+    } catch (error:any) {
+      this.toastService.showError('Error', error.error.data);
+    }
+
+    
   }
 
 
