@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DynamicUserService } from '../../../../core/services/dynamic-user.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-more',
@@ -22,7 +23,7 @@ export class MoreComponent {
   oemList: any[] = [];
   selectedOem: any;
 
-  constructor(private dynamicuserService:DynamicUserService) {}
+  constructor(private dynamicuserService:DynamicUserService, private toastService:ToastService) {}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -53,7 +54,7 @@ export class MoreComponent {
   }
 
   uploadCertificate() {
-
+    this.toastService.showSuccess('Certificate uploaded successfully!','success');
   }
 
   onOemChange(event: any) {

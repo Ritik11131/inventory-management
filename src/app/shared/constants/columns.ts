@@ -18,6 +18,7 @@ export const deviceColumns = [
     { field: 'user', header: 'Permit Holder',nested:true, subfield:'name', hyperlink: true },
     { field:'downloadCertificate',header:'Download Certificate'},
     { field: 'lastPosition', header: 'Online Status',nested:true, subfield:'status' },
+    { field: 'status', header: 'KYC', minWidth: '12rem', kycButton: true },
     // { field: 'simDetails', header: 'Sim Provider',nested:true, subfield:'provider', nextsubfield:'providerName' },
     // { field: 'simDetails', header: 'Primary Sim Operator', nested:true, subfield:'primaryOpt' },
     // { field: 'simDetails', header: 'Primary Mobile No',nested:true, subfield:'primarySimNo' },

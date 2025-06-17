@@ -1,8 +1,8 @@
 <app-generic-table [data]="devices" [columns]="columns" [rows]="10" [header]="'Sim Providers'" [isDataLoading]="isLoading" [actions]="actions" [loadingProgress]="loadingProgress" [totalPages]="totalPages" [newLoadingUI]="true"
-   [exportFilename]="'Device'" [globalFilterFields]="['imei','iccid','sno']" (edit)="onEditDevice($event)" (delete)="onDeleteDevice($event)" [selectionMode]="'multiple'"
+   [exportFilename]="'Device'" [globalFilterFields]="['imei','iccid','sno','vehicle.vehicleNo']" (edit)="onEditDevice($event)" (delete)="onDeleteDevice($event)" [selectionMode]="'multiple'"
    (sampleBulkUpload)="exportSampleBulkUpload($event)" (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" (bulkUpload)="bulkUploadDevice($event)"
    (transferInventory)="onTransferInventory($event)" (sendCommand)="onSendCommand($event)" (activate)="onActivate($event)" (fitment)="onFitment($event)"
-   (unlinkDevice)="handleDeviceUnlink($event)" (emitOverlayAction)="handleOverlayAction($event)" (setAlert)="handleSetAlert($event)" (viewAlertConfig)="handleViewAlertConfig($event)" />
+   (unlinkDevice)="handleDeviceUnlink($event)" (emitOverlayAction)="handleOverlayAction($event)" (setAlert)="handleSetAlert($event)" (viewAlertConfig)="handleViewAlertConfig($event)" (onCompleyteKYC)="handleKYCComplete($event)" />
 
 
 <app-generic-dialog [customSaveLabel]="customSaveLabel" [stepFormFields]="stepFormFields" [disableStepperNextBtn]="disableStepperNextBtn"
@@ -86,6 +86,10 @@
     </div>
 
   </div>
+</ng-template>
+
+<ng-template #setKyc>
+<h1>Hii</h1>
 </ng-template>
 
 

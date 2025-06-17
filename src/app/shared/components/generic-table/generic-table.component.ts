@@ -89,6 +89,7 @@ export class GenericTableComponent implements OnInit {
   emitOverlayAction = output<any>();
   viewAlertConfig = output<any>();
   emitViewPositionsClick = output<any>();
+  onCompleyteKYC = output<any>();
   actionMenuItems!: any[];
   availableActionsList!: any;
   selectedColumn!: any;
@@ -316,6 +317,10 @@ export class GenericTableComponent implements OnInit {
 
   onUnlinkDevice(event : Event,item:any) {
     this.unlinkDevice.emit({event , item})
+  }
+
+  completeKYC(item: any) {
+    this.onCompleyteKYC.emit(item);
   }
 
   async showOverlay(col:any,item: any, event: MouseEvent,op: any) :Promise<any> {

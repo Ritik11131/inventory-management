@@ -50,7 +50,8 @@ import { FitmentService } from '../../../../../core/services/fitment.service';
 })
 export class DeviceListComponent implements AfterViewInit {
 
-  @ViewChild('setAlert') setAlert!: TemplateRef<any>;;
+  @ViewChild('setAlert') setAlert!: TemplateRef<any>;
+  @ViewChild('setKyc') setKyc!: TemplateRef<any>;
 
   fields: FormFields[] | any[] = [];
   devices: any[] = [];
@@ -102,6 +103,7 @@ totalPages: number = 0;
 
   TEMPLATE_KEYS = {
     ALERT: 'ALERT',
+    KYC: 'KYC',
     // NOTIFICATION: 'NOTIFICATION',
     // Add more as needed
   };
@@ -137,6 +139,7 @@ totalPages: number = 0;
   ngAfterViewInit(): void {
     this.templateMap = {
       [this.TEMPLATE_KEYS.ALERT]: this.setAlert,
+      [this.TEMPLATE_KEYS.KYC]: this.setKyc,
       // [this.TEMPLATE_KEYS.NOTIFICATION]: this.setNotification,
       // Add more mappings here
     };
@@ -1112,6 +1115,13 @@ async fetchDevices(): Promise<any> {
     }
     this.enableTempateSave = false;
     this.deviceDialog = true;
+  }
+
+  async handleKYCComplete(event: any): Promise<void> {
+    // this.currentTemplateKey = this.TEMPLATE_KEYS.KYC;
+    // this.currentTemplate = this.templateMap[this.currentTemplateKey];
+    //  this.enableTempateSave = false;
+    // this.deviceDialog = true;
   }
 
 

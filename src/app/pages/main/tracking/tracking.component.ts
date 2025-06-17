@@ -739,7 +739,7 @@ export class TrackingComponent implements OnInit {
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error : any) {
       this.routesOptions = [];
-      this.toastService.showError('Error', error?.error?.data);
+      this.toastService.showError('Error', 'Failed to fetch routes!');
     } finally {
     }
   }
