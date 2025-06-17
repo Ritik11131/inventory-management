@@ -27,7 +27,7 @@ import { bulkUploadDeviceFormFields, deviceActivationFormFields, deviceCreateFor
 import { FormFields } from '../../../../../shared/interfaces/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { DeviceModelService } from '../../../../../core/services/device-model.service';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, filter, Subject } from 'rxjs';
 import { downloadFile } from '../../../../../shared/utils/common';
 import { DynamicUserService } from '../../../../../core/services/dynamic-user.service';
 import { InventoryService } from '../../../../../core/services/inventory.service';
@@ -323,63 +323,40 @@ export class DeviceListComponent {
 
 
 async fetchDevices(): Promise<any> {
-  this.isLoading = true;
-  this.devices = [];
-  this.loadingProgress = 0; // Add this property to your component
-  this.totalPages = 0; // Add this property to your component
+    this.isLoading = true;
+    this.devices = [];
+    this.inStockDevices = [];
+    try {
+      const { data } = await this.deviceService.getList(500, 1);
+      this.devices = data?.items || []; // Use optional chaining for safety
+      console.log(data);
   
-  try {
-    // Fetch first page to get total pages info
-    const { data } = await this.deviceService.getList(500, 1);
-    this.devices = data?.items || [];
-    
-    const { pageSize, totalPage } = data;
-    this.totalPages = totalPage;
-    this.loadingProgress = 1; // First page loaded
-      
-    if (totalPage <= 1) {
-      return; // Only one page, we're done
-    }
-    
-    // Create array of page numbers to fetch (starting from page 2)
-    const remainingPages = Array.from({ length: totalPage - 1 }, (_, i) => i + 2);
-    
-    // Process pages in batches to avoid overwhelming the server
-    const batchSize = 3; // Adjust based on your server capacity
-    
-    for (let i = 0; i < remainingPages.length; i += batchSize) {
-      const batch = remainingPages.slice(i, i + batchSize);
-      
-      // Create promises for current batch
-      const batchRequests = batch.map(pageNum => 
-        this.deviceService.getList(pageSize, pageNum)
+      const { pageSize, totalPage } = data;
+  
+      // Create an array of promises for fetching all pages
+      const pageRequests = Array.from({ length: totalPage - 1 }, (_, i) =>
+        this.deviceService.getList(pageSize, i + 2) // Start from page 2
       );
-      
-      // Wait for current batch to complete
-      const responses = await Promise.all(batchRequests);
-      
-      // Add items from current batch
+  
+      // Wait for all requests to complete
+      const responses = await Promise.all(pageRequests);
+  
+      // Concatenate all items from the responses
       responses.forEach(response => {
-        const newItems = response.data?.items || [];
-        this.devices = [...this.devices, ...newItems]; // Use spread operator for better performance
-        this.inStockDevices = this.devices.filter((device: any) => device?.inStock);
+        this.devices = this.devices.concat(response.data?.items || []);
       });
-      
-      // Update progress
-      this.loadingProgress += batch.length;
-      
-      // Optional: Add small delay to prevent UI blocking
-      await new Promise(resolve => setTimeout(resolve, 50));
+  
+      // Create a new array for in-stock devices without modifying this.devices
+      this.inStockDevices = this.devices.filter((device: any) => device?.inStock);
+  
+      // Optional: Show success message
+      // this.toastService.showSuccess('Success', `${this.authService.getUser Type()} List fetched successfully!`);
+    } catch (error) {
+      this.toastService.showError('Error', `Failed to fetch Device List!`);
+    } finally {
+      this.isLoading = false;
     }
-    
-  } catch (error) {
-    this.toastService.showError('Error', 'Failed to fetch Device List!');
-  } finally {
-    this.isLoading = false;
-    this.loadingProgress = 0;
   }
-}
-
 
 
   resetDevice() {

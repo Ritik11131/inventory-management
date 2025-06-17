@@ -90,7 +90,8 @@ export class GenericDialogComponent implements OnChanges {
   constructor(private exportService:ExportService) { }
 
 
-  ngOnChanges(changes: SimpleChanges): void {                
+  ngOnChanges(changes: SimpleChanges): void {
+                
     if (changes['data'] && changes['data'].currentValue) {
       console.log(this.data, 'dataaa');
     }
