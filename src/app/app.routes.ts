@@ -16,4 +16,8 @@ export const routes: Routes = [
         redirectTo: '/main/dashboard', 
         pathMatch: 'full' 
     },
+    {
+        path: '**',
+        redirectTo:'/auth/login'
+    }
 ];

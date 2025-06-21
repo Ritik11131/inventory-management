@@ -33,8 +33,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             // Update the local storage with the new token
             tokenService.setTokens(response.data.accessToken, response.data.refreshToken, response.data.refreshTokenExpiry);  
             tokenService.decodeToken();
-            console.log(tokenService.decodedToken);
-
             // Clone the original request with the new token
             const newAuthReq = req.clone({
               setHeaders: {
