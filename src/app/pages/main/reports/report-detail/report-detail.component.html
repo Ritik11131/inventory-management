@@ -95,7 +95,7 @@
     <app-generic-table [data]="reportTableData" [columns]="report?.tableColumns" [rows]="10" [header]="''"
     [isDataLoading]="false" [showOnlyExportCsv]="true" [showOnlyExportCsvFileName]="report?.reportName"
     [globalFilterFields]="report?.globalFilterFields || []" [actions]="report.tableActions || []"
-    (sendMessage)="handleSendMessage($event)" (emitViewPositionsClick)="handleViewPositions($event)" />
+    (sendMessage)="handleSendMessage($event)" (emitViewPositionsClick)="handleViewPositions($event)" (emitButtonTextClick)="handleButtonTextClick($event)" />
 }
 }
 

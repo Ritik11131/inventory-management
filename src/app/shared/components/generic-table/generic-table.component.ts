@@ -88,6 +88,7 @@ export class GenericTableComponent implements OnInit {
   unlinkDevice = output<any>();
   emitOverlayAction = output<any>();
   viewAlertConfig = output<any>();
+  emitButtonTextClick = output<any>();
   emitViewPositionsClick = output<any>();
   onCompleyteKYC = output<any>();
   actionMenuItems!: any[];
@@ -285,6 +286,10 @@ export class GenericTableComponent implements OnInit {
 
   onTransferInventory() {
     this.transferInventory.emit(true)
+  }
+
+  onButtonTextClick(e:any, item:any, field:any) {
+    this.emitButtonTextClick.emit({e,item,field})
   }
 
   onSetAlert() {

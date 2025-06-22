@@ -125,6 +125,8 @@
                                                                     }">
                                                 {{ (col.field === 'user' && col.subfield === 'name') ? (item[col.field].userType === 'User') ?  (item[col.field]?.[col.subfield] || '-') : '-'  : ((item.activationStatus && item.inStock) ? 'Click To Create Fitment' : item[col.field]?.[col.subfield] || '-') }}
                                                 </span>
+                                        } @else if(col.buttonText) {
+                                        <p-button [label]="item[col.field]?.[col.subfield]" outlined (onClick)="onButtonTextClick($event,item,col?.subfield)" />
                                         } @else {
                                             <span [ngClass]="{
                                                 'text-green-500' : col.field === 'lastPosition' && item[col.field]?.[col.subfield] === 'Online',
@@ -180,6 +182,8 @@
                                     }
                                 } @else if(col.field === 'status' && col?.kycButton && item.status === 'Kyc Pending') {
                                     <i [pTooltip]="'Complete KYC'" tooltipPosition="bottom" class="pi pi-mobile cursor-pointer text-primary-500" (click)="completeKYC(item)"></i>
+                                } @else if(col.buttonText) {
+                                <p-button [label]="item[col.field]" outlined (onClick)="onButtonTextClick($event,item,col.field)" />
                                 } @else {
                                     {{ col.type === 'date' ? ((item[col.field] | date:'medium' ) || '-')  : item[col.field] || '-' }}
                                 }

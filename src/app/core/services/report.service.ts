@@ -36,4 +36,13 @@ export class ReportService {
             throw error;
           }
     }
+
+    async getDetailedReportEventWise(api:string,deviceId: any,eventType:any,ReportDate:any) {
+      try {
+            const response = await this.http.post(api, {deviceId,eventType,ReportDate});
+            return response;
+          } catch (error) {
+            throw error;
+          }
+    }
 }

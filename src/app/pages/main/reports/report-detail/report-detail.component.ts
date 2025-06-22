@@ -437,4 +437,28 @@ export class ReportDetailComponent implements OnInit {
   }
 
 
+  async handleButtonTextClick(e: any) {
+    console.log(e);
+    let d: any = new Date(this.selectedDate);
+    d = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    try {
+      const response = await this.reportService.getDetailedReportEventWise('Alert/detailed', e?.item?.device?.refId,e.field,d);
+      const mergedEvents = (response?.data || [])
+      .map((obj: any) => obj?.event)
+      .filter((event: any) => event);
+      this.viewTableData = mergedEvents;
+      this.viewTableHeader = e?.field;
+      this.report.dialogTableColumns = [
+        {field:'type',header:'Type',minWidth: '5rem'},
+        {field:'eventtime',header:'Event Time',type:'date',minWidth: '8rem'},
+        {field:'fixtime',header:'Fix Time',type:'date',minWidth: '8rem'},
+      ]      
+    } catch (error) {
+      
+    }
+    this.viewTableDialog = true;
+    
+  }
+
+
 }  
