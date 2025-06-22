@@ -193,6 +193,33 @@ export const simProviderFormFields : FormFields[] = [
     }
 ]
 
+export const assignPortFormFields : FormFields[] = [
+     {
+        name: 'oem',
+        label: 'Select OEM',
+        type: 'dropdown',
+        options: [],
+        dropdownKeys:{},
+        placeholder:'Select a OEM',
+        hide: (hideFields: string[]) => hideFields.includes('oem'),
+     },
+     {
+        name:'serviceProvider',
+        label:'Select Provider',
+        type:'dropdown',
+        options:[],
+        dropdownKeys:{},
+        placeholder:'Select a Provider',
+        hide: (hideFields: string[]) => hideFields.includes('serviceProvider'),
+    },
+    {
+        name: 'port',
+        label: 'Port Number',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('portNumber'),
+    },
+]
+
 export const deviceActivationFormFields : FormFields[] = [
     {
         name:'sim',

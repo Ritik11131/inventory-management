@@ -35,7 +35,11 @@ export const tableActionsConfigRoleWise : any = {
       GeofenceList: [
         { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
         { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
-      ]
+      ],
+      PortList : [
+        { label: 'Add', icon: 'pi pi-plus', action: 'onNewUser' },
+        { label: 'Export to CSV', icon: 'pi pi-print', action: 'onPrint' }
+      ],
     },
     OEM: {
         DistributorList: [

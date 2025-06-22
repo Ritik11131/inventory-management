@@ -76,6 +76,11 @@ export class BreadcrumbService {
           { label: 'Device Model' },
           { label: 'Device Model List' }
         ],
+        'assign-port': [
+          { label: 'Management' },
+          { label: 'Assign Port' },
+          { label: 'Port List' }
+        ],
         assigned: (authService : any) => {
           return {
             [authService.getUserType()]: [

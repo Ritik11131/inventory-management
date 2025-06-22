@@ -188,6 +188,20 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                         }
                     }
                 ]
+            },
+            {
+                label: 'Assign Port',
+                icon: 'pi pi-map-marker',
+                items: [
+                    {
+                        label: 'Port List',
+                        icon: 'pi pi-list',
+                        command: () => {
+                            router.navigate(['/main/management/assign-port']);
+                            breadcrumbService.generateBreadcrumbs('/main/management/assign-port');
+                        }
+                    }
+                ]
             }
         ],
         OEM: [

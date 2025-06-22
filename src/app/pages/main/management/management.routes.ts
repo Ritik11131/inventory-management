@@ -12,6 +12,7 @@ import { VehicleCategoryComponent } from './vehicle-category/vehicle-category.co
 import { RouteComponent } from './route/route.component';
 import { UnmapDeviceComponent } from './unmap-device/unmap-device.component';
 import { GeofenceComponent } from './geofence/geofence.component';
+import { AssignPortComponent } from './assign-port/assign-port.component';
 
 export const managementRoutes: Routes = [
    {
@@ -65,6 +66,10 @@ export const managementRoutes: Routes = [
       {
          path:'geofence',
          component:GeofenceComponent
+      },
+      {
+         path:'assign-port',
+         component:AssignPortComponent
       }
     ]
    },
