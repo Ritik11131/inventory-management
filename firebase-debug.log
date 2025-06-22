@@ -1,0 +1,68 @@
+[debug] [2025-06-21T16:03:36.374Z] ----------------------------------------------------------------------
+[debug] [2025-06-21T16:03:36.376Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Roadcast\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2025-06-21T16:03:36.376Z] CLI Version:   12.8.0
+[debug] [2025-06-21T16:03:36.376Z] Platform:      win32
+[debug] [2025-06-21T16:03:36.376Z] Node Version:  v18.20.4
+[debug] [2025-06-21T16:03:36.377Z] Time:          Sat Jun 21 2025 21:33:36 GMT+0530 (India Standard Time)
+[debug] [2025-06-21T16:03:36.378Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-06-21T16:03:36.395Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-06-21T16:03:36.519Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-06-21T16:03:36.520Z] > authorizing via signed-in user (roadcastdeveloper@gmail.com)
+[debug] [2025-06-21T16:03:36.520Z] [iam] checking project vahansathi-28c9c for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-06-21T16:03:36.521Z] > refreshing access token with scopes: []
+[debug] [2025-06-21T16:03:36.522Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-06-21T16:03:36.522Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-06-21T16:03:36.844Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-06-21T16:03:36.844Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-06-21T16:03:36.874Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions [none]
+[debug] [2025-06-21T16:03:36.875Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions x-goog-quota-user=projects/vahansathi-28c9c
+[debug] [2025-06-21T16:03:36.875Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-21T16:03:37.183Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-06-21T16:03:37.183Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2025-06-21T16:03:37.330Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions 200
+[debug] [2025-06-21T16:03:37.331Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions {}
+[debug] [2025-06-21T16:03:37.331Z] [iam] error while checking permissions, command may fail: FirebaseError: Authorization failed. This account is missing the following required permissions on project vahansathi-28c9c:
+
+  firebase.projects.get
+  firebasehosting.sites.update
+[debug] [2025-06-21T16:03:37.332Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/vahansathi-28c9c [none]
+[debug] [2025-06-21T16:03:37.732Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/vahansathi-28c9c 403
+[debug] [2025-06-21T16:03:37.733Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/vahansathi-28c9c {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2025-06-21T16:03:37.734Z] HTTP Error: 403, The caller does not have permission
+[debug] [2025-06-21T16:03:37.735Z] FirebaseError: HTTP Error: 403, The caller does not have permission
+    at responseToError (C:\Users\Roadcast\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:49:12)
+    at RetryOperation._fn (C:\Users\Roadcast\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:285:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: Failed to get Firebase project vahansathi-28c9c. Please make sure the project exists and your account has permission to access it.
+[debug] [2025-06-21T16:03:45.812Z] ----------------------------------------------------------------------
+[debug] [2025-06-21T16:03:45.814Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Roadcast\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2025-06-21T16:03:45.815Z] CLI Version:   12.8.0
+[debug] [2025-06-21T16:03:45.815Z] Platform:      win32
+[debug] [2025-06-21T16:03:45.815Z] Node Version:  v18.20.4
+[debug] [2025-06-21T16:03:45.817Z] Time:          Sat Jun 21 2025 21:33:45 GMT+0530 (India Standard Time)
+[debug] [2025-06-21T16:03:45.817Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-06-21T16:03:45.889Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-06-21T16:03:45.890Z] > authorizing via signed-in user (roadcastdeveloper@gmail.com)
+[debug] [2025-06-21T16:03:45.890Z] [iam] checking project vahansathi-28c9c for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-06-21T16:03:45.892Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions [none]
+[debug] [2025-06-21T16:03:45.892Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions x-goog-quota-user=projects/vahansathi-28c9c
+[debug] [2025-06-21T16:03:45.893Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-06-21T16:03:47.531Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions 200
+[debug] [2025-06-21T16:03:47.531Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/vahansathi-28c9c:testIamPermissions {}
+[debug] [2025-06-21T16:03:47.532Z] [iam] error while checking permissions, command may fail: FirebaseError: Authorization failed. This account is missing the following required permissions on project vahansathi-28c9c:
+
+  firebase.projects.get
+  firebasehosting.sites.update
+[debug] [2025-06-21T16:03:47.533Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/vahansathi-28c9c [none]
+[debug] [2025-06-21T16:03:48.128Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/vahansathi-28c9c 403
+[debug] [2025-06-21T16:03:48.128Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/vahansathi-28c9c {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2025-06-21T16:03:48.129Z] HTTP Error: 403, The caller does not have permission
+[debug] [2025-06-21T16:03:48.130Z] FirebaseError: HTTP Error: 403, The caller does not have permission
+    at responseToError (C:\Users\Roadcast\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:49:12)
+    at RetryOperation._fn (C:\Users\Roadcast\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:285:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: Failed to get Firebase project vahansathi-28c9c. Please make sure the project exists and your account has permission to access it.
