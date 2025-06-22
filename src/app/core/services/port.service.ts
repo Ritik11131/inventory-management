@@ -19,7 +19,7 @@ export class PortService {
   }
 
 
-  async createRTO(port : any) : Promise<any> {
+  async createPort(port : any) : Promise<any> {
     try {
       const response = await this.http.post('port', {...port});
       return response;
@@ -29,7 +29,7 @@ export class PortService {
   }
 
 
-  async updateRTO(port : any) : Promise<any> {
+  async updatePort(port : any) : Promise<any> {
     try {
       const response = await this.http.put('port', port.id, {...port});
       return response;
