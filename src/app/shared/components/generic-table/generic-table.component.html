@@ -125,7 +125,7 @@
                                                                     }">
                                                 {{ (col.field === 'user' && col.subfield === 'name') ? (item[col.field].userType === 'User') ?  (item[col.field]?.[col.subfield] || '-') : '-'  : ((item.activationStatus && item.inStock) ? 'Click To Create Fitment' : item[col.field]?.[col.subfield] || '-') }}
                                                 </span>
-                                        } @else if(col.buttonText) {
+                                        } @else if(col.buttonText && item[col.field]?.[col.subfield]) {
                                         <p-button [label]="item[col.field]?.[col.subfield]" outlined (onClick)="onButtonTextClick($event,item,col?.subfield)" />
                                         } @else {
                                             <span [ngClass]="{
