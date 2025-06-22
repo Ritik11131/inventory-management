@@ -195,7 +195,7 @@ export const simProviderFormFields : FormFields[] = [
 
 export const assignPortFormFields : FormFields[] = [
      {
-        name: 'oem',
+        name: 'fkUserId',
         label: 'Select OEM',
         type: 'dropdown',
         options: [],
@@ -204,7 +204,7 @@ export const assignPortFormFields : FormFields[] = [
         hide: (hideFields: string[]) => hideFields.includes('oem'),
      },
      {
-        name:'serviceProvider',
+        name:'FkServiceProvider',
         label:'Select Provider',
         type:'dropdown',
         options:[],
@@ -212,11 +212,26 @@ export const assignPortFormFields : FormFields[] = [
         placeholder:'Select a Provider',
         hide: (hideFields: string[]) => hideFields.includes('serviceProvider'),
     },
+     {
+        name: 'domainType',
+        label: 'Domain Type',
+        type:'dropdown',
+        options:[],
+        dropdownKeys:{},
+        placeholder:'Select a Domain Type',
+        hide: (hideFields: string[]) => hideFields.includes('domainType'),
+    },
+     {
+        name: 'domain',
+        label: 'Domain',
+        type: 'text',
+        hide: (hideFields: string[]) => hideFields.includes('domain'),
+    },
     {
         name: 'port',
         label: 'Port Number',
-        type: 'text',
-        hide: (hideFields: string[]) => hideFields.includes('portNumber'),
+        type: 'number',
+        hide: (hideFields: string[]) => hideFields.includes('port'),
     },
 ]
 

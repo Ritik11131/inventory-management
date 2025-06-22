@@ -1,6 +1,6 @@
-<app-generic-table [data]="ports" [columns]="columns" [rows]="10" [header]="'Port'" [isDataLoading]="isLoading"
-   [exportFilename]="'ports'" [globalFilterFields]="['rtocode','rtoname','state']" (edit)="onEditState($event)" [selectionMode]="'none'"
-    (selectionChange)="onSelectionChange($event)" (new)="openNew($event)"/>
+<app-generic-table [data]="ports" [columns]="columns" [rows]="10" [header]="'Port'" [isDataLoading]="isLoading" [toolbarRightActions]="toolbarRightActions"
+   [exportFilename]="'ports'" [globalFilterFields]="['domain','port']" (edit)="onEditState($event)" [selectionMode]="'none'"
+    (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" (dropdown)="onToolBarDropDownChange($event)"/>
 
 
 <app-generic-dialog [visible]="portDialog" [header]="'Ports'" [width]="'800px'" [modal]="true" [isEditing]="isEditing"

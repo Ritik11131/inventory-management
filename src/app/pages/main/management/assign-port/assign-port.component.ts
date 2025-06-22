@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { GenericTableComponent } from '../../../../shared/components/generic-table/generic-table.component';
 import { GenericDialogComponent } from '../../../../shared/components/generic-dialog/generic-dialog.component';
 import { ToastService } from '../../../../core/services/toast.service';
-import { rtoColumns } from '../../../../shared/constants/columns';
+import { portsColumns } from '../../../../shared/constants/columns';
 import { PortService } from '../../../../core/services/port.service';
 import { assignPortFormFields } from '../../../../shared/constants/forms';
 import { SimProvidersService } from '../../../../core/services/sim-providers.service';
@@ -17,26 +17,39 @@ import { DynamicUserService } from '../../../../core/services/dynamic-user.servi
 })
 export class AssignPortComponent {
 
-  columns = rtoColumns;
+  columns = portsColumns;
     fields: any[] = []
     ports: any[] = [];
     port!: any;
     isLoading: boolean = false;
     portDialog: boolean = false;
     isEditing: boolean = false;
+    toolbarRightActions:any[] = [
+    {
+      type:'dropdown',
+      options:[],
+      dropdownKeys:{},
+      placeholder:'Select Oem',
+    }
+  ]
+  toolbarDropDownSelected!:any
   
     constructor(private toastService: ToastService,private dynamicUserService: DynamicUserService,  private portService:PortService, private simProviderService:SimProvidersService) { }
   
   
     ngOnInit(): void {
       this.fillDropDownOptions().then();
-      this.fetchPorts().then();
     }
+
+    async onToolBarDropDownChange(selected:any) : Promise<any> {   
+    this.toolbarDropDownSelected = selected;   
+    await this.fetchPorts(selected)
+  }
   
-    async fetchPorts(): Promise<any> {
+    async fetchPorts(oemId: any): Promise<any> {
       this.isLoading = true;
       try {
-        const response = await this.portService.getList();
+        const response = await this.portService.getList(oemId);
         this.ports = response.data;
         // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
       } catch (error : any) {
@@ -49,23 +62,26 @@ export class AssignPortComponent {
 
   async fillDropDownOptions(): Promise<void> {
     try {
-      const [userResponse, simProviderResponse] = await Promise.all([
+      const [userResponse, simProviderResponse, domainTypeResponse] = await Promise.all([
         this.dynamicUserService.getList(),
-        this.simProviderService.getList()
+        this.simProviderService.getList(),
+        this.portService.getDomainTypeList()
       ]);
 
-      const mapToOptions = (data: any[]) =>
+      const mapToOptions = (data: any[], type?:string) =>
         data.map(item => {
           const keys = Object.keys(item);
           return {
             label: item[keys[1]], // assumes label is at second key
-            value: item[keys[0]], // assumes value is at first key
+            value: type && type === 'domainType' ? item[keys[1]] : item[keys[0]], // assumes value is at first key
           };
         });
 
       this.fields = assignPortFormFields;
+      this.toolbarRightActions[0].options = mapToOptions(userResponse?.data)
       this.fields[0].options = mapToOptions(userResponse.data);
       this.fields[1].options = mapToOptions(simProviderResponse.data);
+      this.fields[2].options = mapToOptions(domainTypeResponse.data, 'domainType');      
 
     } catch (error) {
       console.error('Dropdown options load failed:', error);
@@ -88,9 +104,11 @@ export class AssignPortComponent {
   
     resetPort() {
       return {
-        oem: null,
-        serviceProvider: null,
-        port: "",
+        fkUserId: null,
+        FkServiceProvider: null,
+        domainType: null,
+        domain: '',
+        port: null,
       };
   }
   
@@ -107,30 +125,30 @@ export class AssignPortComponent {
      * @param data The RTO to be saved.
      * @returns A promise that resolves when the RTO is saved.
      */
-    async onSavePort(data: any) : Promise<any> {    
+    async onSavePort(data: any) : Promise<any> {      
       if (this.port.id) {
-        await this.updateRTO(data);
+        await this.updatePort(data);
       } else {
-        await this.createRTO(data);
+        await this.createPort(data);
       }
-      await this.fetchPorts();
+      await this.fetchPorts(this.toolbarDropDownSelected?.sno);
       this.portDialog = false;
       this.port = this.resetPort();
       this.isEditing = false;
     }
   
-    async createRTO(data : any) : Promise<any> {
+    async createPort(data : any) : Promise<any> {
       try {
         const response = await this.portService.createPort(data);
         console.log(response);
-        this.toastService.showSuccess('Success', 'RTO Created Successfully!');
-      } catch (error) {
-        this.toastService.showError('Error', `Failed to create RTO!`);
+        this.toastService.showSuccess('Success', response?.data || 'Port Created Successfully!');
+      } catch (error: any) {
+        this.toastService.showError('Error', error.error?.data || 'Failed to create Port!');
       }
     }
   
   
-    async updateRTO(data : any) : Promise<any> {
+    async updatePort(data : any) : Promise<any> {
       try {
         const response = await this.portService.updatePort(data);
         console.log(response);

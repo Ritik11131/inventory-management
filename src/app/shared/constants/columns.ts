@@ -8,6 +8,12 @@ export const dynamicUserColumns = [
     { field: 'active', header: 'Status', minWidth: '7rem', frozen:true },
 ];
 
+export const portsColumns = [
+    { field: 'domain', header: 'Domain', minWidth: '10rem' },
+    { field: 'domainType', header: 'Domain TYpe', minWidth: '10rem' },
+    { field: 'port', header: 'Port', minWidth: '10rem' },
+]
+
 
 export const deviceColumns = [
     { field: 'index', header: 'S.NO', minWidth: '7rem' },

@@ -13,9 +13,11 @@ import { AvatarModule } from 'primeng/avatar';
 import { DividerModule } from 'primeng/divider';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { NotificationService, NotificationItem } from '../../../core/services/notification.service';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 // Pipes
 import { Pipe, PipeTransform } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Pipe({
   name: 'notificationSeverity',
@@ -95,9 +97,11 @@ export class NotificationIconPipe implements PipeTransform {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    FormsModule,
     BadgeModule,
     ButtonModule,
     OverlayPanelModule,
+    InputSwitchModule,
     ScrollerModule,
     SkeletonModule,
     TooltipModule,
@@ -164,6 +168,7 @@ export class NotificationIconPipe implements PipeTransform {
                   size="small"
                   [loading]="notificationService.isLoading()"
                   (onClick)="clearAllNotifications()" />
+                 <p-inputSwitch id="notificationToggle" [ngModel]="notificationService.soundEnabled()" (onChange)="onToggleNotification($event)" />
               }
             </div>
 
@@ -356,5 +361,10 @@ export class NotificationComponent {
       'sos': { 'background-color': 'var(--red-100)', 'color': 'var(--red-600)' }
     };
     return colorMap[type] || { 'background-color': 'var(--surface-100)', 'color': 'var(--surface-600)' };
+  }
+
+  onToggleNotification(event: any): void {
+    console.log(event);
+    this.notificationService.toggleSound();
   }
 }
