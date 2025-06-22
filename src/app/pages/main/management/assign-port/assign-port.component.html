@@ -1,5 +1,5 @@
 <app-generic-table [data]="ports" [columns]="columns" [rows]="10" [header]="'Port'" [isDataLoading]="isLoading" [toolbarRightActions]="toolbarRightActions"
-   [exportFilename]="'ports'" [globalFilterFields]="['domain','port']" (edit)="onEditState($event)" [selectionMode]="'none'"
+   [exportFilename]="'ports'" [globalFilterFields]="['domain','port']" (edit)="onEditState($event)" [selectionMode]="'none'" [actions]="[]"
     (selectionChange)="onSelectionChange($event)" (new)="openNew($event)" (dropdown)="onToolBarDropDownChange($event)"/>
 
 

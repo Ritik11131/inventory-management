@@ -131,7 +131,7 @@ export class AssignPortComponent {
       } else {
         await this.createPort(data);
       }
-      await this.fetchPorts(this.toolbarDropDownSelected?.sno);
+      await this.fetchPorts(this.toolbarDropDownSelected);
       this.portDialog = false;
       this.port = this.resetPort();
       this.isEditing = false;
