@@ -121,7 +121,7 @@ export class AssignPortComponent {
   
     async createRTO(data : any) : Promise<any> {
       try {
-        const response = await this.portService.createRTO(data);
+        const response = await this.portService.createPort(data);
         console.log(response);
         this.toastService.showSuccess('Success', 'RTO Created Successfully!');
       } catch (error) {
@@ -132,7 +132,7 @@ export class AssignPortComponent {
   
     async updateRTO(data : any) : Promise<any> {
       try {
-        const response = await this.portService.updateRTO(data);
+        const response = await this.portService.updatePort(data);
         console.log(response);
         this.toastService.showSuccess('Success', 'RTO Updated Successfully!');
       } catch (error) {
