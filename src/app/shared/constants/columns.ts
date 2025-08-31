@@ -169,5 +169,24 @@ export const rfcInfoTableColumns = [
     { field: 'oem', header: 'Oem Contact Person Mobile', minWidth: '12rem', type: 'string', nested: true, subfield: 'mobileno' },
     { field: 'rfc', header: 'Rfc Contact Person Mobile', minWidth: '12rem', type: 'string', nested: true, subfield: 'mobileno' },
     { field: 'oem', header: 'Address', minWidth: '18rem', type: 'string', nested: true, subfield: 'address' }
-  ];
+];
+
+
+export const complaintsResolvedInfoTableColumns = [
+    { field: 'vehicleNo', header: 'Vehicle No', minWidth: '8rem' },
+    { field: 'alertType', header: 'Alert Type', minWidth: '5rem' },
+    { field: 'imageUrl', header: 'Image url', minWidth: '8rem', anchor: true },
+    { field: 'status', header: 'Satus', minWidth: '8rem' },
+    { field: 'type', header: 'Type', minWidth: '8rem' },
+    { field: 'description', header: 'Description', minWidth: '8rem' },
+];
+
+export const complaintsPendingInfoTableColumns = [
+    { field: 'vehicleNo', header: 'Vehicle No', minWidth: '8rem' },
+    { field: 'alertType', header: 'Alert Type', minWidth: '8rem' },
+    { field: 'imageUrl', header: 'Image url', minWidth: '8rem', anchor: true },
+    { field: 'status', header: 'Satus', minWidth: '8rem' },
+    { field: 'type', header: 'Type', minWidth: '8rem' },
+    { field: 'description', header: 'Description', minWidth: '8rem' },
+];
   

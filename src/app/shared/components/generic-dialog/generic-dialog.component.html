@@ -205,14 +205,25 @@
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
                         <tr>
                             <td *ngFor="let col of columns">
-                                {{ 
-                                    col.nested ? col?.type && col?.type === 'date' ? 
-                                        ((rowData[col.field]?.[col.subfield] | date:'medium') || '-') : 
-                                        (rowData[col.field]?.[col.subfield] || '-')
-                                    :
-                                    col?.type && col?.type === 'date' ? (rowData[col.field] | date:'medium') : (rowData[col.field] || '-')
-                                 }}
+                                <ng-container *ngIf="col.anchor; else normalCell">
+                                    <a [href]="rowData[col.field]" target="_blank" class="text-primary hover:underline cursor-pointer">
+                                        {{ rowData[col.field] || '-' }}
+                                    </a>
+                                </ng-container>
+                    
+                                <ng-template #normalCell>
+                                    {{
+                                    col.nested
+                                    ? col?.type === 'date'
+                                    ? ((rowData[col.field]?.[col.subfield] | date:'medium') || '-')
+                                    : (rowData[col.field]?.[col.subfield] || '-')
+                                    : col?.type === 'date'
+                                    ? (rowData[col.field] | date:'medium')
+                                    : (rowData[col.field] || '-')
+                                    }}
+                                </ng-template>
                             </td>
+                    
                         </tr>
                     </ng-template>
 

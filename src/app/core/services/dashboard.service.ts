@@ -75,4 +75,13 @@ export class DashboardService {
     }
   }
 
+  async getComplaints() : Promise<any> {
+    try {
+      const response = await this.http.get('Complaint');
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }

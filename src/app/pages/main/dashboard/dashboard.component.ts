@@ -1,4 +1,4 @@
-import { oemInfoTableColumns, rfcInfoTableColumns } from './../../../shared/constants/columns';
+import { complaintsPendingInfoTableColumns, complaintsResolvedInfoTableColumns, oemInfoTableColumns, rfcInfoTableColumns } from './../../../shared/constants/columns';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DividerModule } from 'primeng/divider';
 import { latLng, Map, tileLayer } from "leaflet";
@@ -354,10 +354,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.fetchLastPositionStats(),
         this.fetchUserCountAndDeviceStock(),
         this.fetchVehicleTypesAndCount(),
-        this.fetchTicketsGroupByStatus(),
+        // this.fetchTicketsGroupByStatus(),
+        this.fetchComplaints(),
         this.fetchInventoryStockActivationCount(),
         this.fetchSOSAlertCount(),
-        this.fetchRenewalDueCounts()
+        this.fetchRenewalDueCounts(),
       ]);
     
       // Process or assign the results if needed
@@ -438,15 +439,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  async fetchComplaints(): Promise<any> {
+  try {
+    const response = await this.dashboardService.getComplaints();
+    const data = response?.data ?? [];
+    this.totalComplaints = data.length;
 
-  async fetchSOSAlertCount() : Promise<any> {
+    const stats = data.reduce(
+      (acc: { closed: any[]; open: any[] }, c: any) => {
+        c.status === 'open' ? acc.open.push(c) : acc.closed.push(c);
+        return acc;
+      },{ closed: [], open: [] }
+    );
+
+    this.complaintStats[0] = { ...this.complaintStats[0], count: stats.closed.length, data: stats.closed };
+    this.complaintStats[1] = { ...this.complaintStats[1],count: stats.open.length, data: stats.open };
+
+  } catch (error) {
+    this.totalComplaints = 0;
+    this.complaintStats[0] = { ...this.complaintStats[0], count: 0, data: [] };
+    this.complaintStats[1] = { ...this.complaintStats[1], count: 0, data: [] };
+  }
+}
+
+
+
+  async fetchSOSAlertCount(): Promise<any> {
     try {
       const response = await this.dashboardService.getSOSAletCounts();
       this.updatePanelValues(response?.data);
-      console.log(response,'responseeee');
-      
+      console.log(response, 'responseeee');
+
     } catch (error) {
-      
+
     }
   }
 
@@ -546,7 +571,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async onInfoClick(event: MouseEvent, panel: any, op?: { toggle: (e: MouseEvent) => void }): Promise<void> {    
     if (event.type === 'click') {
       console.log(panel);
-      this.currentInfoTitle = panel?.title || panel?.label || panel?.categoryName || panel?.key || panel?.toUpperCase();
+      this.currentInfoTitle = panel?.title || panel?.label || panel?.categoryName || panel?.key || panel?.toUpperCase() || panel.status;
       this.infoDialog = true;
       this.currentInfoColumns = panel.key === 'alert' ? alertInfotableColumns : 
                                 (panel.key === 'vehicle_installation') ? vehicleTypeInstallationInfotableColumns : 
@@ -555,7 +580,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
                                 (panel === 'inventory') ? inventoryInfoTableColumns : 
                                 (panel === 'renewal') ? renewalInfoTableColumns : 
                                 (panel.key === 'OEM') ? oemInfoTableColumns : 
-                                (panel.key === 'RFC') ? rfcInfoTableColumns : sosInfotableColumns;
+                                (panel.key === 'RFC') ? rfcInfoTableColumns :
+                                (panel.key === 'resolved') ? complaintsResolvedInfoTableColumns : 
+                                (panel.key === 'pending') ? complaintsPendingInfoTableColumns :
+                                sosInfotableColumns;
 
   
       const keyToEndpointMap: Record<string, string> = {
@@ -594,6 +622,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         } finally {
           this.isDashboardTableLoading = false;
         }
+      } else if(panel.key === 'pending' || panel.key === 'resolved') {
+        this.currentInfoData = panel.data
       }
     } else {
       if (op && typeof op.toggle === 'function') {

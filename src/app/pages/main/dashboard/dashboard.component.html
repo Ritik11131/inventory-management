@@ -164,7 +164,9 @@
                 </ng-template>
                 <div class="grid">
                     <div *ngFor="let stat of complaintStats" class="col-12 md:col-6 lg:col-6">
-                        <div class="surface-300 shadow-2 p-3 border-round">
+                        <div (click)="onInfoClick($event,stat)" class="surface-200 shadow-2 p-3 border-round cursor-pointer
+            transition-all transition-duration-200 transition-ease-in-out
+            hover:shadow-4 hover:surface-400 hover:-translate-y-1 hover:scale-105">
                             <div class="flex justify-content-between">
                                 <div>
                                     <div class="mb-3" [ngClass]="'text-' + stat.colorClass + '-500 text-5xl'">{{ stat.count }}</div>
@@ -179,10 +181,8 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="text-right mt-4"></div>
                     </div>
-                </div>
-                <div class="text-right">
-                    <i class="pi pi-info-circle mt-3 text-right cursor-pointer font-bold text-xl text-primary-500"></i>
                 </div>
               </p-panel>
         </div>

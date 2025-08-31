@@ -96,14 +96,18 @@ export const vehicleInstallationTypesObject = [
 export const complaintStatsObject = [
   {
     status: 'Resolved',
+    key:'resolved',
     count: 0,
+    data: [],
     colorClass: 'green',
     icon: 'pi-file-check',
     lottiePath: '/assets/lottie/resolved.json'
   },
   {
     status: 'Pending',
+    key:'pending',
     count: 0,
+    data: [],
     colorClass: 'orange',
     icon: 'pi-file-excel',
     lottiePath: '/assets/lottie/pending.json'
