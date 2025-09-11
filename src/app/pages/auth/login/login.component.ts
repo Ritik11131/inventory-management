@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     const url = window.location.href
-    if (url.includes("vahansathi-28c9c.firebaseapp")) {
+    if (url.includes("staging.vahansathi")) {
       this.isCaptchaDisabled = true;
     }
     this.generateCatcha();
