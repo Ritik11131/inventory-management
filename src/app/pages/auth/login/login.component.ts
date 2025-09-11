@@ -1,26 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { DividerModule } from 'primeng/divider';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
+import {Component, OnInit} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {DividerModule} from 'primeng/divider';
+import {ButtonModule} from 'primeng/button';
+import {InputTextModule} from 'primeng/inputtext';
+import {ToastModule} from 'primeng/toast';
 import * as validator from 'validator';
-import { ToastService } from '../../../core/services/toast.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { generateRandomString } from '../../../shared/utils/common';
-import { PasswordModule } from 'primeng/password';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
+import {ToastService} from '../../../core/services/toast.service';
+import {AuthService} from '../../../core/services/auth.service';
+import {Router, RouterModule} from '@angular/router';
+import {CommonModule} from '@angular/common';
+import {generateRandomString} from '../../../shared/utils/common';
+import {PasswordModule} from 'primeng/password';
+import {InputGroupModule} from 'primeng/inputgroup';
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
+import {IconFieldModule} from 'primeng/iconfield';
+import {InputIconModule} from 'primeng/inputicon';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonModule,InputTextModule,FormsModule,ToastModule,DividerModule,RouterModule,
-    CommonModule,PasswordModule,InputGroupModule,InputGroupAddonModule,IconFieldModule,InputIconModule],
+  imports: [ButtonModule, InputTextModule, FormsModule, ToastModule, DividerModule, RouterModule,
+    CommonModule, PasswordModule, InputGroupModule, InputGroupAddonModule, IconFieldModule, InputIconModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -31,25 +31,28 @@ export class LoginComponent implements OnInit {
   emailError: string = '';
   passwordError: string = '';
   captchaError: boolean = false;
-  isLoggedIn:boolean = false;
+  isLoggedIn: boolean = false;
   captchaCode: string = '';
   userInput: string = '';
   isPasswordToggled: boolean = false;
   captchaImageClass: string = '';
-  
-  
-  constructor(private toastService:ToastService,private authService:AuthService,private router:Router) {}
+  isCaptchaDisabled: boolean = false;
 
 
-  ngOnInit(): void { 
-    this.generateCatcha();
+  constructor(private toastService: ToastService, private authService: AuthService, private router: Router) {
   }
 
 
+  ngOnInit(): void {
+    const url = window.location.href
+    if (url.includes("vahansathi-28c9c.firebaseapp")) {
+      this.isCaptchaDisabled = true;
+    }
+    this.generateCatcha();
+  }
 
-
-   // Disable copy-paste events
-   disableEvent(event: any) {
+  // Disable copy-paste events
+  disableEvent(event: any) {
     event.preventDefault();
   }
 
@@ -75,13 +78,13 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  async signIn() : Promise<any> {
+  async signIn(): Promise<any> {
     this.isLoggedIn = true;
     try {
-      await this.authService.login({ Username: this.email, Password: this.password });
+      await this.authService.login({Username: this.email, Password: this.password});
       // this.toastService.showSuccess('Success', 'Successfully logged in!');
       this.router.navigate([`/main/${this.authService.getUserRole() === 'Dealer' || this.authService.getUserRole() === 'Distributor' ? '/management' : '/dashboard'}`])
-    } catch (error : any) {
+    } catch (error: any) {
       console.error(error);
       this.generateCatcha();
       this.toastService.showError('Error', error.error.data);
@@ -90,12 +93,20 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  generateCatcha() : void {
+  generateCatcha(): void {
+    if (this.isCaptchaDisabled) {
+      this.captchaCode = 'prod';
+      this.userInput = 'prod';
+      return;
+    }
     this.userInput = '';
     this.captchaCode = generateRandomString();
   }
 
   async verifyCode(): Promise<any> {
+    if (this.isCaptchaDisabled) {
+      await this.signIn();
+    } else {
       if (this.userInput === this.captchaCode) {
         await this.signIn();
       } else {
@@ -111,6 +122,7 @@ export class LoginComponent implements OnInit {
         }, 0);
         return this.toastService.showWarn('Warning', 'Captcha code is incorrect!');
       }
+    }
   }
 
 
