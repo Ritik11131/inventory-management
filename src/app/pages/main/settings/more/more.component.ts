@@ -12,11 +12,13 @@ import { DynamicUserService } from '../../../../core/services/dynamic-user.servi
 import { ToastService } from '../../../../core/services/toast.service';
 import { MoreService } from '../../../../core/services/more.service';
 import { saveAs } from 'file-saver';
+import { GenericDialogComponent } from '../../../../shared/components/generic-dialog/generic-dialog.component';
+import { previousFirmwaresTableColumns } from '../../../../shared/constants/columns';
 
 @Component({
   selector: 'app-more',
   standalone: true,
-  imports: [PanelModule, CardModule, ButtonModule, DividerModule, InputTextModule, CommonModule, FormsModule, DropdownModule, FileUploadModule],
+  imports: [PanelModule, CardModule, ButtonModule, DividerModule, InputTextModule, CommonModule, FormsModule, DropdownModule, FileUploadModule, GenericDialogComponent],
   templateUrl: './more.component.html',
   styleUrl: './more.component.scss'
 })
@@ -25,6 +27,12 @@ export class MoreComponent {
   oemList: any[] = [];
   selectedOem: any;
   firmwareFile!: File;
+
+  previousFirmwaresTableColumns = previousFirmwaresTableColumns;
+  currentDialogTitle:any = '';
+  currentDialogData:any[] = []
+  dialogVisible: boolean = false;
+  isDialogTableLoading: boolean = false;
 
   constructor(private dynamicuserService: DynamicUserService, private toastService: ToastService, private moreService: MoreService) { }
 
@@ -81,6 +89,9 @@ export class MoreComponent {
 
 async onOemChange(event: any): Promise<void> {
   console.log('OEM Change Event:', event);
+  this.dialogVisible = true;
+  this.currentDialogTitle = 'Previous Uploaded Firmwares';
+  this.isDialogTableLoading = true;
 
   if (!event?.value?.sno) {
     this.toastService.showError('Invalid Selection', 'No OEM serial number found.');
@@ -91,23 +102,22 @@ async onOemChange(event: any): Promise<void> {
     this.uploadingCertificate = true;
 
     const response = await this.moreService.getPreviousCertificate(event.value.sno);
-    console.log('Previous Certificate Response:', response);
-
-    const firmwareUrl = response?.data?.[0]?.firmwareUrl;
-
-    if (firmwareUrl) {
-      saveAs(firmwareUrl, 'Previous_Uploaded_Certificate');
-    } else {
-      this.toastService.showWarn('No Certificate', 'No previous certificate available for this OEM.');
-    }
-
+    this.currentDialogData = response?.data;
   } catch (error) {
     console.error('Error fetching previous certificate:', error);
     this.toastService.showError('Error', 'No previous certificate found.');
+    this.currentDialogData = [];
   } finally {
     this.uploadingCertificate = false;
-  }
+    this.isDialogTableLoading = false;
+  }  
 }
+
+  onHideDialog(isVisible: boolean) {
+    this.dialogVisible = isVisible;
+    this.currentDialogData = [];
+    this.currentDialogTitle = '';
+  }
 
 
 }

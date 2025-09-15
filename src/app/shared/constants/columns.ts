@@ -189,4 +189,10 @@ export const complaintsPendingInfoTableColumns = [
     { field: 'type', header: 'Type', minWidth: '8rem' },
     { field: 'description', header: 'Description', minWidth: '8rem' },
 ];
+
+export const previousFirmwaresTableColumns = [
+    { field: 'firmwareUrl', header: 'Previous File', anchor: true, type:'date' },
+    { field: 'creationTime', header: 'Creation Time', minWidth: '8rem', type:'date' },
+    { field: 'lastUpdateOn', header: 'Last Updated', minWidth: '8rem', type:'date' },
+]
   

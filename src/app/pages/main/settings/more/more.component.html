@@ -39,3 +39,7 @@
         </div>
     </ng-template>
 </p-panel>
+
+
+<app-generic-dialog [enableSaveBtn]="false" [header]="currentDialogTitle" [isTable]="true" [tableData]="currentDialogData" [isDataLoading]="isDialogTableLoading"
+    [tableColumns]="previousFirmwaresTableColumns" [modal]="true" [visible]="dialogVisible" (onHide)="onHideDialog($event)" />

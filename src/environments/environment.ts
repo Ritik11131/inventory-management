@@ -11,3 +11,9 @@ export const environment = {
       apiKey:'F7XcmYGlBuRehEW5CqVgA8aFooFZjwSR'
     }
   };
+
+
+  // firebase login: use <your_registered_gmail_acoutn> to deploy
+
+// writetoabhshekgupta@gmail.com
+// vahansathi@gmail.com

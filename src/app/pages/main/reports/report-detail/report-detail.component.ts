@@ -424,7 +424,7 @@ export class ReportDetailComponent implements OnInit {
   async handleViewPositions(event: any) {
     if(event?.item) {
       this.viewTableDialog = true;
-      this.viewTableHeader = event?.item?.vehicleNumber +  ' Positions';
+      this.viewTableHeader = ((event?.item?.vehicle?.vehicleNo || '-') +  ' Positions');
       this.viewTableData = event?.item[this.report?.dialogDataKey] || [];
     }
     
