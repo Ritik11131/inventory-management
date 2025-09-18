@@ -252,7 +252,7 @@ export class GenericTableComponent implements OnInit {
       exportData = this.flattenData(this.data, deviceColumns);
       console.log(exportData);
       
-      this.exportService.exportToExcel(exportData, 'Devvices');
+      this.exportService.exportToExcel(exportData, 'Devices');
     } else {
       // Export the data
       this.exportService.exportToExcel(this.data, 'excelData');
