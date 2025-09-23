@@ -86,15 +86,15 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                             breadcrumbService.generateBreadcrumbs('/main/management/device-list');
                         }
                     },
-                    {
-                        label: `Assigned To ${authService.getUserType()}`,
-                        icon: 'pi pi-users',
-                        command: () => {
-                            router.navigate([`/main/management/assigned/${authService.getUserType()}`]);
-                            breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
-                        }
+                    // {
+                    //     label: `Assigned To ${authService.getUserType()}`,
+                    //     icon: 'pi pi-users',
+                    //     command: () => {
+                    //         router.navigate([`/main/management/assigned/${authService.getUserType()}`]);
+                    //         breadcrumbService.generateBreadcrumbs(`/main/management/assigned/${authService.getUserType()}`);
+                    //     }
 
-                    },
+                    // },
                     {
                         label: 'Unmap Device',
                         icon: 'pi pi-sitemap',
