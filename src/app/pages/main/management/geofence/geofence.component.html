@@ -32,7 +32,7 @@
 
             <div class="mt-4 flex justify-content-end">
                 <!-- <p-button icon="pi pi-check" [severity]="'success'" label="Save" class="mr-4" (onClick)="loadSavedRoute()" /> -->
-                <p-button icon="pi pi-check" [severity]="'primary'" [label]="isEditing ? 'Update' : 'Create'" class="mr-4"
+                <p-button (onClick)="createUpdateGeofence()" icon="pi pi-check" [severity]="'primary'" [label]="isEditing ? 'Update' : 'Create'" class="mr-4"
                      />
                 <!-- <p-button icon="pi pi-times" [severity]="'secondary'" label="Reset" (click)="resetInputs()" /> -->
             </div>
