@@ -99,14 +99,21 @@ export class GenericTableComponent implements OnInit {
 
   constructor(private authService:AuthService,private breadcrumbService:BreadcrumbService,private fitmentService:FitmentService, private exportService:ExportService,
               private deviceService:DeviceService,private toastService:ToastService,private pdfService:PdfService) {
+              }
+              
+  async ngOnInit(): Promise<void> {
+    // Wait for user details to load (uses cached promise if already loading)
+    if (this.authService.isAuthenticated()) {
+      try {
+        await this.authService.loadUserDetails();
+      } catch (error) {
+        // Error handling is done in auth service (logout)
+      }
+    }
+    
+    // Now get user role and section after user details are loaded
     this.userRole = this.authService.getUserRole();
-    this.currentSection = this.breadcrumbService.getBreadCrumbsJson()[this.breadcrumbService.getBreadCrumbsJson().length - 1]?.label?.replace(/\s+/g, '');;
-    console.log(this.currentSection,'section');
-  }
-
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
+    this.currentSection = this.breadcrumbService.getBreadCrumbsJson()[this.breadcrumbService.getBreadCrumbsJson().length - 1]?.label?.replace(/\s+/g, '');
     this.loadActions(); 
   }
 

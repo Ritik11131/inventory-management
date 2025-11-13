@@ -308,8 +308,11 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
     // Add user-specific menu items dynamically
     const managementMenu = commonItems.find((item: any) => item.key === 'management');
     
-    if (managementMenu && managementMenu.items && userRole !== 'User') {        
-        managementMenu.items.push(...userMenuItems[authService.getUserRole()]);
+    if (managementMenu && managementMenu.items && userRole !== 'User') {
+        const userRoleForMenu = authService.getUserRole();
+        if (userRoleForMenu && userMenuItems[userRoleForMenu]) {
+            managementMenu.items.push(...userMenuItems[userRoleForMenu]);
+        }
     }
 
     commonItems = (userRole === 'Dealer' || userRole === 'Distributor') ? commonItems?.filter((item: any) => item?.key !== 'dashboard' || item?.key !== 'tracking') : commonItems;

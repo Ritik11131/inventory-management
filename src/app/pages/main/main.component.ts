@@ -82,7 +82,14 @@ export class MainComponent implements OnInit, OnDestroy {
 
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    if (this.authService.isAuthenticated()) {
+      try {
+        await this.authService.loadUserDetails();
+      } catch (error) {
+      }
+    }
+    
     this.initializeMenu();
     this.userRole = this.authService.getUserRole();
     this.userName = this.authService.getUserName();
