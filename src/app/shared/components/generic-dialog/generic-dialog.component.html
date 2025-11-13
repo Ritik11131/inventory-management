@@ -32,14 +32,31 @@
                 }
                 @case ('password') {
                 <ng-container>
-                    <p-iconField iconPosition="right">
-                        <input id="{{ field.name }}" class="w-full" [required]="field.validation"
-                            [type]="isPasswordToggled ? 'text' : 'password'" (keyup)="onInputChange($event, field)"
-                            [(ngModel)]="data[field.name]" pInputText (copy)="disableEvent($event)"
-                            (paste)="disableEvent($event)" (cut)="disableEvent($event)" autocomplete="off">
-                        <p-inputIcon (click)="togglePassword()"
-                            [styleClass]="isPasswordToggled ? 'pi pi-eye-slash cursor-pointer' : 'pi pi-eye cursor-pointer'" />
-                    </p-iconField>
+                    <p-password [(ngModel)]="data[field.name]" 
+                        [required]="field.validation"
+                        (ngModelChange)="onPasswordChange($event, field)"
+                        [feedback]="true"
+                        [toggleMask]="true"
+                        styleClass="w-full"
+                        appendTo="body"
+                        inputStyleClass="w-full">
+                        <ng-template pTemplate="header">
+                            <h6>Pick a password</h6>
+                        </ng-template>
+                        <ng-template pTemplate="footer">
+                            <p-divider />
+                            <p class="mt-2">Suggestions</p>
+                            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                                <li>At least one uppercase</li>
+                                <li>At least one numeric</li>
+                                <li>At least one special character</li>
+                                <li>Minimum 8 characters</li>
+                            </ul>
+                        </ng-template>
+                    </p-password>
+                    @if(data[field.name] && data[field.name].length > 0 && !passwordStrength[field.name]) {
+                        <small class="text-red-500 mt-1 block">Password does not meet strength requirements</small>
+                    }
                 </ng-container>
                 }
                 @case ('confirm_password') {
@@ -249,7 +266,7 @@
             @if(template) {
                  <p-button [label]="'Save'" [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="saveTemplateOne()" />
             } @else {
-                <p-button [disabled]="!isStepForm ? !isValidated : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated)" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
+                <p-button [disabled]="!isStepForm ? (!isValidated || !arePasswordsStrong()) : ((stepperCurrentIndex !== stepFormFields.length - 1) || !isValidated || !arePasswordsStrong())" [label]="customSaveLabel ? customSaveLabel : isEditing ? 'Update' : 'Save'"
                 [icon]="isEditing ?  'pi pi-pencil' : 'pi pi-check'" [text]="true" (onClick)="save()" />
             }
         }

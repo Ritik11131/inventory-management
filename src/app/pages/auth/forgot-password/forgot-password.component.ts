@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { StepperModule } from 'primeng/stepper';
+import { PasswordModule } from 'primeng/password';
 import { AuthService } from '../../../core/services/auth.service';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputOtpModule } from 'primeng/inputotp';
@@ -19,7 +20,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-forgot-password',
   standalone: true,
   imports: [ButtonModule,DividerModule,InputTextModule,CommonModule,FormsModule,IconFieldModule,InputIconModule,
-            StepperModule,InputNumberModule,InputOtpModule,RouterModule],
+            StepperModule,InputNumberModule,InputOtpModule,RouterModule,PasswordModule],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
   styles: [
@@ -47,13 +48,15 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
     reTypedPassword: signal('')
   };
 
-  isValid: Signal<boolean> = computed(() => 
-    [
-      this.resetPasswordObj.newPassword(), 
-      this.resetPasswordObj.reTypedPassword()
-    ].every(val => val !== '') && 
-      this.resetPasswordObj.newPassword() ===  this.resetPasswordObj.reTypedPassword()
-  );
+  isValid: Signal<boolean> = computed(() => {
+    const newPassword = this.resetPasswordObj.newPassword();
+    const reTypedPassword = this.resetPasswordObj.reTypedPassword();
+    
+    return newPassword !== '' && 
+           reTypedPassword !== '' && 
+           newPassword === reTypedPassword &&
+           this.isPasswordStrong(newPassword);
+  });
 
 
 
@@ -152,6 +155,23 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
 
   disableEvent(event: ClipboardEvent) {
     event.preventDefault();
+  }
+
+  /**
+   * Check if password meets strength requirements using regex:
+   * - At least one uppercase letter
+   * - At least one numeric character
+   * - At least one special character (@$!%?&)
+   * - Minimum 8 characters
+   */
+  isPasswordStrong(password: string): boolean {
+    if (!password) {
+      return false;
+    }
+    
+    // Regex pattern: ^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&]).{8,}$
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&]).{8,}$/;
+    return passwordRegex.test(password);
   }
 
 

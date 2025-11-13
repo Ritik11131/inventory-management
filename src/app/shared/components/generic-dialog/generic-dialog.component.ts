@@ -21,6 +21,8 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputOtpModule } from 'primeng/inputotp';
+import { PasswordModule } from 'primeng/password';
+import { DividerModule } from 'primeng/divider';
 import { GenericStepperComponent } from '../generic-stepper/generic-stepper.component';
 import { ExportService } from '../../../core/services/export.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -33,7 +35,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   imports: [TableModule, DialogModule, RippleModule, ButtonModule, PickListModule, DragDropModule, ProgressSpinnerModule,
     InputTextModule, InputTextareaModule, CommonModule, FileUploadModule,
     DropdownModule, TagModule, RadioButtonModule, RatingModule, MultiSelectModule, GenericStepperComponent,InputOtpModule,
-    InputTextModule, FormsModule, InputNumberModule, ConfirmDialogModule, TooltipModule, IconFieldModule, InputIconModule],
+    InputTextModule, FormsModule, InputNumberModule, ConfirmDialogModule, TooltipModule, IconFieldModule, InputIconModule,
+    PasswordModule, DividerModule],
   templateUrl: './generic-dialog.component.html',
   styleUrl: './generic-dialog.component.scss'
 })
@@ -86,6 +89,7 @@ export class GenericDialogComponent implements OnChanges {
   selectedDropdownValue!: any;
   uploadedFiles: any[] = [];
   stepperCurrentIndex!: number;
+  passwordStrength: { [key: string]: boolean } = {}; // Track password strength for each password field
 
   constructor(private exportService:ExportService) { }
 
@@ -121,7 +125,22 @@ export class GenericDialogComponent implements OnChanges {
     this.onHide.emit(false);
   }
 
-  save() {    
+  save() {
+    // Check if any password field is present and validate strength
+    const passwordFields = this.fields.filter((field: any) => field.type === 'password');
+    const hasWeakPassword = passwordFields.some((field: any) => {
+      const passwordValue = this.data[field.name];
+      if (passwordValue && passwordValue.length > 0) {
+        return !this.isPasswordStrong(passwordValue);
+      }
+      return false;
+    });
+    
+    if (hasWeakPassword) {
+      // Don't allow submission if password is weak
+      return;
+    }
+    
     this.onSave.emit(this.data);
   }
 
@@ -140,7 +159,61 @@ export class GenericDialogComponent implements OnChanges {
 
   onInputChange(event: any, field: any) {
     const value = event.target.value;
+    
+    // Validate password strength if it's a password field
+    if (field.type === 'password') {
+      this.passwordStrength[field.name] = this.isPasswordStrong(value);
+    }
+    
     this.onInputTextChange.emit({ value, field });
+  }
+
+  onPasswordChange(value: string, field: any) {
+    this.data[field.name] = value;
+    this.passwordStrength[field.name] = this.isPasswordStrong(value);
+    this.onInputTextChange.emit({ value, field });
+  }
+
+  /**
+   * Check if password meets strength requirements using regex:
+   * - At least one uppercase letter
+   * - At least one numeric character
+   * - At least one special character (@$!%?&)
+   * - Minimum 8 characters
+   */
+  isPasswordStrong(password: string): boolean {
+    if (!password) {
+      return false;
+    }
+    
+    // Regex pattern: ^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&]).{8,}$
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&]).{8,}$/;
+    return passwordRegex.test(password);
+  }
+
+  /**
+   * Check if all password fields (if any) meet strength requirements
+   */
+  arePasswordsStrong(): boolean {
+    const passwordFields = this.fields.filter((field: any) => field.type === 'password');
+    if (passwordFields.length === 0) {
+      return true; // No password fields, so validation passes
+    }
+    
+    return passwordFields.every((field: any) => {
+      const passwordValue = this.data[field.name];
+      // If password field is required and has value, it must be strong
+      if (field.validation && passwordValue && passwordValue.length > 0) {
+        return this.isPasswordStrong(passwordValue);
+      }
+      // If password field is optional and empty, it's valid
+      // If password field is optional and has value, it must be strong
+      if (!field.validation && passwordValue && passwordValue.length > 0) {
+        return this.isPasswordStrong(passwordValue);
+      }
+      // If password field is optional and empty, it's valid
+      return true;
+    });
   }
 
   onDropdownChange(event: any, field: any) {
