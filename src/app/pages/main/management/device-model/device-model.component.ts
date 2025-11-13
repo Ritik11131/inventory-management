@@ -81,8 +81,6 @@ export class DeviceModelComponent implements OnInit {
           id: user[valueKey]
         };
       });
-      console.log(deviceModelFormFields);
-      
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch ${this.authService.getUserType()} List!`);
@@ -102,7 +100,6 @@ export class DeviceModelComponent implements OnInit {
     try {
       const response = await this.dynamicUserService.getList();
       this.generaTetoolBarUserOptions(response)
-      console.log(this.toolbarRightActions);
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch State List!`);
@@ -127,8 +124,6 @@ export class DeviceModelComponent implements OnInit {
     });
     deviceModelFormFields[0].options = this.toolbarRightActions[0].options;
     this.fields = deviceModelFormFields
-    console.log(this.fields);
-    
   }
 
 
@@ -150,7 +145,6 @@ export class DeviceModelComponent implements OnInit {
       this.deviceModel = this.resetDeviceModel();
       this.isEditing = false;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -163,7 +157,6 @@ export class DeviceModelComponent implements OnInit {
         ModelName: data.ModelName
       }
       const response = await this.deviceModelService.createDeviceModel(payload);
-      console.log(response);
       this.toastService.showSuccess('Success', 'Provider Created Successfully!');
     } catch (error: any) {
       this.toastService.showError('Error', error.error.data);
@@ -175,7 +168,6 @@ export class DeviceModelComponent implements OnInit {
   async updateDevice(data: any): Promise<any> {
     // try {
     //   const response = await this.deviceService.updateDevice(data);
-    //   console.log(response);
     //   this.toastService.showSuccess('Success', 'Provider Updated Successfully!');
     // } catch (error) {
     //   this.toastService.showError('Error', `Failed to update State!`);
@@ -195,7 +187,6 @@ export class DeviceModelComponent implements OnInit {
   async onEditDeviceModel(state: any) : Promise<any> {
     await this.generateDropdownValues();
     this.isEditing = true;
-    console.log('Editing user:', state);
     this.deviceModel = { ...state };
     this.deviceModelDialog = true;
   }
@@ -208,7 +199,6 @@ export class DeviceModelComponent implements OnInit {
 
 
   async onDeleteDeviceModel(event: any): Promise<any> {
-    // console.log(event);
     // this.confirmationService.confirm({
     //   target: event.target as EventTarget,
     //   message: 'Do you want to delete this Device?',
@@ -221,7 +211,6 @@ export class DeviceModelComponent implements OnInit {
     //   accept: async () => {
     //     try {
     //       const response = await this.deviceService.deleteDevice(event.item);
-    //       console.log(response);
     //       this.toastService.showSuccess('Success', 'Provider Deleted Successfully!');
     //     } catch (error) {
     //       this.toastService.showError('Error', `Failed to delete Provider!`);
@@ -236,12 +225,10 @@ export class DeviceModelComponent implements OnInit {
 
 
   onInputTextChange(event: any) {
-    // console.log(event);
   }
 
 
   onSelectionChange(event: any) {
-    console.log(event);
   }
 
 

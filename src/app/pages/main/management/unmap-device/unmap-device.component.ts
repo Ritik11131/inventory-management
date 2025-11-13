@@ -36,7 +36,6 @@ export class UnmapDeviceComponent {
    this.loading = true;
     try {
       const response = await this.fitmentService.getFitmentDetailsByImeiRegNO(this.deviceToBeSearched);
-      console.log(response);
       this.deviceInfo = response?.data[0];
 
     } catch (error: any) {
@@ -53,7 +52,6 @@ export class UnmapDeviceComponent {
     this.unlinking = true
     try {
       const response = await this.deviceService.unlinkDevice(this.deviceInfo?.device?.id);
-      console.log(response);
       this.deviceInfo = null; // Clear device info after unlinking
       this.toastService.showSuccess('Success', response?.data);
     } catch (error: any) {

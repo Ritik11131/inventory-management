@@ -363,12 +363,9 @@ export class GenericTableComponent implements OnInit {
         op.toggle(event);
 
       } catch (error) {
-        console.log(error, 'error');
         op.toggle(event);
       }
     }
-
-    console.log(this.selectedOverlayObject);
     
   }
 
@@ -377,10 +374,8 @@ export class GenericTableComponent implements OnInit {
     try {
       const response = await this.fitmentService.getFitmentCertificateData(obj);
       const certificateData : any = parseFitemtCertificateData(response?.data?.attribute);
-      console.log(certificateData);
       this.pdfService.generateFitmentCertificate(certificateData);
     } catch (error:any) {
-      console.log(error);
       this.toastService.showError('Error',error.error.data);
       
     }

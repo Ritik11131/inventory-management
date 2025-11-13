@@ -106,8 +106,6 @@ export class MainComponent implements OnInit, OnDestroy {
     // Method to initialize the menu
     private initializeMenu() {
       this.menuItems = getMenuConfig(this.authService, this.router, this.breadcrumbService);
-      console.log(this.menuItems);
-      
     }
 
 

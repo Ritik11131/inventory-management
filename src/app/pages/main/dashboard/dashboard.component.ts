@@ -242,19 +242,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       resizable: {
         enabled: true, // Enable resizing
         start: (item, gridsterItem, event) => {
-          console.log('Resize start:', item, gridsterItem, event);
         },
         stop: (item, gridsterItem, event) => {
-          console.log('Resize stop:', item, gridsterItem, event);
         },
       },
       draggable: {
         enabled: true, // Enable dragging
         start: (item, gridsterItem, event) => {
-          console.log('Drag start:', item, gridsterItem, event);
         },
         stop: (item, gridsterItem, event) => {
-          console.log('Drag stop:', item, gridsterItem, event);
         },
       },
       swap:false,
@@ -375,7 +371,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.complaintStats[0].count = response?.data?.closed;
       this.complaintStats[1].count = response?.data?.open
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -386,7 +381,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.inventory[0].value = response?.data?.inStock +  response?.data?.inActivation;
       this.inventory[1].value = response?.data?.inActivation; 
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -430,7 +424,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async fetchRenewalDueCounts() :Promise<any> {
     try {
       const response = await this.dashboardService.getRenewalDueCounts();
-      console.log(response,'ress');
       this.renewalStatus[0].value = response?.data?.Due?.length;
       this.renewalStatus[1].value =  response?.data?.Laps?.length;
       
@@ -468,7 +461,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     try {
       const response = await this.dashboardService.getSOSAletCounts();
       this.updatePanelValues(response?.data);
-      console.log(response, 'responseeee');
 
     } catch (error) {
 
@@ -564,13 +556,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onClick(event  :any) {
-    console.log(event);
     
   }
 
   async onInfoClick(event: MouseEvent, panel: any, op?: { toggle: (e: MouseEvent) => void }): Promise<void> {    
     if (event.type === 'click') {
-      console.log(panel);
       this.currentInfoTitle = panel?.title || panel?.label || panel?.categoryName || panel?.key || panel?.toUpperCase() || panel.status;
       this.infoDialog = true;
       this.currentInfoColumns = panel.key === 'alert' ? alertInfotableColumns : 
@@ -628,7 +618,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } else {
       if (op && typeof op.toggle === 'function') {
         op.toggle(event);
-        console.log(`Info clicked for ${panel.title}`);
       } else {
         console.warn('op is not defined or does not have a toggle function');
       }

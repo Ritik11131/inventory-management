@@ -112,7 +112,6 @@ export class GeofenceComponent {
         this.selectedGeometry = null;
       }
 
-      console.log('Created layer -> selectedGeometry:', this.selectedGeometry);
     });
 
     // EDITED
@@ -140,7 +139,6 @@ export class GeofenceComponent {
         } catch (err) {
           this.selectedGeometry = null;
         }
-        console.log('Edited -> selectedGeometry:', this.selectedGeometry);
       }
     });
 
@@ -149,7 +147,6 @@ export class GeofenceComponent {
       this.drawnItems.clearLayers();
       this.currentLayer = null;
       this.selectedGeometry = null;
-      console.log('All drawings deleted');
     });
   }
 
@@ -186,7 +183,6 @@ export class GeofenceComponent {
         ? await this.routeService.updateRoute(payload)
         : await this.routeService.createRoute(payload);
 
-      console.log('Save response:', response);
       this.geofenceDrawer = false;
       await this.fetchGeofences();
       this.toastService.showSuccess('Success', this.isEditing ? 'Geofence Updated!' : 'Geofence Created!');
@@ -389,7 +385,6 @@ export class GeofenceComponent {
   }
 
   onDeleteState(geofence: any) {
-    console.log('Delete Geofence:', geofence);
     // implement delete call if needed
   }
 }

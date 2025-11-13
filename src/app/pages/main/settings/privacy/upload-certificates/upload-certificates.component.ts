@@ -28,13 +28,9 @@ export class UploadCertificatesComponent {
 
 
   onDocumentTypeChange(event:any) {
-    console.log(event);
-    
   }
 
   onSelect(event: any) {
-    console.log(event);
-    
   }
 
   uploadCertificate() {

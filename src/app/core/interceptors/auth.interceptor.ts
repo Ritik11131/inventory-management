@@ -44,7 +44,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(newAuthReq);
           }),
           catchError((refreshError : HttpErrorResponse) => {
-            console.log(refreshError,'refresherror');
             
             // If refresh token API also returns 401, log the user out
             if (refreshError.status === 401) {

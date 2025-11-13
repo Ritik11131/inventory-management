@@ -45,7 +45,6 @@ export class MoreComponent {
   async initMethods() {
     try {
       const response = await this.dynamicuserService.getList();
-      console.log(response);
       this.oemList = response.data;
     } catch (error) {
       console.error('Error during initialization:', error);
@@ -59,7 +58,6 @@ export class MoreComponent {
 
 
   onSelect(event: any) {
-    console.log(event);
     this.firmwareFile = event?.currentFiles[0];
   }
 
@@ -74,8 +72,6 @@ export class MoreComponent {
     this.uploadingCertificate = true;
 
     const response = await this.moreService.uploadFirmware(this.firmwareFile, this.selectedOem.sno);
-    console.log('Upload Response:', response);
-
     this.toastService.showSuccess('Certificate uploaded successfully!', 'Success');
   } catch (error) {
     console.error('Upload failed:', error);
@@ -88,7 +84,6 @@ export class MoreComponent {
 
 
 async onOemChange(event: any): Promise<void> {
-  console.log('OEM Change Event:', event);
   this.dialogVisible = true;
   this.currentDialogTitle = 'Previous Uploaded Firmwares';
   this.isDialogTableLoading = true;

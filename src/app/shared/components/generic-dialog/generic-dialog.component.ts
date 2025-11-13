@@ -96,7 +96,6 @@ export class GenericDialogComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {                
     if (changes['data'] && changes['data'].currentValue) {
-      console.log(this.data, 'dataaa');
     }
     
     if (changes['isEditing'] && changes['isEditing'].currentValue) {

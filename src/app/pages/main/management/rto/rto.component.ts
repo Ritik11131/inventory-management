@@ -47,7 +47,6 @@ export class RtoComponent implements OnInit {
     try {
       const response = await this.stateService.getList();
       this.generaTetoolBarStateOptions(response)
-      console.log(this.toolbarRightActions);
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
     } catch (error) {
       this.toastService.showError('Error', `Failed to fetch State List!`);
@@ -73,8 +72,6 @@ export class RtoComponent implements OnInit {
     });
     rtoCreateFormFields[0].options = this.toolbarRightActions[0].options;
     this.fields = rtoCreateFormFields
-    console.log(this.fields);
-    
   }
 
 
@@ -99,8 +96,6 @@ export class RtoComponent implements OnInit {
 
 
   onDialogDropDownChange(event: any) {
-    console.log(event);
-    console.log(this.rto);
   }
 
 
@@ -142,7 +137,6 @@ export class RtoComponent implements OnInit {
   async createRTO(data : any) : Promise<any> {
     try {
       const response = await this.rtoService.createRTO(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'RTO Created Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to create RTO!`);
@@ -153,7 +147,6 @@ export class RtoComponent implements OnInit {
   async updateRTO(data : any) : Promise<any> {
     try {
       const response = await this.rtoService.updateRTO(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'RTO Updated Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to update RTO!`);
@@ -171,12 +164,10 @@ export class RtoComponent implements OnInit {
   }
   onEditState(rto: any) {
     this.isEditing = true;
-    console.log('Editing user:', rto);
     this.rto = { ...rto };
     this.rtoDialog = true;
   }
   onSelectionChange(event: any) {
-    console.log(event);
   }
 
 }

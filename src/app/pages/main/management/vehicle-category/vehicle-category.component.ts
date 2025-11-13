@@ -69,7 +69,6 @@ export class VehicleCategoryComponent {
       this.category = this.resetVehicleCategory();
       this.isEditing = false;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -78,7 +77,6 @@ export class VehicleCategoryComponent {
   async createVehicleCategory(data : any) : Promise<any> {
     try {
       const response = await this.vehicleCategory.create(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'Provider Created Successfully!');
     } catch (error : any) {
       this.toastService.showError('Error', error.error.data);
@@ -90,7 +88,6 @@ export class VehicleCategoryComponent {
   async updateVehicleCategory(data : any) : Promise<any> {
     try {
       const response = await this.vehicleCategory.update(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'Provider Updated Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to update State!`);
@@ -108,7 +105,6 @@ export class VehicleCategoryComponent {
 
   onEditCategory(state: any) {
     this.isEditing = true;
-    console.log('Editing user:', state);
     this.category = { ...state };
     this.categoryDialog = true;
   }
@@ -122,12 +118,10 @@ export class VehicleCategoryComponent {
 
 
     onInputTextChange(event: any) {
-      console.log(event);
     }
    
     
     onSelectionChange(event: any) {
-      console.log(event);
     }
 
 

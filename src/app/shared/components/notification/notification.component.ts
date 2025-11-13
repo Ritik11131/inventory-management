@@ -364,7 +364,6 @@ export class NotificationComponent {
   }
 
   onToggleNotification(event: any): void {
-    console.log(event);
     this.notificationService.toggleSound();
   }
 }

@@ -88,7 +88,6 @@ export class RouteComponent implements OnInit, OnDestroy {
 
 
   onMapReady(map: L.Map) {
-    console.log('Leaflet Map is Ready', map);
     this.map = map;
     setTimeout(() => {
       this.map.invalidateSize();
@@ -99,7 +98,6 @@ export class RouteComponent implements OnInit, OnDestroy {
       const lat = e.latlng.lat;
       const lng = e.latlng.lng;
       
-      console.log(`Map clicked at: ${lat}, ${lng}`);
       this.addMarkerOnClick(lat, lng);
     });
     // this.initRoutingControl()
@@ -189,7 +187,6 @@ export class RouteComponent implements OnInit, OnDestroy {
           ? JSON.stringify(geometryData)
           : geometryData;
         
-        console.log('Updated route geometry:', this.route.geometry);
       } catch (error) {
         console.error('Error updating route geometry:', error);
       }
@@ -209,7 +206,6 @@ export class RouteComponent implements OnInit, OnDestroy {
     this.markersSignal.set([]);
     this.markerCounter.set(0);
     
-    console.log('All markers cleared');
   }
 
   exportAllMarkersAsGeoJSON(): any {
@@ -218,7 +214,6 @@ export class RouteComponent implements OnInit, OnDestroy {
       features: this.markers().map(markerData => markerData.geoJson)
     };
     
-    console.log('All Markers GeoJSON Collection:', JSON.stringify(featureCollection, null, 2));
     
     // Optional: Download as file
     this.downloadGeoJSON(featureCollection);
@@ -255,17 +250,14 @@ export class RouteComponent implements OnInit, OnDestroy {
 
     try {
       const response = await this.routeService.getRouteById(selectedRoute);
-      console.log('Editing route:', response.data);
       const {id , userId, geometry, name} = response?.data
       this.routeName = name
       const modifiedroute = this.reverseGeoJSONToRoute(JSON.parse(geometry));
-      console.log(this.route);
       
 
       if (modifiedroute) {
         const savedCoordinates = modifiedroute.coordinates.map((coord: any) => L.latLng(coord.lat, coord.lng));
         const savedWaypoints = modifiedroute.waypoints.map((coord: any) => coord.latLng);
-        console.log(savedWaypoints);
         
   
         if (savedCoordinates.length > 0) {
@@ -274,7 +266,6 @@ export class RouteComponent implements OnInit, OnDestroy {
             this.map.removeControl(this.routingControl);
           }
   
-          console.log('yeahh');
   
   
           // Custom routing control using your own waypoints
@@ -282,7 +273,6 @@ export class RouteComponent implements OnInit, OnDestroy {
             waypoints: savedWaypoints, // This will be your custom waypoints
             addWaypoints: false,
             createMarker: (waypointIndex: any, waypoint: any, numberOfWaypoints: any) => {
-              console.log(waypointIndex, waypoint, numberOfWaypoints);
   
               // Create the marker for each waypoint
               const marker = L.marker(waypoint.latLng, {
@@ -314,7 +304,6 @@ export class RouteComponent implements OnInit, OnDestroy {
 
           // Save route to local storage when the route is changed
           this.routingControl.on('routesfound', (e: any) => {
-            console.log(e);
             // const routes = e.routes;
             // localStorage.setItem('savedRoute', JSON.stringify(routes));
 
@@ -328,7 +317,6 @@ export class RouteComponent implements OnInit, OnDestroy {
 
             const geoJSON = this.convertToGeoJSON(route);
             this.route = { id: id, geometry: JSON.stringify(geoJSON) }
-            console.log(this.route);
             
 
 
@@ -343,7 +331,6 @@ export class RouteComponent implements OnInit, OnDestroy {
       }
 
 
-      console.log(this.route,'routeeeeeee');
       
     } catch (error:any) {
       this.toastService.showError('Error', 'Failed to get Route');
@@ -354,7 +341,6 @@ export class RouteComponent implements OnInit, OnDestroy {
 
 
   async onDeleteState(event:any): Promise<any> {
-    console.log(event);
     
     try {
       await this.routeService.deleteRoute(event.item);
@@ -459,7 +445,6 @@ export class RouteComponent implements OnInit, OnDestroy {
       addWaypoints: false, // Disable adding waypoints
       createMarker: (waypointIndex: any, waypoint: any, numberOfWaypoints: any) => {
         // Create custom markers only for the first and last waypoint
-        console.log(waypointIndex, waypoint, numberOfWaypoints);
         return L.marker(waypoint.latLng, {
           icon: L.icon({
             iconSize: [25, 41],
@@ -476,7 +461,6 @@ export class RouteComponent implements OnInit, OnDestroy {
 
      // Save route to local storage when the route is changed
      this.routingControl.on('routesfound', (e: any) => {
-      console.log(e);
       // const routes = e.routes;
       // localStorage.setItem('savedRoute', JSON.stringify(routes));
 
@@ -515,7 +499,6 @@ export class RouteComponent implements OnInit, OnDestroy {
   async createUpdateRoute(): Promise<any> {
     try {
       const response = this.isEditing ? await this.routeService.updateRoute({name: this.routeName,...this.route}) :  await this.routeService.createRoute({name: this.routeName,...this.route});
-      console.log(response);
       this.routeDrawer = false;
       await this.fetchRoutes()
       this.toastService.showSuccess('Success', 'Route Created Successfully!');

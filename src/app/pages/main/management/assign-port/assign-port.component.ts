@@ -92,8 +92,6 @@ export class AssignPortComponent {
   
   
     onDialogDropDownChange(event: any) {
-      console.log(event);
-      console.log(this.port);
     }
   
   
@@ -114,8 +112,6 @@ export class AssignPortComponent {
   
   
     onInputTextChange(event: any) {
-      console.log(event,'event');
-      
     }
   
   
@@ -140,7 +136,6 @@ export class AssignPortComponent {
     async createPort(data : any) : Promise<any> {
       try {
         const response = await this.portService.createPort(data);
-        console.log(response);
         this.toastService.showSuccess('Success', response?.data || 'Port Created Successfully!');
       } catch (error: any) {
         this.toastService.showError('Error', error.error?.data || 'Failed to create Port!');
@@ -151,7 +146,6 @@ export class AssignPortComponent {
     async updatePort(data : any) : Promise<any> {
       try {
         const response = await this.portService.updatePort(data);
-        console.log(response);
         this.toastService.showSuccess('Success', 'RTO Updated Successfully!');
       } catch (error) {
         this.toastService.showError('Error', `Failed to update RTO!`);
@@ -169,12 +163,10 @@ export class AssignPortComponent {
     }
     onEditState(port: any) {
       this.isEditing = true;
-      console.log('Editing user:', port);
       this.port = { ...port };
       this.portDialog = true;
     }
     onSelectionChange(event: any) {
-      console.log(event);
     }
 
 }

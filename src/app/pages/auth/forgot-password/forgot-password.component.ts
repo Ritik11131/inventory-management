@@ -105,7 +105,6 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
       this.startTimer();
       callback.emit();
     } catch (error : any) {
-      console.log(error);
       this.toastService.showError('Error', error.error.data);
     }
   }
@@ -125,7 +124,6 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
   async resetPassword(callback:any) : Promise<any> {
     try {
       const response = await this.authService.resetPassword({requestId: this.requestId, newPassword: this.resetPasswordObj.newPassword()});
-      console.log(response);
       this.toastService.showSuccess('Success', response.data);
       callback.emit();
     } catch (error:any) {
@@ -136,7 +134,6 @@ export class ForgotPasswordComponent implements OnInit,OnDestroy {
   async resendOtp(): Promise<any> {
     try {
       const response = await this.authService.resendOtp(this.requestId);
-      console.log(response);
       this.toastService.showSuccess('Success', response?.data?.message);
     } catch (error:any) {
       this.toastService.showError('Error', error.error.data);

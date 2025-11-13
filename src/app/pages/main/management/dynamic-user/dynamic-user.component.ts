@@ -57,7 +57,6 @@ export class DynamicUserComponent {
   ngOnInit() {
     this.userType = this.authService.getUserType();
     this.selectionMode = this.userType === 'Dealer' ? 'single' : 'none';
-    console.log(this.selectionMode);
     
     if (this.selectionMode === 'none') {
       // Check if the 'index' column does not exist in the columns array
@@ -105,8 +104,6 @@ export class DynamicUserComponent {
     
     // Assign fields dynamically to this.fields
     this.fields = linkRtoFormFields;
-    console.log(this.fields);
-    
   }
 
   constructValidationState(fields: any[]): void {
@@ -115,7 +112,6 @@ export class DynamicUserComponent {
         // Check if validationState already has the field; if not, initialize it
         if (this.isEditing && this.user[field.name]) {
           this.validationState[field.name] = true; // Valid for edit case if data exists
-          console.log(this.validationState,this.isValidated);
         } else {
           this.validationState[field.name] = false; // Invalid or new entry case
         }
@@ -171,7 +167,6 @@ export class DynamicUserComponent {
     }
 
     this.isValidated = Object.values(this.validationState).every(val => val === true);
-    console.log(this.validationState, 'validation state');
   }
   
 
@@ -229,8 +224,6 @@ export class DynamicUserComponent {
     this.unlinked = rtoList.data.filter((item1 : any) => 
       !this.linked.some(item2 => item1['id'] === item2['id'])
     );
-    console.log(this.unlinked);
-    console.log(this.linked);
   }
 
   async onDialogDropDownChange(event: any) : Promise<any> {
@@ -242,16 +235,13 @@ export class DynamicUserComponent {
     if(fieldName === 'stateid') {
       try {
         rtoList = await this.rtoService.getList(selectedValue);
-        console.log(rtoList,'rtos');
       } catch (error : any) {
-        console.log(error);
         rtoList = [];
         this.toastService.showError('Error', error.error.data);
       }
 
       try {
         linkedRto = await this.rtoService.getLinkedRtoUserWise(this.selectedUsers);
-        console.log(linkedRto,'linked rto');
       } catch (error  :any) {
         linkedRto = [];
         this.toastService.showError('Error', error.error.data);
@@ -281,7 +271,6 @@ export class DynamicUserComponent {
       await this.fetchDynamicUserList();
       this.resetVaribles();
     } catch (error) {
-      console.log(error);
       this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);
     }
   }
@@ -309,7 +298,6 @@ export class DynamicUserComponent {
   }
 
   onDeleteProduct(user: any) {
-    console.log('Deleting user:', user);
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + user.name + '?',
       header: 'Confirm',
@@ -322,7 +310,6 @@ export class DynamicUserComponent {
   }
 
   onSelectionChange(event: any[]) {
-    console.log(event);
     this.selectedUsers = event;
   }
 
@@ -344,7 +331,6 @@ export class DynamicUserComponent {
   async createDynamicUser(data : DynamicUser) : Promise<any> {
     try {
       const response = await this.dynamicUserService.createUser(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'User Created Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);
@@ -359,7 +345,6 @@ export class DynamicUserComponent {
     };
     try {
       const response = await this.dynamicUserService.linkRtoToUser(linkedPayload); 
-      console.log(response);
       this.toastService.showSuccess('Success', response.data);     
     } catch (error) {
       this.toastService.showError('Error', `Failed to Link ${this.authService.getUserType()}!`);
@@ -373,7 +358,6 @@ export class DynamicUserComponent {
     };
     try {
       const response = await this.dynamicUserService.unlinkRtoToUser(unlinkedPayload); 
-      console.log(response);
       // this.toastService.showSuccess('Success', response.data);     
     } catch (error) {
       this.toastService.showError('Error', `Failed to Link ${this.authService.getUserType()}!`);
@@ -384,7 +368,6 @@ export class DynamicUserComponent {
   async updateDynamicUser(data : DynamicUser) : Promise<any> {
     try {
       const response = await this.dynamicUserService.updateUser(data);
-      console.log(response);
       this.toastService.showSuccess('Success', response.data);
     } catch (error) {
       this.toastService.showError('Error', `Failed to create ${this.authService.getUserType()}!`);

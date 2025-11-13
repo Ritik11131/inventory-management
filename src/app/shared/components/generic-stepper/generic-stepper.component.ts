@@ -50,8 +50,6 @@ export class GenericStepperComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {    
-      console.log(this.data,'yeahhhh');
-        
   }
 
 
@@ -77,7 +75,6 @@ export class GenericStepperComponent implements OnChanges {
     const fieldName = field.name;
     this.data[fieldName] = selectedValue;
     this.onDialogDropdownChange.emit({ selectedValue, fieldName });
-    console.log(this.data);
   }
 
 

@@ -170,7 +170,6 @@ totalPages: number = 0;
         if (!isDuplicate) {
           try {
             const vehicleDetails = await this.fitmentService.getVehicleDetails(value);
-            console.log(vehicleDetails, 'vehicleDetails');
     
             let {
               vehicleMake,
@@ -202,7 +201,6 @@ totalPages: number = 0;
             });
     
           } catch (error : any) {
-            console.log(error);
             this.stepFormFields.forEach(step => {
               step.fields.forEach((field:any) => {
                 if (this.stepperFieldsToDisable.includes(field.name)) {
@@ -290,7 +288,6 @@ totalPages: number = 0;
     }
 
     this.isValidated = Object.values(this.validationState).every(val => val === true);
-    console.log(this.validationState, 'validation state');
   }
 
   constructValidationState(fields: any[]): void {
@@ -348,7 +345,6 @@ totalPages: number = 0;
             };
       });
   
-      console.log(formFields);
   
       // Show success message (optional)
       // this.toastService.showSuccess('Success', `${this.authService.getUserType()} List fetched successfully!`);
@@ -542,7 +538,6 @@ async fetchDevices(): Promise<any> {
         await this.fetchAndResetDevice();
       }
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -639,7 +634,6 @@ async fetchDevices(): Promise<any> {
     };
 
 
-    console.log(payload,'payload');
 
     try {
       const response = await this.fitmentService.createFitment(payload);
@@ -705,7 +699,6 @@ async fetchDevices(): Promise<any> {
   async createDevice(data: any): Promise<any> {
     try {
       const response = await this.deviceService.createDevice(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'Provider Created Successfully!');
     } catch (error: any) {
       this.toastService.showError('Error', error.error.data);
@@ -716,7 +709,6 @@ async fetchDevices(): Promise<any> {
   async handleBulkUpload(data: any): Promise<any> {
     try {
       const response = await this.deviceService.bulkUpload(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'Provider Created Successfully!');
     } catch (error: any) {
       this.toastService.showError('Error', error.error.data.message);
@@ -729,7 +721,6 @@ async fetchDevices(): Promise<any> {
   async updateDevice(data: any): Promise<any> {
     try {
       const response = await this.deviceService.updateDevice(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'Provider Updated Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to update State!`);
@@ -765,7 +756,6 @@ async fetchDevices(): Promise<any> {
     await this.generateDropdownValues('create');
     this.isEditing = true;
     this.constructValidationState(this.fields);
-    console.log('Editing user:', state);
     this.device = { ...state };
     this.deviceDialog = true;
   }
@@ -784,7 +774,6 @@ async fetchDevices(): Promise<any> {
 
 
   async onDeleteDevice(event: any): Promise<any> {
-    console.log(event);
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Do you want to delete this Device?',
@@ -797,7 +786,6 @@ async fetchDevices(): Promise<any> {
       accept: async () => {
         try {
           const response = await this.deviceService.deleteDevice(event.item);
-          console.log(response);
           this.toastService.showSuccess('Success', 'Provider Deleted Successfully!');
         } catch (error) {
           this.toastService.showError('Error', `Failed to delete Provider!`);
@@ -812,7 +800,6 @@ async fetchDevices(): Promise<any> {
 
 
   onInputTextChange({ field, value }: any) {
-    console.log(field);
     if(field.hasOwnProperty('validation')) {
       const fieldName = field.name;
       this.validationDebounceSubject.next({ fieldName, value });
@@ -821,7 +808,6 @@ async fetchDevices(): Promise<any> {
 
 
   stepperInputTextChange({ field, value }: any) {
-    console.log(field,value);    
     if(!this.device.isOld && field.name === 'chassisNo') {
       this.device.vehicleNo = this.device.chassisNo
     }
@@ -840,7 +826,6 @@ async fetchDevices(): Promise<any> {
 
 
   onSelectionChange(event: any) {
-    console.log(event);
     this.selectedDevices = event || []
   }
 
@@ -857,7 +842,6 @@ async fetchDevices(): Promise<any> {
 
 
   async onActivate(event: any) : Promise<any> {
-    console.log(event);   
     this.currentAction = 'activate';
     await this.generateDropdownValues('activate');
     this.fields = deviceActivationFormFields;
@@ -869,7 +853,6 @@ async fetchDevices(): Promise<any> {
 
 
   constructStepperValidationState(fields: any[]): void {
-    console.log(fields,'construct');
     fields.map((field) => {
     field.fields.map((object:any)=> {
       if (object.hasOwnProperty('validation') && object.validation) {
@@ -886,7 +869,6 @@ async fetchDevices(): Promise<any> {
   }
 
   async onFitment(event: any) : Promise<any> {
-    console.log(event);   
     this.currentAction = 'fitment';
     this.accesStepForm = true;
     this.generateAllDropdownValuesStepForm(fitmentFormFields,event);
@@ -898,7 +880,6 @@ async fetchDevices(): Promise<any> {
 
 
   async generateAllDropdownValuesStepForm(form:any,event:any) : Promise<any> {
-    console.log(event.item);
     form[0].fields.map(async (object:any)=>{
       if(object.type === 'dropdown' && object.name !== 'isOld') {
         const response = await this.vehicleCategory.getList();
@@ -918,7 +899,6 @@ async fetchDevices(): Promise<any> {
     form[1].fields.map(async (object:any)=>{
       if(object.name === 'state') {
         const response = await this.stateService.getList();
-        console.log(response);
 
         object.options = response.data.map((obj: any) => {
           const keys = Object.keys(obj);
@@ -944,7 +924,6 @@ async fetchDevices(): Promise<any> {
       }
     });
     
-    console.log(form);
     this.stepFormFields = form;
     
   }
@@ -1027,7 +1006,6 @@ async fetchDevices(): Promise<any> {
 
 
   async handleOverlayAction(event : any) : Promise<any> {
-    console.log(event,'event');
     
     try {
       const response = await this.authService.sendSMSOtp(event?.overlayObj?.permitHolderMobile, event?.item?.id);
@@ -1046,7 +1024,6 @@ async fetchDevices(): Promise<any> {
   }
 
   async handleDeviceUnlink(event : any) : Promise<any> {
-    console.log(event,'event');
     
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -1060,7 +1037,6 @@ async fetchDevices(): Promise<any> {
       accept: async () => {
         try {
           const response = await this.deviceService.unlinkDevice(event.item.id);
-          console.log(response);
           this.toastService.showSuccess('Success', 'Device Unlinked Successfully!');
         } catch (error) {
           this.toastService.showError('Error', `Failed to unlink Device!`);
@@ -1092,7 +1068,6 @@ async fetchDevices(): Promise<any> {
 
     try {
       await handler();
-      console.log(`${this.currentTemplateKey} template saved successfully.`);
     } catch (error) {
       console.error(`Error saving ${this.currentTemplateKey} template`, error);
     }

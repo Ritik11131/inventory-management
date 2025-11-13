@@ -65,7 +65,6 @@ export class StateComponent implements OnInit {
       this.state = this.resetState();
       this.isEditing = false;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -80,7 +79,6 @@ export class StateComponent implements OnInit {
   async createSate(data : any) : Promise<any> {
     try {
       const response = await this.stateService.createState(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'State Created Successfully!');
     } catch (error : any) {
       this.toastService.showError('Error', error.error.data);
@@ -92,7 +90,6 @@ export class StateComponent implements OnInit {
   async updateState(data : any) : Promise<any> {
     try {
       const response = await this.stateService.updateState(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'State Updated Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to update State!`);
@@ -102,7 +99,6 @@ export class StateComponent implements OnInit {
 
 
   onInputTextChange(event: any) {
-    console.log(event);
   }
 
   openNew(event: any) {
@@ -115,7 +111,6 @@ export class StateComponent implements OnInit {
   }
   onEditState(state: any) {
     this.isEditing = true;
-    console.log('Editing user:', state);
     this.state = { ...state };
     this.stateDialog = true;
   }

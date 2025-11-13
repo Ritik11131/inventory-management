@@ -197,7 +197,6 @@ export class TrackingComponent implements OnInit {
       );
 
       marker.on('click', ()=>{
-        console.log(vehicle);
       })
 
       this.markerClusterGroup.addLayer(marker);
@@ -226,7 +225,6 @@ export class TrackingComponent implements OnInit {
 
             marker.bindTooltip(`Vehicle No: ${vehicle.vehicleNo}`, { direction: 'top' });
             marker.on('click', ()=>{
-              console.log(vehicle);
             })
             markers.push(marker);
             this.markerClusterGroup.addLayer(marker);
@@ -280,7 +278,6 @@ export class TrackingComponent implements OnInit {
   //   this.resetPlaybackState();
   
   //   if (this.isSingleVehicleEvent(event)) {
-  //     console.log(event,'event');
       
   //     await this.handleSingleVehicleEvent(event);
   //   } else {
@@ -385,7 +382,6 @@ export class TrackingComponent implements OnInit {
         this.toastService.showInfo('Info','No Data Found');
       }
     } catch (error) {
-      console.log(error);
       this.toastService.showError('Error','Something Went Wrong')
     } finally {
       this.creatingPlaybackPath = false;
@@ -1013,7 +1009,6 @@ private plotAlertMarkers(trackData: any[]): void {
   });
   
   if (alertData.length > 0) {
-    console.log(`Added ${alertData.length} alert markers to the map`);
   }
 }
 
@@ -1043,12 +1038,6 @@ private formatAlertTime(timestamp: string | Date): string {
 
 private onAlertMarkerClick(alertPoint: any, alertInfo: any): void {
   // Optional: Add custom logic when alert marker is clicked
-  console.log('Alert marker clicked:', {
-    alertId: alertPoint.alertId,
-    alertName: alertInfo.name,
-    timestamp: alertPoint.timestamp || alertPoint.dateTime,
-    location: [alertPoint.latitude, alertPoint.longitude]
-  });
   
   // You can add additional functionality here, such as:
   // - Showing detailed alert information in a sidebar

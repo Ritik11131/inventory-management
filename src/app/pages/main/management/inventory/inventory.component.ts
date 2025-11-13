@@ -51,7 +51,6 @@ export class InventoryComponent implements OnInit {
     try {
       const { data } = await this.inventoryService.getList(500, 1);
       this.inventory = data?.items || []; // Use optional chaining for safety
-      console.log(data);
   
       const { pageSize, totalPage } = data;
   

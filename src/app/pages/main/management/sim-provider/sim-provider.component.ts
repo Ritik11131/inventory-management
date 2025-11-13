@@ -67,7 +67,6 @@ export class SimProviderComponent implements OnInit {
       this.provider = this.resetSimProvider();
       this.isEditing = false;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -76,7 +75,6 @@ export class SimProviderComponent implements OnInit {
   async createSimProvider(data : any) : Promise<any> {
     try {
       const response = await this.simProviderService.createSimProvider(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'Provider Created Successfully!');
     } catch (error : any) {
       this.toastService.showError('Error', error.error.data);
@@ -88,7 +86,6 @@ export class SimProviderComponent implements OnInit {
   async updateSimProvider(data : any) : Promise<any> {
     try {
       const response = await this.simProviderService.updateSimProvider(data);
-      console.log(response);
       this.toastService.showSuccess('Success', 'Provider Updated Successfully!');
     } catch (error) {
       this.toastService.showError('Error', `Failed to update State!`);
@@ -106,7 +103,6 @@ export class SimProviderComponent implements OnInit {
 
   onEditProvider(state: any) {
     this.isEditing = true;
-    console.log('Editing user:', state);
     this.provider = { ...state };
     this.providerDialog = true;
   }
@@ -119,7 +115,6 @@ export class SimProviderComponent implements OnInit {
 
 
   async onDeleteProvider(event: any) : Promise<any> {
-    console.log(event);
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Do you want to delete this provider?',
@@ -132,7 +127,6 @@ export class SimProviderComponent implements OnInit {
       accept: async () => {
         try {
           const response = await this.simProviderService.deleteSimProvider(event.item);
-          console.log(response);
           this.toastService.showSuccess('Success', 'Provider Deleted Successfully!');
           await this.fetchSimProviders()
         } catch (error) {
@@ -148,12 +142,10 @@ export class SimProviderComponent implements OnInit {
 
 
     onInputTextChange(event: any) {
-      console.log(event);
     }
    
     
     onSelectionChange(event: any) {
-      console.log(event);
     }
 
 }
