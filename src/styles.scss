@@ -94,6 +94,30 @@ body .p-component
   font-family: 'Urbanist', sans-serif;
 }
 
+/* Override PrimeNG's Inter font with Urbanist */
+:root {
+  --font-family: 'Urbanist', sans-serif;
+}
+
+.p-component,
+.p-inputtext,
+.p-button,
+.p-dropdown,
+.p-calendar,
+.p-datatable,
+.p-menu,
+.p-menubar,
+.p-dialog,
+.p-toast,
+.p-tooltip,
+.p-overlaypanel,
+.p-confirm-dialog,
+.p-password,
+.p-stepper,
+.p-stepper-panel {
+  font-family: 'Urbanist', sans-serif !important;
+}
+
 
 .p-menubar .p-submenu-list {
   z-index: 9999;
