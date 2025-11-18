@@ -60,3 +60,11 @@
 </div>
 
 <router-outlet></router-outlet>
+
+<!-- Firmware Version Loading Spinner -->
+@if(isLoadingFirmwareVersion) {
+    <div class="fixed top-0 left-0 w-full h-full flex align-items-center justify-content-center" 
+         style="background-color: rgba(0, 0, 0, 0.4); z-index: 9999;">
+        <p-progressSpinner ariaLabel="loading" styleClass="w-4rem h-4rem" strokeWidth="4"></p-progressSpinner>
+    </div>
+}

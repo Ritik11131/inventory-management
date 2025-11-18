@@ -14,6 +14,7 @@ export class AuthService {
   private cachedUserType: string | null = null;
   private cachedUserName: string | null = null;
   private cachedUserRole: string | null = null;
+  private cachedOrgName: string | null = null;
   
   // Cache the loadUserDetails promise to prevent multiple API calls
   private loadUserDetailsPromise: Promise<void> | null = null;
@@ -107,18 +108,20 @@ export class AuthService {
       
       const response = await this.http.get('auth/tokenDetails', { jti: decodedToken?.jti });
       if (response && response.data) {
-        const {role, userName} = response.data;
+        const {role, userName, orgName} = response.data;
         this.cachedUserRole = role || null;
         this.cachedUserType = role === 'Admin' ? 'OEM' 
           : role === 'OEM' ? 'Distributor' 
           : role === 'Distributor' ? 'Dealer' 
           : role === 'Dealer' ? 'User' : 'NA';
         this.cachedUserName = userName;
+        this.cachedOrgName = orgName || null;
       }
     } catch (error) {
       this.cachedUserName = null;
       this.cachedUserType = null;
       this.cachedUserRole = null;
+      this.cachedOrgName = null;
       if (error instanceof HttpErrorResponse) {
         const errorMessage = error.error?.data || error.message || 'Failed to load user details';
         this.toastService.showError('Error', errorMessage);
@@ -136,6 +139,7 @@ export class AuthService {
     this.cachedUserType = null;
     this.cachedUserName = null;
     this.cachedUserRole = null;
+    this.cachedOrgName = null;
     this.loadUserDetailsPromise = null; // Clear the promise cache
     setTimeout(() => {
       this.router.navigate(['/auth/login']);
@@ -155,6 +159,13 @@ export class AuthService {
       return this.cachedUserName;
     }
     return 'NA';
+  }
+
+  getOrgName() : string {
+    if (this.cachedOrgName !== null) {
+      return this.cachedOrgName;
+    }
+    return '';
   }
 
   getuserId() : string {
@@ -182,6 +193,7 @@ export class AuthService {
       this.cachedUserType = null;
       this.cachedUserName = null;
       this.cachedUserRole = null;
+      this.cachedOrgName = null;
       this.loadUserDetailsPromise = null; // Clear the promise cache
       return response;
     } catch (error) {

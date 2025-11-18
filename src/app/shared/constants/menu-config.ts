@@ -3,7 +3,7 @@ import { AuthService } from "../../core/services/auth.service";
 import { BreadcrumbService } from "../../core/services/breadcrumb.service";
 import { MenuItem } from "primeng/api";
 
-export function getMenuConfig(authService: AuthService, router: Router, breadcrumbService: BreadcrumbService): MenuItem[] {
+export function getMenuConfig(authService: AuthService, router: Router, breadcrumbService: BreadcrumbService, onGetFirmwareVersion?: () => void): MenuItem[] {
     const userRole = authService.getUserRole();    
 
     // Common menu items for all user types
@@ -228,6 +228,15 @@ export function getMenuConfig(authService: AuthService, router: Router, breadcru
                     // }
                 ]
             },
+            {
+                label: 'Get Firmware Version',
+                icon: 'pi pi-code',
+                command: () => {
+                    if (onGetFirmwareVersion) {
+                        onGetFirmwareVersion();
+                    }
+                }
+            }
             // {
             //     label: 'Vehicle',
             //     icon: 'pi pi-car',

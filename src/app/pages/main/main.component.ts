@@ -18,12 +18,13 @@ import { Subscription } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
 import { getMenuConfig } from '../../shared/constants/menu-config';
 import { NotificationComponent } from "../../shared/components/notification/notification.component";
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-main',
   standalone: true,
   imports: [CommonModule, RouterOutlet, MenubarModule, BadgeModule, AvatarModule, InputTextModule, RippleModule,
-    RouterLink, MenuModule, ButtonModule, BreadcrumbModule, DropdownModule, NotificationComponent],
+    RouterLink, MenuModule, ButtonModule, BreadcrumbModule, DropdownModule, NotificationComponent, ProgressSpinnerModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
@@ -35,6 +36,7 @@ export class MainComponent implements OnInit, OnDestroy {
   userRole: string = '';
   userName: string = '';
   menuItems!: MenuItem[];
+  isLoadingFirmwareVersion: boolean = false;
 
   home: MenuItem | undefined = {
     icon: 'pi pi-home', command: () => {
@@ -105,7 +107,25 @@ export class MainComponent implements OnInit, OnDestroy {
 
     // Method to initialize the menu
     private initializeMenu() {
-      this.menuItems = getMenuConfig(this.authService, this.router, this.breadcrumbService);
+      this.menuItems = getMenuConfig(this.authService, this.router, this.breadcrumbService, () => this.handleGetFirmwareVersion());
+    }
+
+    // Handle Get Firmware Version button click
+    async handleGetFirmwareVersion(): Promise<void> {
+      this.isLoadingFirmwareVersion = true;
+      
+      // Wait for 2 seconds
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      this.isLoadingFirmwareVersion = false;
+      
+      // Get orgName or userName
+      const orgName = this.authService.getOrgName();
+      const userName = this.authService.getUserName();
+      const displayName = orgName || userName;
+      
+      // Show the firmware version
+      this.toastService.showInfo('Firmware Version', `${displayName} - Version 1.0.4`);
     }
 
 
